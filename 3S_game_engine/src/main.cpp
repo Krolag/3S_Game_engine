@@ -1,9 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "Shader/Shader.h"
 #include <iostream>
-
-#include "Mesh.h"
+#include "Shader/Shader.h"
+#include "Mesh/Mesh.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -27,7 +26,6 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 int main()
 {
-    
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();

@@ -3,13 +3,14 @@
   <ItemGroup>
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="include\Texture\Texture.cpp" />
     <ClCompile Include="include\Shader\Shader.cpp" />
+    <ClCompile Include="include\Mesh\Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="include\Mesh\Mesh.h" />
+    <ClInclude Include="include\Texture\Texture.h" />
     <ClInclude Include="include\Shader\Shader.h" />
   </ItemGroup>
 </Project>
