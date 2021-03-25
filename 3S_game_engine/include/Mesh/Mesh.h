@@ -14,18 +14,21 @@ struct Vertex
 	glm::vec3 Position;
 	glm::vec3 Normal;
 	glm::vec2 TexCoords;
+	glm::vec3 Tangent;
+	glm::vec3 Bitangent;
 };
 
 class Mesh
 {
 public:
 	/* Mesh data */
-	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
 	std::vector<Texture> m_textures;
+	std::vector<Vertex> m_vertices;
 
-	/* Constructor */
+	/* Constructor & destructor */
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+	~Mesh();
 
 	void drawMesh(Shader &shader);
 
