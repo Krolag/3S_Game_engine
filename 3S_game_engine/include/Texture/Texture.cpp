@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include <stb_image.h>
 
 Texture::Texture(const std::string& path) : ID(0), filePath(path), imageDataBuffer(nullptr), width(0), height(0), nrChannels(0)
 {
@@ -38,4 +39,14 @@ void Texture::Bind(unsigned int slot) const
 void Texture::Unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+unsigned int Texture::GetID()
+{
+	return ID;
+}
+
+std::string Texture::GetType()
+{
+	return type;
 }
