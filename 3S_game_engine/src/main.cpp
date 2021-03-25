@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include "Shader/Shader.h"
 #include <iostream>
 
 #include "Mesh.h"
@@ -27,6 +27,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 int main()
 {
+    
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -58,6 +59,7 @@ int main()
         return -1;
     }
 
+    Shader shader("assets/shaders/vertexShader.vert", "assets/shaders/fragmentShader.frag");
 
     // build and compile our shader program
     // ------------------------------------
