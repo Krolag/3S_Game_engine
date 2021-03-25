@@ -7,12 +7,11 @@
 class Texture
 {
 private:
-	std::string filePath;
-	unsigned char* localBuffer;
-	int width;
-	int height; // prob must add 1-2 fields like renderer ID and
 	unsigned int ID;
-	std::string type;
+	std::string filePath;
+	unsigned char* imageDataBuffer;
+	int width, height, nrChannels;
+	std::string type; // ASK IF IT MEAN TEXTURE_2D/TEXTURE_3D ETC
 
 public:
 	Texture(const std::string& path);

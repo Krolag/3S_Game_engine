@@ -1,27 +1,38 @@
 #include "Texture.h"
 
-Texture::Texture(const std::string& path) : filePath(path), localBuffer(nullptr), width(0), height(0)
+Texture::Texture(const std::string& path) : ID(0), filePath(path), imageDataBuffer(nullptr), width(0), height(0), nrChannels(0)
 {
-	// prob flip vertically
+	stbi_set_flip_vertically_on_load(true);
 
-	// glGenTextures, glBindTextures
+	// generate and bind
+	glGenTextures(1, &ID);
+	glBindTexture(GL_TEXTURE_2D, ID); // ASK IF HERE SHOUDNT BE TYPE FIELD
 
-	// set parameters like min/mag filter and wrapping
+	// load image
+	imageDataBuffer = stbi_load(path.c_str(), &width, &height, &nrChannels, 4);
 
-	// Unbind
+	// set texture parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	// free image stbi for local buffer
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageDataBuffer);
+
+	// unbind and free image local buffer
+	glBindTexture(GL_TEXTURE_2D, 0);
+	if (imageDataBuffer) stbi_image_free(imageDataBuffer);
 }
 
 Texture::~Texture()
 {
-	// glDeleteTextures();
+	glDeleteTextures(1, &ID);
 }
 
 void Texture::Bind(unsigned int slot) const
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
-	// glBindTexture(GL_TEXTURE_2D, );
+	glBindTexture(GL_TEXTURE_2D, ID);
 }
 
 void Texture::Unbind()
