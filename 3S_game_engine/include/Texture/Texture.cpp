@@ -30,15 +30,19 @@ Texture::~Texture()
 	glDeleteTextures(1, &ID);
 }
 
-void Texture::Bind(unsigned int slot) const
+void Texture::Bind() const
 {
-	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, ID);
 }
 
 void Texture::Unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::Active(unsigned int slot) const
+{
+	glActiveTexture(GL_TEXTURE0 + slot);
 }
 
 unsigned int Texture::GetID()

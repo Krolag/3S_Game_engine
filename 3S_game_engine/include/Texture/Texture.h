@@ -15,8 +15,10 @@ public:
 	Texture(const std::string& path); 
 	~Texture();
 
-	void Bind(unsigned int slot = 0) const; // Max possible slots are from 0 to 31
+	void Bind() const;
 	void Unbind();
+
+	void Active(unsigned int slot = 0) const; // Max possible slots are from 0 to 31
 
 	unsigned int GetID();
 	std::string GetType();
