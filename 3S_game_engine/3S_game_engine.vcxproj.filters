@@ -14,5 +14,9 @@
     <ClInclude Include="include\Texture\Texture.h" />
     <ClInclude Include="include\Shader\Shader.h" />
     <ClInclude Include="include\Model\Model.h" />
+    <ClInclude Include="include\assimp\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin64\assimpd.dll" />
   </ItemGroup>
 </Project>
