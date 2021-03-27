@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClCompile Include="include\Mesh\Mesh.cpp" />
     <ClCompile Include="include\Model\Model.cpp" />
+    <ClCompile Include="include\MouseInput\MouseInput.cpp" />
     <ClCompile Include="include\Shader\Shader.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\Model\Model.h" />
+    <ClInclude Include="include\MouseInput\MouseInput.h" />
     <ClInclude Include="include\Shader\Shader.h" />
     <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\Mesh\Mesh.h" />

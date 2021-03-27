@@ -3,6 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include "Shader/Shader.h"
+#include "MouseInput/MouseInput.h"
 //#include "Mesh/Mesh.h"
 
 #include <iostream>
@@ -183,6 +184,9 @@ int main()
 
     // render loop
     // -----------
+
+    MouseInput* mouseInput = new MouseInput(window);
+
     while (!glfwWindowShouldClose(window))
     {
         // input
@@ -201,6 +205,16 @@ int main()
         shader.use();
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        
+        //mouse test
+        if (mouseInput->isPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+            printf("pressed\n");
+        }
+        if (mouseInput->isReleased(GLFW_MOUSE_BUTTON_LEFT)) {
+            std::cout << mouseInput->getCursorPosition().x<<"    "<< mouseInput->getCursorPosition().y<< "\n";
+        }
+
         // glBindVertexArray(0); // no need to unbind it every time 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

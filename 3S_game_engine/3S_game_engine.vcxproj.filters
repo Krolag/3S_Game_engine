@@ -7,6 +7,7 @@
     <ClCompile Include="include\Shader\Shader.cpp" />
     <ClCompile Include="include\Mesh\Mesh.cpp" />
     <ClCompile Include="include\Model\Model.cpp" />
+    <ClCompile Include="include\MouseInput\MouseInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -15,5 +16,6 @@
     <ClInclude Include="include\Shader\Shader.h" />
     <ClInclude Include="include\Model\Model.h" />
     <ClInclude Include="include\assimp\config.h" />
+    <ClInclude Include="include\MouseInput\MouseInput.h" />
   </ItemGroup>
 </Project>
