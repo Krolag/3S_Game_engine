@@ -9,7 +9,7 @@
 #include "Shader/Shader.h"
 #include "MouseInput/MouseInput.h"
 #include "KeyboardInput/KeyboardInput.h"
-#include "Texture/Texture.h"
+//#include "Texture/Texture.h"
 #include "Model/Model.h"
 
 #include <iostream>
@@ -98,7 +98,7 @@ int main()
 
     // load and create a texture 
     // -------------------------
-	Texture wallTexture("assets/wall.jpg");
+	//Texture wallTexture("assets/textures/wall.jpg");
 
 	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -121,7 +121,7 @@ int main()
     KeyboardInput* keyboardInput = new KeyboardInput(window);
 
     /* Load models */
-    Model girl((char*)"assets/models/girl_complete_03.obj");
+    Model naruto((char*)"assets/models/naruto/naruto.obj");
     //Model reception_desk((char*)"assets/models/reception-desk.obj");
 
     while (!glfwWindowShouldClose(window))
@@ -146,7 +146,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     	// bind class texture
-        wallTexture.Bind();
+        //wallTexture.Bind();
     	
         // render container
         //glDisable(GL_DEPTH_TEST);
@@ -162,10 +162,10 @@ int main()
         modelShader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+        model = glm::scale(model, glm::vec3(1.0f));
         modelShader.setMat4("model", model);
 
-        girl.DrawModel(modelShader);
+        naruto.DrawModel(modelShader);
         
         // glBindVertexArray(0); // no need to unbind it every time 
 
