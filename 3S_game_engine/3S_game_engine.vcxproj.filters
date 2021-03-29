@@ -8,6 +8,7 @@
     <ClCompile Include="include\Mesh\Mesh.cpp" />
     <ClCompile Include="include\Model\Model.cpp" />
     <ClCompile Include="include\MouseInput\MouseInput.cpp" />
+    <ClCompile Include="include\KeyboardInput\KeyboardInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -17,5 +18,6 @@
     <ClInclude Include="include\Model\Model.h" />
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\MouseInput\MouseInput.h" />
+    <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />
   </ItemGroup>
 </Project>

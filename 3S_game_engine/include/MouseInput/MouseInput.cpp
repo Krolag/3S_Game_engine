@@ -1,5 +1,6 @@
 #include "MouseInput.h"
 
+double MouseInput::yScroll;
 
 MouseInput::MouseInput(GLFWwindow* window)
 {
@@ -10,6 +11,12 @@ MousePosition MouseInput::getCursorPosition() //return mouse position as struct 
 {
 	glfwGetCursorPos(window, &mousePosition.x, &mousePosition.y);
 	return mousePosition;	
+}
+
+double MouseInput::getScrollValue() // retrun scroll value
+{
+	glfwSetScrollCallback(window, scroll_callback);
+	return yScroll;
 }
 
 bool MouseInput::isPressed(int button) // check if button is pressed
@@ -30,4 +37,9 @@ bool MouseInput::isReleased(int button) //check if button is released
 		return true;
 	}
 	return false;
+}
+
+void MouseInput::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	yScroll += yoffset;
 }

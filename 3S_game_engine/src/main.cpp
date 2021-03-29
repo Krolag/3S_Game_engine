@@ -5,6 +5,7 @@
 
 #include "Shader/Shader.h"
 #include "MouseInput/MouseInput.h"
+#include "KeyboardInput/KeyboardInput.h"
 #include "Texture/Texture.h"
 
 //#include "Mesh/Mesh.h"
@@ -167,6 +168,7 @@ int main()
     // -----------
 
     MouseInput* mouseInput = new MouseInput(window);
+    KeyboardInput* keyboardInput = new KeyboardInput(window);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -188,14 +190,19 @@ int main()
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         
-        //mouse test
+        //input test
         if (mouseInput->isPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            printf("pressed\n");
+            std::cout << mouseInput->getCursorPosition().x << "    " << mouseInput->getCursorPosition().y << "\n";
         }
-        if (mouseInput->isReleased(GLFW_MOUSE_BUTTON_LEFT)) {
-            std::cout << mouseInput->getCursorPosition().x<<"    "<< mouseInput->getCursorPosition().y<< "\n";
+        if (mouseInput->isPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
+            std::cout << mouseInput->getScrollValue();
         }
-
+        if (keyboardInput->isPressed(GLFW_KEY_W)) {
+            printf("W \n");
+        }
+        if (keyboardInput->isPressed(GLFW_KEY_D)) {
+            printf("D \n");
+        }
         // glBindVertexArray(0); // no need to unbind it every time 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
