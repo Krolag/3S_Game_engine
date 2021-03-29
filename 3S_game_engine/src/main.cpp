@@ -121,7 +121,8 @@ int main()
     KeyboardInput* keyboardInput = new KeyboardInput(window);
 
     /* Load models */
-    Model backpack((char*)"assets/models/survival-guitar-backpack/source/Survival_BackPack_2.fbx");
+    Model girl((char*)"assets/models/girl_complete_03.obj");
+    //Model reception_desk((char*)"assets/models/reception-desk.obj");
 
     while (!glfwWindowShouldClose(window))
     {
@@ -148,23 +149,23 @@ int main()
         wallTexture.Bind();
     	
         // render container
-        glDisable(GL_DEPTH_TEST);
-        UIShader.use();
+        //glDisable(GL_DEPTH_TEST);
+        //UIShader.use();
         /*glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);*/
 
         glEnable(GL_DEPTH_TEST);
         modelShader.use();
+        glm::mat4 projection = glm::mat4(1.0f);
+        modelShader.setMat4("projection", projection);
+        glm::mat4 view = glm::mat4(1.0f);
+        modelShader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        glm::mat4 projection = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        modelShader.setMat4("projection", projection);
-        modelShader.setMat4("view", view);
+        model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
         modelShader.setMat4("model", model);
 
-        backpack.DrawModel(modelShader);
+        girl.DrawModel(modelShader);
         
         // glBindVertexArray(0); // no need to unbind it every time 
 
