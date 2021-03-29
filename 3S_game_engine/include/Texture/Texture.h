@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TEXTURE_H
 #include <glad/glad.h>
 #include <string>

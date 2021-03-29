@@ -175,6 +175,12 @@
     <ClInclude Include="include\Mesh\Mesh.h" />
     <ClInclude Include="include\Texture\Texture.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\model_loading.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="assets\shaders\model_loading.frag" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

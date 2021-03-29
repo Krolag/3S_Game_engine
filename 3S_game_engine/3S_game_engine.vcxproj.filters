@@ -20,4 +20,10 @@
     <ClInclude Include="include\MouseInput\MouseInput.h" />
     <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\model_loading.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="assets\shaders\model_loading.frag" />
+  </ItemGroup>
 </Project>
