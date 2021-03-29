@@ -5,7 +5,6 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 {
 	std::string filename = std::string(path);
 	filename = directory + '/' + filename;
-	printf(filename.c_str());
 
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
@@ -179,10 +178,9 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 {
 	std::vector<Texture> textures;
 
-	printf("Model.cpp :: 182 :: error_check\n");
-
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 	{
+		//printf("Model.cpp :: 184 :: error_check\n");
 		aiString str;
 		mat->GetTexture(type, i, &str);
 		

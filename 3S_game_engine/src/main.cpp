@@ -121,7 +121,7 @@ int main()
     KeyboardInput* keyboardInput = new KeyboardInput(window);
 
     /* Load models */
-    Model naruto((char*)"assets/models/naruto/naruto.obj");
+    Model backpack((char*)"assets/models/backpack/backpack.obj");
     //Model reception_desk((char*)"assets/models/reception-desk.obj");
 
     while (!glfwWindowShouldClose(window))
@@ -165,7 +165,7 @@ int main()
         model = glm::scale(model, glm::vec3(1.0f));
         modelShader.setMat4("model", model);
 
-        naruto.DrawModel(modelShader);
+        backpack.DrawModel(modelShader);
         
         // glBindVertexArray(0); // no need to unbind it every time 
 
