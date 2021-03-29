@@ -10,6 +10,11 @@
 class Model
 {
 public:
+	/* Model data */
+	std::vector<Texture> texturesLoaded;
+	std::vector<Mesh> meshes;
+	std::string directory;
+	bool gammaCorrection;
 
 	/* Construtor & destructor */
 	Model(char *path);
@@ -18,9 +23,6 @@ public:
 	void DrawModel(Shader &shader);
 
 private:
-	/* Model data */
-	std::vector<Mesh> meshes;
-	std::string directory;
 
 	void loadModel(std::string path);
 	void processNode(aiNode* node, const aiScene* scene);

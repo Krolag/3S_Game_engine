@@ -1,15 +1,6 @@
 #include "Model.h"
 #include <stb_image.h>
 
-Model::Model(char* path)
-{
-	loadModel(path);
-}
-
-Model::~Model()
-{
-}
-
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false)
 {
 	std::string filename = std::string(path);
@@ -50,6 +41,13 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 	return textureID;
 }
 
+Model::Model(char* path)
+{
+	loadModel(path);
+}
+
+Model::~Model() { }
+
 void Model::DrawModel(Shader& shader)
 {
 	/* Loop over each of the meshes */
@@ -62,7 +60,7 @@ void Model::DrawModel(Shader& shader)
 void Model::loadModel(std::string path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 	/* Check if scene and root node != null*/
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -108,18 +106,34 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		position.z = mesh->mVertices[i].z;
 		vertex.Position = position;
 		/* Vertex normals */
-		glm::vec3 normal;
-		normal.x = mesh->mNormals[i].x;
-		normal.y = mesh->mNormals[i].y;
-		normal.z = mesh->mNormals[i].z;
-		vertex.Normal = normal;
+		if (mesh->HasNormals())
+		{
+			glm::vec3 normal;
+			normal.x = mesh->mNormals[i].x;
+			normal.y = mesh->mNormals[i].y;
+			normal.z = mesh->mNormals[i].z;
+			vertex.Normal = normal;
+		}
 		/* Vertex texture coordinates */
 		if (mesh->mTextureCoords[0])
 		{
+			/* Textures */
 			glm::vec2 textureCoord;
 			textureCoord.x = mesh->mTextureCoords[0][i].x;
 			textureCoord.y = mesh->mTextureCoords[0][i].y;
 			vertex.TexCoords = textureCoord;
+			/* Tangent */
+			glm::vec3 tangent;
+			tangent.x = mesh->mTangents[i].x;
+			tangent.y = mesh->mTangents[i].y;
+			tangent.z = mesh->mTangents[i].z;
+			vertex.Tangent = tangent;
+			/* Bitangent */
+			glm::vec3 bitangent;
+			bitangent.x = mesh->mBitangents[i].x;
+			bitangent.y = mesh->mBitangents[i].y;
+			bitangent.z = mesh->mBitangents[i].z;
+			vertex.Bitangent = bitangent;
 		}
 		else
 		{
@@ -150,8 +164,11 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 		/* Normal */
-		//std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texure_normal");
-		//textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+		std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+		/* Height */
+		std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 	}
 
 	return Mesh(vertices, indices, textures);
@@ -166,9 +183,26 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		aiString str;
 		mat->GetTexture(type, i, &str);
 		
-		//Texture texture(typeName, str.C_Str(), TextureFromFile(str.C_Str(), directory));
+		/* Flag to check if texture was loaded before */
+		bool skip = false;
 
-		//textures.push_back(texture);
+		for (unsigned int j = 0; j < texturesLoaded.size(); j++)
+		{
+			if (std::strcmp(texturesLoaded[j].GetPath().data(), str.C_Str()) == 0)
+			{
+				textures.push_back(texturesLoaded[j]);
+				skip = true;
+				break;
+			}
+		}
+		if (!skip)
+		{
+			Texture texture(str.C_Str()); // set path when setting up object
+			texture.SetID(TextureFromFile(str.C_Str(), this->directory));
+			texture.SetType(typeName);
+			textures.push_back(texture);
+			texturesLoaded.push_back(texture);
+		}
 	}
 
 	return textures;

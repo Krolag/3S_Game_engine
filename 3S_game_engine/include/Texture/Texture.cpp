@@ -64,3 +64,18 @@ std::string Texture::GetType()
 {
 	return type;
 }
+
+void Texture::SetID(unsigned int id)
+{
+	this->ID = id;
+}
+
+void Texture::SetType(std::string _type)
+{
+	this->type = _type;
+}
+
+std::string Texture::GetPath()
+{
+	return filePath;
+}
