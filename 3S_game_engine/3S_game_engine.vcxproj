@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\KeyboardInput\KeyboardInput.cpp" />
     <ClCompile Include="include\Mesh\Mesh.cpp" />
     <ClCompile Include="include\Model\Model.cpp" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\assimp\config.h" />
+    <ClInclude Include="include\Camera\Camera.h" />
     <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />
     <ClInclude Include="include\Model\Model.h" />
     <ClInclude Include="include\MouseInput\MouseInput.h" />

@@ -9,6 +9,7 @@
     <ClCompile Include="include\Model\Model.cpp" />
     <ClCompile Include="include\MouseInput\MouseInput.cpp" />
     <ClCompile Include="include\KeyboardInput\KeyboardInput.cpp" />
+    <ClCompile Include="include\Camera\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -19,6 +20,7 @@
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\MouseInput\MouseInput.h" />
     <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />
+    <ClInclude Include="include\Camera\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
