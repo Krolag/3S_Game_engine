@@ -20,7 +20,7 @@ private:
 
 	GLFWwindow* window;
 
-	const static int KEY_NUMBERS = 348;
+	static const int NUMBER_OF_KEYS;
 
 	static bool activeKeys[];
 

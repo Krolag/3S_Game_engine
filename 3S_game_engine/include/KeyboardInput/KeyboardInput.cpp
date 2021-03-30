@@ -1,8 +1,10 @@
 #include "KeyboardInput.h"
 #include<algorithm>
 
-bool KeyboardInput::activeKeys[KEY_NUMBERS];
-int KeyboardInput::keyStates[KEY_NUMBERS];
+const int KeyboardInput::NUMBER_OF_KEYS = 348;
+
+bool KeyboardInput::activeKeys[KeyboardInput::NUMBER_OF_KEYS];
+int KeyboardInput::keyStates[KeyboardInput::NUMBER_OF_KEYS];
 
 KeyboardInput::KeyboardInput(GLFWwindow* window)
 {
@@ -13,7 +15,7 @@ KeyboardInput::KeyboardInput(GLFWwindow* window)
 
 void KeyboardInput::update() //reset key states after each loop
 {
-	std::fill_n(keyStates, 512, -1); //fill array with -1
+	std::fill_n(keyStates, NUMBER_OF_KEYS, -1); //fill array with -1
 }
 
 bool KeyboardInput::isKeyDown(int key) // check if key is continuously pressed down
