@@ -180,15 +180,26 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 	{
-		//printf("Model.cpp :: 184 :: error_check\n");
 		aiString str;
 		mat->GetTexture(type, i, &str);
-		
-		Texture texture(str.C_Str()); // set path when setting up object
-		texture.SetID(TextureFromFile(str.C_Str(), this->directory));
-		texture.SetType(typeName);
-		textures.push_back(texture);
-		texturesLoaded.push_back(texture);
+		bool skip = false;
+		for (unsigned int j = 0; j < texturesLoaded.size(); j++)
+		{
+			if (std::strcmp(texturesLoaded[j].GetPath().data(), str.C_Str()) == 0)
+			{
+				textures.push_back(texturesLoaded[j]);
+				skip = true; 
+				break;
+			}
+		}
+		if (!skip)
+		{
+			Texture texture(str.C_Str()); // set path when setting up object
+			texture.SetID(TextureFromFile(str.C_Str(), this->directory));
+			texture.SetType(typeName);
+			textures.push_back(texture);
+			texturesLoaded.push_back(texture);
+		}
 	}
 
 	return textures;

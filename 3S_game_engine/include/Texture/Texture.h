@@ -14,6 +14,7 @@ private:
 public:
 	/* Constructors and destructors */
 	Texture(const std::string& path); 
+	Texture(); 
 	~Texture();
 
 	void Bind() const;
