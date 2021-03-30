@@ -164,17 +164,14 @@ int main()
         processInput(window);
 
         //input test
-        if (mouseInput->isPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            std::cout << mouseInput->getCursorPosition().x << "    " << mouseInput->getCursorPosition().y << "\n";
+        if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE)) {
+            printf("pressed \n");
         }
-        if (mouseInput->isPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
-            std::cout << mouseInput->getScrollValue();
+        if (keyboardInput->isKeyDown(GLFW_KEY_SPACE)) {
+            printf("down \n");
         }
-        if (keyboardInput->isPressed(GLFW_KEY_W)) {
-            printf("W \n");
-        }
-        if (keyboardInput->isPressed(GLFW_KEY_D)) {
-            printf("D \n");
+        if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE)) {
+            printf("released \n");
         }
 
         /* Clear screen */
@@ -208,6 +205,7 @@ int main()
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
+        keyboardInput->update();
         glfwPollEvents();
     }
 

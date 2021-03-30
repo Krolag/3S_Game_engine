@@ -8,13 +8,25 @@ public:
 
 	KeyboardInput(GLFWwindow* window);
 
-	bool isPressed(int button);
+	void update();
 
-	bool isReleased(int button);
+	bool isKeyDown(int key);
+
+	bool isKeyPressed(int key);
+
+	bool isKeyReleased(int key);
 
 private:
 
 	GLFWwindow* window;
+
+	const static int KEY_NUMBERS = 348;
+
+	static bool activeKeys[];
+
+	static int keyStates[];
+
+	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 };
 #endif
