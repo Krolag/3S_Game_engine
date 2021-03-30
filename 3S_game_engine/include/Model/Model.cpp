@@ -185,7 +185,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		bool skip = false;
 		for (unsigned int j = 0; j < texturesLoaded.size(); j++)
 		{
-			if (std::strcmp(texturesLoaded[j].GetPath().data(), str.C_Str()) == 0)
+			if (std::strcmp(texturesLoaded[j].path.data(), str.C_Str()) == 0)
 			{
 				textures.push_back(texturesLoaded[j]);
 				skip = true; 
@@ -194,9 +194,10 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		}
 		if (!skip)
 		{
-			Texture texture(str.C_Str()); // set path when setting up object
-			texture.SetID(TextureFromFile(str.C_Str(), this->directory));
-			texture.SetType(typeName);
+			Texture texture; // set path when setting up object
+			texture.id = TextureFromFile(str.C_Str(), this->directory);
+			texture.path = str.C_Str();
+			texture.type = typeName;
 			textures.push_back(texture);
 			texturesLoaded.push_back(texture);
 		}

@@ -22,7 +22,7 @@ void Mesh::DrawMesh(Shader &shader)
 
 		/* Retrive texture number */
 		std::string number;
-		std::string name = m_textures[i].GetType();
+		std::string name = m_textures[i].type;
 		
 		if (name == "texture_diffuse")
 			number = std::to_string(diffuseNr++);
@@ -34,7 +34,7 @@ void Mesh::DrawMesh(Shader &shader)
 			number = std::to_string(heightNr++);
 
 		shader.setFloat(("material." + name + number).c_str(), i);
-		glBindTexture(GL_TEXTURE_2D, m_textures[i].GetID());
+		glBindTexture(GL_TEXTURE_2D, m_textures[i].id);
 	}
 	
 	/* Draw mesh */

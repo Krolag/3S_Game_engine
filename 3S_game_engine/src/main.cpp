@@ -162,7 +162,7 @@ int main()
         modelShader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f));
+        model = glm::scale(model, glm::vec3(0.2f));
         modelShader.setMat4("model", model);
 
         backpack.DrawModel(modelShader);
