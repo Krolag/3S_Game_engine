@@ -155,10 +155,11 @@ int main()
 
     MouseInput* mouseInput = new MouseInput(window);
     KeyboardInput* keyboardInput = new KeyboardInput(window);
-
+    mouseInput->cursorEnable();
     /* Load models */
     Model backpack((char*)"assets/models/backpack/backpack.obj");
     //Model reception_desk((char*)"assets/models/reception-desk.obj");
+
 
     while (!glfwWindowShouldClose(window))
     {
@@ -179,7 +180,11 @@ int main()
         if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE)) {
             printf("released \n");
         }
-
+        //mouse
+        if (mouseInput->isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+            std::cout<<mouseInput->getCursorPosition().x<<"     "<< mouseInput->getCursorPosition().y<<"\n";
+        }
+        
         /* Clear screen */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -212,6 +217,7 @@ int main()
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         keyboardInput->update();
+        mouseInput->update();
         glfwPollEvents();
     }
 

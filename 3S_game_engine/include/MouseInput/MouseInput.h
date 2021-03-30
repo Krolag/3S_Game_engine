@@ -18,17 +18,41 @@ public:
 
 	MousePosition getCursorPosition();
 
+	void cursorEnable();
+
+	void cursorDisable();
+
+	bool isButtonDown(int button);
+
+	bool isButtonPressed(int button);
+
+	bool isButtonReleased(int button);
+
+	void update();
+
 	double getScrollValue();
 
-	bool isPressed(int button);
-
-	bool isReleased(int button);
-
-	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 private:
+
+	static const int NUMBER_OF_BUTTONS;
+
 	GLFWwindow* window;
+
+	static int entered;
+
+	static int buttonStates[];
+
+	static bool activeButtons[];
+
 	static double yScroll;
+
+	static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+
+	static void cursorEnterCallback(GLFWwindow* window, int entered);
+
+	static void buttonCallback(GLFWwindow* window, int button, int action, int mods);
+
 };
 #endif
 
