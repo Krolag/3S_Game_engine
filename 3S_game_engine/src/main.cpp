@@ -92,7 +92,7 @@ int main()
 	// Creation of UI Element. The last four parameters in constructor are positions of left, right, bottom and top edges of UI face
     UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/progressbar.jpg", 0.1, 0.4, 0.8, 0.9);
 	
-    // Skybox skybox(&view, &projection, &camera);
+    Skybox skybox(&view, &projection, &camera);
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -211,8 +211,8 @@ int main()
         modelShader.setMat4("model", model);
 
         backpack.DrawModel(modelShader);
-        // skybox.render() // MUST BE RENDERED LAST !
-        uiELement.render();
+        skybox.render(); // Must be rendered almost last, before hud
+        uiELement.render(); // Must be rendered last
     	// glBindVertexArray(0); // no need to unbind it every time 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
