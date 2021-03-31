@@ -12,6 +12,7 @@
     <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\Skybox\Skybox.cpp" />
     <ClCompile Include="include\UIElement\UIElement.cpp" />
+    <ClCompile Include="include\Background\BackgroundImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -25,6 +26,7 @@
     <ClInclude Include="include\Camera\Camera.h" />
     <ClInclude Include="include\Skybox\Skybox.h" />
     <ClInclude Include="include\UIElement\UIElement.h" />
+    <ClInclude Include="include\Background\BackgroundImage.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

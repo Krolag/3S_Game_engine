@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Background\BackgroundImage.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\KeyboardInput\KeyboardInput.cpp" />
     <ClCompile Include="include\Mesh\Mesh.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="include\UIElement\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Background\BackgroundImage.h" />
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\Camera\Camera.h" />
     <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />

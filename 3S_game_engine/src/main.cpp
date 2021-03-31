@@ -14,6 +14,7 @@
 #include "Model/Model.h"
 #include "Camera/Camera.h"
 #include "UIElement/UIElement.h"
+#include "Background/BackgroundImage.h"
 
 #include <iostream>
 
@@ -91,6 +92,8 @@ int main()
 
 	// Creation of UI Element. The last four parameters in constructor are positions of left, right, bottom and top edges of UI face
     UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/progressbar.jpg", 0.1, 0.4, 0.8, 0.9);
+    
+    BackgroundImage background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/wall.jpg");
 	
     Skybox skybox(&view, &projection, &camera);
 
@@ -199,6 +202,8 @@ int main()
         /*glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);*/
 
+        //background.render(); //-----turn off skybox before use
+
         glEnable(GL_DEPTH_TEST);
         modelShader.use();
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);
@@ -211,7 +216,7 @@ int main()
         modelShader.setMat4("model", model);
 
         backpack.DrawModel(modelShader);
-        skybox.render(); // Must be rendered almost last, before hud
+        skybox.render(); // Must be rendered almost last, before hud      
         uiELement.render(); // Must be rendered last
     	// glBindVertexArray(0); // no need to unbind it every time 
 
