@@ -11,6 +11,7 @@
     <ClCompile Include="include\KeyboardInput\KeyboardInput.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\Skybox\Skybox.cpp" />
+    <ClCompile Include="include\UIElement\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />
     <ClInclude Include="include\Camera\Camera.h" />
     <ClInclude Include="include\Skybox\Skybox.h" />
+    <ClInclude Include="include\UIElement\UIElement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
