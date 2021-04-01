@@ -159,6 +159,8 @@
     <ClCompile Include="include\Background\BackgroundImage.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\KeyboardInput\KeyboardInput.cpp" />
+    <ClCompile Include="include\Light\Light.cpp" />
+    <ClCompile Include="include\Material\Material.cpp" />
     <ClCompile Include="include\Mesh\Mesh.cpp" />
     <ClCompile Include="include\Model\Model.cpp" />
     <ClCompile Include="include\MouseInput\MouseInput.cpp" />
@@ -174,6 +176,8 @@
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\Camera\Camera.h" />
     <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />
+    <ClInclude Include="include\Light\Light.h" />
+    <ClInclude Include="include\Material\Material.h" />
     <ClInclude Include="include\Model\Model.h" />
     <ClInclude Include="include\MouseInput\MouseInput.h" />
     <ClInclude Include="include\Shader\Shader.h" />
