@@ -14,6 +14,7 @@
 #include "Camera/Camera.h"
 #include "UIElement/UIElement.h"
 #include "Background/BackgroundImage.h"
+#include "Light/Light.h"
 
 #include <iostream>
 
@@ -23,8 +24,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -156,10 +157,18 @@ int main()
     MouseInput* mouseInput = new MouseInput(window);
     KeyboardInput* keyboardInput = new KeyboardInput(window);
     mouseInput->cursorEnable();
+    
     /* Load models */
-    //Model backpack((char*)"assets/models/backpack/backpack.obj");
-    //Model reception_desk((char*)"assets/models/reception-desk.obj");
+    Model troll(glm::vec3(0.0f), glm::vec3(0.05f));
+    troll.loadModel("assets/models/lotr_troll/scene.gltf");
 
+    /* Lights */
+    DirLight dirLight = {
+        glm::vec3(-0.2f, -1.0f, -0.3f), 
+        glm::vec3(0.1f), 
+        glm::vec3(0.4f),
+        glm::vec3(0.75f)
+    };
 
     while (!glfwWindowShouldClose(window))
     {
@@ -207,9 +216,8 @@ int main()
         view = camera.GetViewMatrix(); //glm::mat4(1.0f);
         modelShader.setMat4("view", view);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.2f));
-        modelShader.setMat4("model", model);
+        dirLight.render(modelShader);
+        troll.render(modelShader);
 
         //backpack.DrawModel(modelShader);
         skybox.render(); // Must be rendered almost last, before hud
@@ -223,6 +231,8 @@ int main()
         mouseInput->update();
         glfwPollEvents();
     }
+
+    troll.cleanup();
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------

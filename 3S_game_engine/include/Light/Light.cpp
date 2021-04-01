@@ -26,7 +26,7 @@ void DirLight::render(Shader _shader)
 
 void SpotLight::render(Shader _shader, int _idx)
 {
-	std::string name = "spotLights[" + std::to_string(_idx) + "]"; ";
+	std::string name = "spotLights[" + std::to_string(_idx) + "]";
 
 	_shader.setVec3(name + ".position", this->position);
 	_shader.setVec3(name + ".direction", this->direction);

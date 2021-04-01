@@ -1,7 +1,5 @@
 #include "Model.h"
 
-Model::Model() {}
-
 Model::Model(glm::vec3 _position, glm::vec3 _size)
 	: position(_position), size(_size) {}
 
@@ -9,6 +7,12 @@ void Model::init() {}
 
 void Model::render(Shader _shader)
 {
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, this->position);
+	model = glm::scale(model, this->size);
+	_shader.setMat4("model", model);
+	_shader.setFloat("material.shininess", 0.5f);
+
 	for (Mesh mesh : meshes)
 	{
 		mesh.render(_shader);

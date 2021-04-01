@@ -20,7 +20,6 @@ public:
 	glm::vec3 size;
 
 	/* Construtor & destructor */
-	Model();
 	Model(glm::vec3 _position = glm::vec3(0.0f), glm::vec3 _size = glm::vec3(1.0f));
 
 	void init();
