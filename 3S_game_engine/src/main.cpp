@@ -159,8 +159,9 @@ int main()
     mouseInput->cursorEnable();
     
     /* Load models */
-    Model troll(glm::vec3(0.0f), glm::vec3(0.05f));
-    troll.loadModel("assets/models/lotr_troll/scene.gltf");
+    //Model m(glm::vec3(-12.0f), glm::vec3(.05f));
+    Model m(glm::vec3(1.0f), glm::vec3(1.0f));
+    m.loadModel("assets/models/backpack/backpack.obj");
 
     /* Lights */
     DirLight dirLight = {
@@ -217,7 +218,7 @@ int main()
         modelShader.setMat4("view", view);
         model = glm::mat4(1.0f);
         dirLight.render(modelShader);
-        troll.render(modelShader);
+        m.render(modelShader);
 
         //backpack.DrawModel(modelShader);
         skybox.render(); // Must be rendered almost last, before hud
@@ -232,7 +233,7 @@ int main()
         glfwPollEvents();
     }
 
-    troll.cleanup();
+    m.cleanup();
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------

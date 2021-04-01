@@ -1,4 +1,4 @@
-#version 330 core
+#version 420
 
 struct Material
 {
@@ -44,8 +44,8 @@ struct SpotLight
 };
 
 uniform Material material;
-uniform sampler2D diffuse0;
-uniform sampler2D specular0;
+layout(binding = 0) uniform sampler2D diffuse0;
+layout(binding = 1) uniform sampler2D specular0;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform int noPointLights;
 uniform DirLight dirLight;

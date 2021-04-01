@@ -13,7 +13,7 @@ public:
 
 	void generate();
 	void load(bool _flip = true);
-	void bind();
+	void bind(int _slot = 0);
 
 	unsigned int id;
 	aiTextureType type;

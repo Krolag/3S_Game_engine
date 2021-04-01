@@ -41,7 +41,6 @@ void Texture::load(bool _flip)
 		glBindTexture(GL_TEXTURE_2D, this->id);
 		glTexImage2D(GL_TEXTURE_2D, 0, colorMode, width, height, 0, colorMode, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
-
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -56,8 +55,9 @@ void Texture::load(bool _flip)
 	stbi_image_free(data);
 }
 
-void Texture::bind()
+void Texture::bind(int _slot)
 {
+	glActiveTexture(GL_TEXTURE0 + _slot);
 	glBindTexture(GL_TEXTURE_2D, this->id);
 }
 
