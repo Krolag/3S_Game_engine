@@ -159,9 +159,10 @@ int main()
     mouseInput->cursorEnable();
     
     /* Load models */
-    //Model m(glm::vec3(-12.0f), glm::vec3(.05f));
     Model m(glm::vec3(1.0f), glm::vec3(1.0f));
     m.loadModel("assets/models/backpack/backpack.obj");
+    Model troll(glm::vec3(-12.0f), glm::vec3(0.02f));
+    troll.loadModel("assets/models/lotr_troll/scene.gltf");
 
     /* Lights */
     DirLight dirLight = {
@@ -219,8 +220,8 @@ int main()
         model = glm::mat4(1.0f);
         dirLight.render(modelShader);
         m.render(modelShader);
+        troll.render(modelShader);
 
-        //backpack.DrawModel(modelShader);
         skybox.render(); // Must be rendered almost last, before hud
         uiELement.render(); // Must be rendered last
     	// glBindVertexArray(0); // no need to unbind it every time 

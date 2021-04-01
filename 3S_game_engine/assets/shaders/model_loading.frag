@@ -87,7 +87,8 @@ void main()
     }
 
     /* Set value correctly */
-    FragColor = vec4(result, 1.0f);
+    FragColor = vec4(result, 1.0f); //uncomment this line of code, to see model with textures
+//    FragColor = vec4(TexCoord, 0.0f, 1.0f); // uncomment this line of code, to see model's texture coord
 }
 
 vec3 calcPointLight(int _idx, vec3 _norm, vec3 _viewDir, vec3 _diffMap, vec3 _specMap)
