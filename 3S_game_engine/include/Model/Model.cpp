@@ -1,207 +1,162 @@
 #include "Model.h"
-#include <stb_image.h>
 
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false)
+Model::Model() {}
+
+Model::Model(glm::vec3 _position, glm::vec3 _size)
+	: position(_position), size(_size) {}
+
+void Model::init() {}
+
+void Model::render(Shader _shader)
 {
-	std::string filename = std::string(path);
-	filename = directory + '/' + filename;
-
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-
-	int width, height, nrComponents;
-	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-	if (data)
+	for (Mesh mesh : meshes)
 	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
-
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		stbi_image_free(data);
-	}
-	else
-	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
-		stbi_image_free(data);
-	}
-
-	return textureID;
-}
-
-Model::Model(char* path)
-{
-	loadModel(path);
-}
-
-Model::~Model() { }
-
-void Model::DrawModel(Shader& shader)
-{
-	/* Loop over each of the meshes */
-	for (unsigned int i = 0; i < meshes.size(); i++)
-	{
-		meshes[i].DrawMesh(shader);
+		mesh.render(_shader);
 	}
 }
 
-void Model::loadModel(std::string path)
+void Model::loadModel(std::string _path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(_path,
+		aiProcess_Triangulate |
+		aiProcess_FlipUVs);
 
-	/* Check if scene and root node != null*/
+	/* Check if scene is imported properly */
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
-		std::cerr << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+		std::cerr << "Failed to load model at " << _path << std::endl << "Reason: " << importer.GetErrorString() << std::endl;
 		return;
 	}
 
-	directory = path.substr(0, path.find_last_of('/'));
-
+	this->directory = _path.substr(0, _path.find_last_of("/"));
 	processNode(scene->mRootNode, scene);
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene)
+void Model::processNode(aiNode* _node, const aiScene* _scene)
 {
-	/* Process all the node's meshes (if any) */
-	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	/* Process all the meshes */
+	for (unsigned int i = 0; i < _node->mNumMeshes; i++)
 	{
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(processMesh(mesh, scene));
+		aiMesh* mesh = _scene->mMeshes[_node->mMeshes[i]];
+		meshes.push_back(processMesh(mesh, _scene));
 	}
-	/* Do the same for each of its children */
-	for (unsigned int i = 0; i < node->mNumChildren; i++)
+
+	/* Process all child nodes */
+	for (unsigned int i = 0; i < _node->mNumChildren; i++)
 	{
-		processNode(node->mChildren[i], scene);
+		processNode(_node->mChildren[i], _scene);
 	}
 }
-/* Process assimp's data into the mesh class */
-Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
+
+Mesh Model::processMesh(aiMesh* _mesh, const aiScene* _scene)
 {
 	std::vector<Vertex> vertices;
-	std::vector<Texture> textures;
 	std::vector<unsigned int> indices;
+	std::vector<Texture> textures;
 
-	/* Process verticies */
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+	/* Process Vertices */
+	for (unsigned int i = 0; i < _mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
-		/* Vertex position */
-		glm::vec3 position;
-		position.x = mesh->mVertices[i].x;
-		position.y = mesh->mVertices[i].y;
-		position.z = mesh->mVertices[i].z;
-		vertex.Position = position;
-		/* Vertex normals */
-		if (mesh->HasNormals())
+
+		/* Position */
+		vertex.position = glm::vec3(
+			_mesh->mVertices[i].x,
+			_mesh->mVertices[i].y,
+			_mesh->mVertices[i].z 
+		);
+		/* Normal vectors */
+		vertex.normal = glm::vec3(
+			_mesh->mNormals[i].x,
+			_mesh->mNormals[i].y,
+			_mesh->mNormals[i].z
+		);
+		/* Textures */
+		if (_mesh->mTextureCoords[0])
 		{
-			glm::vec3 normal;
-			normal.x = mesh->mNormals[i].x;
-			normal.y = mesh->mNormals[i].y;
-			normal.z = mesh->mNormals[i].z;
-			vertex.Normal = normal;
-		}
-		/* Vertex texture coordinates */
-		if (mesh->mTextureCoords[0])
-		{
-			/* Textures */
-			glm::vec2 textureCoord;
-			textureCoord.x = mesh->mTextureCoords[0][i].x;
-			textureCoord.y = mesh->mTextureCoords[0][i].y;
-			vertex.TexCoords = textureCoord;
-			/* Tangent */
-			glm::vec3 tangent;
-			tangent.x = mesh->mTangents[i].x;
-			tangent.y = mesh->mTangents[i].y;
-			tangent.z = mesh->mTangents[i].z;
-			vertex.Tangent = tangent;
-			/* Bitangent */
-			glm::vec3 bitangent;
-			bitangent.x = mesh->mBitangents[i].x;
-			bitangent.y = mesh->mBitangents[i].y;
-			bitangent.z = mesh->mBitangents[i].z;
-			vertex.Bitangent = bitangent;
+			vertex.texCoord = glm::vec2(
+				_mesh->mTextureCoords[0][i].x,
+				_mesh->mTextureCoords[0][i].y
+			);
 		}
 		else
 		{
-			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+			vertex.texCoord = glm::vec2(0.0f);
 		}
 		
+		/* Push completed data */
 		vertices.push_back(vertex);
 	}
-	/* Process indices */
-	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+
+	/* Process Indices */
+	for (unsigned int i = 0; i < _mesh->mNumFaces; i++)
 	{
-		aiFace face = mesh->mFaces[i];
+		aiFace face = _mesh->mFaces[i];
+
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 		{
 			indices.push_back(face.mIndices[j]);
 		}
 	}
 
-	/* Process materials */
-	if (mesh->mMaterialIndex >= 0)
+	/* Process Material */
+	if (_mesh->mMaterialIndex >= 0)
 	{
-		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		
-		/* Diffuse */
-		std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		aiMaterial* material = _scene->mMaterials[_mesh->mMaterialIndex];
+
+		/* Diffuse maps */
+		std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE);
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-		/* Specular */
-		std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		/* Specular maps */
+		std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR);
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-		/* Normal */
-		std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-		/* Height */
-		std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 	}
 
+	/* Return properly collected data */
 	return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Texture> Model::loadTextures(aiMaterial* _material, aiTextureType _type)
 {
 	std::vector<Texture> textures;
 
-	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+	for (unsigned int i = 0; i < _material->GetTextureCount(_type); i++)
 	{
 		aiString str;
-		mat->GetTexture(type, i, &str);
+		_material->GetTexture(_type, i, &str);
+		std::cout << "Model.cpp | line 128:\t" << str.C_Str() << std::endl;
+
+		/* Prevent duplicate loading */
 		bool skip = false;
+
 		for (unsigned int j = 0; j < texturesLoaded.size(); j++)
 		{
 			if (std::strcmp(texturesLoaded[j].path.data(), str.C_Str()) == 0)
 			{
 				textures.push_back(texturesLoaded[j]);
-				skip = true; 
+				skip = true;
 				break;
 			}
 		}
+
 		if (!skip)
 		{
-			Texture texture; // set path when setting up object
-			texture.id = TextureFromFile(str.C_Str(), this->directory);
-			texture.path = str.C_Str();
-			texture.type = typeName;
-			textures.push_back(texture);
-			texturesLoaded.push_back(texture);
+			/* Not loaded yet */
+			Texture tex(this->directory, str.C_Str(), _type);
+			tex.load(false); // we don't want to flip it, flipUV's is doing it for us
+			textures.push_back(tex);
+			texturesLoaded.push_back(tex);
 		}
 	}
 
 	return textures;
+}
+
+void Model::cleanup()
+{
+	for (Mesh mesh : meshes)
+	{
+		mesh.cleanup();
+	}
 }

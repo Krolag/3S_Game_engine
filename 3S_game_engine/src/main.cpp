@@ -10,7 +10,6 @@
 #include "MouseInput/MouseInput.h"
 #include "KeyboardInput/KeyboardInput.h"
 #include "Skybox/Skybox.h"
-//#include "Texture/Texture.h"
 #include "Model/Model.h"
 #include "Camera/Camera.h"
 #include "UIElement/UIElement.h"
@@ -32,8 +31,6 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
-
-
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -150,7 +147,6 @@ int main()
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0);
 
-
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -161,7 +157,7 @@ int main()
     KeyboardInput* keyboardInput = new KeyboardInput(window);
     mouseInput->cursorEnable();
     /* Load models */
-    Model backpack((char*)"assets/models/backpack/backpack.obj");
+    //Model backpack((char*)"assets/models/backpack/backpack.obj");
     //Model reception_desk((char*)"assets/models/reception-desk.obj");
 
 
@@ -215,8 +211,8 @@ int main()
         model = glm::scale(model, glm::vec3(0.2f));
         modelShader.setMat4("model", model);
 
-        backpack.DrawModel(modelShader);
-        skybox.render(); // Must be rendered almost last, before hud      
+        //backpack.DrawModel(modelShader);
+        skybox.render(); // Must be rendered almost last, before hud
         uiELement.render(); // Must be rendered last
     	// glBindVertexArray(0); // no need to unbind it every time 
 
