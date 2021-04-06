@@ -19,9 +19,8 @@
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
+void cameraMouseInput(GLFWwindow* window, MouseInput *mouse);
+void cameraKeyboardInput(GLFWwindow* window, KeyboardInput *keyboard);
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -65,8 +64,8 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    //glfwSetCursorPosCallback(window, mouse_callback);
+    //glfwSetScrollCallback(window, scroll_callback);
 
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -156,7 +155,7 @@ int main()
 
     MouseInput* mouseInput = new MouseInput(window);
     KeyboardInput* keyboardInput = new KeyboardInput(window);
-    mouseInput->cursorEnable();
+    //mouseInput->cursorEnable();
     
     /* Load models */
     Model m(glm::vec3(1.0f), glm::vec3(1.0f));
@@ -179,23 +178,12 @@ int main()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        processInput(window);
 
-        //input test
-        if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE)) {
-            printf("pressed \n");
-        }
-        if (keyboardInput->isKeyDown(GLFW_KEY_SPACE)) {
-            printf("down \n");
-        }
-        if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE)) {
-            printf("released \n");
-        }
-        //mouse
-        if (mouseInput->isButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            std::cout<<mouseInput->getCursorPosition().x<<"     "<< mouseInput->getCursorPosition().y<<"\n";
-        }
-        
+
+        //use input to move camera
+        cameraMouseInput(window, mouseInput);
+        cameraKeyboardInput(window, keyboardInput);
+
         /* Clear screen */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -248,20 +236,36 @@ int main()
     return 0;
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
+void cameraMouseInput(GLFWwindow* window, MouseInput *mouse)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+    if (firstMouse)
+    {
+        lastX = mouse->getCursorPosition().x;
+        lastY = mouse->getCursorPosition().y;
+        firstMouse = false;
+    }
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    float xoffset = mouse->getCursorPosition().x - lastX;
+    float yoffset = lastY - mouse->getCursorPosition().y; // reversed since y-coordinates go from bottom to top
+
+    lastX = mouse->getCursorPosition().x;
+    lastY = mouse->getCursorPosition().y;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+    camera.ProcessMouseScroll(mouse->getScrollValue());
+}
+
+void cameraKeyboardInput(GLFWwindow* window, KeyboardInput *keyboard)
+{
+    if (keyboard->isKeyDown(GLFW_KEY_ESCAPE))
+        glfwSetWindowShouldClose(window, true);
+    if (keyboard->isKeyDown(GLFW_KEY_W))
         camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    if (keyboard->isKeyDown(GLFW_KEY_S))
         camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    if (keyboard->isKeyDown(GLFW_KEY_A))
         camera.ProcessKeyboard(LEFT, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    if (keyboard->isKeyDown(GLFW_KEY_D))
         camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
@@ -272,29 +276,4 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
-}
-
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    camera.ProcessMouseScroll(yoffset);
 }

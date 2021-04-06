@@ -7,7 +7,7 @@ bool MouseInput::activeButtons[MouseInput::NUMBER_OF_BUTTONS];
 int MouseInput::buttonStates[MouseInput::NUMBER_OF_BUTTONS];
 
 int MouseInput::entered;
-double MouseInput::yScroll;
+double MouseInput::yScroll = 45;
 
 
 MouseInput::MouseInput(GLFWwindow* window)
@@ -15,6 +15,7 @@ MouseInput::MouseInput(GLFWwindow* window)
 	this->window = window;	
 	glfwSetCursorEnterCallback(window, cursorEnterCallback);
 	glfwSetMouseButtonCallback(window, buttonCallback);
+	glfwSetScrollCallback(window, scrollCallback);
 }
 
 void MouseInput::cursorEnable()		//enable cursor in window
@@ -54,15 +55,19 @@ MousePosition MouseInput::getCursorPosition() //return mouse position as struct 
 	return mousePosition;	
 }
 
+bool MouseInput::isCursorEntered() 
+{
+	return entered;
+}
+
 double MouseInput::getScrollValue() // retrun scroll value
 {
-	glfwSetScrollCallback(window, scrollCallback);
 	return yScroll;
 }
 
 void MouseInput::scrollCallback(GLFWwindow* window, double xoffset, double yoffset) 
 {
-	yScroll += yoffset;
+	yScroll -= yoffset;
 }
 
 void MouseInput::cursorEnterCallback(GLFWwindow* window, int entered)

@@ -18,6 +18,8 @@ public:
 
 	MousePosition getCursorPosition();
 
+	bool isCursorEntered();
+
 	void cursorEnable();
 
 	void cursorDisable();
