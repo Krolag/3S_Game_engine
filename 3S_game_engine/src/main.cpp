@@ -335,11 +335,15 @@ int main()
         skybox.render(); // Must be rendered almost last, before hud
         uiELement.render(); // Must be rendered last
     	// glBindVertexArray(0); // no need to unbind it every time 
+        
+        //Variables just to make text changing in time
+        float timeValue = glfwGetTime();
+        float redValue = sin(timeValue) / 2.0f + 0.5f;
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        renderText(textShader, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-        renderText(textShader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+        renderText(textShader, "We all love OpenGL", 25.0f, 25.0f, 1.0f, glm::vec3(redValue, 0.0f, 0.0f));
+        //renderText(textShader, "Przeczytaj tekst na dole", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
 
         glfwSwapBuffers(window);
         keyboardInput->update();
