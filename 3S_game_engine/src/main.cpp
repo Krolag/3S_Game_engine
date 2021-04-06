@@ -60,6 +60,7 @@ float lastFrame = 0.0f;
 int main()
 {
     glm::mat4 projection;
+    glm::mat4 textProjection;
     glm::mat4 view;
 	glm::mat4 model;
 	
@@ -107,10 +108,6 @@ int main()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
     Shader UIShader("assets/shaders/vertexShader.vert", "assets/shaders/fragmentShader.frag");
     Shader modelShader("assets/shaders/model_loading.vert", "assets/shaders/model_loading.frag");
@@ -121,9 +118,9 @@ int main()
     BackgroundImage background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/wall.jpg");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
 
-    projection = glm::ortho(0.0f, static_cast<GLfloat>(SCR_WIDTH), 0.0f, static_cast<GLfloat>(SCR_HEIGHT));
+    textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCR_WIDTH), 0.0f, static_cast<GLfloat>(SCR_HEIGHT));
     textShader.use();
-    glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "textProjection"), 1, GL_FALSE, glm::value_ptr(textProjection));
 	
     //FreeType
     FT_Library ft;
@@ -334,7 +331,7 @@ int main()
 
         skybox.render(); // Must be rendered almost last, before hud
         uiELement.render(); // Must be rendered last
-    	// glBindVertexArray(0); // no need to unbind it every time 
+    	 //glBindVertexArray(0); // no need to unbind it every time 
         
         //Variables just to make text changing in time
         float timeValue = glfwGetTime();
@@ -342,9 +339,14 @@ int main()
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         renderText(textShader, "We all love OpenGL", 25.0f, 25.0f, 1.0f, glm::vec3(redValue, 0.0f, 0.0f));
         //renderText(textShader, "Przeczytaj tekst na dole", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
-
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_BLEND);
+        
         glfwSwapBuffers(window);
         keyboardInput->update();
         mouseInput->update();
