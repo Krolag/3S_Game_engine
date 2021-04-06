@@ -112,9 +112,7 @@ int main()
     Shader UIShader("assets/shaders/vertexShader.vert", "assets/shaders/fragmentShader.frag");
     Shader modelShader("assets/shaders/model_loading.vert", "assets/shaders/model_loading.frag");
 
-	// Creation of UI Element. The last four parameters in constructor are positions of left, right, bottom and top edges of UI face
-    UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/progressbar.jpg", 0.1, 0.4, 0.8, 0.9);
-    
+	
     BackgroundImage background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/wall.jpg");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
 
@@ -266,18 +264,15 @@ int main()
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    // render loop
-    // -----------
-
     MouseInput* mouseInput = new MouseInput(window);
     KeyboardInput* keyboardInput = new KeyboardInput(window);
     mouseInput->cursorEnable();
     
     /* Load models */
     Model m(glm::vec3(1.0f), glm::vec3(1.0f));
-    m.loadModel("assets/models/backpack/backpack.obj");
+    m.loadModel("aassets/models/backpack/backpack.obj");
     Model troll(glm::vec3(-12.0f), glm::vec3(0.02f));
-    troll.loadModel("assets/models/lotr_troll/scene.gltf");
+    troll.loadModel("aassets/models/lotr_troll/scene.gltf");
 
     /* Lights */
     DirLight dirLight = {
@@ -287,6 +282,19 @@ int main()
         glm::vec3(0.75f)
     };
 
+    // Creation of UI Element. The last four parameters in constructor are positions of left, right, bottom and top edges of UI face
+    UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/progressbar.jpg", 0.1, 0.4, 0.8, 0.9);
+
+    /* Animated sprites */
+    UIElement marioWalking[4] = {
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_00.png", 0.0, 0.1, 0.2, 0.1),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_01.png", 0.0, 0.1, 0.2, 0.1),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_00.png", 0.0, 0.1, 0.2, 0.1),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_03.png", 0.0, 0.1, 0.2, 0.1)
+    };
+    int marioWalkingIndex = 0;
+    float timeBetweenFrames = 0.15f;
+
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -294,7 +302,6 @@ int main()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
 
         //use input to move camera
         cameraMouseInput(window, mouseInput);
@@ -304,17 +311,6 @@ int main()
         /* Clear screen */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
-    	// bind class texture
-        //wallTexture.Bind();
-    	
-        // render container
-        //glDisable(GL_DEPTH_TEST);
-        //UIShader.use();
-        /*glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);*/
 
         //background.render(); //-----turn off skybox before use
 
@@ -329,24 +325,30 @@ int main()
         m.render(modelShader);
         troll.render(modelShader);
 
-        skybox.render(); // Must be rendered almost last, before hud
-        uiELement.render(); // Must be rendered last
-    	 //glBindVertexArray(0); // no need to unbind it every time 
+        /* Sky-box -- Must be rendered almost last, before hud */
+        skybox.render(); 
+
+        /* Animated image */
+        marioWalking[marioWalkingIndex].render();
+        timeBetweenFrames -= deltaTime;
+        if (timeBetweenFrames <= 0)
+        {
+            marioWalkingIndex++;
+            timeBetweenFrames = 0.15f;
+        }
+        if (marioWalkingIndex >= 4)
+            marioWalkingIndex = 0;
         
-        //Variables just to make text changing in time
+        /* Static image -- Must be rendered last */
+        uiELement.render();
+        
+        /* Change text color in time */
         float timeValue = glfwGetTime();
         float redValue = sin(timeValue) / 2.0f + 0.5f;
-
+        renderText(textShader, "We all love OpenGL", 25.0f, 25.0f, 1.0f, glm::vec3(redValue, 0.0f, 0.0f));
+        
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        renderText(textShader, "We all love OpenGL", 25.0f, 25.0f, 1.0f, glm::vec3(redValue, 0.0f, 0.0f));
-        //renderText(textShader, "Przeczytaj tekst na dole", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
-        glDisable(GL_CULL_FACE);
-        glDisable(GL_BLEND);
-        
         glfwSwapBuffers(window);
         keyboardInput->update();
         mouseInput->update();
@@ -420,6 +422,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // -------------------
 void renderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color)
 {
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // activate corresponding render state	
     shader.use();
     glUniform3f(glGetUniformLocation(shader.ID, "textColor"), color.x, color.y, color.z);
@@ -461,4 +467,7 @@ void renderText(Shader& shader, std::string text, float x, float y, float scale,
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
 }
