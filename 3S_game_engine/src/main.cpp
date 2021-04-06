@@ -16,6 +16,9 @@
 #include "Background/BackgroundImage.h"
 #include "Light/Light.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H  
+
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
