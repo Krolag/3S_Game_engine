@@ -158,6 +158,13 @@
   <ItemGroup>
     <ClCompile Include="include\Background\BackgroundImage.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
+    <ClCompile Include="include\ImGUI\imgui.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_tables.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="include\KeyboardInput\KeyboardInput.cpp" />
     <ClCompile Include="include\Light\Light.cpp" />
     <ClCompile Include="include\Material\Material.cpp" />
@@ -175,6 +182,14 @@
     <ClInclude Include="include\Background\BackgroundImage.h" />
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\Camera\Camera.h" />
+    <ClInclude Include="include\ImGUI\imconfig.h" />
+    <ClInclude Include="include\ImGUI\imgui.h" />
+    <ClInclude Include="include\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="include\ImGUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="include\ImGUI\imgui_internal.h" />
+    <ClInclude Include="include\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="include\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="include\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />
     <ClInclude Include="include\Light\Light.h" />
     <ClInclude Include="include\Material\Material.h" />

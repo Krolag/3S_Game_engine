@@ -15,6 +15,13 @@
     <ClCompile Include="include\Background\BackgroundImage.cpp" />
     <ClCompile Include="include\Material\Material.cpp" />
     <ClCompile Include="include\Light\Light.cpp" />
+    <ClCompile Include="include\ImGUI\imgui.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_tables.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_widgets.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="include\ImGUI\imgui_impl_opengl3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -31,6 +38,14 @@
     <ClInclude Include="include\Background\BackgroundImage.h" />
     <ClInclude Include="include\Material\Material.h" />
     <ClInclude Include="include\Light\Light.h" />
+    <ClInclude Include="include\ImGUI\imconfig.h" />
+    <ClInclude Include="include\ImGUI\imgui.h" />
+    <ClInclude Include="include\ImGUI\imgui_internal.h" />
+    <ClInclude Include="include\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="include\ImGUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="include\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="include\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="include\ImGUI\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

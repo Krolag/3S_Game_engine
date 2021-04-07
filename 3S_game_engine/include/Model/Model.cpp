@@ -130,7 +130,6 @@ std::vector<Texture> Model::loadTextures(aiMaterial* _material, aiTextureType _t
 	{
 		aiString str;
 		_material->GetTexture(_type, i, &str);
-		std::cout << "Model.cpp | line 132:\t" << str.C_Str() << std::endl;
 
 		/* Prevent duplicate loading */
 		bool skip = false;
@@ -148,7 +147,6 @@ std::vector<Texture> Model::loadTextures(aiMaterial* _material, aiTextureType _t
 		if (!skip)
 		{
 			/* Not loaded yet */
-			std::cout << "Model.cpp | line 151:\t" << "LOADED" << std::endl;
 			Texture tex(this->directory, str.C_Str(), _type);
 			tex.load(false); // we don't want to flip it, flipUV's is doing it for us
 			textures.push_back(tex);

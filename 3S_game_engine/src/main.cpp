@@ -21,6 +21,98 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H  
 
+#pragma region ImGUI
+// dear imgui: Renderer Backend for modern OpenGL with shaders / programmatic pipeline
+// - Desktop GL: 2.x 3.x 4.x
+// - Embedded GL: ES 2.0 (WebGL 1.0), ES 3.0 (WebGL 2.0)
+// This needs to be used along with a Platform Backend (e.g. GLFW, SDL, Win32, custom..)
+
+// Implemented features:
+//  [X] Renderer: User texture binding. Use 'GLuint' OpenGL texture identifier as void*/ImTextureID. Read the FAQ about ImTextureID!
+//  [x] Renderer: Desktop GL only: Support for large meshes (64k+ vertices) with 16-bit indices.
+
+// You can copy and use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
+// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
+// Read online: https://github.com/ocornut/imgui/tree/master/docs
+
+// About Desktop OpenGL function loaders:
+//  Modern Desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
+//  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
+//  You may use another loader/header of your choice (glext, glLoadGen, etc.), or chose to manually implement your own.
+
+// About GLSL version:
+//  The 'glsl_version' initialization parameter should be NULL (default) or a "#version XXX" string.
+//  On computer platform the GLSL version default to "#version 130". On OpenGL ES 3 platform it defaults to "#version 300 es"
+//  Only override if your GL version doesn't handle this GLSL version. See GLSL version table at the top of imgui_impl_opengl3.cpp.
+
+#pragma once
+#include "ImGUI/imgui.h" // IMGUI_IMPL_API
+
+// Backend API
+IMGUI_IMPL_API bool     ImGui_ImplOpenGL3_Init(const char* glsl_version = NULL);
+IMGUI_IMPL_API void     ImGui_ImplOpenGL3_Shutdown();
+IMGUI_IMPL_API void     ImGui_ImplOpenGL3_NewFrame();
+IMGUI_IMPL_API void     ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data);
+
+// (Optional) Called by Init/NewFrame/Shutdown
+IMGUI_IMPL_API bool     ImGui_ImplOpenGL3_CreateFontsTexture();
+IMGUI_IMPL_API void     ImGui_ImplOpenGL3_DestroyFontsTexture();
+IMGUI_IMPL_API bool     ImGui_ImplOpenGL3_CreateDeviceObjects();
+IMGUI_IMPL_API void     ImGui_ImplOpenGL3_DestroyDeviceObjects();
+
+// Specific OpenGL ES versions
+//#define IMGUI_IMPL_OPENGL_ES2     // Auto-detected on Emscripten
+//#define IMGUI_IMPL_OPENGL_ES3     // Auto-detected on iOS/Android
+
+// Attempt to auto-detect the default Desktop GL loader based on available header files.
+// If auto-detection fails or doesn't select the same GL loader file as used by your application,
+// you are likely to get a crash in ImGui_ImplOpenGL3_Init().
+// You can explicitly select a loader by using one of the '#define IMGUI_IMPL_OPENGL_LOADER_XXX' in imconfig.h or compiler command-line.
+#if !defined(IMGUI_IMPL_OPENGL_ES2) \
+ && !defined(IMGUI_IMPL_OPENGL_ES3) \
+ && !defined(IMGUI_IMPL_OPENGL_LOADER_GL3W) \
+ && !defined(IMGUI_IMPL_OPENGL_LOADER_GLEW) \
+ && !defined(IMGUI_IMPL_OPENGL_LOADER_GLAD) \
+ && !defined(IMGUI_IMPL_OPENGL_LOADER_GLAD2) \
+ && !defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING2) \
+ && !defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING3) \
+ && !defined(IMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+
+// Try to detect GLES on matching platforms
+#if defined(__APPLE__)
+#include "TargetConditionals.h"
+#endif
+#if (defined(__APPLE__) && (TARGET_OS_IOS || TARGET_OS_TV)) || (defined(__ANDROID__))
+#define IMGUI_IMPL_OPENGL_ES3               // iOS, Android  -> GL ES 3, "#version 300 es"
+#elif defined(__EMSCRIPTEN__)
+#define IMGUI_IMPL_OPENGL_ES2               // Emscripten    -> GL ES 2, "#version 100"
+
+// Otherwise try to detect supported Desktop OpenGL loaders..
+#elif defined(__has_include)
+#if __has_include(<GL/glew.h>)
+#define IMGUI_IMPL_OPENGL_LOADER_GLEW
+#elif __has_include(<glad/glad.h>)
+#define IMGUI_IMPL_OPENGL_LOADER_GLAD
+#elif __has_include(<glad/gl.h>)
+#define IMGUI_IMPL_OPENGL_LOADER_GLAD2
+#elif __has_include(<GL/gl3w.h>)
+#define IMGUI_IMPL_OPENGL_LOADER_GL3W
+#elif __has_include(<glbinding/glbinding.h>)
+#define IMGUI_IMPL_OPENGL_LOADER_GLBINDING3
+#elif __has_include(<glbinding/Binding.h>)
+#define IMGUI_IMPL_OPENGL_LOADER_GLBINDING2
+#else
+#error "Cannot detect OpenGL loader!"
+#endif
+#else
+#define IMGUI_IMPL_OPENGL_LOADER_GL3W   // Default to GL3W embedded in our repository
+#endif
+
+#endif
+
+#pragma endregion
+
+
 #include <iostream>
 #include <map>
 #include <string>
@@ -105,13 +197,8 @@ int main()
         return -1;
     }
 
-    // configure global opengl state
-    // -----------------------------
-    glEnable(GL_DEPTH_TEST);
-
     Shader UIShader("assets/shaders/vertexShader.vert", "assets/shaders/fragmentShader.frag");
     Shader modelShader("assets/shaders/model_loading.vert", "assets/shaders/model_loading.frag");
-
 	
     BackgroundImage background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/wall.jpg");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
@@ -208,71 +295,15 @@ int main()
 
     Skybox skybox(&view, &projection, &camera);
 
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    float vertices[] = {
-        // positions          // colors           // texture coords
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
-    };
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
-    };
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(0);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    // load and create a texture 
-    // -------------------------
-	//Texture wallTexture("assets/textures/wall.jpg");
-
-	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    glBindVertexArray(0);
-
-    // uncomment this call to draw in wireframe polygons.
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
     MouseInput* mouseInput = new MouseInput(window);
     KeyboardInput* keyboardInput = new KeyboardInput(window);
     mouseInput->cursorEnable();
     
     /* Load models */
     Model m(glm::vec3(1.0f), glm::vec3(1.0f));
-    m.loadModel("aassets/models/backpack/backpack.obj");
+    m.loadModel("assets/models/backpack/backpack.obj");
     Model troll(glm::vec3(-12.0f), glm::vec3(0.02f));
-    troll.loadModel("aassets/models/lotr_troll/scene.gltf");
+    troll.loadModel("assets/models/lotr_troll/scene.gltf");
 
     /* Lights */
     DirLight dirLight = {
@@ -356,12 +387,7 @@ int main()
     }
 
     m.cleanup();
-
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    troll.cleanup();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
