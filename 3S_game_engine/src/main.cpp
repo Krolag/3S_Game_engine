@@ -4,7 +4,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include <ft2build.h>
+#include FT_FREETYPE_H  
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw.h"
+#include "ImGUI/imgui_impl_opengl3.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -17,100 +21,6 @@
 #include "UIElement/UIElement.h"
 #include "Background/BackgroundImage.h"
 #include "Light/Light.h"
-
-#include <ft2build.h>
-#include FT_FREETYPE_H  
-
-#pragma region ImGUI
-// dear imgui: Renderer Backend for modern OpenGL with shaders / programmatic pipeline
-// - Desktop GL: 2.x 3.x 4.x
-// - Embedded GL: ES 2.0 (WebGL 1.0), ES 3.0 (WebGL 2.0)
-// This needs to be used along with a Platform Backend (e.g. GLFW, SDL, Win32, custom..)
-
-// Implemented features:
-//  [X] Renderer: User texture binding. Use 'GLuint' OpenGL texture identifier as void*/ImTextureID. Read the FAQ about ImTextureID!
-//  [x] Renderer: Desktop GL only: Support for large meshes (64k+ vertices) with 16-bit indices.
-
-// You can copy and use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
-// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
-// Read online: https://github.com/ocornut/imgui/tree/master/docs
-
-// About Desktop OpenGL function loaders:
-//  Modern Desktop OpenGL doesn't have a standard portable header file to load OpenGL function pointers.
-//  Helper libraries are often used for this purpose! Here we are supporting a few common ones (gl3w, glew, glad).
-//  You may use another loader/header of your choice (glext, glLoadGen, etc.), or chose to manually implement your own.
-
-// About GLSL version:
-//  The 'glsl_version' initialization parameter should be NULL (default) or a "#version XXX" string.
-//  On computer platform the GLSL version default to "#version 130". On OpenGL ES 3 platform it defaults to "#version 300 es"
-//  Only override if your GL version doesn't handle this GLSL version. See GLSL version table at the top of imgui_impl_opengl3.cpp.
-
-#pragma once
-#include "ImGUI/imgui.h" // IMGUI_IMPL_API
-
-// Backend API
-IMGUI_IMPL_API bool     ImGui_ImplOpenGL3_Init(const char* glsl_version = NULL);
-IMGUI_IMPL_API void     ImGui_ImplOpenGL3_Shutdown();
-IMGUI_IMPL_API void     ImGui_ImplOpenGL3_NewFrame();
-IMGUI_IMPL_API void     ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data);
-
-// (Optional) Called by Init/NewFrame/Shutdown
-IMGUI_IMPL_API bool     ImGui_ImplOpenGL3_CreateFontsTexture();
-IMGUI_IMPL_API void     ImGui_ImplOpenGL3_DestroyFontsTexture();
-IMGUI_IMPL_API bool     ImGui_ImplOpenGL3_CreateDeviceObjects();
-IMGUI_IMPL_API void     ImGui_ImplOpenGL3_DestroyDeviceObjects();
-
-// Specific OpenGL ES versions
-//#define IMGUI_IMPL_OPENGL_ES2     // Auto-detected on Emscripten
-//#define IMGUI_IMPL_OPENGL_ES3     // Auto-detected on iOS/Android
-
-// Attempt to auto-detect the default Desktop GL loader based on available header files.
-// If auto-detection fails or doesn't select the same GL loader file as used by your application,
-// you are likely to get a crash in ImGui_ImplOpenGL3_Init().
-// You can explicitly select a loader by using one of the '#define IMGUI_IMPL_OPENGL_LOADER_XXX' in imconfig.h or compiler command-line.
-#if !defined(IMGUI_IMPL_OPENGL_ES2) \
- && !defined(IMGUI_IMPL_OPENGL_ES3) \
- && !defined(IMGUI_IMPL_OPENGL_LOADER_GL3W) \
- && !defined(IMGUI_IMPL_OPENGL_LOADER_GLEW) \
- && !defined(IMGUI_IMPL_OPENGL_LOADER_GLAD) \
- && !defined(IMGUI_IMPL_OPENGL_LOADER_GLAD2) \
- && !defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING2) \
- && !defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING3) \
- && !defined(IMGUI_IMPL_OPENGL_LOADER_CUSTOM)
-
-// Try to detect GLES on matching platforms
-#if defined(__APPLE__)
-#include "TargetConditionals.h"
-#endif
-#if (defined(__APPLE__) && (TARGET_OS_IOS || TARGET_OS_TV)) || (defined(__ANDROID__))
-#define IMGUI_IMPL_OPENGL_ES3               // iOS, Android  -> GL ES 3, "#version 300 es"
-#elif defined(__EMSCRIPTEN__)
-#define IMGUI_IMPL_OPENGL_ES2               // Emscripten    -> GL ES 2, "#version 100"
-
-// Otherwise try to detect supported Desktop OpenGL loaders..
-#elif defined(__has_include)
-#if __has_include(<GL/glew.h>)
-#define IMGUI_IMPL_OPENGL_LOADER_GLEW
-#elif __has_include(<glad/glad.h>)
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD
-#elif __has_include(<glad/gl.h>)
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD2
-#elif __has_include(<GL/gl3w.h>)
-#define IMGUI_IMPL_OPENGL_LOADER_GL3W
-#elif __has_include(<glbinding/glbinding.h>)
-#define IMGUI_IMPL_OPENGL_LOADER_GLBINDING3
-#elif __has_include(<glbinding/Binding.h>)
-#define IMGUI_IMPL_OPENGL_LOADER_GLBINDING2
-#else
-#error "Cannot detect OpenGL loader!"
-#endif
-#else
-#define IMGUI_IMPL_OPENGL_LOADER_GL3W   // Default to GL3W embedded in our repository
-#endif
-
-#endif
-
-#pragma endregion
 
 
 #include <iostream>
@@ -198,6 +108,16 @@ int main()
         return -1;
     }
 #pragma endregion
+
+#pragma region ImGUI init
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
+    ImGui::StyleColorsDark();
+
+#pragma endregion
+
 
     Shader UIShader("assets/shaders/vertexShader.vert", "assets/shaders/fragmentShader.frag");
     Shader modelShader("assets/shaders/model_loading.vert", "assets/shaders/model_loading.frag");
@@ -319,14 +239,14 @@ int main()
     };
 
     // Creation of UI Element. The last four parameters in constructor are positions of left, right, bottom and top edges of UI face
-    UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/progressbar.jpg", 0.1, 0.4, 0.8, 0.9);
+    UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/progressbar.jpg", 0.1f, 0.4f, 0.8f, 0.9f);
 
     /* Animated sprites */
     UIElement marioWalking[4] = {
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_00.png", 0.0, 0.1, 0.2, 0.1),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_01.png", 0.0, 0.1, 0.2, 0.1),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_00.png", 0.0, 0.1, 0.2, 0.1),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_03.png", 0.0, 0.1, 0.2, 0.1)
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_00.png", 0.0f, 0.1f, 0.2f, 0.1f),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_01.png", 0.0f, 0.1f, 0.2f, 0.1f),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_00.png", 0.0f, 0.1f, 0.2f, 0.1f),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_03.png", 0.0f, 0.1f, 0.2f, 0.1f)
     };
     int marioWalkingIndex = 0;
     float timeBetweenFrames = 0.15f;
@@ -334,6 +254,20 @@ int main()
     /* Render loop */
     while (!glfwWindowShouldClose(window))
     {
+        /* Clear screen */
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        /* Dear ImGUI new frame setup */
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        /* ImGUI window setup */
+        {
+            ImGui::Text("Troll");
+        }
+
         // per-frame time logic
         // --------------------
         float currentFrame = glfwGetTime();
@@ -345,13 +279,6 @@ int main()
         cameraKeyboardInput(window, keyboardInput);
         mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
 
-        /* Clear screen */
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        /* ImGUI testing */
-        ImGui::Begin();
-       
 
         //background.render(); //-----turn off skybox before use
 
@@ -390,11 +317,17 @@ int main()
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         keyboardInput->update();
         mouseInput->update();
         glfwPollEvents();
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     m.cleanup();
     troll.cleanup();
