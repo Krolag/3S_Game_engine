@@ -156,6 +156,7 @@ int main()
     glm::mat4 view;
 	glm::mat4 model;
 	
+#pragma region GLFW init
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -196,17 +197,20 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+#pragma endregion
 
     Shader UIShader("assets/shaders/vertexShader.vert", "assets/shaders/fragmentShader.frag");
     Shader modelShader("assets/shaders/model_loading.vert", "assets/shaders/model_loading.frag");
 	
     BackgroundImage background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/wall.jpg");
+    
+#pragma region Text
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
 
     textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCR_WIDTH), 0.0f, static_cast<GLfloat>(SCR_HEIGHT));
     textShader.use();
     glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "textProjection"), 1, GL_FALSE, glm::value_ptr(textProjection));
-	
+
     //FreeType
     FT_Library ft;
     // All functions return a value different than 0 whenever an error occurred
@@ -225,12 +229,12 @@ int main()
     }
     // load font as face
     FT_Face face;
-    if (FT_New_Face(ft, font_name.c_str(), 0, &face)) 
+    if (FT_New_Face(ft, font_name.c_str(), 0, &face))
     {
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
         return -1;
     }
-    else 
+    else
     {
         // set size to load glyphs as
         FT_Set_Pixel_Sizes(face, 0, 48);
@@ -268,7 +272,7 @@ int main()
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             // now store character for later use
-            Character character = 
+            Character character =
             {
                 texture,
                 glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
@@ -292,7 +296,8 @@ int main()
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
+#pragma endregion
+    
     Skybox skybox(&view, &projection, &camera);
 
     MouseInput* mouseInput = new MouseInput(window);
@@ -326,6 +331,7 @@ int main()
     int marioWalkingIndex = 0;
     float timeBetweenFrames = 0.15f;
 
+    /* Render loop */
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -342,6 +348,10 @@ int main()
         /* Clear screen */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        /* ImGUI testing */
+        ImGui::Begin();
+       
 
         //background.render(); //-----turn off skybox before use
 
