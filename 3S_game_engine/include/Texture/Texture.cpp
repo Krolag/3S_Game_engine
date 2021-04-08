@@ -10,6 +10,12 @@ Texture::Texture(std::string _directory, std::string _path, aiTextureType _type)
 	generate();
 }
 
+Texture::Texture(std::string _directory, std::string _path)
+	: directory(_directory), path(_path), type(aiTextureType_NONE)
+{
+	generate();
+}
+
 void Texture::generate()
 {
 	glGenTextures(1, &this->id);

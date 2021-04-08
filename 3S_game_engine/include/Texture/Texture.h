@@ -10,7 +10,8 @@ public:
 	/* Constructors */
 	Texture();
 	Texture(std::string _directory, std::string _path, aiTextureType _type);
-
+	Texture(std::string _directory, std::string _path);
+	
 	void generate();
 	void load(bool _flip = true);
 	void bind(int _slot = 0);

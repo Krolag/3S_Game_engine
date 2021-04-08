@@ -239,14 +239,14 @@ int main()
     };
 
     // Creation of UI Element. The last four parameters in constructor are positions of left, right, bottom and top edges of UI face
-    UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/progressbar.jpg", 0.1f, 0.4f, 0.8f, 0.9f);
+    UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "progressbar.jpg", 0.1f, 0.4f, 0.8f, 0.9f);
 
     /* Animated sprites */
     UIElement marioWalking[4] = {
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_00.png", 0.0f, 0.1f, 0.2f, 0.1f),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_01.png", 0.0f, 0.1f, 0.2f, 0.1f),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_00.png", 0.0f, 0.1f, 0.2f, 0.1f),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking/mario_03.png", 0.0f, 0.1f, 0.2f, 0.1f)
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.0f, 0.1f, 0.2f, 0.1f),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_01.png", 0.0f, 0.1f, 0.2f, 0.1f),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.0f, 0.1f, 0.2f, 0.1f),
+        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_03.png", 0.0f, 0.1f, 0.2f, 0.1f)
     };
     int marioWalkingIndex = 0;
     float timeBetweenFrames = 0.15f;
