@@ -51,7 +51,7 @@ Skybox::Skybox(glm::mat4* view, glm::mat4* projection, Camera* camera) : skyboxS
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     skyboxShader.use();
-    skyboxShader.setInt("skybox", 0);
+    skyboxShader.setUniform("skybox", 0);
 }
 
 Skybox::~Skybox()
@@ -66,8 +66,8 @@ void Skybox::render()
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
     skyboxShader.use();
     *view = glm::mat4(glm::mat3((*camera).GetViewMatrix())); // remove translation from the view matrix
-    skyboxShader.setMat4("view", *view);
-    skyboxShader.setMat4("projection", *projection);
+    skyboxShader.setUniform("view", *view);
+    skyboxShader.setUniform("projection", *projection);
     // skybox cube
     glBindVertexArray(skyboxVAO);
     glActiveTexture(GL_TEXTURE0);

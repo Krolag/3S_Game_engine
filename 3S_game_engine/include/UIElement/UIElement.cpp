@@ -73,7 +73,7 @@ uiVAO(0), uiVBO(0), uiEBO(0), uiTexture(0)
     }
 
     uiShader.use();
-    uiShader.setInt("texture1", 0);
+    uiShader.setUniform("texture1", 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

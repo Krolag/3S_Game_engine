@@ -285,9 +285,9 @@ int main()
         glEnable(GL_DEPTH_TEST);
         modelShader.use();
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);
-        modelShader.setMat4("projection", projection);
+        modelShader.setUniform("projection", projection);
         view = camera.GetViewMatrix(); //glm::mat4(1.0f);
-        modelShader.setMat4("view", view);
+        modelShader.setUniform("view", view);
         model = glm::mat4(1.0f);
         dirLight.render(modelShader);
         m.render(modelShader);

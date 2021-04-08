@@ -61,7 +61,7 @@ void Mesh::render(Shader shader)
 		}
 
 		/* Set texture value in the shader */
-		shader.setInt(name, i);
+		shader.setUniform(name, (int)i);
 		textures[i].bind();
 	}
 
