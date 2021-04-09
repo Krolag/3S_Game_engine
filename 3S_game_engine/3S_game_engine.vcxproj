@@ -173,6 +173,7 @@
     <ClCompile Include="include\InputSystem\MouseInput.cpp" />
     <ClCompile Include="include\Shader\Shader.cpp" />
     <ClCompile Include="include\Skybox\Skybox.cpp" />
+    <ClCompile Include="include\Text\TextRender.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="include\Texture\Texture.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="include\Loader\Mesh.h" />
     <ClInclude Include="include\Texture\Texture.h" />
     <ClInclude Include="include\Skybox\Skybox.h" />
+    <ClInclude Include="include\Text\TextRender.h" />
     <ClInclude Include="include\UIElement\UIElement.h" />
   </ItemGroup>
   <ItemGroup>

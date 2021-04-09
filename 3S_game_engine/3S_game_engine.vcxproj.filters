@@ -22,6 +22,7 @@
     <ClCompile Include="include\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="include\ImGUI\imgui_impl_glfw.cpp" />
     <ClCompile Include="include\ImGUI\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="include\Text\TextRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -48,6 +49,7 @@
     <ClInclude Include="include\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\Loader\Loader.h" />
     <ClInclude Include="include\InputSystem\InputSystem.h" />
+    <ClInclude Include="include\Text\TextRender.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
