@@ -9,9 +9,9 @@ void PointLight::render(Shader _shader, int _idx)
 	_shader.setUniform(name + ".diffuse", this->diffuse);
 	_shader.setUniform(name + ".specular", this->specular);
 
-	_shader.setUniform(name + ".k0", this->k0);
-	_shader.setUniform(name + ".k1", this->k1);
-	_shader.setUniform(name + ".k2", this->k2);
+	_shader.setUniformFloat(name + ".k0", this->k0);
+	_shader.setUniformFloat(name + ".k1", this->k1);
+	_shader.setUniformFloat(name + ".k2", this->k2);
 }
 
 void DirLight::render(Shader _shader)
@@ -30,13 +30,13 @@ void SpotLight::render(Shader _shader, int _idx)
 
 	_shader.setUniform(name + ".position", this->position);
 	_shader.setUniform(name + ".direction", this->direction);
-	_shader.setUniform(name + ".cutOff", this->cutOff);
-	_shader.setUniform(name + ".outerCutOff", this->cutOff);
+	_shader.setUniformFloat(name + ".cutOff", this->cutOff);
+	_shader.setUniformFloat(name + ".outerCutOff", this->cutOff);
 	_shader.setUniform(name + ".ambient", this->ambient);
 	_shader.setUniform(name + ".diffuse", this->diffuse);
 	_shader.setUniform(name + ".specular", this->specular);
 
-	_shader.setUniform(name + ".k0", this->k0);
-	_shader.setUniform(name + ".k1", this->k1);
-	_shader.setUniform(name + ".k2", this->k2);
+	_shader.setUniformFloat(name + ".k0", this->k0);
+	_shader.setUniformFloat(name + ".k1", this->k1);
+	_shader.setUniformFloat(name + ".k2", this->k2);
 }

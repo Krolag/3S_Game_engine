@@ -13,7 +13,7 @@ namespace Loader
 		model = glm::translate(model, this->position);
 		model = glm::scale(model, this->size);
 		_shader.setUniform("model", model);
-		_shader.setUniform("material.shininess", 0.5f);
+		_shader.setUniformFloat("material.shininess", 0.5f);
 
 		for (Mesh mesh : meshes)
 		{

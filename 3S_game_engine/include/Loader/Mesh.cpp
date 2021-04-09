@@ -62,7 +62,7 @@ namespace Loader
 			}
 
 			/* Set texture value in the shader */
-			shader.setUniform(name, (int)i);
+			shader.setUniformInt(name, i);
 			textures[i].bind();
 		}
 

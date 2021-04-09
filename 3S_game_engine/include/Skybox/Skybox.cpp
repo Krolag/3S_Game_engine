@@ -51,7 +51,7 @@ Skybox::Skybox(glm::mat4* view, glm::mat4* projection, Camera* camera) : skyboxS
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     skyboxShader.use();
-    skyboxShader.setUniform("skybox", 0);
+    skyboxShader.setUniformInt("skybox", 0);
 }
 
 Skybox::~Skybox()

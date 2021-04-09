@@ -68,7 +68,7 @@ BackgroundImage::BackgroundImage(std::string vertexShaderPath, std::string fragm
     }
 
     backgroundShader.use();
-    backgroundShader.setUniform("texture1", 0);
+    backgroundShader.setUniformInt("texture1", 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
