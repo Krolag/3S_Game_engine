@@ -107,8 +107,7 @@ int main()
 #pragma endregion
 
 
-    Shader UIShader("assets/shaders/vertexShader.vert", "assets/shaders/fragmentShader.frag");
-    Shader modelShader("assets/shaders/model_loading.vert", "assets/shaders/model_loading.frag");
+    Shader modelShader("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
 	
     BackgroundImage background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/wall.jpg");
     
