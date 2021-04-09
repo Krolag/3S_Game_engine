@@ -13,15 +13,15 @@
 #include <stb_image.h>
 
 #include "Shader/Shader.h"
-#include "MouseInput/MouseInput.h"
-#include "KeyboardInput/KeyboardInput.h"
 #include "Skybox/Skybox.h"
-#include "Model/Model.h"
 #include "Camera/Camera.h"
 #include "UIElement/UIElement.h"
 #include "Background/BackgroundImage.h"
 #include "Light/Light.h"
 
+/* Rework Work In Progress */
+#include "Loader/Loader.h"
+#include "InputSystem/InputSystem.h"
 
 #include <iostream>
 #include <map>
@@ -41,9 +41,9 @@ GLuint textVAO, textVBO;
 void renderText(Shader& shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void cameraMouseInput(GLFWwindow* window, MouseInput *mouse);
-void cameraKeyboardInput(GLFWwindow* window, KeyboardInput *keyboard);
-void mouseOusideWindowsPos(int key, KeyboardInput* keyboard, MouseInput* mouse);
+void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput *mouse);
+void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboard);
+void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -220,14 +220,14 @@ int main()
     
     Skybox skybox(&view, &projection, &camera);
 
-    MouseInput* mouseInput = new MouseInput(window);
-    KeyboardInput* keyboardInput = new KeyboardInput(window);
+    InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);
+    InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(window);
     mouseInput->cursorEnable();
     
     /* Load models */
-    Model m(glm::vec3(1.0f), glm::vec3(1.0f));
+    Loader::Model m(glm::vec3(1.0f), glm::vec3(1.0f));
+    Loader::Model troll(glm::vec3(-12.0f), glm::vec3(0.02f));
     m.loadModel("assets/models/backpack/backpack.obj");
-    Model troll(glm::vec3(-12.0f), glm::vec3(0.02f));
     troll.loadModel("assets/models/lotr_troll/scene.gltf");
 
     /* Lights */
@@ -278,7 +278,6 @@ int main()
         cameraMouseInput(window, mouseInput);
         cameraKeyboardInput(window, keyboardInput);
         mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
-
 
         //background.render(); //-----turn off skybox before use
 
@@ -338,7 +337,7 @@ int main()
     return 0;
 }
 
-void cameraMouseInput(GLFWwindow* window, MouseInput *mouse)
+void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput *mouse)
 {
     if (firstMouse)
     {
@@ -357,7 +356,7 @@ void cameraMouseInput(GLFWwindow* window, MouseInput *mouse)
     camera.ProcessMouseScroll(mouse->getScrollValue());
 }
 
-void cameraKeyboardInput(GLFWwindow* window, KeyboardInput *keyboard)
+void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboard)
 {
     if (keyboard->isKeyDown(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, true);
@@ -371,7 +370,7 @@ void cameraKeyboardInput(GLFWwindow* window, KeyboardInput *keyboard)
         camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
-void mouseOusideWindowsPos(int key, KeyboardInput* keyboard, MouseInput* mouse)
+void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse)
 {
     if (keyboard->isKeyDown(key) && !mouse->isCursorEntered()) {
         std::cout << mouse->getCursorPosition().x << "    " << mouse->getCursorPosition().y << "\n";

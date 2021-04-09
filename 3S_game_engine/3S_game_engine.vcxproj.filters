@@ -5,10 +5,10 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="include\Texture\Texture.cpp" />
     <ClCompile Include="include\Shader\Shader.cpp" />
-    <ClCompile Include="include\Mesh\Mesh.cpp" />
-    <ClCompile Include="include\Model\Model.cpp" />
-    <ClCompile Include="include\MouseInput\MouseInput.cpp" />
-    <ClCompile Include="include\KeyboardInput\KeyboardInput.cpp" />
+    <ClCompile Include="include\Loader\Mesh.cpp" />
+    <ClCompile Include="include\Loader\Model.cpp" />
+    <ClCompile Include="include\InputSystem\MouseInput.cpp" />
+    <ClCompile Include="include\InputSystem\KeyboardInput.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\Skybox\Skybox.cpp" />
     <ClCompile Include="include\UIElement\UIElement.cpp" />
@@ -25,13 +25,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
-    <ClInclude Include="include\Mesh\Mesh.h" />
+    <ClInclude Include="include\Loader\Mesh.h" />
     <ClInclude Include="include\Texture\Texture.h" />
     <ClInclude Include="include\Shader\Shader.h" />
-    <ClInclude Include="include\Model\Model.h" />
+    <ClInclude Include="include\Loader\Model.h" />
     <ClInclude Include="include\assimp\config.h" />
-    <ClInclude Include="include\MouseInput\MouseInput.h" />
-    <ClInclude Include="include\KeyboardInput\KeyboardInput.h" />
+    <ClInclude Include="include\InputSystem\MouseInput.h" />
+    <ClInclude Include="include\InputSystem\KeyboardInput.h" />
     <ClInclude Include="include\Camera\Camera.h" />
     <ClInclude Include="include\Skybox\Skybox.h" />
     <ClInclude Include="include\UIElement\UIElement.h" />
@@ -46,6 +46,8 @@
     <ClInclude Include="include\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="include\ImGUI\imstb_textedit.h" />
     <ClInclude Include="include\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="include\Loader\Loader.h" />
+    <ClInclude Include="include\InputSystem\InputSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
