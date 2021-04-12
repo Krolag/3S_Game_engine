@@ -11,8 +11,8 @@
     <ClCompile Include="include\InputSystem\KeyboardInput.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\Skybox\Skybox.cpp" />
-    <ClCompile Include="include\UIElement\UIElement.cpp" />
-    <ClCompile Include="include\Background\BackgroundImage.cpp" />
+    <ClCompile Include="include\UIRender\UIElement.cpp" />
+    <ClCompile Include="include\UIRender\BackgroundImage.cpp" />
     <ClCompile Include="include\Material\Material.cpp" />
     <ClCompile Include="include\Light\Light.cpp" />
     <ClCompile Include="include\ImGUI\imgui.cpp" />
@@ -22,7 +22,8 @@
     <ClCompile Include="include\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="include\ImGUI\imgui_impl_glfw.cpp" />
     <ClCompile Include="include\ImGUI\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="include\Text\TextRender.cpp" />
+    <ClCompile Include="include\UIRender\TextRender.cpp" />
+    <ClCompile Include="include\SceneGraph\SceneGraph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -35,8 +36,8 @@
     <ClInclude Include="include\InputSystem\KeyboardInput.h" />
     <ClInclude Include="include\Camera\Camera.h" />
     <ClInclude Include="include\Skybox\Skybox.h" />
-    <ClInclude Include="include\UIElement\UIElement.h" />
-    <ClInclude Include="include\Background\BackgroundImage.h" />
+    <ClInclude Include="include\UIRender\UIElement.h" />
+    <ClInclude Include="include\UIRender\BackgroundImage.h" />
     <ClInclude Include="include\Material\Material.h" />
     <ClInclude Include="include\Light\Light.h" />
     <ClInclude Include="include\ImGUI\imconfig.h" />
@@ -49,7 +50,9 @@
     <ClInclude Include="include\ImGUI\imstb_truetype.h" />
     <ClInclude Include="include\Loader\Loader.h" />
     <ClInclude Include="include\InputSystem\InputSystem.h" />
-    <ClInclude Include="include\Text\TextRender.h" />
+    <ClInclude Include="include\UIRender\TextRender.h" />
+    <ClInclude Include="include\UIRender\UIRender.h" />
+    <ClInclude Include="include\SceneGraph\SceneGraph.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

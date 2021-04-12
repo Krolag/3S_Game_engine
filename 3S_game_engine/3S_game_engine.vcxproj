@@ -156,7 +156,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\Background\BackgroundImage.cpp" />
+    <ClCompile Include="include\SceneGraph\SceneGraph.cpp" />
+    <ClCompile Include="include\UIRender\BackgroundImage.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\ImGUI\imgui.cpp" />
     <ClCompile Include="include\ImGUI\imgui_demo.cpp" />
@@ -173,14 +174,15 @@
     <ClCompile Include="include\InputSystem\MouseInput.cpp" />
     <ClCompile Include="include\Shader\Shader.cpp" />
     <ClCompile Include="include\Skybox\Skybox.cpp" />
-    <ClCompile Include="include\Text\TextRender.cpp" />
+    <ClCompile Include="include\UIRender\TextRender.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="include\Texture\Texture.cpp" />
-    <ClCompile Include="include\UIElement\UIElement.cpp" />
+    <ClCompile Include="include\UIRender\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Background\BackgroundImage.h" />
+    <ClInclude Include="include\SceneGraph\SceneGraph.h" />
+    <ClInclude Include="include\UIRender\BackgroundImage.h" />
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\Camera\Camera.h" />
     <ClInclude Include="include\ImGUI\imconfig.h" />
@@ -203,8 +205,9 @@
     <ClInclude Include="include\Loader\Mesh.h" />
     <ClInclude Include="include\Texture\Texture.h" />
     <ClInclude Include="include\Skybox\Skybox.h" />
-    <ClInclude Include="include\Text\TextRender.h" />
-    <ClInclude Include="include\UIElement\UIElement.h" />
+    <ClInclude Include="include\UIRender\TextRender.h" />
+    <ClInclude Include="include\UIRender\UIElement.h" />
+    <ClInclude Include="include\UIRender\UIRender.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

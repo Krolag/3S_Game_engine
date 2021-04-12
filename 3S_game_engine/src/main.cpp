@@ -15,14 +15,13 @@
 #include "Shader/Shader.h"
 #include "Skybox/Skybox.h"
 #include "Camera/Camera.h"
-#include "UIElement/UIElement.h"
-#include "Background/BackgroundImage.h"
 #include "Light/Light.h"
-#include "Text/TextRender.h"
+#include "SceneGraph/SceneGraph.h"
 
-/* Rework Work In Progress */
+/* Load 3SE packages */
 #include "Loader/Loader.h"
 #include "InputSystem/InputSystem.h"
+#include "UIRender/UIRender.h"
 
 #include <iostream>
 #include <map>
@@ -34,13 +33,13 @@ void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboar
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
 
 // settings
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 720;
+const unsigned int SCREEN_WIDTH = 1280;
+const unsigned int SCREEN_HEIGHT = 720;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
+float lastX = SCREEN_WIDTH / 2.0f;
+float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 // timing
@@ -68,7 +67,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -106,33 +105,27 @@ int main()
 
 #pragma endregion
 
-
-    Shader modelShader("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
+    /* Create shaders */
+    Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
 	
-    BackgroundImage background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/wall.jpg");
-    
-#pragma region Text
-    Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
-
-    textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCR_WIDTH), 0.0f, static_cast<GLfloat>(SCR_HEIGHT));
-    textShader.use();
-    glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "textProjection"), 1, GL_FALSE, glm::value_ptr(textProjection));
-
-    TextRender text("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/arial.ttf");
-
-#pragma endregion
-    
+    /* Create Skybox */
     Skybox skybox(&view, &projection, &camera);
 
+    /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(window);
     mouseInput->cursorEnable();
     
     /* Load models */
     Loader::Model m(glm::vec3(1.0f), glm::vec3(1.0f));
-    Loader::Model troll(glm::vec3(-12.0f), glm::vec3(0.02f));
+    Loader::Model trollModel(glm::vec3(-12.0f), glm::vec3(0.02f));
     m.loadModel("assets/models/backpack/backpack.obj");
-    troll.loadModel("assets/models/lotr_troll/scene.gltf");
+    trollModel.loadModel("assets/models/lotr_troll/scene.gltf");
+
+    /* Scene graph */
+    SceneGraphSP root(new SceneGraph());
+    SceneGraphSP troll(new SceneGraph(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.05f)));
+    root->addChild(troll);
 
     /* Lights */
     DirLight dirLight = {
@@ -141,19 +134,6 @@ int main()
         glm::vec3(0.4f),
         glm::vec3(0.75f)
     };
-
-    // Creation of UI Element. The last four parameters in constructor are positions of left, right, bottom and top edges of UI face
-    UIElement uiELement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "progressbar.jpg", 0.1f, 0.4f, 0.8f, 0.9f);
-
-    /* Animated sprites */
-    UIElement marioWalking[4] = {
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.0f, 0.1f, 0.2f, 0.1f),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_01.png", 0.0f, 0.1f, 0.2f, 0.1f),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.0f, 0.1f, 0.2f, 0.1f),
-        UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_03.png", 0.0f, 0.1f, 0.2f, 0.1f)
-    };
-    int marioWalkingIndex = 0;
-    float timeBetweenFrames = 0.15f;
 
     /* Render loop */
     while (!glfwWindowShouldClose(window))
@@ -172,62 +152,41 @@ int main()
             ImGui::Text("Troll");
         }
 
-        // per-frame time logic
-        // --------------------
+        /* Per-frame time logic */
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        //use input to move camera
+        /* Use InputSystem to move camera */
         cameraMouseInput(window, mouseInput);
         cameraKeyboardInput(window, keyboardInput);
         mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
 
-        //background.render(); //-----turn off skybox before use
-
         glEnable(GL_DEPTH_TEST);
-        modelShader.use();
-        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);
-        modelShader.setUniform("projection", projection);
+        model3D.use();
+        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);
+        model3D.setUniform("projection", projection);
         view = camera.GetViewMatrix(); //glm::mat4(1.0f);
-        modelShader.setUniform("view", view);
+        model3D.setUniform("view", view);
         model = glm::mat4(1.0f);
-        dirLight.render(modelShader);
-        m.render(modelShader);
-        troll.render(modelShader);
+        dirLight.render(model3D);
+        m.render(model3D);
+        trollModel.render(model3D);
+        //root->update(glm::mat4(1.0f), false);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render(); 
 
-        /* Animated image */
-        marioWalking[marioWalkingIndex].render();
-        timeBetweenFrames -= deltaTime;
-        if (timeBetweenFrames <= 0)
-        {
-            marioWalkingIndex++;
-            timeBetweenFrames = 0.15f;
-        }
-        if (marioWalkingIndex >= 4)
-            marioWalkingIndex = 0;
-        
-        /* Static image -- Must be rendered last */
-        uiELement.render();
-        
-        /* Change text color in time */
-        float timeValue = glfwGetTime();
-        float greenValue = sin(timeValue * 10) / 2.0f + 0.5f;
-        
-        text.render(textShader, "Fusrodah", SCR_WIDTH / 2.0f, SCR_HEIGHT / 2.0f, 1.0f, glm::vec3(0.0f, greenValue, 0.0f));
-        text.render(textShader, "KAMEHAME.................................................................", 0.0f, 0.0f, 1.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-        text.render(textShader, "HAAA!", (float)SCR_WIDTH - 150.0f, 0.0f, 1.0f, glm::vec3(greenValue, 0.0f, 0.0f));
-        
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
+        /* DEBUG - Draw DearImGUI */
         ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(window);
+        
+        /* Update InputSystem */
         keyboardInput->update();
         mouseInput->update();
+
+        /* Clear frame at the end of the loop */
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
@@ -236,7 +195,7 @@ int main()
     ImGui::DestroyContext();
 
     m.cleanup();
-    troll.cleanup();
+    trollModel.cleanup();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
