@@ -2,9 +2,12 @@
 
 namespace UIRender
 {
-    TextRender::TextRender(std::string vertexShaderPath, std::string fragmentShaderPath, std::string fontPath) :
-        textShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str())
+    TextRender::TextRender(std::string vertexShaderPath, std::string fragmentShaderPath, std::string fontPath, int witdh, int height) :
+        textShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str()), screenWidth(witdh), screenHeight(height)
     {
+        glm::mat4 textProjection = glm::ortho(0.0f, static_cast<GLfloat>(screenWidth), 0.0f, static_cast<GLfloat>(screenHeight));
+        textShader.use();
+        glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "textProjection"), 1, GL_FALSE, glm::value_ptr(textProjection));
         //FreeType
         // All functions return a value different than 0 whenever an error occurred
         if (FT_Init_FreeType(&ft))
@@ -93,7 +96,7 @@ namespace UIRender
         glDeleteBuffers(1, &textVBO);
     }
 
-    void TextRender::render(Shader& textShader, std::string text, float x, float y, float scale, glm::vec3 color)
+    void TextRender::render(std::string text, float x, float y, float scale, glm::vec3 color)
     {
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);

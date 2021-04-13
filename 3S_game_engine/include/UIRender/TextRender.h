@@ -28,12 +28,12 @@ namespace UIRender
     class TextRender
     {
     public:
-        TextRender(std::string vertexShaderPath, std::string fragmentShaderPath, std::string fontPath);
+        TextRender(std::string vertexShaderPath, std::string fragmentShaderPath, std::string fontPath, int witdh = 1280, int height = 720);
         ~TextRender();
 
         //1st argument is shader program which will create text, 2nd is text to render, 3rd and 4th are position in X and Y axis, 
         //5th is scale of text, 6th is vec3 of color
-        void render(Shader& textShader, std::string text, float x, float y, float scale, glm::vec3 color);
+        void render(std::string text, float x, float y, float scale, glm::vec3 color);
 
     private:
         unsigned int textVBO, textVAO;
@@ -43,5 +43,6 @@ namespace UIRender
         //float x, y, scale;
         std::string fontPath;
         Shader textShader;
+        int screenHeight, screenWidth;
     };
 }
