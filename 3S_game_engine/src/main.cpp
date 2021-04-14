@@ -32,6 +32,10 @@ void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput *mouse);
 void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboard);
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
 
+// Those functions will define position of given model 
+void keyboardMovementWSAD(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard);
+void keyboardMovementIJKL(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard);
+
 // settings
 const unsigned int SCREEN_WIDTH = 1280;
 const unsigned int SCREEN_HEIGHT = 720;
@@ -41,6 +45,10 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCREEN_WIDTH / 2.0f;
 float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
+
+// movement
+float positionOfWsadObject[3] = { 0, 0, 0 };
+float positionOfIjklObject[3] = { 0, 0, 0 };
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -117,8 +125,15 @@ int main()
     mouseInput->cursorEnable();
     
     /* Load models */
-    Loader::Model m(glm::vec3(1.0f), glm::vec3(1.0f));
-    Loader::Model trollModel(glm::vec3(-12.0f), glm::vec3(0.02f));
+    positionOfIjklObject[0] = 1.0f;
+    positionOfIjklObject[1] = 1.0f;
+    positionOfIjklObject[2] = 1.0f;
+    Loader::Model m(glm::vec3(positionOfIjklObject[0], positionOfIjklObject[1], positionOfIjklObject[2]), glm::vec3(1.0f));
+
+    positionOfWsadObject[0] = -12.0f;
+    positionOfWsadObject[1] = -12.0f;
+    positionOfWsadObject[2] = -12.0f;
+    Loader::Model trollModel(glm::vec3(positionOfWsadObject[0], positionOfWsadObject[1], positionOfWsadObject[2]), glm::vec3(0.02f));
     m.loadModel("assets/models/backpack/backpack.obj");
     trollModel.loadModel("assets/models/lotr_troll/scene.gltf");
 
@@ -170,7 +185,9 @@ int main()
         model3D.setUniform("view", view);
         model = glm::mat4(1.0f);
         dirLight.render(model3D);
+        keyboardMovementIJKL(positionOfIjklObject, &m, keyboardInput);
         m.render(model3D);
+        keyboardMovementWSAD(positionOfWsadObject, &trollModel, keyboardInput);
         trollModel.render(model3D);
         //root->update(glm::mat4(1.0f), false);
 
@@ -226,13 +243,13 @@ void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboar
 {
     if (keyboard->isKeyDown(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, true);
-    if (keyboard->isKeyDown(GLFW_KEY_W))
+    if (keyboard->isKeyDown(GLFW_KEY_UP))
         camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (keyboard->isKeyDown(GLFW_KEY_S))
+    if (keyboard->isKeyDown(GLFW_KEY_DOWN))
         camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (keyboard->isKeyDown(GLFW_KEY_A))
+    if (keyboard->isKeyDown(GLFW_KEY_LEFT))
         camera.ProcessKeyboard(LEFT, deltaTime);
-    if (keyboard->isKeyDown(GLFW_KEY_D))
+    if (keyboard->isKeyDown(GLFW_KEY_RIGHT))
         camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
@@ -250,4 +267,59 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
+}
+
+void keyboardMovementWSAD(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard)
+{
+    if (keyboard->isKeyDown(GLFW_KEY_W))
+    {
+        positionData[2] -= 0.2;
+        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+    }
+
+    if (keyboard->isKeyDown(GLFW_KEY_S))
+    {
+        positionData[2] += 0.2;
+        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+    }
+
+    if (keyboard->isKeyDown(GLFW_KEY_A))
+    {
+        positionData[0] -= 0.2;
+        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+    }
+
+    if (keyboard->isKeyDown(GLFW_KEY_D))
+    {
+        positionData[0] += 0.2;
+        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+    }
+}
+
+void keyboardMovementIJKL(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard)
+{
+    if (keyboard->isKeyDown(GLFW_KEY_I))
+    {
+        positionData[2] -= 0.2;
+        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+    }
+   
+    if (keyboard->isKeyDown(GLFW_KEY_K))
+    {
+        positionData[2] += 0.2;
+        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+    }
+    
+    if (keyboard->isKeyDown(GLFW_KEY_J))
+    {
+        positionData[0] -= 0.2;
+        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+    }
+   
+    if (keyboard->isKeyDown(GLFW_KEY_L)) 
+    {
+        positionData[0] += 0.2;
+        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+    }
+    
 }
