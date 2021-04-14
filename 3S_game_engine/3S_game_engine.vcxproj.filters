@@ -24,6 +24,7 @@
     <ClCompile Include="include\ImGUI\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\UIRender\TextRender.cpp" />
     <ClCompile Include="include\SceneGraph\SceneGraph.cpp" />
+    <ClCompile Include="include\Primitives\Cube\Cube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="include\UIRender\TextRender.h" />
     <ClInclude Include="include\UIRender\UIRender.h" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
+    <ClInclude Include="include\Primitives\Cube\Cube.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
