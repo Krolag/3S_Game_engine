@@ -16,7 +16,8 @@
 #include "Skybox/Skybox.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
-#include "SceneGraph/SceneGraph.h"
+#include "GameLogic/SceneGraph.h"
+#include "GameLogic/Proctor.h"
 
 /* Load 3SE packages */
 #include "Loader/Loader.h"
@@ -138,9 +139,8 @@ int main()
     trollModel.loadModel("assets/models/lotr_troll/scene.gltf");
 
     /* Scene graph */
-    SceneGraphSP root(new SceneGraph());
-    SceneGraphSP troll(new SceneGraph(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.05f)));
-    root->addChild(troll);
+    Proctor troll(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+    troll.model = trollModel;
 
     /* Lights */
     DirLight dirLight = {
@@ -165,6 +165,12 @@ int main()
         /* ImGUI window setup */
         {
             ImGui::Text("Troll");
+            float scale[3];
+            scale[0] = troll.transform.scale.x;
+            scale[1] = troll.transform.scale.y;
+            scale[2] = troll.transform.scale.z;
+            ImGui::InputFloat3("scale", scale, "%.3f");
+            troll.setScale(glm::vec3(scale[0], scale[1], scale[2]));
         }
 
         /* Per-frame time logic */
@@ -186,10 +192,8 @@ int main()
         model = glm::mat4(1.0f);
         dirLight.render(model3D);
         keyboardMovementIJKL(positionOfIjklObject, &m, keyboardInput);
-        m.render(model3D);
         keyboardMovementWSAD(positionOfWsadObject, &trollModel, keyboardInput);
-        trollModel.render(model3D);
-        //root->update(glm::mat4(1.0f), false);
+        troll.render(model3D);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render(); 
