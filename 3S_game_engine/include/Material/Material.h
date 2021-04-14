@@ -12,7 +12,7 @@ struct Material
 	float shininess;
 
 	static Material emerald;
-	static Material gold;
+	static Material greenRubber;
 
 	/* Function to mix two materials with a proportion */
 	static Material mix(Material _m1, Material _m2, float _mix = 0.5f);

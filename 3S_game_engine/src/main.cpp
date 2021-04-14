@@ -115,9 +115,17 @@ int main()
 
 #pragma endregion
 
+    
+
     /* Create shaders */
     Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
-	
+    Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
+
+    /* Text init */
+    textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCREEN_WIDTH), 0.0f, static_cast<GLfloat>(SCREEN_WIDTH));
+    textShader.use();
+    glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "textProjection"), 1, GL_FALSE, glm::value_ptr(textProjection));
+
     /* Create Skybox */
     Skybox skybox(&view, &projection, &camera);
 

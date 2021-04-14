@@ -10,6 +10,7 @@
 /* 3SGE library*/
 #include <Shader/Shader.h>
 #include "Loader/Mesh.h"
+#include "Material/Material.h"
 #include <vector>
 
 namespace Loader
@@ -20,6 +21,7 @@ namespace Loader
 		/* Model transformation */
 		glm::vec3 position;
 		glm::vec3 size;
+		Material material;
 
 		/* Construtor & destructor */
 		Model(glm::vec3 _position = glm::vec3(0.0f), glm::vec3 _size = glm::vec3(1.0f));
