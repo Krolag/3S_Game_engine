@@ -4,9 +4,6 @@
 class Component
 {
 public:
-	Component();
-	~Component();
-
 	virtual void init();
 	virtual void input();
 	virtual void update();

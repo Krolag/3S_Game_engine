@@ -16,8 +16,8 @@
 #include "Skybox/Skybox.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
-#include "GameLogic/SceneGraph.h"
 #include "GameLogic/Proctor.h"
+#include "GameLogic/Hierarchy.h"
 
 /* Load 3SE packages */
 #include "Loader/Loader.h"
@@ -111,6 +111,7 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     ImGui::StyleColorsDark();
+    int hierarchyCurrentItem = 0;
 
 #pragma endregion
 
@@ -124,7 +125,10 @@ int main()
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(window);
     mouseInput->cursorEnable();
-    
+
+    /* Create object hierarchy */
+    Hierarchy hierarchy;
+
     /* Load models */
     positionOfIjklObject[0] = 1.0f;
     positionOfIjklObject[1] = 1.0f;
@@ -139,8 +143,10 @@ int main()
     trollModel.loadModel("assets/models/lotr_troll/scene.gltf");
 
     /* Scene graph */
-    Proctor troll(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
-    troll.model = trollModel;
+    Proctor troll("Troll", glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+    Proctor test_model("test_model", glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+    hierarchy.addObject(troll);
+    hierarchy.addObject(test_model);
 
     /* Lights */
     DirLight dirLight = {
@@ -164,13 +170,12 @@ int main()
 
         /* ImGUI window setup */
         {
-            ImGui::Text("Troll");
-            float scale[3];
-            scale[0] = troll.transform.scale.x;
-            scale[1] = troll.transform.scale.y;
-            scale[2] = troll.transform.scale.z;
-            ImGui::InputFloat3("scale", scale, "%.3f");
-            troll.setScale(glm::vec3(scale[0], scale[1], scale[2]));
+            ImGui::Begin("Hierarchy");
+            for (auto obj : hierarchy.getObjects())
+            {
+                ImGui::Button(obj.name.c_str());
+            }
+            ImGui::End();
         }
 
         /* Per-frame time logic */
@@ -193,7 +198,9 @@ int main()
         dirLight.render(model3D);
         keyboardMovementIJKL(positionOfIjklObject, &m, keyboardInput);
         keyboardMovementWSAD(positionOfWsadObject, &trollModel, keyboardInput);
-        troll.render(model3D);
+
+        /* Render models */
+        hierarchy.getObject("troll").render(model3D);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render(); 

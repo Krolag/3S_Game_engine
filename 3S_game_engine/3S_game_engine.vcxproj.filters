@@ -23,10 +23,9 @@
     <ClCompile Include="include\ImGUI\imgui_impl_glfw.cpp" />
     <ClCompile Include="include\ImGUI\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\UIRender\TextRender.cpp" />
-    <ClCompile Include="include\SceneGraph\SceneGraph.cpp" />
     <ClCompile Include="include\Primitives\Cube\Cube.cpp" />
-    <ClCompile Include="include\GameLogic\SceneGraph.cpp" />
     <ClCompile Include="include\GameLogic\Proctor.cpp" />
+    <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -57,9 +56,10 @@
     <ClInclude Include="include\UIRender\UIRender.h" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\Primitives\Cube\Cube.h" />
-    <ClInclude Include="include\GameLogic\SceneGraph.h" />
     <ClInclude Include="include\GameLogic\Proctor.h" />
-    <ClInclude Include="include\GameLogic\Component.h" />
+    <ClInclude Include="include\Components\Component.h" />
+    <ClInclude Include="include\Components\MeshRenderer.h" />
+    <ClInclude Include="include\GameLogic\Hierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

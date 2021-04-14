@@ -156,10 +156,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
     <ClCompile Include="include\Primitives\Cube\Cube.cpp" />
-    <ClCompile Include="include\SceneGraph\SceneGraph.cpp" />
     <ClCompile Include="include\GameLogic\Proctor.cpp" />
-    <ClCompile Include="include\GameLogic\SceneGraph.cpp" />
     <ClCompile Include="include\UIRender\BackgroundImage.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\ImGUI\imgui.cpp" />
@@ -184,11 +183,12 @@
     <ClCompile Include="include\UIRender\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Components\MeshRenderer.h" />
+    <ClInclude Include="include\GameLogic\Hierarchy.h" />
     <ClInclude Include="include\Primitives\Cube\Cube.h" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
-    <ClInclude Include="include\GameLogic\Component.h" />
+    <ClInclude Include="include\Components\Component.h" />
     <ClInclude Include="include\GameLogic\Proctor.h" />
-    <ClInclude Include="include\GameLogic\SceneGraph.h" />
     <ClInclude Include="include\UIRender\BackgroundImage.h" />
     <ClInclude Include="include\assimp\config.h" />
     <ClInclude Include="include\Camera\Camera.h" />

@@ -1,7 +1,8 @@
 #include "Proctor.h"
 
-Proctor::Proctor(const glm::vec3& _position, const glm::vec3& _rotation, const glm::vec3& _scale)
+Proctor::Proctor(std::string _name, const glm::vec3& _position, const glm::vec3& _rotation, const glm::vec3& _scale)
 {
+	name = _name;
 	transform.position = _position;
 	transform.rotation = _rotation;
 	transform.scale = _scale;
@@ -12,6 +13,22 @@ Proctor::~Proctor() { }
 void Proctor::addChild(Proctor _child)
 {
 	children.push_back(_child);
+}
+
+Proctor Proctor::getChild(Proctor _child)
+{
+	for (auto obj : children)
+	{
+		if (obj.name == _child.name)
+		{
+			return obj;
+		}
+	}
+}
+
+std::vector<Proctor> Proctor::getChildren()
+{
+	return children;
 }
 
 //void Proctor::addComponent(Component _component)
@@ -52,8 +69,6 @@ void Proctor::render(Shader _shader)
 		compo.render();
 	}*/
 
-	model.render(_shader);
-
 	for (auto& child : children)
 	{
 		child.render(_shader);
@@ -63,5 +78,4 @@ void Proctor::render(Shader _shader)
 void Proctor::setScale(glm::vec3 _scale)
 {
 	transform.scale = _scale;
-	model.size = transform.scale;
 }
