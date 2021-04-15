@@ -55,28 +55,28 @@ void Cube::init()
 	// init indices data
 	float _cubeInd[] = {
 		// front
-		1, 2, 3,
-		3, 4, 1,
+		0, 1, 2,
+		2, 3, 0,
 		
 		// back
-		5, 6, 7,
-		7, 8, 5,
+		4, 5, 6,
+		6, 7, 4,
 
 		// left
-		1, 5, 8,
-		8, 4, 1,
+		0, 4, 7,
+		7, 3, 0,
 		
 		// right
-		2, 6, 7,
-		7, 3, 2,
-		
-		// top
 		1, 5, 6,
 		6, 2, 1,
 		
+		// top
+		0, 4, 5,
+		5, 1, 0,
+		
 		// bottom
-		4, 8, 7,
-		7, 3, 4
+		3, 7, 6,
+		6, 2, 3
 	};
 	
 	for (int i = 0; i < 36; i++)
@@ -121,7 +121,7 @@ void Cube::render()
 	glBindVertexArray(cubeVAO); // bind vertex array belonging to this object
 
 	cubeTexture.bind(); // bind ui texture to use it
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // draw call
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); // draw call
 
 	glBindVertexArray(0); // unbind vertex array belonging to this object
 }
