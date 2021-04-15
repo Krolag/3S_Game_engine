@@ -14,6 +14,7 @@ private:
 	int cubeIndices[36]; // Indices data
 	float cubeSize;
 
+	// need for rendering properly and setting uniforms
 	Camera *camera;
 	glm::mat4 *model, *view, *projection;
 
