@@ -132,7 +132,7 @@ int main()
     Skybox skybox(&view, &projection, &camera);
 
 	/* Create Cube */
-    Cube cube(0.5);
+    Cube cube(0.5, &camera, &model, &view, &projection);
 	
     /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);

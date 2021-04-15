@@ -113,7 +113,8 @@ void Cube::init()
 void Cube::render()
 {
 	cubeShader.use(); // we want to use shader belonging to this object
-
+	cubeShader.setUniform("view", *view);
+	cubeShader.setUniform("projection", *projection);
 	glEnable(GL_DEPTH_TEST);
 	
 	glBindVertexArray(cubeVAO); // bind vertex array belonging to this object
