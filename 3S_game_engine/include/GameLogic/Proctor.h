@@ -33,17 +33,17 @@ public:
 	void addChild(Proctor _child);
 	Proctor getChild(Proctor _child);
 	std::vector<Proctor> getChildren();
-	//void addComponent(Component _component);
+	void addComponent(Component _component);
 	void input();
 	void update();
-	void render(Shader _shader);
+	void render();
 
 	Transform getTransform() { return transform; }
 	void setScale(glm::vec3 _scale);
 
 private:
 	std::vector<Proctor> children;
-	//std::vector<Component> components;
+	std::vector<Component> components;
 };
 
 #endif // !PROCTOR_H

@@ -4,10 +4,10 @@
 class Component
 {
 public:
-	virtual void init();
-	virtual void input();
-	virtual void update();
-	virtual void render();
+	void init() {}
+	void input() {}
+	void update() {}
+	void render() {}
 };
 
 #endif // !COMPONENT_H

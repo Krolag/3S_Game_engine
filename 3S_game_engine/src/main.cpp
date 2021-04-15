@@ -18,6 +18,8 @@
 #include "Light/Light.h"
 #include "GameLogic/Proctor.h"
 #include "GameLogic/Hierarchy.h"
+#include "Primitives/Cube/Cube.h"
+#include "Components/MeshRenderer.h"
 
 /* Load 3SE packages */
 #include "Loader/Loader.h"
@@ -28,7 +30,6 @@
 #include <map>
 #include <string>
 
-#include "Primitives/Cube/Cube.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput *mouse);
@@ -117,8 +118,6 @@ int main()
 
 #pragma endregion
 
-    
-
     /* Create shaders */
     Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
@@ -152,14 +151,12 @@ int main()
     positionOfWsadObject[1] = -12.0f;
     positionOfWsadObject[2] = -12.0f;
     Loader::Model trollModel(glm::vec3(positionOfWsadObject[0], positionOfWsadObject[1], positionOfWsadObject[2]), glm::vec3(0.02f));
-    m.loadModel("assets/models/backpack/backpack.obj");
     trollModel.loadModel("assets/models/lotr_troll/scene.gltf");
 
-    /* Scene graph */
+    /* Load hierarchy */
     Proctor troll("Troll", glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
-    Proctor test_model("test_model", glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+    troll.addComponent(MeshRenderer(trollModel, model3D));
     hierarchy.addObject(troll);
-    hierarchy.addObject(test_model);
 
     /* Lights */
     DirLight dirLight = {
@@ -213,7 +210,7 @@ int main()
         keyboardMovementWSAD(positionOfWsadObject, &trollModel, keyboardInput);
 
         /* Render models */
-        hierarchy.getObject("troll").render(model3D);
+        hierarchy.getObject("troll").render();
         cube.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */

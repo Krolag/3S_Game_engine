@@ -31,17 +31,17 @@ std::vector<Proctor> Proctor::getChildren()
 	return children;
 }
 
-//void Proctor::addComponent(Component _component)
-//{
-//	components.push_back(_component);
-//}
+void Proctor::addComponent(Component _component)
+{
+	components.push_back(_component);
+}
 
 void Proctor::input()
 {
-	//for (auto& compo : components)
-	//{
-	//	compo.input();
-	//}
+	for (auto& compo : components)
+	{
+		compo.input();
+	}
 
 	for (auto& child : children)
 	{
@@ -51,10 +51,10 @@ void Proctor::input()
 
 void Proctor::update()
 {
-	/*for (auto& compo : components)
+	for (auto& compo : components)
 	{
 		compo.update();
-	}*/
+	}
 
 	for (auto& child : children)
 	{
@@ -62,16 +62,16 @@ void Proctor::update()
 	}
 }
 
-void Proctor::render(Shader _shader)
+void Proctor::render()
 {
-	/*for (auto& compo : components)
+	for (auto& compo : components)
 	{
 		compo.render();
-	}*/
+	}
 
 	for (auto& child : children)
 	{
-		child.render(_shader);
+		child.render();
 	}
 }
 
