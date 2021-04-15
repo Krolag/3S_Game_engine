@@ -28,6 +28,8 @@
 #include <map>
 #include <string>
 
+#include "Primitives/Cube/Cube.h"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput *mouse);
 void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboard);
@@ -129,6 +131,9 @@ int main()
     /* Create Skybox */
     Skybox skybox(&view, &projection, &camera);
 
+	/* Create Cube */
+    Cube cube(0.5);
+	
     /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(window);
@@ -209,6 +214,7 @@ int main()
 
         /* Render models */
         hierarchy.getObject("troll").render(model3D);
+        cube.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render(); 
