@@ -1,81 +1,34 @@
 #include "Proctor.h"
+#include <iostream>
+#include "GameLogic/Randomizer.h"
 
-Proctor::Proctor(std::string _name, const glm::vec3& _position, const glm::vec3& _rotation, const glm::vec3& _scale)
+Proctor::Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _active, bool _isStatic)
+	: name(_name), uuid(_uuid), parent(_parent), active(_active), isStatic(_isStatic)
 {
-	name = _name;
-	transform.position = _position;
-	transform.rotation = _rotation;
-	transform.scale = _scale;
+	if (uuid == 0)
+	{
+		uuid = uuid = Randomizer().randomInt();
+	}
 }
 
 Proctor::~Proctor() { }
 
-void Proctor::addChild(Proctor _child)
-{
-	children.push_back(_child);
-}
-
-Proctor Proctor::getChild(Proctor _child)
-{
-	for (auto obj : children)
-	{
-		if (obj.name == _child.name)
-		{
-			return obj;
-		}
-	}
-}
-
-std::vector<Proctor> Proctor::getChildren()
-{
-	return children;
-}
-
-void Proctor::addComponent(Component _component)
-{
-	components.push_back(_component);
-}
-
-void Proctor::input()
-{
-	for (auto& compo : components)
-	{
-		compo.input();
-	}
-
-	for (auto& child : children)
-	{
-		child.input();
-	}
-}
-
 void Proctor::update()
 {
-	for (auto& compo : components)
+	/* First update components for current hierarchy level */
+	for (auto& a : components)
 	{
-		compo.update();
+		a->update();
 	}
 
-	for (auto& child : children)
+	/* Next update children */
+	for (auto &a : children)
 	{
-		child.update();
-	}
-}
-
-void Proctor::render()
-{
-	for (auto& compo : components)
-	{
-		compo.render();
-	}
-
-	for (auto& child : children)
-	{
-		child.render();
+		a->update();
 	}
 }
 
-void Proctor::setScale(glm::vec3 _scale)
+void Proctor::addComponent(Component* _component)
 {
-	transform.scale = _scale;
+	components.push_back(_component);
 }

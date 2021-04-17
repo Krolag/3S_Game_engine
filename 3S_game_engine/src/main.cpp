@@ -154,9 +154,12 @@ int main()
     trollModel.loadModel("assets/models/lotr_troll/scene.gltf");
 
     /* Load hierarchy */
-    Proctor troll("Troll", glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
-    troll.addComponent(MeshRenderer(trollModel, model3D));
-    hierarchy.addObject(troll);
+    Proctor troll("troll_name", 0, NULL);
+    MeshRenderer trollMR(C_MESH);
+    trollMR.setModel(&trollModel);
+    trollMR.setShader(model3D);
+    troll.addComponent(&trollMR);
+    hierarchy.addObject(&troll);
 
     /* Lights */
     DirLight dirLight = {
@@ -180,12 +183,12 @@ int main()
 
         /* ImGUI window setup */
         {
-            ImGui::Begin("Hierarchy");
+            /*ImGui::Begin("Hierarchy");
             for (auto obj : hierarchy.getObjects())
             {
                 ImGui::Button(obj.name.c_str());
             }
-            ImGui::End();
+            ImGui::End();*/
         }
 
         /* Per-frame time logic */
@@ -210,8 +213,9 @@ int main()
         keyboardMovementWSAD(positionOfWsadObject, &trollModel, keyboardInput);
 
         /* Render models */
-        hierarchy.getObject("troll").render();
-        cube.render();
+        //troll.update();
+        hierarchy.update();
+        //cube.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render(); 

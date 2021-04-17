@@ -19,31 +19,37 @@ struct Transform
 class Proctor
 {
 public:
-	Transform transform;
 	std::string name;
+	Transform transform;
 
-	Proctor(
-		std::string _name,
-		const glm::vec3& _position = glm::vec3(0.0f),
-		const glm::vec3& _rotation = glm::vec3(0.0f),
-		const glm::vec3& _scale = glm::vec3(1.0f)
-		);
+	Proctor();
+	Proctor(Proctor* _parent);
+	Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _active = true, bool _isStatic = false);
 	~Proctor();
 
-	void addChild(Proctor _child);
-	Proctor getChild(Proctor _child);
-	std::vector<Proctor> getChildren();
-	void addComponent(Component _component);
-	void input();
 	void update();
-	void render();
 
-	Transform getTransform() { return transform; }
-	void setScale(glm::vec3 _scale);
+	/* Children methods */
+	void addChild(Proctor* _proctor);
+	void removeChild(Proctor* _proctor);
+	void removeChildren();
+	Proctor* getParent() const;
+	void setParent(Proctor* _proctor);
+	unsigned int childCount();
+
+	/* Components methods */
+	void addComponent(Component* _component);
 
 private:
-	std::vector<Proctor> children;
-	std::vector<Component> components;
+	/* Hierarchy data */
+	Proctor* parent = NULL;
+	std::vector<Proctor*> children;
+
+	/* Proctor data */
+	unsigned int uuid = 0;
+	bool active = true;
+	bool isStatic = false;
+	std::vector<Component*> components;
 };
 
 #endif // !PROCTOR_H

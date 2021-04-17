@@ -6,17 +6,30 @@
 class MeshRenderer : public Component
 {
 public:
-	Loader::Model model;
-	Material material;
-	Shader shader;
-
-	MeshRenderer() {}
-	MeshRenderer(Loader::Model _model, Shader _shader)
-		: model(_model), shader(_shader)
-	{}
-
-	void render()
+	MeshRenderer(ComponentType _type)
+		: Component(_type, NULL)
 	{
-		model.render(shader);
+
 	}
+
+	MeshRenderer(ComponentType _type, Proctor* _proctor);
+
+	void setModel(Loader::Model* _model)
+	{
+		model = _model;
+	}
+
+	void update()
+	{
+		model->render(shader);
+	}
+
+	void setShader(Shader _shader)
+	{
+		shader = _shader;
+	}
+
+private:
+	Loader::Model* model = nullptr;
+	Shader shader;
 };

@@ -27,6 +27,7 @@
     <ClCompile Include="include\GameLogic\Proctor.cpp" />
     <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
     <ClCompile Include="include\GameLogic\BoxCollider.cpp" />
+    <ClCompile Include="include\Components\Component.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="include\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />
     <ClInclude Include="include\GameLogic\BoxCollider.h" />
+    <ClInclude Include="include\GameLogic\Randomizer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
