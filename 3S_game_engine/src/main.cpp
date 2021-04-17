@@ -40,6 +40,9 @@ void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputS
 void keyboardMovementWSAD(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard);
 void keyboardMovementIJKL(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard);
 
+//Switch camera position(debug)
+void cameraSwitch(bool &isDebugMode, int cameraPositionY,InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window);
+
 // settings
 const unsigned int SCREEN_WIDTH = 1280;
 const unsigned int SCREEN_HEIGHT = 720;
@@ -57,6 +60,8 @@ float positionOfIjklObject[3] = { 0, 0, 0 };
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
+
+bool isDebugModeOn = false;
 
 int main()
 {
@@ -136,16 +141,16 @@ int main()
     /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(window);
-    mouseInput->cursorEnable();
 
     /* Create object hierarchy */
     Hierarchy hierarchy;
 
     /* Load models */
-    positionOfIjklObject[0] = 1.0f;
-    positionOfIjklObject[1] = 1.0f;
-    positionOfIjklObject[2] = 1.0f;
-    Loader::Model m(glm::vec3(positionOfIjklObject[0], positionOfIjklObject[1], positionOfIjklObject[2]), glm::vec3(1.0f));
+    positionOfIjklObject[0] = 12.0f;
+    positionOfIjklObject[1] = -12.0f;
+    positionOfIjklObject[2] = -12.0f;
+    Loader::Model m(glm::vec3(positionOfIjklObject[0], positionOfIjklObject[1], positionOfIjklObject[2]), glm::vec3(0.02f));
+    m.loadModel("assets/models/lotr_troll/scene.gltf");
 
     positionOfWsadObject[0] = -12.0f;
     positionOfWsadObject[1] = -12.0f;
@@ -197,10 +202,9 @@ int main()
         lastFrame = currentFrame;
 
         /* Use InputSystem to move camera */
-        cameraMouseInput(window, mouseInput);
-        cameraKeyboardInput(window, keyboardInput);
-        mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
-
+        /* Use 'P' to swicth between camera modes, CTRL to look around, 'R' to get cursor position*/
+        cameraSwitch(isDebugModeOn, 40, mouseInput, keyboardInput, window);
+              
         glEnable(GL_DEPTH_TEST);
         model3D.use();
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);
@@ -211,7 +215,8 @@ int main()
         dirLight.render(model3D);
         keyboardMovementIJKL(positionOfIjklObject, &m, keyboardInput);
         keyboardMovementWSAD(positionOfWsadObject, &trollModel, keyboardInput);
-
+        trollModel.render(model3D);
+        m.render(model3D);
         /* Render models */
         //troll.update();
         hierarchy.update();
@@ -281,7 +286,7 @@ void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboar
 
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse)
 {
-    if (keyboard->isKeyDown(key) && !mouse->isCursorEntered()) {
+    if (keyboard->isKeyDown(key)) {
         std::cout << mouse->getCursorPosition().x << "    " << mouse->getCursorPosition().y << "\n";
     }
 }
@@ -348,4 +353,34 @@ void keyboardMovementIJKL(float* positionData, Loader::Model* model, InputSystem
         model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
     }
     
+}
+
+void cameraSwitch(bool &isDebugMode, int cameraPositionY, InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window)
+{
+    if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
+        isDebugModeOn = !isDebugModeOn;
+    }
+
+    if (isDebugModeOn)
+    {
+        cameraKeyboardInput(window, keyboardInput); 
+        mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
+
+        if (keyboardInput->isKeyDown(GLFW_KEY_LEFT_CONTROL))
+        {
+            cameraMouseInput(window, mouseInput);
+            mouseInput->cursorDisable();
+        }
+        if (keyboardInput->isKeyReleased(GLFW_KEY_LEFT_CONTROL))
+        {
+            firstMouse = true; // reset last saved mosue position
+        }
+    }
+    if (!isDebugModeOn)
+    {
+        camera.Yaw = -90; // set yaw to default value
+        camera.ProcessMouseMovement(0, -89); // set pitch to default value
+        camera.Position = glm::vec3((positionOfWsadObject[0] + positionOfIjklObject[0]) / 2.f, cameraPositionY, (positionOfWsadObject[2] + positionOfIjklObject[2]) / 2.f);
+        mouseInput->cursorEnable();
+    }
 }
