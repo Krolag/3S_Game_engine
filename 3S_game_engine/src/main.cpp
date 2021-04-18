@@ -152,7 +152,6 @@ int main()
     positionOfWsadObject[2] = -12.0f;
     Loader::Model troll_00_model;
     troll_00_model.loadModel("assets/models/lotr_troll/scene.gltf");
-
     positionOfIjklObject[0] = 12.0f;
     positionOfIjklObject[1] = -12.0f;
     positionOfIjklObject[2] = -12.0f;

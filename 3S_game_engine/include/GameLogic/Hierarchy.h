@@ -5,13 +5,16 @@
 class Hierarchy
 {
 public:
+	/* Constructors */
 	Hierarchy();
 
+	/* Objects method */
 	void addObject(Proctor* _proctor);
 	void removeObject(Proctor* _proctor);
 	Proctor* getObject(std::string _name);
-	Proctor* getObject(unsigned int uuid);
+	Proctor* getObject(unsigned int _uuid);
 	std::vector<Proctor*> getObjects();
+	
 	void update();
 
 private:

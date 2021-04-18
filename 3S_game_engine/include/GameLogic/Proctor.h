@@ -20,6 +20,7 @@ class Proctor
 {
 public:
 	std::string name;
+	unsigned int uuid = 0;
 	Transform transform;
 
 	Proctor();
@@ -55,7 +56,6 @@ private:
 	std::vector<Proctor*> children;
 
 	/* Proctor data */
-	unsigned int uuid = 0;
 	bool active = true;
 	bool isStatic = false;
 	std::vector<Component*> components;
