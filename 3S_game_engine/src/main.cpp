@@ -160,7 +160,7 @@ int main()
 
     /* Load hierarchy */
     // TROLL 00
-    Proctor troll_00("troll_name", 0, NULL);
+    Proctor troll_00("troll_00", 0, NULL);
     troll_00.setPosition(glm::vec3(-12.0f));
     troll_00.setScale(glm::vec3(0.02f));
     MeshRenderer troll_00_mr(C_MESH, &troll_00);

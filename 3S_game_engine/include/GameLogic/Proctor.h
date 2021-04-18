@@ -19,7 +19,7 @@ struct Transform
 class Proctor
 {
 public:
-	std::string name;
+	std::string name = "none";
 	unsigned int uuid = 0;
 	Transform transform;
 
@@ -49,6 +49,9 @@ public:
 
 	/* Components methods */
 	void addComponent(Component* _component);
+
+	/* Debug window methods */
+	void drawDebugWindow();
 
 private:
 	/* Hierarchy data */

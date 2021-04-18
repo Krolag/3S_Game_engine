@@ -1,6 +1,11 @@
 #include "Hierarchy.h"
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw.h"
+#include "ImGUI/imgui_impl_opengl3.h"
 
-Hierarchy::Hierarchy() { }
+Hierarchy::Hierarchy(bool _state)
+	: active(_state)
+{ }
 
 void Hierarchy::addObject(Proctor* _proctor)
 {
@@ -61,11 +66,49 @@ std::vector<Proctor*> Hierarchy::getObjects()
 	return objects;
 }
 
+void Hierarchy::setState(bool _state)
+{
+	active = _state;
+}
+
+bool Hierarchy::getState()
+{
+	return active;
+}
+
+void Hierarchy::drawHierarchyWindow()
+{
+	/* Draw hierarchy as buttons */
+	ImGui::Begin("Hierarchy");
+	for (auto& a : objects)
+	{
+		if (ImGui::Button(a->name.c_str(), { 100.0f, 25.0f }))
+		{
+			activeProctorName = a->name;
+		}
+	}
+	ImGui::End();
+
+	/* Draw proctor window */
+	ImGui::Begin("Proctor");
+	if (activeProctorName != "none")
+	{
+		getObject(activeProctorName)->drawDebugWindow();
+	}
+	ImGui::End();
+}
+
 void Hierarchy::update()
 {
 	/* Update all proctors in objects vector */
 	for (auto& a : objects)
 	{
 		a->update();
+	}
+
+	/* If hierarchy is active, draw debug window */
+	if (active)
+	{
+		drawHierarchyWindow();
 	}
 }

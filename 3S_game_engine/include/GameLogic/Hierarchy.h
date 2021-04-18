@@ -6,7 +6,7 @@ class Hierarchy
 {
 public:
 	/* Constructors */
-	Hierarchy();
+	Hierarchy(bool _state = true);
 
 	/* Objects method */
 	void addObject(Proctor* _proctor);
@@ -14,9 +14,20 @@ public:
 	Proctor* getObject(std::string _name);
 	Proctor* getObject(unsigned int _uuid);
 	std::vector<Proctor*> getObjects();
-	
+
+	/* State methods */
+	void setState(bool _state);
+	bool getState();
+
+	/* Render methods */
+	void drawHierarchyWindow();
+
 	void update();
 
 private:
 	std::vector<Proctor*> objects;
+
+	/* Debug window variables */
+	bool active;
+	std::string activeProctorName = "none";
 };

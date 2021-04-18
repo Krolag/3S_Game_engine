@@ -1,5 +1,8 @@
 #include "Proctor.h"
 #include <iostream>
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw.h"
+#include "ImGUI/imgui_impl_opengl3.h"
 #include "GameLogic/Randomizer.h"
 
 Proctor::Proctor() 
@@ -104,6 +107,16 @@ void Proctor::addComponent(Component* _component)
 
 	/* If component cannot be found in components vector, add it */
 	components.push_back(_component);
+}
+
+void Proctor::drawDebugWindow()
+{
+	ImGui::Text("|--------| NAME |--------|");
+	ImGui::Text(name.c_str());
+	ImGui::Text("|--------| TRANSFORM |--------|");
+	float variables[3] = { transform.position.x, transform.position.y, transform.position.z };
+	ImGui::Text("Position:"); ImGui::SameLine(); ImGui::DragFloat3("", variables, 0.01f);
+	transform.position = glm::vec3(variables[0], variables[1], variables[2]);
 }
 
 void Proctor::setTransform(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
