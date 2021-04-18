@@ -38,8 +38,8 @@ void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboar
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
 
 // Those functions will define position of given model 
-void keyboardMovementWSAD(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard);
-void keyboardMovementIJKL(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard);
+void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard);
+void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard);
 
 //Switch camera position(debug)
 void cameraSwitch(bool &isDebugMode, int cameraPositionY,InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window);
@@ -147,25 +147,37 @@ int main()
     Hierarchy hierarchy;
 
     /* Load models */
-    positionOfIjklObject[0] = 12.0f;
-    positionOfIjklObject[1] = -12.0f;
-    positionOfIjklObject[2] = -12.0f;
-    Loader::Model m(glm::vec3(positionOfIjklObject[0], positionOfIjklObject[1], positionOfIjklObject[2]), glm::vec3(0.02f));
-    m.loadModel("assets/models/lotr_troll/scene.gltf");
-
     positionOfWsadObject[0] = -12.0f;
     positionOfWsadObject[1] = -12.0f;
     positionOfWsadObject[2] = -12.0f;
-    Loader::Model trollModel(glm::vec3(positionOfWsadObject[0], positionOfWsadObject[1], positionOfWsadObject[2]), glm::vec3(0.02f));
-    trollModel.loadModel("assets/models/lotr_troll/scene.gltf");
+    Loader::Model troll_00_model;
+    troll_00_model.loadModel("assets/models/lotr_troll/scene.gltf");
+
+    positionOfIjklObject[0] = 12.0f;
+    positionOfIjklObject[1] = -12.0f;
+    positionOfIjklObject[2] = -12.0f;
+    Loader::Model troll_01_model;
+    troll_01_model.loadModel("assets/models/lotr_troll/scene.gltf");
 
     /* Load hierarchy */
-    Proctor troll("troll_name", 0, NULL);
-    MeshRenderer trollMR(C_MESH, &troll);
-    trollMR.setModel(&trollModel);
-    trollMR.setShader(model3D);
-    troll.addComponent(&trollMR);
-    hierarchy.addObject(&troll);
+    // TROLL 00
+    Proctor troll_00("troll_name", 0, NULL);
+    troll_00.setPosition(glm::vec3(-12.0f));
+    troll_00.setScale(glm::vec3(0.02f));
+    MeshRenderer troll_00_mr(C_MESH, &troll_00);
+    troll_00_mr.setModel(&troll_00_model);
+    troll_00_mr.setShader(model3D);
+    troll_00.addComponent(&troll_00_mr);
+    hierarchy.addObject(&troll_00);
+    // TROLL 01
+    Proctor troll_01("troll_01", 0, NULL);
+    troll_01.setPosition(glm::vec3(12.0f, -12.0f, -12.0f));
+    troll_01.setScale(glm::vec3(0.02f));
+    MeshRenderer troll_01_mr(C_MESH, &troll_01);
+    troll_01_mr.setModel(&troll_01_model);
+    troll_01_mr.setShader(model3D);
+    troll_01.addComponent(&troll_01_mr);
+    hierarchy.addObject(&troll_01);
 
     /* Lights */
     DirLight dirLight = {
@@ -187,23 +199,13 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        /* ImGUI window setup */
-        {
-            /*ImGui::Begin("Hierarchy");
-            for (auto obj : hierarchy.getObjects())
-            {
-                ImGui::Button(obj.name.c_str());
-            }
-            ImGui::End();*/
-        }
-
         /* Per-frame time logic */
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
         /* Use InputSystem to move camera */
-        /* Use 'P' to swicth between camera modes, CTRL to look around, 'R' to get cursor position*/
+        /* Use 'P' to switch between camera modes, CTRL to look around, 'R' to get cursor position*/
         cameraSwitch(isDebugModeOn, 40, mouseInput, keyboardInput, window);
               
         glEnable(GL_DEPTH_TEST);
@@ -214,14 +216,13 @@ int main()
         model3D.setUniform("view", view);
         model = glm::mat4(1.0f);
         dirLight.render(model3D);
-        keyboardMovementIJKL(positionOfIjklObject, &m, keyboardInput);
-        keyboardMovementWSAD(positionOfWsadObject, &trollModel, keyboardInput);
-        trollModel.render(model3D);
-        m.render(model3D);
+        keyboardMovementWSAD(positionOfWsadObject, &troll_00, keyboardInput);
+        keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput);
+
         /* Render models */
-        //troll.update();
         hierarchy.update();
-        //cube.render();
+        troll_00_model.render(model3D);
+        troll_01_model.render(model3D);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render(); 
@@ -243,8 +244,8 @@ int main()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    m.cleanup();
-    trollModel.cleanup();
+    troll_01_model.cleanup();
+    troll_00_model.cleanup();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
@@ -301,57 +302,57 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void keyboardMovementWSAD(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard)
+void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard)
 {
     if (keyboard->isKeyDown(GLFW_KEY_W))
     {
         positionData[2] -= 0.2;
-        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_S))
     {
         positionData[2] += 0.2;
-        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_A))
     {
         positionData[0] -= 0.2;
-        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_D))
     {
         positionData[0] += 0.2;
-        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
     }
 }
 
-void keyboardMovementIJKL(float* positionData, Loader::Model* model, InputSystem::KeyboardInput* keyboard)
+void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard)
 {
     if (keyboard->isKeyDown(GLFW_KEY_I))
     {
         positionData[2] -= 0.2;
-        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
     }
    
     if (keyboard->isKeyDown(GLFW_KEY_K))
     {
         positionData[2] += 0.2;
-        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
     }
     
     if (keyboard->isKeyDown(GLFW_KEY_J))
     {
         positionData[0] -= 0.2;
-        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
     }
    
     if (keyboard->isKeyDown(GLFW_KEY_L)) 
     {
         positionData[0] += 0.2;
-        model->position = glm::vec3(positionData[0], positionData[1], positionData[2]);
+        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
     }
     
 }

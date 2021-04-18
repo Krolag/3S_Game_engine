@@ -1,4 +1,5 @@
 #include "MeshRenderer.h"
+#include "GameLogic/Proctor.h"
 
 MeshRenderer::MeshRenderer(ComponentType _type, Proctor* _proctor)
 	: Component(_type, _proctor), parent(proctor)
@@ -11,11 +12,15 @@ void MeshRenderer::setModel(Loader::Model * _model)
 
 void MeshRenderer::update()
 {
-	model->position;
-	//Transform transform = proctor->getTransform();
-	//model->position = transform.position;
-	//model->scale = transform.scale;
+	/* Create transform container for proctor's transform values */
+	Transform transform = proctor->getTransform();
 
+	/* Apply those values each frame */
+	model->position = transform.position;
+	//model->rotation = transform.rotation;
+	model->scale = transform.scale;
+
+	/* Render model with given shader */
 	model->render(shader);
 }
 

@@ -7,7 +7,7 @@
 #include <vector>
 #include "Loader/Loader.h"
 #include "Shader/Shader.h"
-#include "Components/Component.h"
+#include "Components/MeshRenderer.h"
 
 struct Transform
 {
@@ -37,7 +37,7 @@ public:
 	unsigned int childCount();
 
 	/* Transform methods */
-	void setTransform(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale);
+	void setTransform(glm::vec3 _position = glm::vec3(1.0f), glm::quat _rotation = glm::quat(glm::vec3(1.0f)), glm::vec3 _scale = glm::vec3(1.0f));
 	void setPosition(glm::vec3 _position);
 	void setRotation(glm::quat _rotation);
 	void setScale(glm::vec3 _scale);
