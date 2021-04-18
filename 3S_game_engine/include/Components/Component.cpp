@@ -1,6 +1,8 @@
 #include "Component.h"
 #include "GameLogic/Randomizer.h"
 
+Component::Component() { }
+
 Component::Component(ComponentType _type, Proctor* _proctor)
 	: type(_type), proctor(_proctor)
 {

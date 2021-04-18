@@ -20,11 +20,11 @@ namespace Loader
 	public:
 		/* Model transformation */
 		glm::vec3 position;
-		glm::vec3 size;
+		glm::vec3 scale;
 		Material material;
 
 		/* Construtor & destructor */
-		Model(glm::vec3 _position = glm::vec3(0.0f), glm::vec3 _size = glm::vec3(1.0f));
+		Model(glm::vec3 _position = glm::vec3(0.0f), glm::vec3 _scale = glm::vec3(1.0f));
 
 		void init();
 		void render(Shader _shader);

@@ -28,6 +28,7 @@
     <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
     <ClCompile Include="include\GameLogic\BoxCollider.cpp" />
     <ClCompile Include="include\Components\Component.cpp" />
+    <ClCompile Include="include\Components\MeshRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />

@@ -16,6 +16,7 @@
 #include "Skybox/Skybox.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
+#include "Components/Component.h"
 #include "GameLogic/Proctor.h"
 #include "GameLogic/Hierarchy.h"
 #include "Primitives/Cube/Cube.h"
@@ -160,7 +161,7 @@ int main()
 
     /* Load hierarchy */
     Proctor troll("troll_name", 0, NULL);
-    MeshRenderer trollMR(C_MESH);
+    MeshRenderer trollMR(C_MESH, &troll);
     trollMR.setModel(&trollModel);
     trollMR.setShader(model3D);
     troll.addComponent(&trollMR);

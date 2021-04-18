@@ -12,6 +12,10 @@ class Proctor;
 class Component
 {
 public:
+	Proctor* proctor;
+
+	/* Constructors / Destructors */
+	Component();
 	Component(ComponentType _type, Proctor* _proctor);
 	virtual ~Component();
 
@@ -23,7 +27,6 @@ public:
 protected:
 	bool active = true;
 	ComponentType type;
-	Proctor* proctor = nullptr;
 	unsigned int uuid = 0;
 };
 

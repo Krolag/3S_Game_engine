@@ -4,10 +4,10 @@
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/matrix.hpp>
-#include "Components/Component.h"
 #include <vector>
 #include "Loader/Loader.h"
 #include "Shader/Shader.h"
+#include "Components/Component.h"
 
 struct Transform
 {
@@ -23,7 +23,6 @@ public:
 	Transform transform;
 
 	Proctor();
-	Proctor(Proctor* _parent);
 	Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _active = true, bool _isStatic = false);
 	~Proctor();
 
@@ -36,6 +35,16 @@ public:
 	Proctor* getParent() const;
 	void setParent(Proctor* _proctor);
 	unsigned int childCount();
+
+	/* Transform methods */
+	void setTransform(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale);
+	void setPosition(glm::vec3 _position);
+	void setRotation(glm::quat _rotation);
+	void setScale(glm::vec3 _scale);
+	Transform getTransform();
+	glm::vec3 getPosition();
+	glm::quat getRotation();
+	glm::vec3 getScale();
 
 	/* Components methods */
 	void addComponent(Component* _component);
