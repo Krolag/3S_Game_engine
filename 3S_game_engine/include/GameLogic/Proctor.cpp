@@ -114,18 +114,19 @@ void Proctor::drawDebugWindow()
 	ImGui::Text("|--------| NAME |-------------|");
 	ImGui::Text(name.c_str());
 	ImGui::Text("|--------| TRANSFORM |--------|");
-	float vecPos[3];
+	float variables[3];
 	/* Position */
-	vecPos[0] = transform.position.x; vecPos[1] = transform.position.y; vecPos[2] = transform.position.z;
-	ImGui::Text("Position:"); ImGui::SameLine(); ImGui::DragFloat3("P", vecPos, 0.01f);
-	setPosition(glm::vec3(vecPos[0], vecPos[1], vecPos[2]));
+	variables[0] = transform.position.x; variables[1] = transform.position.y; variables[2] = transform.position.z;
+	ImGui::Text("Position:"); ImGui::SameLine(); ImGui::DragFloat3("P", variables, 0.01f);
+	setPosition(glm::vec3(variables[0], variables[1], variables[2]));
 	/* Rotation */
-	ImGui::Text("Rotation:"); ImGui::SameLine(); ImGui::Text("rotation_plc_hold");
+	variables[0] = transform.rotation.x; variables[1] = transform.rotation.y; variables[2] = transform.rotation.z;
+	ImGui::Text("Rotation:"); ImGui::SameLine(); ImGui::DragFloat3("R", variables, 0.01f);
+	setRotation(glm::quat(1.0f, variables[0], variables[1], variables[2]));
 	/* Scale */
-	float vecScale[3];
-	vecScale[0] = transform.scale.x; vecScale[1] = transform.scale.y; vecScale[2] = transform.scale.z;
-	ImGui::Text("Scale:   "); ImGui::SameLine(); ImGui::DragFloat3("S", vecScale, 0.01f);
-	setScale(glm::vec3(vecScale[0], vecScale[1], vecScale[2]));
+	variables[0] = transform.scale.x; variables[1] = transform.scale.y; variables[2] = transform.scale.z;
+	ImGui::Text("Scale:   "); ImGui::SameLine(); ImGui::DragFloat3("S", variables, 0.01f);
+	setScale(glm::vec3(variables[0], variables[1], variables[2]));
 	ImGui::Text("|--------| MOVEMENT |---------|");
 }
 
