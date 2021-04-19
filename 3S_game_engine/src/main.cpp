@@ -32,16 +32,17 @@
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput *mouse);
-void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboard);
+void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
+void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput* keyboard);
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
 
 // Those functions will define position of given model 
-void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard);
-void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard);
+void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight);
+void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight);
 
 //Switch camera position(debug)
-void cameraSwitch(int cameraPositionY,InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2);
+void cameraSwitch(int cameraPositionY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2,
+    float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
 // settings
 const unsigned int SCREEN_WIDTH = 1280;
@@ -68,8 +69,8 @@ int main()
     glm::mat4 projection;
     glm::mat4 textProjection;
     glm::mat4 view;
-	glm::mat4 model;
-	
+    glm::mat4 model;
+
 #pragma region GLFW init
     // glfw: initialize and configure
     // ------------------------------
@@ -134,7 +135,7 @@ int main()
 
     /* Create Skybox */
     Skybox skybox(&view, &projection, &camera);
-	
+
     /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(window);
@@ -178,7 +179,7 @@ int main()
     troll_01_mr.setShader(model3D);
     troll_01.addComponent(&troll_01_mr);
     hierarchy.addObject(&troll_01);
-	// JAKIS MODEL
+    // JAKIS MODEL
     Proctor modelJakis_00("modelJakis_00", 0, NULL);
     modelJakis_00.setPosition(glm::vec3(-10.0f));
     modelJakis_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
@@ -191,11 +192,16 @@ int main()
 
     /* Lights */
     DirLight dirLight = {
-        glm::vec3(-0.2f, -1.0f, -0.3f), 
-        glm::vec3(0.1f), 
+        glm::vec3(-0.2f, -1.0f, -0.3f),
+        glm::vec3(0.1f),
         glm::vec3(0.4f),
         glm::vec3(0.75f)
     };
+
+    float xValueRight = 0.2;
+    float xValueLeft = 0.2;
+    float yValueUp = 0.2;
+    float yValueDown = 0.2;
 
     /* Render loop */
     while (!glfwWindowShouldClose(window))
@@ -203,7 +209,7 @@ int main()
         /* Clear screen */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         /* Dear ImGUI new frame setup */
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -216,8 +222,8 @@ int main()
 
         /* Use InputSystem to move camera */
         /* Use 'P' to switch between camera modes, CTRL to look around, 'R' to get cursor position*/
-        cameraSwitch(40, mouseInput, keyboardInput, window, &troll_00, &troll_01);
-              
+        cameraSwitch(40, mouseInput, keyboardInput, window, &troll_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+
         glEnable(GL_DEPTH_TEST);
         model3D.use();
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);
@@ -226,20 +232,19 @@ int main()
         model3D.setUniform("view", view);
         model = glm::mat4(1.0f);
         dirLight.render(model3D);
-
-        /* Collect Input */
-        keyboardMovementWSAD(positionOfWsadObject, &troll_00, keyboardInput);
-        keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput);
+        keyboardMovementWSAD(positionOfWsadObject, &troll_00, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight);
+        keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         /* Render models */
         hierarchy.update();
 
+
         /* Sky-box -- Must be rendered almost last, before hud */
-        skybox.render(); 
+        skybox.render();
 
         /* DEBUG - Draw DearImGUI */
         ImGui::Render();
-        
+
         /* Update InputSystem */
         keyboardInput->update();
         mouseInput->update();
@@ -257,14 +262,14 @@ int main()
     troll_01_model.cleanup();
     troll_00_model.cleanup();
     modelJakis.cleanup();
-	
+
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
 }
 
-void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput *mouse)
+void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse)
 {
     if (firstMouse)
     {
@@ -283,7 +288,7 @@ void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput *mouse)
     camera.ProcessMouseScroll(mouse->getScrollValue());
 }
 
-void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput *keyboard)
+void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput* keyboard)
 {
     if (keyboard->isKeyDown(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, true);
@@ -313,32 +318,32 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard)
+void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight)
 {
     if (keyboard->isKeyDown(GLFW_KEY_W))
     {
-        positionData[2] -= 0.2;
+        positionData[2] -= yValueUp;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_S))
     {
-        positionData[2] += 0.2;
+        positionData[2] += yValueDown;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_A))
     {
-        positionData[0] -= 0.2;
+        positionData[0] -= xValueRight;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_D))
     {
-        positionData[0] += 0.2;
+        positionData[0] += xValueLeft;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
@@ -361,32 +366,32 @@ void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::K
     }
 }
 
-void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard)
+void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight)
 {
     if (keyboard->isKeyDown(GLFW_KEY_I))
     {
-        positionData[2] -= 0.2;
+        positionData[2] -= yValueDown;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
-   
+
     if (keyboard->isKeyDown(GLFW_KEY_K))
     {
-        positionData[2] += 0.2;
+        positionData[2] += yValueUp;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
-    
+
     if (keyboard->isKeyDown(GLFW_KEY_J))
     {
-        positionData[0] -= 0.2;
+        positionData[0] -= xValueLeft;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
-   
-    if (keyboard->isKeyDown(GLFW_KEY_L)) 
+
+    if (keyboard->isKeyDown(GLFW_KEY_L))
     {
-        positionData[0] += 0.2;
+        positionData[0] += xValueRight;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
@@ -407,10 +412,11 @@ void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::K
     {
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f));
     }
-    
+
 }
 
-void cameraSwitch(int cameraPositionY, InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window, Proctor *player_1, Proctor *player_2)
+void cameraSwitch(int cameraPositionY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2,
+    float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight)
 {
     if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
         isDebugModeOn = !isDebugModeOn;
@@ -418,7 +424,7 @@ void cameraSwitch(int cameraPositionY, InputSystem::MouseInput *mouseInput, Inpu
 
     if (isDebugModeOn)
     {
-        cameraKeyboardInput(window, keyboardInput); 
+        cameraKeyboardInput(window, keyboardInput);
         mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
 
         if (keyboardInput->isKeyDown(GLFW_KEY_LEFT_CONTROL))
@@ -436,6 +442,22 @@ void cameraSwitch(int cameraPositionY, InputSystem::MouseInput *mouseInput, Inpu
         camera.Yaw = -90; // set yaw to default value
         camera.ProcessMouseMovement(0, -89); // set pitch to default value
         camera.Position = glm::vec3((player_1->getPosition()[0] + player_2->getPosition()[0]) / 2.f, cameraPositionY, (player_1->getPosition()[2] + player_2->getPosition()[2]) / 2.f);
+
+        float xDistance = player_1->getPosition()[0] - player_2->getPosition()[0];
+        float yDistance = player_1->getPosition()[2] - player_2->getPosition()[2];
+
+        if (xDistance < -60) xValueRight = 0;
+        else xValueRight = 0.2;
+
+        if (xDistance > 60) xValueLeft = 0;
+        else xValueLeft = 0.2;
+
+        if (yDistance < -35) yValueUp = 0;
+        else yValueUp = 0.2;
+
+        if (yDistance > 35) yValueDown = 0;
+        else yValueDown = 0.2;
+
         mouseInput->cursorEnable();
     }
 }
