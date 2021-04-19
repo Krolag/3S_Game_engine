@@ -111,12 +111,22 @@ void Proctor::addComponent(Component* _component)
 
 void Proctor::drawDebugWindow()
 {
-	ImGui::Text("|--------| NAME |--------|");
+	ImGui::Text("|--------| NAME |-------------|");
 	ImGui::Text(name.c_str());
 	ImGui::Text("|--------| TRANSFORM |--------|");
-	float variables[3] = { transform.position.x, transform.position.y, transform.position.z };
-	ImGui::Text("Position:"); ImGui::SameLine(); ImGui::DragFloat3("", variables, 0.01f);
-	transform.position = glm::vec3(variables[0], variables[1], variables[2]);
+	float vecPos[3];
+	/* Position */
+	vecPos[0] = transform.position.x; vecPos[1] = transform.position.y; vecPos[2] = transform.position.z;
+	ImGui::Text("Position:"); ImGui::SameLine(); ImGui::DragFloat3("P", vecPos, 0.01f);
+	setPosition(glm::vec3(vecPos[0], vecPos[1], vecPos[2]));
+	/* Rotation */
+	ImGui::Text("Rotation:"); ImGui::SameLine(); ImGui::Text("rotation_plc_hold");
+	/* Scale */
+	float vecScale[3];
+	vecScale[0] = transform.scale.x; vecScale[1] = transform.scale.y; vecScale[2] = transform.scale.z;
+	ImGui::Text("Scale:   "); ImGui::SameLine(); ImGui::DragFloat3("S", vecScale, 0.01f);
+	setScale(glm::vec3(vecScale[0], vecScale[1], vecScale[2]));
+	ImGui::Text("|--------| MOVEMENT |---------|");
 }
 
 void Proctor::setTransform(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)

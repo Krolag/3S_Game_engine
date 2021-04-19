@@ -176,7 +176,6 @@ int main()
     troll_01_mr.setShader(model3D);
     troll_01.addComponent(&troll_01_mr);
     hierarchy.addObject(&troll_01);
-	
 	// JAKIS MODEL
     Proctor modelJakis_00("modelJakis_00", 0, NULL);
     modelJakis_00.setPosition(glm::vec3(-10.0f));
