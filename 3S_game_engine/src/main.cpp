@@ -161,6 +161,7 @@ int main()
     // TROLL 00
     Proctor troll_00("troll_00", 0, NULL);
     troll_00.setPosition(glm::vec3(-12.0f));
+    troll_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));//-----------------------------
     troll_00.setScale(glm::vec3(0.02f));
     MeshRenderer troll_00_mr(C_MESH, &troll_00);
     troll_00_mr.setModel(&troll_00_model);
@@ -170,6 +171,7 @@ int main()
     // TROLL 01
     Proctor troll_01("troll_01", 0, NULL);
     troll_01.setPosition(glm::vec3(12.0f, -12.0f, -12.0f));
+    troll_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));//------------------------------
     troll_01.setScale(glm::vec3(0.02f));
     MeshRenderer troll_01_mr(C_MESH, &troll_01);
     troll_01_mr.setModel(&troll_01_model);
@@ -179,6 +181,7 @@ int main()
 	// JAKIS MODEL
     Proctor modelJakis_00("modelJakis_00", 0, NULL);
     modelJakis_00.setPosition(glm::vec3(-10.0f));
+    modelJakis_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     modelJakis_00.setScale(glm::vec3(1.f));
     MeshRenderer modelJakis_mr(C_MESH, &modelJakis_00);
     modelJakis_mr.setModel(&modelJakis);
@@ -317,24 +320,28 @@ void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::K
     {
         positionData[2] -= 0.2;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_S))
     {
         positionData[2] += 0.2;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_A))
     {
         positionData[0] -= 0.2;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_D))
     {
         positionData[0] += 0.2;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
 }
 
@@ -344,24 +351,28 @@ void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::K
     {
         positionData[2] -= 0.2;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
    
     if (keyboard->isKeyDown(GLFW_KEY_K))
     {
         positionData[2] += 0.2;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
     
     if (keyboard->isKeyDown(GLFW_KEY_J))
     {
         positionData[0] -= 0.2;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
    
     if (keyboard->isKeyDown(GLFW_KEY_L)) 
     {
         positionData[0] += 0.2;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
     
 }

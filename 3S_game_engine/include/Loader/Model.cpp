@@ -2,8 +2,8 @@
 
 namespace Loader
 {
-	Model::Model(glm::vec3 _position, glm::vec3 _scale)
-		: position(_position), scale(_scale) {}
+	Model::Model(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
+		: position(_position), rotation(_rotation), scale(_scale) {}
 
 	void Model::init() {}
 
@@ -11,6 +11,7 @@ namespace Loader
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, this->position);
+		model = glm::rotate(model, this->rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, this->scale);
 		_shader.setUniform("model", model);
 		_shader.setUniformFloat("material.shininess", 0.5f);

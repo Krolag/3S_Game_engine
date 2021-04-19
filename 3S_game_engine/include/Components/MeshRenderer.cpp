@@ -17,7 +17,7 @@ void MeshRenderer::update()
 
 	/* Apply those values each frame */
 	model->position = transform.position;
-	//model->rotation = transform.rotation;
+	model->rotation = transform.rotation;
 	model->scale = transform.scale;
 
 	/* Render model with given shader */

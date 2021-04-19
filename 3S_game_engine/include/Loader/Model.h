@@ -7,6 +7,7 @@
 /* GLM library */
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 /* 3SGE library*/
 #include <Shader/Shader.h>
 #include "Loader/Mesh.h"
@@ -20,11 +21,12 @@ namespace Loader
 	public:
 		/* Model transformation */
 		glm::vec3 position;
+		glm::quat rotation;
 		glm::vec3 scale;
 		Material material;
 
 		/* Construtor & destructor */
-		Model(glm::vec3 _position = glm::vec3(0.0f), glm::vec3 _scale = glm::vec3(1.0f));
+		Model(glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
 
 		void init();
 		void render(Shader _shader);
