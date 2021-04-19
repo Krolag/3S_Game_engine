@@ -41,7 +41,7 @@ void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::K
 void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard);
 
 //Switch camera position(debug)
-void cameraSwitch(bool &isDebugMode, int cameraPositionY,InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window);
+void cameraSwitch(int cameraPositionY,InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2);
 
 // settings
 const unsigned int SCREEN_WIDTH = 1280;
@@ -216,7 +216,7 @@ int main()
 
         /* Use InputSystem to move camera */
         /* Use 'P' to switch between camera modes, CTRL to look around, 'R' to get cursor position*/
-        cameraSwitch(isDebugModeOn, 40, mouseInput, keyboardInput, window);
+        cameraSwitch(40, mouseInput, keyboardInput, window, &troll_00, &troll_01);
               
         glEnable(GL_DEPTH_TEST);
         model3D.use();
@@ -411,7 +411,7 @@ void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::K
     
 }
 
-void cameraSwitch(bool &isDebugMode, int cameraPositionY, InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window)
+void cameraSwitch(int cameraPositionY, InputSystem::MouseInput *mouseInput, InputSystem::KeyboardInput *keyboardInput, GLFWwindow* window, Proctor *player_1, Proctor *player_2)
 {
     if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
         isDebugModeOn = !isDebugModeOn;
@@ -436,7 +436,7 @@ void cameraSwitch(bool &isDebugMode, int cameraPositionY, InputSystem::MouseInpu
     {
         camera.Yaw = -90; // set yaw to default value
         camera.ProcessMouseMovement(0, -89); // set pitch to default value
-        camera.Position = glm::vec3((positionOfWsadObject[0] + positionOfIjklObject[0]) / 2.f, cameraPositionY, (positionOfWsadObject[2] + positionOfIjklObject[2]) / 2.f);
+        camera.Position = glm::vec3((player_1->getPosition()[0] + player_2->getPosition()[0]) / 2.f, cameraPositionY, (player_1->getPosition()[2] + player_2->getPosition()[2]) / 2.f);
         mouseInput->cursorEnable();
     }
 }
