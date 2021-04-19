@@ -19,7 +19,6 @@
 #include "Components/Component.h"
 #include "GameLogic/Proctor.h"
 #include "GameLogic/Hierarchy.h"
-#include "Primitives/Cube/Cube.h"
 #include "Components/MeshRenderer.h"
 
 /* Load 3SE packages */
@@ -135,9 +134,6 @@ int main()
 
     /* Create Skybox */
     Skybox skybox(&view, &projection, &camera);
-
-	/* Create Cube */
-    Cube cube(0.5, &camera, &model, &view, &projection);
 	
     /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);
@@ -158,6 +154,9 @@ int main()
     Loader::Model troll_01_model;
     troll_01_model.loadModel("assets/models/lotr_troll/scene.gltf");
 
+    Loader::Model modelJakis;
+    modelJakis.loadModel("assets/models/cube/untitled.obj");
+
     /* Load hierarchy */
     // TROLL 00
     Proctor troll_00("troll_00", 0, NULL);
@@ -177,6 +176,16 @@ int main()
     troll_01_mr.setShader(model3D);
     troll_01.addComponent(&troll_01_mr);
     hierarchy.addObject(&troll_01);
+	
+	// JAKIS MODEL
+    Proctor modelJakis_00("modelJakis_00", 0, NULL);
+    modelJakis_00.setPosition(glm::vec3(-10.0f));
+    modelJakis_00.setScale(glm::vec3(1.f));
+    MeshRenderer modelJakis_mr(C_MESH, &modelJakis_00);
+    modelJakis_mr.setModel(&modelJakis);
+    modelJakis_mr.setShader(model3D);
+    troll_00.addComponent(&modelJakis_mr);
+    hierarchy.addObject(&modelJakis_00);
 
     /* Lights */
     DirLight dirLight = {
@@ -222,6 +231,7 @@ int main()
         hierarchy.update();
         troll_00_model.render(model3D);
         troll_01_model.render(model3D);
+        modelJakis.render(model3D);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render(); 
@@ -245,7 +255,8 @@ int main()
 
     troll_01_model.cleanup();
     troll_00_model.cleanup();
-
+    modelJakis.cleanup();
+	
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
     glfwTerminate();

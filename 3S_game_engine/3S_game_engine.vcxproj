@@ -158,9 +158,7 @@
   <ItemGroup>
     <ClCompile Include="include\Components\Component.cpp" />
     <ClCompile Include="include\Components\MeshRenderer.cpp" />
-    <ClCompile Include="include\GameLogic\BoxCollider.cpp" />
     <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
-    <ClCompile Include="include\Primitives\Cube\Cube.cpp" />
     <ClCompile Include="include\GameLogic\Proctor.cpp" />
     <ClCompile Include="include\UIRender\BackgroundImage.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
@@ -186,11 +184,9 @@
     <ClCompile Include="include\UIRender\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\GameLogic\BoxCollider.h" />
     <ClInclude Include="include\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />
     <ClInclude Include="include\GameLogic\Randomizer.h" />
-    <ClInclude Include="include\Primitives\Cube\Cube.h" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\Components\Component.h" />
     <ClInclude Include="include\GameLogic\Proctor.h" />
