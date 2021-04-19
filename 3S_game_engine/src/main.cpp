@@ -226,14 +226,13 @@ int main()
         model3D.setUniform("view", view);
         model = glm::mat4(1.0f);
         dirLight.render(model3D);
+
+        /* Collect Input */
         keyboardMovementWSAD(positionOfWsadObject, &troll_00, keyboardInput);
         keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput);
 
         /* Render models */
         hierarchy.update();
-        troll_00_model.render(model3D);
-        troll_01_model.render(model3D);
-        modelJakis.render(model3D);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render(); 
