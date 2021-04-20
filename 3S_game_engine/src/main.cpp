@@ -428,9 +428,9 @@ void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::K
     if (keyboard->isKeyDown(GLFW_KEY_A))
     {
         speed += acceleration;
-        if (speed >= xValueLeft)
+        if (speed >= xValueRight)
         {
-            speed = xValueLeft;
+            speed = xValueRight;
         }
     
         positionData[0] -= speed;
@@ -441,9 +441,9 @@ void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::K
     if (keyboard->isKeyDown(GLFW_KEY_D))
     {
         speed += acceleration;
-        if (speed >= xValueRight)
+        if (speed >= xValueLeft)
         {
-            speed = xValueRight;
+            speed = xValueLeft;
         }
         positionData[0] += speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
@@ -479,9 +479,9 @@ void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::K
     if (keyboard->isKeyDown(GLFW_KEY_I))
     {
         speed += acceleration;
-        if (speed >= yValueUp)
+        if (speed >= yValueDown)
         {
-            speed = yValueUp;
+            speed = yValueDown;
         }
         positionData[2] -= speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
@@ -491,9 +491,9 @@ void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::K
     if (keyboard->isKeyDown(GLFW_KEY_K))
     {
         speed += acceleration;
-        if (speed >= yValueDown)
+        if (speed >= yValueUp)
         {
-            speed = yValueDown;
+            speed = yValueUp;
         }
         positionData[2] += speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
