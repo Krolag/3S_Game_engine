@@ -17,33 +17,49 @@
 class BoxCollider
 {
 private:
-	glm::vec3 min, max;
-	glm::mat4 transform;
-	Box collisionBox;
+	/* Variables to draw */
+	Shader colliderShader;
+	unsigned int colliderVBO, colliderVAO;
+	float centerPoint[3];
+
+	/* Min and max x, y, z coordinates */
+	glm::vec3 min;
+	glm::vec3 max;
+	glm::vec3 radius;
 public:
+	/* Box collider transformation */
+	glm::vec3 position;
+	glm::quat rotation;
+	glm::vec3 scale;
+
 	/* Constructors and destructors */
-	BoxCollider(Box _box, glm::mat4 _transform);
-	BoxCollider(Shader _collisionBoxShader, Loader::Model _model, glm::mat4 _transform);
-	BoxCollider(Shader _collsiionBoxShader, glm::vec3 _min, glm::vec3 _max, glm::mat4 _transform);
+	BoxCollider(Shader _colliderShader, Loader::Model* _model, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale);
+	//BoxCollider(Shader _collsiionBoxShader, glm::vec3 _min, glm::vec3 _max, glm::vec3 _position, glm::vec3 _scale);
 	~BoxCollider();
-	
+
 	/* Main class methods */
 	void update();
 	void render();
 	void compareAndUpdateMin(glm::vec3 position);
 	void compareAndUpdateMax(glm::vec3 position);
+	void calcCenter();
+	void calcRadius();
 
-	/* Transform methods */
-	void translate(glm::vec3 translate);
-	void rotate(float degrees, glm::vec3 axis);
-	void scale(glm::vec3 scale);
-	void copyTransform(glm::mat4 sourceMatrix);
-	
+	/* Getters */
+	glm::vec3 getMin() const;
+	glm::vec3 getMax() const;
+	glm::vec3 getRadius() const;
+	glm::vec3 getCenter() const;
+	glm::mat4 getModelMatrix() const;
+	glm::mat4 getTranslateMatrix() const;
+	glm::mat4 getRotateMatrix() const;
+	glm::mat4 getScaleMatrix() const;
+
 	/* Setters */
 	void setMin(glm::vec3 _min);
 	void setMax(glm::vec3 _max);
-
-	/* Getters */
-	glm::vec3 getMin();
-	glm::vec3 getMax();
+	void setCenter(glm::vec3 _center);
+	void setPosition(glm::vec3 _position);
+	void setScale(glm::vec3 _scale);
+	void setRotation(glm::quat _rotation);
 };

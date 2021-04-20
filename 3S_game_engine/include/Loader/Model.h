@@ -33,6 +33,10 @@ namespace Loader
 		void loadModel(std::string _path);
 		void cleanup();
 
+		/* Getters */
+		std::vector<Mesh> getMeshes() const;
+		glm::mat4 getModelMatrix() const;
+
 	protected:
 		/* Model data */
 		std::vector<Mesh> meshes;

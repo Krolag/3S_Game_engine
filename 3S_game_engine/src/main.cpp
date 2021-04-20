@@ -30,6 +30,8 @@
 #include <map>
 #include <string>
 
+#include "GameLogic/Collisions/BoxCollider.h"
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -44,6 +46,9 @@ void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::K
 //maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
 void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
+
+// Collision functions
+bool checkAABBCollision(BoxCollider a, BoxCollider b);
 
 // settings
 const unsigned int SCREEN_WIDTH = 1280;
@@ -131,7 +136,8 @@ int main()
     /* Create shaders */
     Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
-
+    Shader collisionBoxShader("assets/shaders/boxCollider.vert", "assets/shaders/boxCollider.frag", "assets/shaders/boxCollider.geom");
+	
     /* Text init */
     textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCREEN_WIDTH), 0.0f, static_cast<GLfloat>(SCREEN_WIDTH));
     textShader.use();
@@ -159,8 +165,11 @@ int main()
     Loader::Model troll_01_model;
     troll_01_model.loadModel("assets/models/lotr_troll/scene.gltf");
 
-    Loader::Model modelJakis;
-    modelJakis.loadModel("assets/models/cube/untitled.obj");
+    Loader::Model modelJakis_00_model;
+    modelJakis_00_model.loadModel("assets/models/cube/untitled.obj");
+
+    Loader::Model modelJakis_01_model;
+    modelJakis_01_model.loadModel("assets/models/cube/untitled.obj");
 
     /* Load hierarchy */
     // TROLL 00
@@ -168,31 +177,50 @@ int main()
     troll_00.setPosition(glm::vec3(-12.0f));
     troll_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     troll_00.setScale(glm::vec3(0.02f));
+	
     MeshRenderer troll_00_mr(C_MESH, &troll_00);
     troll_00_mr.setModel(&troll_00_model);
     troll_00_mr.setShader(model3D);
+	
     troll_00.addComponent(&troll_00_mr);
     hierarchy.addObject(&troll_00);
+	
     // TROLL 01
     Proctor troll_01("troll_01", 0, NULL);
     troll_01.setPosition(glm::vec3(12.0f, -12.0f, -12.0f));
     troll_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     troll_01.setScale(glm::vec3(0.02f));
+	
     MeshRenderer troll_01_mr(C_MESH, &troll_01);
     troll_01_mr.setModel(&troll_01_model);
     troll_01_mr.setShader(model3D);
+	
     troll_01.addComponent(&troll_01_mr);
     hierarchy.addObject(&troll_01);
-    // JAKIS MODEL
+	
+    // JAKIS MODEL 00
     Proctor modelJakis_00("modelJakis_00", 0, NULL);
-    modelJakis_00.setPosition(glm::vec3(-10.0f));
-    modelJakis_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+    modelJakis_00.setPosition(glm::vec3(-4.0f));
+    modelJakis_00.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
     modelJakis_00.setScale(glm::vec3(1.f));
-    MeshRenderer modelJakis_mr(C_MESH, &modelJakis_00);
-    modelJakis_mr.setModel(&modelJakis);
-    modelJakis_mr.setShader(model3D);
-    troll_00.addComponent(&modelJakis_mr);
+	
+    MeshRenderer modelJakis_mr_00(C_MESH, &modelJakis_00);
+    modelJakis_mr_00.setModel(&modelJakis_00_model);
+    modelJakis_mr_00.setShader(model3D);
+	
+    modelJakis_00.addComponent(&modelJakis_mr_00);
     hierarchy.addObject(&modelJakis_00);
+	
+    // JAKIS MODEL 01
+    Proctor modelJakis_01("modelJakis_01", 0, NULL);
+    modelJakis_01.setPosition(glm::vec3(-10.0f));
+    modelJakis_01.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
+    modelJakis_01.setScale(glm::vec3(1.f));
+    MeshRenderer modelJakis_mr_01(C_MESH, &modelJakis_01);
+    modelJakis_mr_01.setModel(&modelJakis_01_model);
+    modelJakis_mr_01.setShader(model3D);
+    modelJakis_01.addComponent(&modelJakis_mr_01);
+    hierarchy.addObject(&modelJakis_01);
 
     /* Lights */
     DirLight dirLight = {
@@ -202,6 +230,11 @@ int main()
         glm::vec3(0.75f)
     };
 
+    /* Init Box Colliders for the models */
+    BoxCollider someModelCollider_00(collisionBoxShader, &modelJakis_00_model, modelJakis_00_model.position, modelJakis_00_model.rotation , modelJakis_00_model.scale);
+    BoxCollider someModelCollider_01(collisionBoxShader, &modelJakis_01_model, modelJakis_01_model.position, modelJakis_01_model.rotation, modelJakis_01_model.scale);
+    //BoxCollider troll_00_collider(collisionBoxShader, &troll_00_model, troll_00_model.position, troll_00_model.scale);
+    
     float xValueRight = 0.2;
     float xValueLeft = 0.2;
     float yValueUp = 0.2;
@@ -229,19 +262,64 @@ int main()
         cameraSwitch(35,60,90,45, mouseInput, keyboardInput, window, &troll_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         glEnable(GL_DEPTH_TEST);
+    	
+    	/* Set up model 3D shader uniforms*/
         model3D.use();
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);
         model3D.setUniform("projection", projection);
         view = camera.GetViewMatrix(); //glm::mat4(1.0f);
         model3D.setUniform("view", view);
         model = glm::mat4(1.0f);
+
+    	/* Render lights */
         dirLight.render(model3D);
+
+        /* Process movement */
         keyboardMovementWSAD(positionOfWsadObject, &troll_00, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight);
         keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         /* Render models */
         hierarchy.update();
 
+
+        /* Set up universal collisionBoxShader uniforms */
+        collisionBoxShader.use();
+        collisionBoxShader.setUniform("view", view);
+        collisionBoxShader.setUniform("projection", projection);
+    	
+        /* Update colliders positions, calc collisions */
+    	// box 00
+        someModelCollider_00.setScale(modelJakis_00_model.scale);
+        someModelCollider_00.setRotation(modelJakis_00_model.rotation);
+        someModelCollider_00.setPosition(modelJakis_00_model.position);
+
+    	// box 01
+        someModelCollider_01.setScale(modelJakis_01_model.scale);
+        someModelCollider_01.setRotation(modelJakis_01_model.rotation);
+        someModelCollider_01.setPosition(modelJakis_01_model.position);
+    	
+        /* Update uniforms and render colliders */
+    	// box 00
+        collisionBoxShader.setUniform("model", someModelCollider_00.getModelMatrix());
+        collisionBoxShader.setUniform("radius", someModelCollider_00.getRadius() / someModelCollider_00.scale/* * someModelCollider.scale*/);
+        collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
+        someModelCollider_00.render();
+    	
+        // box 01
+        collisionBoxShader.setUniform("model", someModelCollider_01.getModelMatrix());
+        collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale/* * someModelCollider.scale*/);
+        collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
+        someModelCollider_01.render();
+
+        if (checkAABBCollision(someModelCollider_00, someModelCollider_01)) std::cout << "KOLIZJA" << std::endl;
+        else std::cout << "NIE KOLIDUJOM" << std::endl;
+
+    	
+    	//// troll_00
+     //   troll_00_collider.setScale(troll_00_model.scale);
+     //   troll_00_collider.setPosition(troll_00_model.position);
+     //   collisionBoxShader.setUniform("radius", troll_00_collider.getRadius() * troll_00_model.scale);
+     //   troll_00_collider.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
@@ -265,7 +343,8 @@ int main()
 
     troll_01_model.cleanup();
     troll_00_model.cleanup();
-    modelJakis.cleanup();
+    modelJakis_01_model.cleanup();
+    modelJakis_00_model.cleanup();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
@@ -522,4 +601,12 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
 
         mouseInput->cursorEnable();
     }
+}
+
+bool checkAABBCollision(BoxCollider a, BoxCollider b)
+{
+    if (glm::abs(a.position.x - b.position.x) > (a.getRadius().x + b.getRadius().x)) return false;
+    if (glm::abs(a.position.y - b.position.y) > (a.getRadius().y + b.getRadius().y)) return false;
+    if (glm::abs(a.position.z - b.position.z) > (a.getRadius().z + b.getRadius().z)) return false;
+    return true;
 }

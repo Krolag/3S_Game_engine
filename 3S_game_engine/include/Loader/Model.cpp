@@ -169,4 +169,17 @@ namespace Loader
 			mesh.cleanup();
 		}
 	}
+
+	std::vector<Mesh> Model::getMeshes() const
+	{
+		return meshes;
+	}
+
+	glm::mat4 Model::getModelMatrix() const
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, this->position);
+		model = glm::scale(model, this->scale);
+		return model;
+	}
 }

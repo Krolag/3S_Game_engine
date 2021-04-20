@@ -27,6 +27,10 @@
     <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
     <ClCompile Include="include\Components\Component.cpp" />
     <ClCompile Include="include\Components\MeshRenderer.cpp" />
+    <ClCompile Include="include\GameLogic\Collisions\BoxCollider.cpp" />
+    <ClCompile Include="include\GameLogic\Collisions\Collider.cpp" />
+    <ClCompile Include="include\GameLogic\Collisions\CollisionsManager.cpp" />
+    <ClCompile Include="include\Primitives\Box\Box.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -61,6 +65,10 @@
     <ClInclude Include="include\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />
     <ClInclude Include="include\GameLogic\Randomizer.h" />
+    <ClInclude Include="include\GameLogic\Collisions\BoxCollider.h" />
+    <ClInclude Include="include\GameLogic\Collisions\Collider.h" />
+    <ClInclude Include="include\GameLogic\Collisions\CollisionsManager.h" />
+    <ClInclude Include="include\Primitives\Box\Box.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
