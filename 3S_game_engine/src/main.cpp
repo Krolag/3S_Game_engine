@@ -427,15 +427,17 @@ void cameraSwitch(int cameraPositionY, InputSystem::MouseInput* mouseInput, Inpu
         cameraKeyboardInput(window, keyboardInput);
         mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
 
-        if (keyboardInput->isKeyDown(GLFW_KEY_LEFT_CONTROL))
+        if (keyboardInput->isKeyDown(GLFW_KEY_RIGHT_CONTROL))
         {
             cameraMouseInput(window, mouseInput);
             mouseInput->cursorDisable();
         }
-        if (keyboardInput->isKeyReleased(GLFW_KEY_LEFT_CONTROL))
+        if (keyboardInput->isKeyReleased(GLFW_KEY_RIGHT_CONTROL))
         {
             firstMouse = true; // reset last saved mosue position
+            mouseInput->cursorEnable();
         }
+
     }
     if (!isDebugModeOn)
     {
