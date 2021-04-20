@@ -39,8 +39,8 @@ void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput* keyboar
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
 
 // Those functions will define position of given model 
-void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight);
-void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight);
+void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed);
+void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed);
 
 //Switch camera position(debug)
 //maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
@@ -63,8 +63,6 @@ bool firstMouse = true;
 // movement
 float positionOfWsadObject[3] = { 0, 0, 0 };
 float positionOfIjklObject[3] = { 0, 0, 0 };
-float WSADSpeed = 0.0;
-float IJKLSpeed = 0.0;
 const float acceleration = 0.005f;
 
 // timing
@@ -239,6 +237,8 @@ int main()
     float xValueLeft = 0.2;
     float yValueUp = 0.2;
     float yValueDown = 0.2;
+    float WSADSpeed = 0.0;
+    float IJKLSpeed = 0.0;
 
     /* Render loop */
     while (!glfwWindowShouldClose(window))
@@ -273,10 +273,8 @@ int main()
 
     	/* Render lights */
         dirLight.render(model3D);
-
-        /* Process movement */
-        keyboardMovementWSAD(positionOfWsadObject, &troll_00, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight);
-        keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight);
+        keyboardMovementWSAD(positionOfWsadObject, &troll_00, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, WSADSpeed);
+        keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, IJKLSpeed);
 
         /* Render models */
         hierarchy.update();
@@ -401,53 +399,53 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight)
+void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
 {
     if (keyboard->isKeyDown(GLFW_KEY_W))
     {
-        WSADSpeed += acceleration;
-        if (WSADSpeed >= yValueUp)
+        speed += acceleration;
+        if (speed >= yValueUp)
         {
-            WSADSpeed = yValueUp;
+            speed = yValueUp;
         }
-        positionData[2] -= WSADSpeed;
+        positionData[2] -= speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_S))
     {
-        WSADSpeed += acceleration;
-        if (WSADSpeed >= yValueDown)
+        speed += acceleration;
+        if (speed >= yValueDown)
         {
-            WSADSpeed = yValueDown;
+            speed = yValueDown;
         }
-        positionData[2] += WSADSpeed;
+        positionData[2] += speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_A))
     {
-        WSADSpeed += acceleration;
-        if (WSADSpeed >= xValueLeft)
+        speed += acceleration;
+        if (speed >= xValueLeft)
         {
-            WSADSpeed = xValueLeft;
+            speed = xValueLeft;
         }
     
-        positionData[0] -= WSADSpeed;
+        positionData[0] -= speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_D))
     {
-        WSADSpeed += acceleration;
-        if (WSADSpeed >= xValueRight)
+        speed += acceleration;
+        if (speed >= xValueRight)
         {
-            WSADSpeed = xValueRight;
+            speed = xValueRight;
         }
-        positionData[0] += WSADSpeed;
+        positionData[0] += speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
@@ -471,59 +469,59 @@ void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::K
 
     if (!keyboard->isKeyDown(GLFW_KEY_W) && !keyboard->isKeyDown(GLFW_KEY_S) && !keyboard->isKeyDown(GLFW_KEY_A) && !keyboard->isKeyDown(GLFW_KEY_D))
     {
-        WSADSpeed = 0.f;
+        speed = 0.f;
     }
-    //std::cout << "WSAD Speed: " << WSADSpeed << std::endl;
+    //std::cout << "WSAD Speed: " << speed << std::endl;
 }
 
-void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight)
+void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
 {
     if (keyboard->isKeyDown(GLFW_KEY_I))
     {
-        IJKLSpeed += acceleration;
-        if (IJKLSpeed >= yValueUp)
+        speed += acceleration;
+        if (speed >= yValueUp)
         {
-            IJKLSpeed = yValueUp;
+            speed = yValueUp;
         }
-        positionData[2] -= IJKLSpeed;
+        positionData[2] -= speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_K))
     {
-        IJKLSpeed += acceleration;
-        if (IJKLSpeed >= yValueDown)
+        speed += acceleration;
+        if (speed >= yValueDown)
         {
-            IJKLSpeed = yValueDown;
+            speed = yValueDown;
         }
-        positionData[2] += IJKLSpeed;
+        positionData[2] += speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_J))
     {
-        IJKLSpeed += acceleration;
-        if (IJKLSpeed >= xValueLeft)
+        speed += acceleration;
+        if (speed >= xValueLeft)
         {
-            IJKLSpeed = xValueLeft;
+            speed = xValueLeft;
         }
 
-        positionData[0] -= IJKLSpeed;
+        positionData[0] -= speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_L))
     {
-        IJKLSpeed += acceleration;
-        if (IJKLSpeed >= xValueRight)
+        speed += acceleration;
+        if (speed >= xValueRight)
         {
-            IJKLSpeed = xValueRight;
+            speed = xValueRight;
         }
 
-        positionData[0] += IJKLSpeed;
+        positionData[0] += speed;
         _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
         _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
@@ -547,9 +545,9 @@ void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::K
 
     if (!keyboard->isKeyDown(GLFW_KEY_I) && !keyboard->isKeyDown(GLFW_KEY_J) && !keyboard->isKeyDown(GLFW_KEY_K) && !keyboard->isKeyDown(GLFW_KEY_L))
     {
-        IJKLSpeed = 0.f;
+        speed = 0.f;
     }
-    //std::cout << "IJKL Speed: " << IJKLSpeed << std::endl;
+    //std::cout << "IJKL Speed: " << speed << std::endl;
 }
 
 void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2,
