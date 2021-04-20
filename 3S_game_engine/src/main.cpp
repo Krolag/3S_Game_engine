@@ -41,7 +41,7 @@ void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::K
 void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight);
 
 //Switch camera position(debug)
-//----maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
+//maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
 void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
@@ -223,7 +223,7 @@ int main()
 
         /* Use InputSystem to move camera */
         /* Use 'P' to switch between camera modes, CTRL to look around, 'R' to get cursor position*/
-        cameraSwitch(30,40,60,33, mouseInput, keyboardInput, window, &troll_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+        cameraSwitch(35,60,90,45, mouseInput, keyboardInput, window, &troll_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         glEnable(GL_DEPTH_TEST);
         model3D.use();
@@ -459,7 +459,6 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
         else yValueDown = 0.2;
 
         float camPos = minZoom + distance/maxDistanceX*(maxZoom-minZoom); //clamp
-        std::cout << camPos << "\n";
         camera.Yaw = -90; // set yaw to default value
         camera.ProcessMouseMovement(0, -89); // set pitch to default value
         camera.Position = glm::vec3((player_1->getPosition()[0] + player_2->getPosition()[0]) / 2.f, camPos, (player_1->getPosition()[2] + player_2->getPosition()[2]) / 2.f);
