@@ -20,6 +20,7 @@ public:
 	virtual ~Component();
 
 	virtual void update() {}
+	virtual void cleanup() {}
 
 	bool isActive();
 	void setActive(bool _value);

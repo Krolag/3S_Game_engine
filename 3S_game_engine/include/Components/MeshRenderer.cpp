@@ -24,6 +24,11 @@ void MeshRenderer::update()
 	model->render(shader);
 }
 
+void MeshRenderer::cleanup()
+{
+	model->cleanup();
+}
+
 void MeshRenderer::setShader(Shader _shader)
 {
 	shader = _shader;

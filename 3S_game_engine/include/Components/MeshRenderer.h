@@ -14,6 +14,7 @@ public:
 	void setShader(Shader _shader);
 	
 	void update();
+	void cleanup();
 
 private:
 	Proctor* parent = nullptr;

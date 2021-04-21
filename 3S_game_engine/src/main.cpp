@@ -1,14 +1,17 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
+/* Load 3SE packages */
+#include "Loader/Loader.h"
+#include "InputSystem/InputSystem.h"
+#include "UIRender/UIRender.h"
+#include "Application/Application.h"
+ 
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw.h"
+#include "ImGUI/imgui_impl_opengl3.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <ft2build.h>
-#include FT_FREETYPE_H  
-#include "ImGUI/imgui.h"
-#include "ImGUI/imgui_impl_glfw.h"
-#include "ImGUI/imgui_impl_opengl3.h"
+#include FT_FREETYPE_H 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -20,18 +23,11 @@
 #include "GameLogic/Proctor.h"
 #include "GameLogic/Hierarchy.h"
 #include "Components/MeshRenderer.h"
-
-/* Load 3SE packages */
-#include "Loader/Loader.h"
-#include "InputSystem/InputSystem.h"
-#include "UIRender/UIRender.h"
-
-#include <iostream>
-#include <map>
-#include <string>
-
 #include "GameLogic/Collisions/BoxCollider.h"
 
+//#include <iostream>
+#include <map>
+//#include <string>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -78,53 +74,23 @@ int main()
     glm::mat4 view;
     glm::mat4 model;
 
-#pragma region GLFW init
-    // glfw: initialize and configure
-    // ------------------------------
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    /* Load scene */
+    Application::Scene mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT);
+    glfwMakeContextCurrent(mainScene.window);
+    glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
+    glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-    // glfw window creation
-    // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    // Initialize GLEW to setup the OpenGL Function pointers
-    //glewExperimental = GL_TRUE;
-    //glewInit();
-
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    //glfwSetCursorPosCallback(window, mouse_callback);
-    //glfwSetScrollCallback(window, scroll_callback);
-
-    // tell GLFW to capture our mouse
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
+    /* Load all OpenGL function pointers */
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-#pragma endregion
 
 #pragma region ImGUI init
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(mainScene.window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     ImGui::StyleColorsDark();
     int hierarchyCurrentItem = 0;
@@ -145,8 +111,8 @@ int main()
     Skybox skybox(&view, &projection, &camera);
 
     /* Create InputSystem elements */
-    InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(window);
-    InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(window);
+    InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(mainScene.window);
+    InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(mainScene.window);
 
     /* Create object hierarchy */
     Hierarchy hierarchy;
@@ -155,13 +121,14 @@ int main()
     positionOfWsadObject[0] = -12.0f;
     positionOfWsadObject[1] = -12.0f;
     positionOfWsadObject[2] = -12.0f;
-    Loader::Model troll_00_model;
-    troll_00_model.loadModel("assets/models/lotr_troll/scene.gltf");
     positionOfIjklObject[0] = 12.0f;
     positionOfIjklObject[1] = -12.0f;
     positionOfIjklObject[2] = -12.0f;
     Loader::Model troll_01_model;
     troll_01_model.loadModel("assets/models/lotr_troll/scene.gltf");
+
+    Loader::Model hero_00_model;
+    hero_00_model.loadModel("assets/models/hero/hero_noanim.fbx");
 
     Loader::Model modelJakis_00_model;
     modelJakis_00_model.loadModel("assets/models/cube/untitled.obj");
@@ -169,31 +136,32 @@ int main()
     Loader::Model modelJakis_01_model;
     modelJakis_01_model.loadModel("assets/models/cube/untitled.obj");
 
+
     /* Load hierarchy */
-    // TROLL 00
-    Proctor troll_00("troll_00", 0, NULL);
-    troll_00.setPosition(glm::vec3(-12.0f));
-    troll_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
-    troll_00.setScale(glm::vec3(0.02f));
+    // hero_00 - configure proctor
+    Proctor hero_00("hero_00", 0, NULL);
+    hero_00.setPosition(glm::vec3(-12.0f));
+    hero_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+    hero_00.setScale(glm::vec3(0.3f));
+    // hero_00 - load model
+    MeshRenderer hero_00_mr(C_MESH, &hero_00);
+    hero_00_mr.setModel(&hero_00_model);
+    hero_00_mr.setShader(model3D);
+    hero_00.addComponent(&hero_00_mr);
+    // hero_00 - add object to hierarchy
+    hierarchy.addObject(&hero_00);
 	
-    MeshRenderer troll_00_mr(C_MESH, &troll_00);
-    troll_00_mr.setModel(&troll_00_model);
-    troll_00_mr.setShader(model3D);
-	
-    troll_00.addComponent(&troll_00_mr);
-    hierarchy.addObject(&troll_00);
-	
-    // TROLL 01
+    // TROLL 01 - configure proctor
     Proctor troll_01("troll_01", 0, NULL);
     troll_01.setPosition(glm::vec3(12.0f, -12.0f, -12.0f));
     troll_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     troll_01.setScale(glm::vec3(0.02f));
-	
+    // TROLL 01 - load model
     MeshRenderer troll_01_mr(C_MESH, &troll_01);
     troll_01_mr.setModel(&troll_01_model);
     troll_01_mr.setShader(model3D);
-	
     troll_01.addComponent(&troll_01_mr);
+    // TROLL 01 - add object to hierarchy
     hierarchy.addObject(&troll_01);
 	
     // JAKIS MODEL 00
@@ -201,11 +169,9 @@ int main()
     modelJakis_00.setPosition(glm::vec3(-4.0f));
     modelJakis_00.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
     modelJakis_00.setScale(glm::vec3(1.f));
-	
     MeshRenderer modelJakis_mr_00(C_MESH, &modelJakis_00);
     modelJakis_mr_00.setModel(&modelJakis_00_model);
     modelJakis_mr_00.setShader(model3D);
-	
     modelJakis_00.addComponent(&modelJakis_mr_00);
     hierarchy.addObject(&modelJakis_00);
 	
@@ -223,8 +189,8 @@ int main()
     /* Lights */
     DirLight dirLight = {
         glm::vec3(-0.2f, -1.0f, -0.3f),
-        glm::vec3(0.8f),
-        glm::vec3(0.4f),
+        glm::vec3(0.9f),
+        glm::vec3(0.6f),
         glm::vec3(0.75f)
     };
 
@@ -241,7 +207,7 @@ int main()
     float IJKLSpeed = 0.0;
 
     /* Render loop */
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(mainScene.window))
     {
         /* Clear screen */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -259,7 +225,7 @@ int main()
 
         /* Use InputSystem to move camera */
         /* Use 'P' to switch between camera modes, CTRL to look around, 'R' to get cursor position*/
-        cameraSwitch(35,60,90,45, mouseInput, keyboardInput, window, &troll_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+        cameraSwitch(35,60,90,45, mouseInput, keyboardInput, mainScene.window, &hero_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         glEnable(GL_DEPTH_TEST);
     	
@@ -273,7 +239,7 @@ int main()
 
     	/* Render lights */
         dirLight.render(model3D);
-        keyboardMovementWSAD(positionOfWsadObject, &troll_00, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, WSADSpeed);
+        keyboardMovementWSAD(positionOfWsadObject, &hero_00, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, WSADSpeed);
         keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, IJKLSpeed);
 
         /* Render models */
@@ -309,8 +275,8 @@ int main()
         collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
         someModelCollider_01.render();
 
-        if (checkAABBCollision(someModelCollider_00, someModelCollider_01)) std::cout << "KOLIZJA" << std::endl;
-        else std::cout << "NIE KOLIDUJOM" << std::endl;
+        //if (checkAABBCollision(someModelCollider_00, someModelCollider_01)) std::cout << "KOLIZJA" << std::endl;
+        //else std::cout << "NIE KOLIDUJOM" << std::endl;
 
     	
     	//// troll_00
@@ -331,7 +297,7 @@ int main()
 
         /* Clear frame at the end of the loop */
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(mainScene.window);
         glfwPollEvents();
     }
 
@@ -339,10 +305,7 @@ int main()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    troll_01_model.cleanup();
-    troll_00_model.cleanup();
-    modelJakis_01_model.cleanup();
-    modelJakis_00_model.cleanup();
+    hierarchy.cleanup();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------

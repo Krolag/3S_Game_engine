@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Application\Scene.cpp" />
     <ClCompile Include="include\Components\Component.cpp" />
     <ClCompile Include="include\Components\MeshRenderer.cpp" />
     <ClCompile Include="include\GameLogic\Collisions\BoxCollider.cpp" />
@@ -188,12 +189,14 @@
     <ClCompile Include="include\UIRender\UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Application\Application.h" />
+    <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameLogic\Collisions\BoxCollider.h" />
     <ClInclude Include="include\GameLogic\Collisions\Collider.h" />
     <ClInclude Include="include\GameLogic\Collisions\CollisionsManager.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />
-    <ClInclude Include="include\GameLogic\Randomizer.h" />
+    <ClInclude Include="include\Application\Randomizer.h" />
     <ClInclude Include="include\Primitives\Box\Box.h" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\Components\Component.h" />

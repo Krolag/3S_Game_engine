@@ -3,7 +3,7 @@
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw.h"
 #include "ImGUI/imgui_impl_opengl3.h"
-#include "GameLogic/Randomizer.h"
+#include "Application/Randomizer.h"
 
 Proctor::Proctor() 
 { 
@@ -19,7 +19,7 @@ Proctor::Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _
 	/* Assign uuid */
 	if (uuid == 0)
 	{
-		uuid = uuid = Randomizer().randomInt();
+		uuid = uuid = Application::Randomizer().randomInt();
 	}
 	
 	/* Assign values to transform */
@@ -42,6 +42,20 @@ void Proctor::update()
 	for (auto &a : children)
 	{
 		a->update();
+	}
+}
+
+void Proctor::cleanup()
+{
+	/* Clear data from memory */
+	for (auto& a : components)
+	{
+		a->cleanup();
+	}
+
+	for (auto& a : children)
+	{
+		a->cleanup();
 	}
 }
 

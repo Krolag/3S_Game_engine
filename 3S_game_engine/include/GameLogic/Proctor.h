@@ -23,11 +23,10 @@ public:
 	unsigned int uuid = 0;
 	Transform transform;
 
+	/* Constructors / Destructors */
 	Proctor();
 	Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _active = true, bool _isStatic = false);
 	~Proctor();
-
-	void update();
 
 	/* Children methods */
 	void addChild(Proctor* _proctor);
@@ -52,6 +51,9 @@ public:
 
 	/* Debug window methods */
 	void drawDebugWindow();
+	
+	void update();
+	void cleanup();
 
 private:
 	/* Hierarchy data */

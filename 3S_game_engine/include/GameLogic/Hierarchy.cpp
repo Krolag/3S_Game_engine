@@ -98,6 +98,14 @@ void Hierarchy::drawHierarchyWindow()
 	ImGui::End();
 }
 
+void Hierarchy::cleanup()
+{
+	for (auto& a : objects)
+	{
+		a->cleanup();
+	}
+}
+
 void Hierarchy::update()
 {
 	/* Update all proctors in objects vector */

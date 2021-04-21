@@ -23,6 +23,7 @@ public:
 	void drawHierarchyWindow();
 
 	void update();
+	void cleanup();
 
 private:
 	std::vector<Proctor*> objects;

@@ -1,12 +1,12 @@
 #include "Component.h"
-#include "GameLogic/Randomizer.h"
+#include "Application/Randomizer.h"
 
 Component::Component() { }
 
 Component::Component(ComponentType _type, Proctor* _proctor)
 	: type(_type), proctor(_proctor)
 {
-	uuid = uuid = Randomizer().randomInt();
+	uuid = uuid = Application::Randomizer().randomInt();
 }
 
 Component::~Component() { }
