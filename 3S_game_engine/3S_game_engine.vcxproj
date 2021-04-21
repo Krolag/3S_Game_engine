@@ -157,8 +157,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\Application\Scene.cpp" />
-    <ClCompile Include="include\Components\Component.cpp" />
-    <ClCompile Include="include\Components\MeshRenderer.cpp" />
+    <ClCompile Include="include\GameLogic\Components\Component.cpp" />
+    <ClCompile Include="include\GameLogic\Components\MeshRenderer.cpp" />
     <ClCompile Include="include\GameLogic\Collisions\BoxCollider.cpp" />
     <ClCompile Include="include\GameLogic\Collisions\Collider.cpp" />
     <ClCompile Include="include\GameLogic\Collisions\CollisionsManager.cpp" />
@@ -191,15 +191,16 @@
   <ItemGroup>
     <ClInclude Include="include\Application\Application.h" />
     <ClInclude Include="include\Application\Scene.h" />
-    <ClInclude Include="include\Components\MeshRenderer.h" />
+    <ClInclude Include="include\GameLogic\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameLogic\Collisions\BoxCollider.h" />
     <ClInclude Include="include\GameLogic\Collisions\Collider.h" />
     <ClInclude Include="include\GameLogic\Collisions\CollisionsManager.h" />
+    <ClInclude Include="include\GameLogic\GameLogic.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />
     <ClInclude Include="include\Application\Randomizer.h" />
     <ClInclude Include="include\Primitives\Box\Box.h" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
-    <ClInclude Include="include\Components\Component.h" />
+    <ClInclude Include="include\GameLogic\Components\Component.h" />
     <ClInclude Include="include\GameLogic\Proctor.h" />
     <ClInclude Include="include\UIRender\BackgroundImage.h" />
     <ClInclude Include="include\assimp\config.h" />

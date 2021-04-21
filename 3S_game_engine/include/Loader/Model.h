@@ -1,5 +1,7 @@
+#pragma once
 #ifndef MODEL_H
 #define MODEL_H
+
 /* Assimp library*/
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -25,7 +27,7 @@ namespace Loader
 		glm::vec3 scale;
 		Material material;
 
-		/* Construtor & destructor */
+		/* Construtor / destructor */
 		Model(glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
 
 		void init();

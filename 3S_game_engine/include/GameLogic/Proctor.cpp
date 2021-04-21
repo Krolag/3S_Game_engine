@@ -5,183 +5,186 @@
 #include "ImGUI/imgui_impl_opengl3.h"
 #include "Application/Randomizer.h"
 
-Proctor::Proctor() 
-{ 
-	/* Assign values to transform */
-	transform.position = glm::vec3(0.0f);
-	transform.rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
-	transform.scale = glm::vec3(1.0f);
-}
-
-Proctor::Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _active, bool _isStatic)
-	: name(_name), uuid(_uuid), parent(_parent), active(_active), isStatic(_isStatic)
+namespace GameLogic
 {
-	/* Assign uuid */
-	if (uuid == 0)
+	Proctor::Proctor()
 	{
-		uuid = uuid = Application::Randomizer().randomInt();
-	}
-	
-	/* Assign values to transform */
-	transform.position = glm::vec3(0.0f);
-	transform.rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
-	transform.scale = glm::vec3(1.0f);
-}
-
-Proctor::~Proctor() { }
-
-void Proctor::update()
-{
-	/* First update components for current hierarchy level */
-	for (auto& a : components)
-	{
-		a->update();
+		/* Assign values to transform */
+		transform.position = glm::vec3(0.0f);
+		transform.rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
+		transform.scale = glm::vec3(1.0f);
 	}
 
-	/* Next update children */
-	for (auto &a : children)
+	Proctor::Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _active, bool _isStatic)
+		: name(_name), uuid(_uuid), parent(_parent), active(_active), isStatic(_isStatic)
 	{
-		a->update();
-	}
-}
-
-void Proctor::cleanup()
-{
-	/* Clear data from memory */
-	for (auto& a : components)
-	{
-		a->cleanup();
-	}
-
-	for (auto& a : children)
-	{
-		a->cleanup();
-	}
-}
-
-void Proctor::addChild(Proctor* _proctor)
-{
-	/* Check if given proctor is already in use */
-	for (unsigned int i = 0; i < children.size(); i++)
-	{
-		if (children[i] == _proctor)
+		/* Assign uuid */
+		if (uuid == 0)
 		{
-			return;
+			uuid = uuid = Application::Randomizer().randomInt();
+		}
+
+		/* Assign values to transform */
+		transform.position = glm::vec3(0.0f);
+		transform.rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
+		transform.scale = glm::vec3(1.0f);
+	}
+
+	Proctor::~Proctor() { }
+
+	void Proctor::update()
+	{
+		/* First update components for current hierarchy level */
+		for (auto& a : components)
+		{
+			a->update();
+		}
+
+		/* Next update children */
+		for (auto& a : children)
+		{
+			a->update();
 		}
 	}
 
-	/* If proctor cannot be found in children vector, add it */
-	children.push_back(_proctor);
-}
-
-void Proctor::removeChild(Proctor* _proctor)
-{
-	/* Find correct proctor and delete it */
-	for (unsigned int i = 0; i < children.size(); i++)
+	void Proctor::cleanup()
 	{
-		if (children[i] == _proctor)
+		/* Clear data from memory */
+		for (auto& a : components)
 		{
-			children.erase(children.begin() + i);
-			return;
+			a->cleanup();
 		}
-	}
-}
 
-void Proctor::removeChildren()
-{
-	/* Drop all children */
-	children.clear();
-}
-
-Proctor* Proctor::getParent() const
-{
-	return parent;
-}
-
-void Proctor::setParent(Proctor* _proctor)
-{
-	parent = _proctor;
-}
-
-unsigned int Proctor::childCount()
-{
-	return children.size();
-}
-
-void Proctor::addComponent(Component* _component)
-{
-	/* Check if given component is already in use */
-	for (unsigned int i = 0; i < components.size(); i++)
-	{
-		if (components[i] == _component)
+		for (auto& a : children)
 		{
-			return;
+			a->cleanup();
 		}
 	}
 
-	/* If component cannot be found in components vector, add it */
-	components.push_back(_component);
-}
+	void Proctor::addChild(Proctor* _proctor)
+	{
+		/* Check if given proctor is already in use */
+		for (unsigned int i = 0; i < children.size(); i++)
+		{
+			if (children[i] == _proctor)
+			{
+				return;
+			}
+		}
 
-void Proctor::drawDebugWindow()
-{
-	ImGui::Text("|--------| NAME |-------------|");
-	ImGui::Text(name.c_str());
-	ImGui::Text("|--------| TRANSFORM |--------|");
-	float variables[3];
-	/* Position */
-	variables[0] = transform.position.x; variables[1] = transform.position.y; variables[2] = transform.position.z;
-	ImGui::Text("Position:"); ImGui::SameLine(); ImGui::DragFloat3("P", variables, 0.01f);
-	setPosition(glm::vec3(variables[0], variables[1], variables[2]));
-	/* Rotation */
-	variables[0] = transform.rotation.x; variables[1] = transform.rotation.y; variables[2] = transform.rotation.z;
-	ImGui::Text("Rotation:"); ImGui::SameLine(); ImGui::DragFloat3("R", variables, 0.01f);
-	setRotation(glm::quat(1.0f, variables[0], variables[1], variables[2]));
-	/* Scale */
-	variables[0] = transform.scale.x; variables[1] = transform.scale.y; variables[2] = transform.scale.z;
-	ImGui::Text("Scale:   "); ImGui::SameLine(); ImGui::DragFloat3("S", variables, 0.01f);
-	setScale(glm::vec3(variables[0], variables[1], variables[2]));
-	ImGui::Text("|--------| MOVEMENT |---------|");
-}
+		/* If proctor cannot be found in children vector, add it */
+		children.push_back(_proctor);
+	}
 
-void Proctor::setTransform(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
-{
-	transform.position = _position;
-	transform.rotation = _rotation;
-	transform.scale = _scale;
-}
+	void Proctor::removeChild(Proctor* _proctor)
+	{
+		/* Find correct proctor and delete it */
+		for (unsigned int i = 0; i < children.size(); i++)
+		{
+			if (children[i] == _proctor)
+			{
+				children.erase(children.begin() + i);
+				return;
+			}
+		}
+	}
 
-void Proctor::setPosition(glm::vec3 _position)
-{
-	transform.position = _position;
-}
+	void Proctor::removeChildren()
+	{
+		/* Drop all children */
+		children.clear();
+	}
 
-void Proctor::setRotation(glm::quat _rotation)
-{
-	transform.rotation = _rotation;
-}
+	Proctor* Proctor::getParent() const
+	{
+		return parent;
+	}
 
-void Proctor::setScale(glm::vec3 _scale)
-{
-	transform.scale = _scale;
-}
+	void Proctor::setParent(Proctor* _proctor)
+	{
+		parent = _proctor;
+	}
 
-Transform Proctor::getTransform()
-{
-	return transform;
-}
+	unsigned int Proctor::childCount()
+	{
+		return children.size();
+	}
 
-glm::vec3 Proctor::getPosition()
-{
-	return transform.position;
-}
+	void Proctor::addComponent(Component* _component)
+	{
+		/* Check if given component is already in use */
+		for (unsigned int i = 0; i < components.size(); i++)
+		{
+			if (components[i] == _component)
+			{
+				return;
+			}
+		}
 
-glm::quat Proctor::getRotation()
-{
-	return transform.rotation;
-}
+		/* If component cannot be found in components vector, add it */
+		components.push_back(_component);
+	}
 
-glm::vec3 Proctor::getScale()
-{
-	return transform.scale;
+	void Proctor::drawDebugWindow()
+	{
+		ImGui::Text("|--------| NAME |-------------|");
+		ImGui::Text(name.c_str());
+		ImGui::Text("|--------| TRANSFORM |--------|");
+		float variables[3];
+		/* Position */
+		variables[0] = transform.position.x; variables[1] = transform.position.y; variables[2] = transform.position.z;
+		ImGui::Text("Position:"); ImGui::SameLine(); ImGui::DragFloat3("P", variables, 0.01f);
+		setPosition(glm::vec3(variables[0], variables[1], variables[2]));
+		/* Rotation */
+		variables[0] = transform.rotation.x; variables[1] = transform.rotation.y; variables[2] = transform.rotation.z;
+		ImGui::Text("Rotation:"); ImGui::SameLine(); ImGui::DragFloat3("R", variables, 0.01f);
+		setRotation(glm::quat(1.0f, variables[0], variables[1], variables[2]));
+		/* Scale */
+		variables[0] = transform.scale.x; variables[1] = transform.scale.y; variables[2] = transform.scale.z;
+		ImGui::Text("Scale:   "); ImGui::SameLine(); ImGui::DragFloat3("S", variables, 0.01f);
+		setScale(glm::vec3(variables[0], variables[1], variables[2]));
+		ImGui::Text("|--------| MOVEMENT |---------|");
+	}
+
+	void Proctor::setTransform(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
+	{
+		transform.position = _position;
+		transform.rotation = _rotation;
+		transform.scale = _scale;
+	}
+
+	void Proctor::setPosition(glm::vec3 _position)
+	{
+		transform.position = _position;
+	}
+
+	void Proctor::setRotation(glm::quat _rotation)
+	{
+		transform.rotation = _rotation;
+	}
+
+	void Proctor::setScale(glm::vec3 _scale)
+	{
+		transform.scale = _scale;
+	}
+
+	Transform Proctor::getTransform()
+	{
+		return transform;
+	}
+
+	glm::vec3 Proctor::getPosition()
+	{
+		return transform.position;
+	}
+
+	glm::quat Proctor::getRotation()
+	{
+		return transform.rotation;
+	}
+
+	glm::vec3 Proctor::getScale()
+	{
+		return transform.scale;
+	}
 }

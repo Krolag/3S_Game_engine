@@ -5,4 +5,6 @@
 #include "Scene.h"
 #include "Randomizer.h"
 
+namespace Application {}
+
 #endif // !APPLICATION_H

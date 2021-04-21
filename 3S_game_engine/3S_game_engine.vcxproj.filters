@@ -25,8 +25,8 @@
     <ClCompile Include="include\UIRender\TextRender.cpp" />
     <ClCompile Include="include\GameLogic\Proctor.cpp" />
     <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
-    <ClCompile Include="include\Components\Component.cpp" />
-    <ClCompile Include="include\Components\MeshRenderer.cpp" />
+    <ClCompile Include="include\GameLogic\Components\Component.cpp" />
+    <ClCompile Include="include\GameLogic\Components\MeshRenderer.cpp" />
     <ClCompile Include="include\GameLogic\Collisions\BoxCollider.cpp" />
     <ClCompile Include="include\GameLogic\Collisions\Collider.cpp" />
     <ClCompile Include="include\GameLogic\Collisions\CollisionsManager.cpp" />
@@ -62,8 +62,8 @@
     <ClInclude Include="include\UIRender\UIRender.h" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\GameLogic\Proctor.h" />
-    <ClInclude Include="include\Components\Component.h" />
-    <ClInclude Include="include\Components\MeshRenderer.h" />
+    <ClInclude Include="include\GameLogic\Components\Component.h" />
+    <ClInclude Include="include\GameLogic\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />
     <ClInclude Include="include\Application\Randomizer.h" />
     <ClInclude Include="include\GameLogic\Collisions\BoxCollider.h" />
@@ -72,6 +72,7 @@
     <ClInclude Include="include\Primitives\Box\Box.h" />
     <ClInclude Include="include\Application\Application.h" />
     <ClInclude Include="include\Application\Scene.h" />
+    <ClInclude Include="include\GameLogic\GameLogic.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

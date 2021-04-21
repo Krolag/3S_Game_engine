@@ -1,8 +1,9 @@
 /* Load 3SE packages */
+#include "Application/Application.h"
 #include "Loader/Loader.h"
+#include "GameLogic/GameLogic.h"
 #include "InputSystem/InputSystem.h"
 #include "UIRender/UIRender.h"
-#include "Application/Application.h"
  
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw.h"
@@ -19,10 +20,6 @@
 #include "Skybox/Skybox.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
-#include "Components/Component.h"
-#include "GameLogic/Proctor.h"
-#include "GameLogic/Hierarchy.h"
-#include "Components/MeshRenderer.h"
 #include "GameLogic/Collisions/BoxCollider.h"
 
 //#include <iostream>
@@ -35,12 +32,12 @@ void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput* keyboar
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
 
 // Those functions will define position of given model 
-void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed);
-void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed);
+void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed);
+void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed);
 
 //Switch camera position(debug)
 //maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
-void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2,
+void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
 // Collision functions
@@ -115,7 +112,7 @@ int main()
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(mainScene.window);
 
     /* Create object hierarchy */
-    Hierarchy hierarchy;
+    GameLogic::Hierarchy hierarchy;
 
     /* Load models */
     positionOfWsadObject[0] = -12.0f;
@@ -139,12 +136,12 @@ int main()
 
     /* Load hierarchy */
     // hero_00 - configure proctor
-    Proctor hero_00("hero_00", 0, NULL);
+    GameLogic::Proctor hero_00("hero_00", 0, NULL);
     hero_00.setPosition(glm::vec3(-12.0f));
     hero_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     hero_00.setScale(glm::vec3(0.3f));
     // hero_00 - load model
-    MeshRenderer hero_00_mr(C_MESH, &hero_00);
+    GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00);
     hero_00_mr.setModel(&hero_00_model);
     hero_00_mr.setShader(model3D);
     hero_00.addComponent(&hero_00_mr);
@@ -152,12 +149,12 @@ int main()
     hierarchy.addObject(&hero_00);
 	
     // TROLL 01 - configure proctor
-    Proctor troll_01("troll_01", 0, NULL);
+    GameLogic::Proctor troll_01("troll_01", 0, NULL);
     troll_01.setPosition(glm::vec3(12.0f, -12.0f, -12.0f));
     troll_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     troll_01.setScale(glm::vec3(0.02f));
     // TROLL 01 - load model
-    MeshRenderer troll_01_mr(C_MESH, &troll_01);
+    GameLogic::MeshRenderer troll_01_mr(GameLogic::C_MESH, &troll_01);
     troll_01_mr.setModel(&troll_01_model);
     troll_01_mr.setShader(model3D);
     troll_01.addComponent(&troll_01_mr);
@@ -165,22 +162,22 @@ int main()
     hierarchy.addObject(&troll_01);
 	
     // JAKIS MODEL 00
-    Proctor modelJakis_00("modelJakis_00", 0, NULL);
+    GameLogic::Proctor modelJakis_00("modelJakis_00", 0, NULL);
     modelJakis_00.setPosition(glm::vec3(-4.0f));
     modelJakis_00.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
     modelJakis_00.setScale(glm::vec3(1.f));
-    MeshRenderer modelJakis_mr_00(C_MESH, &modelJakis_00);
+    GameLogic::MeshRenderer modelJakis_mr_00(GameLogic::C_MESH, &modelJakis_00);
     modelJakis_mr_00.setModel(&modelJakis_00_model);
     modelJakis_mr_00.setShader(model3D);
     modelJakis_00.addComponent(&modelJakis_mr_00);
     hierarchy.addObject(&modelJakis_00);
 	
     // JAKIS MODEL 01
-    Proctor modelJakis_01("modelJakis_01", 0, NULL);
+    GameLogic::Proctor modelJakis_01("modelJakis_01", 0, NULL);
     modelJakis_01.setPosition(glm::vec3(-10.0f));
     modelJakis_01.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
     modelJakis_01.setScale(glm::vec3(1.f));
-    MeshRenderer modelJakis_mr_01(C_MESH, &modelJakis_01);
+    GameLogic::MeshRenderer modelJakis_mr_01(GameLogic::C_MESH, &modelJakis_01);
     modelJakis_mr_01.setModel(&modelJakis_01_model);
     modelJakis_mr_01.setShader(model3D);
     modelJakis_01.addComponent(&modelJakis_mr_01);
@@ -362,7 +359,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
+void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
 {
     if (keyboard->isKeyDown(GLFW_KEY_W))
     {
@@ -437,7 +434,7 @@ void keyboardMovementWSAD(float* positionData, Proctor* _proctor, InputSystem::K
     //std::cout << "WSAD Speed: " << speed << std::endl;
 }
 
-void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
+void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
 {
     if (keyboard->isKeyDown(GLFW_KEY_I))
     {
@@ -513,7 +510,7 @@ void keyboardMovementIJKL(float* positionData, Proctor* _proctor, InputSystem::K
     //std::cout << "IJKL Speed: " << speed << std::endl;
 }
 
-void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, Proctor* player_1, Proctor* player_2,
+void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight)
 {
     if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
