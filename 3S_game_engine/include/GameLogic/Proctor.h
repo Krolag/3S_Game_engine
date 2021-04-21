@@ -9,6 +9,7 @@
 #include "Loader/Loader.h"
 #include "Shader/Shader.h"
 #include "Components/MeshRenderer.h"
+#include "Components/PlayerInput.h"
 
 namespace GameLogic
 {

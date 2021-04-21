@@ -143,7 +143,39 @@ namespace GameLogic
 		variables[0] = transform.scale.x; variables[1] = transform.scale.y; variables[2] = transform.scale.z;
 		ImGui::Text("Scale:   "); ImGui::SameLine(); ImGui::DragFloat3("S", variables, 0.01f);
 		setScale(glm::vec3(variables[0], variables[1], variables[2]));
-		ImGui::Text("|--------| MOVEMENT |---------|");
+		/* Movement */
+		for (auto a : components)
+		{
+			if (a->type == GameLogic::C_MESH)
+			{
+				ImGui::Text("|--------| MESHRENDERER |-----|");
+				ImGui::Text("Model from path:");
+				ImGui::Text(((MeshRenderer*) a)->model->path.c_str());
+			}
+
+			if (a->type == GameLogic::C_MOVEMENT)
+			{
+				ImGui::Text("|--------| MOVEMENT |---------|");
+				if (((PlayerInput*)a)->getScheme())
+				{
+					ImGui::Text("Up:    W");
+					ImGui::Text("Down:  S");
+					ImGui::Text("Left:  A");
+					ImGui::Text("Right: D");
+					ImGui::Text("Use:   V");
+					ImGui::Text("Row:   B");
+				}
+				else
+				{
+					ImGui::Text("Up:    I");
+					ImGui::Text("Down:  K");
+					ImGui::Text("Left:  J");
+					ImGui::Text("Right: L");
+					ImGui::Text("Use:   .");
+					ImGui::Text("Row:   /");
+				}
+			}
+		}
 	}
 
 	void Proctor::setTransform(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)

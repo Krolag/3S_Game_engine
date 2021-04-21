@@ -17,6 +17,7 @@ namespace GameLogic
 	{
 	public:
 		Proctor* proctor;
+		ComponentType type;
 
 		/* Constructors / Destructors */
 		Component();
@@ -31,7 +32,6 @@ namespace GameLogic
 
 	protected:
 		bool active = true;
-		ComponentType type;
 		unsigned int uuid = 0;
 	};
 }

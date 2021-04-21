@@ -21,6 +21,7 @@ namespace Loader
 	class Model
 	{
 	public:
+		std::string path;
 		/* Model transformation */
 		glm::vec3 position;
 		glm::quat rotation;

@@ -1,8 +1,8 @@
 /* Load 3SE packages */
 #include "Application/Application.h"
 #include "Loader/Loader.h"
-#include "GameLogic/GameLogic.h"
 #include "InputSystem/InputSystem.h"
+#include "GameLogic/GameLogic.h"
 #include "UIRender/UIRender.h"
  
 #include "ImGUI/imgui.h"
@@ -72,7 +72,7 @@ int main()
     glm::mat4 model;
 
     /* Load scene */
-    Application::Scene mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT);
+    Application::Scene mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     glfwMakeContextCurrent(mainScene.window);
     glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
     glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -133,18 +133,20 @@ int main()
     Loader::Model modelJakis_01_model;
     modelJakis_01_model.loadModel("assets/models/cube/untitled.obj");
 
-
     /* Load hierarchy */
     // hero_00 - configure proctor
     GameLogic::Proctor hero_00("hero_00", 0, NULL);
-    hero_00.setPosition(glm::vec3(-12.0f));
+    hero_00.setPosition(glm::vec3(0.0f));
     hero_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     hero_00.setScale(glm::vec3(0.3f));
-    // hero_00 - load model
+    // hero_00 - add mesh renderer component
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00);
     hero_00_mr.setModel(&hero_00_model);
     hero_00_mr.setShader(model3D);
     hero_00.addComponent(&hero_00_mr);
+    // hero_00 - add movement component
+    GameLogic::PlayerInput hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
+    hero_00.addComponent(&hero_00_pi);
     // hero_00 - add object to hierarchy
     hierarchy.addObject(&hero_00);
 	
@@ -236,12 +238,13 @@ int main()
 
     	/* Render lights */
         dirLight.render(model3D);
+
+        /* Collect input */
         keyboardMovementWSAD(positionOfWsadObject, &hero_00, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, WSADSpeed);
         keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, IJKLSpeed);
 
         /* Render models */
         hierarchy.update();
-
 
         /* Set up universal collisionBoxShader uniforms */
         collisionBoxShader.use();

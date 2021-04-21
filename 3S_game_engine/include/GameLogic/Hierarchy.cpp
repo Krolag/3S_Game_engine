@@ -116,6 +116,20 @@ namespace GameLogic
 			a->update();
 		}
 
+		// TODO: flag if loaded
+		// przekazaæ collidery wskaŸnikowo
+		//for (unsigned int i = 0; i < objects.size(); i++)
+		//{
+		//	std::vector<Collider> colliders;
+
+		//	if (objects[i].getComponents().getComponent(C_COLLIDER) != NULL)
+		//	{
+		//		colliders.push_back(objects[i].getComponents().getComponent(C_COLLIDER))
+		//	}
+
+		//	flag == true;
+		//}
+
 		/* If hierarchy is active, draw debug window */
 		if (active)
 		{

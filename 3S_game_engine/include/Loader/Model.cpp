@@ -26,6 +26,8 @@ namespace Loader
 
 	void Model::loadModel(std::string _path)
 	{
+		path = _path;
+
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(_path,
 			aiProcess_Triangulate |

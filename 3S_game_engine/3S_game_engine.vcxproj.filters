@@ -32,6 +32,7 @@
     <ClCompile Include="include\GameLogic\Collisions\CollisionsManager.cpp" />
     <ClCompile Include="include\Primitives\Box\Box.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
+    <ClCompile Include="include\GameLogic\Components\PlayerInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -73,6 +74,7 @@
     <ClInclude Include="include\Application\Application.h" />
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\GameLogic\GameLogic.h" />
+    <ClInclude Include="include\GameLogic\Components\PlayerInput.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

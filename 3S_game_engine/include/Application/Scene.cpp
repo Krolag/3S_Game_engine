@@ -10,11 +10,12 @@ namespace Application
 		/* Create window */
 		if (isFullScreen)
 		{
-			this->window = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, glfwGetVideoMode(glfwGetPrimaryMonitor())->height, "3S GameEngine", glfwGetPrimaryMonitor(), NULL);
+			this->window = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, glfwGetVideoMode(glfwGetPrimaryMonitor())->height, 
+				_name.c_str(), glfwGetPrimaryMonitor(), NULL);
 		}
 		else
 		{
-			this->window = glfwCreateWindow(_width, _height, "3S GameEngine", NULL, NULL);
+			this->window = glfwCreateWindow(_width, _height, _name.c_str(), NULL, NULL);
 		}
 
 		/* Check if window was created properly */

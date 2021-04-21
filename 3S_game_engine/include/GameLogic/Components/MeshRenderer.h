@@ -11,6 +11,9 @@ namespace GameLogic
 	class MeshRenderer : public Component
 	{
 	public:
+		Loader::Model* model = nullptr;
+		Shader shader;
+
 		/* Constructors */
 		MeshRenderer(ComponentType _type, Proctor* _proctor);
 
@@ -23,8 +26,6 @@ namespace GameLogic
 
 	private:
 		Proctor* parent = nullptr;
-		Loader::Model* model = nullptr;
-		Shader shader;
 	};
 }
 

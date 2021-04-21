@@ -1,5 +1,7 @@
+#pragma once
 #ifndef KEYBOARDINPUT_H
 #define KEYBOARDINPUT_H
+
 #include <GLFW/glfw3.h>
 
 namespace InputSystem
@@ -21,4 +23,4 @@ namespace InputSystem
 		static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	};
 }
-#endif
+#endif // !KEYBOARDINPUT_H

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MOUSEINPUT_H
 #define MOUSEINPUT_H
 
@@ -37,4 +38,4 @@ namespace InputSystem
 		static void buttonCallback(GLFWwindow* window, int button, int action, int mods);
 	};
 }
-#endif // MOUSEINPUT_H
+#endif // !MOUSEINPUT_H

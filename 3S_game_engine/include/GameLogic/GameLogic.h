@@ -6,6 +6,7 @@
 #include "Proctor.h"
 #include "Components/Component.h"
 #include "Components/MeshRenderer.h"
+#include "Components/PlayerInput.h"
 
 namespace GameLogic {}
 
