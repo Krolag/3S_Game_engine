@@ -46,6 +46,7 @@ public:
 	void calcRadius();
 
 	/* Getters */
+	std::vector<glm::vec3> getColliderBoxVertices();
 	glm::vec3 getMin() const;
 	glm::vec3 getMax() const;
 	glm::vec3 getRadius() const;

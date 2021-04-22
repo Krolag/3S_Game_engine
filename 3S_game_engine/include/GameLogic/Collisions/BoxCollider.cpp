@@ -11,7 +11,7 @@
 
 /* Constructor will make bounding box around given model */
 BoxCollider::BoxCollider(Shader _colliderShader, Loader::Model* _model, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale) :
-	colliderShader(_colliderShader), position(glm::vec3(_position)), rotation(glm::quat(_rotation)), scale(glm::vec3(_scale))
+	colliderShader(_colliderShader), position(glm::vec3(_position)), rotation(glm::quat(_rotation)), scale(glm::vec3(_scale)), min(_position), max(_position)
 {
 	std::cout << "Initializing the box collider based on the model... Be patient if model has many vertices and wait until finish..." << std::endl;
 
@@ -32,6 +32,7 @@ BoxCollider::BoxCollider(Shader _colliderShader, Loader::Model* _model, glm::vec
 		std::cout << "PROCESSING MESH NUMBER " << i << " FINISHED" << std::endl;
 	}
 	std::cout << "MODEL POSITION FROM CONSTRUCTOR COLLIDER:\nx: " << _model->position.x << ", y: " << _model->position.y << ", z: " << _model->position.z << std::endl;
+	
 	/* Transform the min and max x,y,z vectors with the model transform matrix */
 	glm::mat4 modelTransform = _model->getModelMatrix();
 	min = modelTransform * glm::vec4(min.x, min.y, min.z, 1.0f);
@@ -40,10 +41,12 @@ BoxCollider::BoxCollider(Shader _colliderShader, Loader::Model* _model, glm::vec
 	/* Calculate center point of the cube */
 	calcCenter();
 	calcRadius();
-	//radius.x = glm::abs(centerPoint[0] - min.x);
-	//radius.y = glm::abs(centerPoint[1] - min.y);
-	//radius.z = glm::abs(centerPoint[2] - min.z);
+
 	std::cout << "RADIUS VECTOR: " << radius.x << " " << radius.y << " " << radius.z << std::endl;
+	std::cout << "MIN VECTOR: " << min.x << " " << min.y << " " << min.z << std::endl;
+	std::cout << "MAX VECTOR: " << max.x << " " << max.y << " " << max.z << std::endl;
+	std::cout << "CENTER POINT: " << centerPoint[0] << " " << centerPoint[1] << " " << centerPoint[2] << std::endl;
+
 		
 	/* Initialize gl objects for correct rendering collider box */
 	glGenBuffers(1, &colliderVBO);
@@ -60,12 +63,6 @@ BoxCollider::BoxCollider(Shader _colliderShader, Loader::Model* _model, glm::vec
 	glBindVertexArray(0);
 }
 
-///* Constructor with already known min and max values */
-//BoxCollider::BoxCollider(Shader _collisionBoxShader, glm::vec3 _min, glm::vec3 _max, glm::mat4 _transform) : min(_min), max(_max)
-//{
-//	
-//}
-
 BoxCollider::~BoxCollider()
 {
 	
@@ -77,37 +74,28 @@ BoxCollider::~BoxCollider()
 void BoxCollider::update()
 {
 	// Transform the bounding box the same as model based on model matrix
-
-	// scale min max
-
-	// rotate min max
 	
-	// translate min max
-	min.x = position.x - radius.x * scale.x;
-	min.y = position.y - radius.y * scale.y;
-	min.z = position.z - radius.z * scale.z;
+	std::vector<glm::vec3> vertices = getColliderBoxVertices();
+	glm::vec3 updateMin = glm::vec3(position);
+	glm::vec3 updateMax = glm::vec3(position);
 	
-	max.x = position.x + radius.x * scale.x;
-	max.y = position.y + radius.y * scale.y;
-	max.z = position.z + radius.z * scale.z;
-
-
-	//std::cout << "COLLISION CLASS VALUES UPDATE METHOD:\nMIN: " << min.x << " " << min.y << " " << min.z << std::endl;
-	//std::cout << "MAX: " << max.x << " " << max.y << " " << max.z << std::endl;
-	//std::cout << "CENTER DATA INIT POINT: " << centerPoint[0] << " " << centerPoint[0] << " " << centerPoint[0] << std::endl;
-	//std::cout << "POSITION: " << position.x << " " << position.y << " " << position.z << std::endl;
-	//std::cout << "ROTATION: " << rotation.x << " " << rotation.y << " " << rotation.z << " " << rotation.w << std::endl;
-	//std::cout << "SCALE: " << scale.x << " " << scale.y << " " << scale.z << std::endl;
-
-	//glBindVertexArray(colliderVAO);
-	//glBindBuffer(GL_ARRAY_BUFFER, colliderVBO);
-
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(centerPoint), &centerPoint, GL_DYNAMIC_DRAW);
-
-	//glEnableVertexAttribArray(0);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
-
-	//glBindVertexArray(0);
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		// update vert
+		vertices.at(i) = getModelMatrix() * glm::vec4(vertices.at(i).x, vertices.at(i).y, vertices.at(i).z, 1.0f);
+		// check min
+		if (updateMin.x > vertices.at(i).x) updateMin.x = vertices.at(i).x;
+		if (updateMin.y > vertices.at(i).y) updateMin.y = vertices.at(i).y;
+		if (updateMin.z > vertices.at(i).z) updateMin.z = vertices.at(i).z;
+		// check max
+		if (updateMax.x < vertices.at(i).x) updateMax.x = vertices.at(i).x;
+		if (updateMax.y < vertices.at(i).y) updateMax.y = vertices.at(i).y;
+		if (updateMax.z < vertices.at(i).z) updateMax.z = vertices.at(i).z;
+	}
+	
+	radius.x = glm::abs(position.x - updateMin.x);
+	radius.y = glm::abs(position.y - updateMin.y);
+	radius.z = glm::abs(position.z - updateMin.z);
 }
 
 /* Method will render bounding box around the model if necessary */
@@ -152,6 +140,22 @@ void BoxCollider::calcRadius()
 
 // GETTERS
 
+std::vector<glm::vec3> BoxCollider::getColliderBoxVertices()
+{
+	std::vector<glm::vec3> verts;
+	// FRONT FACE
+	verts.push_back(glm::vec3(min.x, max.y, min.z));
+	verts.push_back(glm::vec3(max.x, max.y, min.z));
+	verts.push_back(glm::vec3(max.x, min.y, min.z));
+	verts.push_back(glm::vec3(min.x, min.y, min.z));
+	// BACK FACE
+	verts.push_back(glm::vec3(min.x, max.y, max.z));
+	verts.push_back(glm::vec3(max.x, max.y, max.z));
+	verts.push_back(glm::vec3(max.x, min.y, max.z));
+	verts.push_back(glm::vec3(min.x, min.y, max.z));
+	return verts;
+}
+
 glm::vec3 BoxCollider::getMin() const
 {
 	return min;
@@ -164,7 +168,7 @@ glm::vec3 BoxCollider::getMax() const
 
 glm::vec3 BoxCollider::getRadius() const
 {
-	return radius * scale;
+	return radius;
 }
 
 /* Returns center of the collider box based */
@@ -204,7 +208,7 @@ glm::mat4 BoxCollider::getRotateMatrix() const
 glm::mat4 BoxCollider::getScaleMatrix() const
 {
 	glm::mat4 scale = glm::mat4(1.0f);
-	scale = glm::translate(scale, this->position);
+	scale = glm::scale(scale, this->scale);
 	return scale;
 }
 

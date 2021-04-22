@@ -121,6 +121,7 @@ int main()
     positionOfIjklObject[0] = 12.0f;
     positionOfIjklObject[1] = -12.0f;
     positionOfIjklObject[2] = -12.0f;
+	
     Loader::Model troll_01_model;
     troll_01_model.loadModel("assets/models/lotr_troll/scene.gltf");
 
@@ -196,7 +197,6 @@ int main()
     /* Init Box Colliders for the models */
     BoxCollider someModelCollider_00(collisionBoxShader, &modelJakis_00_model, modelJakis_00_model.position, modelJakis_00_model.rotation , modelJakis_00_model.scale);
     BoxCollider someModelCollider_01(collisionBoxShader, &modelJakis_01_model, modelJakis_01_model.position, modelJakis_01_model.rotation, modelJakis_01_model.scale);
-    //BoxCollider troll_00_collider(collisionBoxShader, &troll_00_model, troll_00_model.position, troll_00_model.scale);
     
     float xValueRight = 0.2;
     float xValueLeft = 0.2;
@@ -261,29 +261,20 @@ int main()
         someModelCollider_01.setScale(modelJakis_01_model.scale);
         someModelCollider_01.setRotation(modelJakis_01_model.rotation);
         someModelCollider_01.setPosition(modelJakis_01_model.position);
-    	
+
         /* Update uniforms and render colliders */
     	// box 00
-        collisionBoxShader.setUniform("model", someModelCollider_00.getModelMatrix());
-        collisionBoxShader.setUniform("radius", someModelCollider_00.getRadius() / someModelCollider_00.scale/* * someModelCollider.scale*/);
+        collisionBoxShader.setUniform("model", someModelCollider_00.getTranslateMatrix() * someModelCollider_00.getScaleMatrix());
+        collisionBoxShader.setUniform("radius", someModelCollider_00.getRadius() / someModelCollider_00.scale);
         collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
         someModelCollider_00.render();
     	
         // box 01
-        collisionBoxShader.setUniform("model", someModelCollider_01.getModelMatrix());
-        collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale/* * someModelCollider.scale*/);
+        collisionBoxShader.setUniform("model", someModelCollider_01.getTranslateMatrix() * someModelCollider_01.getScaleMatrix());
+        collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale);
         collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
         someModelCollider_01.render();
-
-        //if (checkAABBCollision(someModelCollider_00, someModelCollider_01)) std::cout << "KOLIZJA" << std::endl;
-        //else std::cout << "NIE KOLIDUJOM" << std::endl;
-
     	
-    	//// troll_00
-     //   troll_00_collider.setScale(troll_00_model.scale);
-     //   troll_00_collider.setPosition(troll_00_model.position);
-     //   collisionBoxShader.setUniform("radius", troll_00_collider.getRadius() * troll_00_model.scale);
-     //   troll_00_collider.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
