@@ -11,6 +11,8 @@ namespace GameLogic
 	class PlayerInput : public Component
 	{
 	public:
+		float movementSpeed = 0.2f;
+
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);
 		PlayerInput(ComponentType _type, Proctor* _proctor, bool _isPlayerOne);
@@ -28,7 +30,8 @@ namespace GameLogic
 		Proctor* parent = nullptr;
 		bool isPlayerOne;
 
-		void usePlayerOneMovement();
+		void usePlayerOneInput();
+		void usePlayerTwoInput();
 	};
 }
 

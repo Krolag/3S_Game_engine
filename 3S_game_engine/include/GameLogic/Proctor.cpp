@@ -185,6 +185,11 @@ namespace GameLogic
 		transform.scale = _scale;
 	}
 
+	void Proctor::setTransform(Transform _transform)
+	{
+		transform = _transform;
+	}
+
 	void Proctor::setPosition(glm::vec3 _position)
 	{
 		transform.position = _position;

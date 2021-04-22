@@ -153,7 +153,7 @@ int main()
 	
     // TROLL 01 - configure proctor
     GameLogic::Proctor troll_01("troll_01", 0, NULL);
-    troll_01.setPosition(glm::vec3(12.0f, -12.0f, -12.0f));
+    troll_01.setPosition(glm::vec3(0.0f));
     troll_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     troll_01.setScale(glm::vec3(0.02f));
     // TROLL 01 - load model
@@ -274,7 +274,6 @@ int main()
         collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale);
         collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
         someModelCollider_01.render();
-    	
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
@@ -362,9 +361,9 @@ void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = yValueUp;
         }
-        positionData[2] -= speed;
-        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
+        //positionData[2] -= speed;
+        //_proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_S))
@@ -374,9 +373,9 @@ void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = yValueDown;
         }
-        positionData[2] += speed;
-        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
+        //positionData[2] += speed;
+        //_proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_A))
@@ -387,9 +386,9 @@ void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, Inp
             speed = xValueRight;
         }
     
-        positionData[0] -= speed;
-        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
+        //positionData[0] -= speed;
+        //_proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_D))
@@ -399,32 +398,32 @@ void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = xValueLeft;
         }
-        positionData[0] += speed;
-        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
+        //positionData[0] += speed;
+        //_proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
+        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
 
-    if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyDown(GLFW_KEY_A))
-    {
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-135.0f), 0.0f));
-    }
-    if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyDown(GLFW_KEY_D))
-    {
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f));
-    }
-    if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyDown(GLFW_KEY_A))
-    {
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f));
-    }
-    if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyDown(GLFW_KEY_D))
-    {
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f));
-    }
+    //if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyDown(GLFW_KEY_A))
+    //{
+        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-135.0f), 0.0f));
+    //}
+    //if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyDown(GLFW_KEY_D))
+    //{
+        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f));
+    //}
+    //if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyDown(GLFW_KEY_A))
+    //{
+    //    _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f));
+    //}
+    //if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyDown(GLFW_KEY_D))
+    //{
+    //    _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f));
+    //}
 
-    if (!keyboard->isKeyDown(GLFW_KEY_W) && !keyboard->isKeyDown(GLFW_KEY_S) && !keyboard->isKeyDown(GLFW_KEY_A) && !keyboard->isKeyDown(GLFW_KEY_D))
-    {
-        speed = 0.f;
-    }
+    //if (!keyboard->isKeyDown(GLFW_KEY_W) && !keyboard->isKeyDown(GLFW_KEY_S) && !keyboard->isKeyDown(GLFW_KEY_A) && !keyboard->isKeyDown(GLFW_KEY_D))
+    //{
+    //    speed = 0.f;
+    //}
     //std::cout << "WSAD Speed: " << speed << std::endl;
 }
 

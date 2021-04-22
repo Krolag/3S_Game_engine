@@ -25,27 +25,73 @@ namespace GameLogic
 		/* Check which player should get update */
 		if (isPlayerOne) 
 		{
-			usePlayerOneMovement();
+			usePlayerOneInput();
 		}
 		else
 		{
-
+			usePlayerTwoInput();
 		}
 	}
 
-
-	void PlayerInput::usePlayerOneMovement()
+	void PlayerInput::usePlayerOneInput()
 	{
 		/* Get proctors parent transform */
 		Transform transform = proctor->getTransform();
 
+		/* Horizontal movement */
+		if (keyboard->isKeyDown(GLFW_KEY_A))
+		{
+			transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f);
+			transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(270.0f), 0.0f);
+		}
+		else if (keyboard->isKeyDown(GLFW_KEY_D))
+		{
+			transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f);
+			transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f);
+		}
+
+		/* Vertical movement */
 		if (keyboard->isKeyDown(GLFW_KEY_W))
 		{
-			std::cout << "move up" << std::endl;
+			transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed);
+
+			/* Check for diagonal movement */
+			if (keyboard->isKeyDown(GLFW_KEY_A))
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(225.0f), 0.0f);
+			}
+			else if (keyboard->isKeyDown(GLFW_KEY_D))
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f);
+			}
+			else
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f);
+			}
 		}
 		else if (keyboard->isKeyDown(GLFW_KEY_S))
 		{
-			std::cout << "move down" << std::endl;
+			transform.position += glm::vec3(0.0f, 0.0f, movementSpeed);
+
+			/* Check for diagonal movement */
+			if (keyboard->isKeyDown(GLFW_KEY_A))
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f);
+			}
+			else if (keyboard->isKeyDown(GLFW_KEY_D))
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f);
+			}
+			else
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f);
+			}
 		}
+
+		proctor->setTransform(transform);
+	}
+
+	void PlayerInput::usePlayerTwoInput()
+	{
 	}
 }

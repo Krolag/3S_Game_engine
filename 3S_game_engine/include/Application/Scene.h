@@ -12,9 +12,10 @@ namespace Application
 	{
 	public:
 		GLFWwindow* window;
+		float deltaTime;
 
 		Scene(std::string _name, float _width = 1280, float _height = 720, bool _isFullScreen = false);
-	
+
 	private:
 		bool isFullScreen;
 		std::string name;
