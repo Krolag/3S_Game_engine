@@ -15,7 +15,7 @@ namespace GameLogic
 		transform.scale = glm::vec3(1.0f);
 	}
 
-	Proctor::Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _active, bool _isStatic)
+	Proctor::Proctor(const char* _name, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale, Proctor* _parent, unsigned int _uuid, bool _active, bool _isStatic)
 		: name(_name), uuid(_uuid), parent(_parent), active(_active), isStatic(_isStatic)
 	{
 		/* Assign uuid */
@@ -25,9 +25,9 @@ namespace GameLogic
 		}
 
 		/* Assign values to transform */
-		transform.position = glm::vec3(0.0f);
-		transform.rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
-		transform.scale = glm::vec3(1.0f);
+		transform.position = _position;
+		transform.rotation = _rotation;
+		transform.scale = _scale;
 	}
 
 	Proctor::~Proctor() { }

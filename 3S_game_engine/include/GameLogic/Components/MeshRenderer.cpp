@@ -3,13 +3,24 @@
 
 namespace GameLogic
 {
-	MeshRenderer::MeshRenderer(ComponentType _type, Proctor* _proctor)
-		: Component(_type, _proctor), parent(proctor)
-	{ }
+	MeshRenderer::MeshRenderer(ComponentType _type, Proctor* _proctor, Loader::Model* _model, Shader* _shader)
+		: Component(_type, _proctor), parent(proctor), model(_model), shader(_shader)
+	{
+		if (_proctor != NULL)
+		{
+			proctor->addComponent(this);
+
+		}
+	}
 
 	void MeshRenderer::setModel(Loader::Model* _model)
 	{
 		model = _model;
+	}
+
+	void MeshRenderer::setShader(Shader* _shader)
+	{
+		shader = _shader;
 	}
 
 	void MeshRenderer::update()
@@ -29,10 +40,5 @@ namespace GameLogic
 	void MeshRenderer::cleanup()
 	{
 		model->cleanup();
-	}
-
-	void MeshRenderer::setShader(Shader* _shader)
-	{
-		shader = _shader;
 	}
 }

@@ -29,7 +29,9 @@ namespace GameLogic
 
 		/* Constructors / Destructors */
 		Proctor();
-		Proctor(const char* _name, unsigned int _uuid, Proctor* _parent, bool _active = true, bool _isStatic = false);
+		Proctor(const char* _name, glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, glm::vec3(0.0f)), 
+			glm::vec3 _scale = glm::vec3(1.0f), Proctor* _parent = NULL, unsigned int _uuid = 0,
+			bool _active = true, bool _isStatic = false);
 		~Proctor();
 
 		/* Children methods */

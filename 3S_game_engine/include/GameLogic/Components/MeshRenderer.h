@@ -15,7 +15,7 @@ namespace GameLogic
 		Shader* shader;
 
 		/* Constructors */
-		MeshRenderer(ComponentType _type, Proctor* _proctor);
+		MeshRenderer(ComponentType _type, Proctor* _proctor = NULL, Loader::Model* _model = NULL, Shader* _shader = NULL);
 
 		/* Model methods */
 		void setModel(Loader::Model* _model);
