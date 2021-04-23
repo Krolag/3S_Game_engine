@@ -35,11 +35,14 @@ namespace GameLogic
 
 	void PlayerInput::usePlayerOneInput()
 	{
+		/* Get deltaTime from proctor */
+		float deltaTime = proctor->getDeltaTime();
+
 		/* Get proctors parent transform */
 		Transform transform = proctor->getTransform();
 
 		/* Calculate speed */
-		movementSpeed += acceleration;
+		movementSpeed += acceleration * deltaTime;
 		if (movementSpeed >= maxSpeed)
 		{
 			movementSpeed = maxSpeed;
@@ -48,19 +51,19 @@ namespace GameLogic
 		/* Horizontal movement */
 		if (keyboard->isKeyDown(GLFW_KEY_A))
 		{
-			transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f);
+			transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
 			transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(270.0f), 0.0f);
 		}
 		else if (keyboard->isKeyDown(GLFW_KEY_D))
 		{
-			transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f);
+			transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
 			transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f);
 		}
 
 		/* Vertical movement */
 		if (keyboard->isKeyDown(GLFW_KEY_W))
 		{
-			transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed);
+			transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed) * deltaTime * 20.0f;
 
 			/* Check for diagonal movement */
 			if (keyboard->isKeyDown(GLFW_KEY_A))
@@ -78,7 +81,7 @@ namespace GameLogic
 		}
 		else if (keyboard->isKeyDown(GLFW_KEY_S))
 		{
-			transform.position += glm::vec3(0.0f, 0.0f, movementSpeed);
+			transform.position += glm::vec3(0.0f, 0.0f, movementSpeed) * deltaTime * 20.0f;
 
 			/* Check for diagonal movement */
 			if (keyboard->isKeyDown(GLFW_KEY_A))
@@ -118,14 +121,14 @@ namespace GameLogic
 
 	void PlayerInput::usePlayerTwoInput()
 	{
-		// Ignacy, tu masz jak sie dostac do delta time
-		// proctor->getDeltaTime();
+		/* Get deltaTime from proctor */
+		float deltaTime = proctor->getDeltaTime();
 
 		/* Get proctors parent transform */
 		Transform transform = proctor->getTransform();
 
 		/* Calculate speed */
-		movementSpeed += acceleration;
+		movementSpeed += acceleration * deltaTime;
 		if (movementSpeed >= maxSpeed)
 		{
 			movementSpeed = maxSpeed;
@@ -134,19 +137,19 @@ namespace GameLogic
 		/* Horizontal movement */
 		if (keyboard->isKeyDown(GLFW_KEY_J))
 		{
-			transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f);
+			transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
 			transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(270.0f), 0.0f);
 		}
 		else if (keyboard->isKeyDown(GLFW_KEY_L))
 		{
-			transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f);
+			transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
 			transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f);
 		}
 
 		/* Vertical movement */
 		if (keyboard->isKeyDown(GLFW_KEY_I))
 		{
-			transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed);
+			transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed) * deltaTime * 20.0f;
 
 			/* Check for diagonal movement */
 			if (keyboard->isKeyDown(GLFW_KEY_J))
@@ -164,7 +167,7 @@ namespace GameLogic
 		}
 		else if (keyboard->isKeyDown(GLFW_KEY_K))
 		{
-			transform.position += glm::vec3(0.0f, 0.0f, movementSpeed);
+			transform.position += glm::vec3(0.0f, 0.0f, movementSpeed) * deltaTime * 20.0f;
 
 			/* Check for diagonal movement */
 			if (keyboard->isKeyDown(GLFW_KEY_J))

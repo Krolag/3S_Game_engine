@@ -49,11 +49,6 @@ float lastX = SCREEN_WIDTH / 2.0f;
 float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-// movement
-float positionOfWsadObject[3] = { 0, 0, 0 };
-float positionOfIjklObject[3] = { 0, 0, 0 };
-const float acceleration = 0.005f;
-
 bool isDebugModeOn = false;
 
 int main()
@@ -186,8 +181,6 @@ int main()
     float xValueLeft = 0.2;
     float yValueUp = 0.2;
     float yValueDown = 0.2;
-    float WSADSpeed = 0.0;
-    float IJKLSpeed = 0.0;
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))

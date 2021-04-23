@@ -12,7 +12,7 @@ namespace GameLogic
 	{
 	public:
 		float maxSpeed = 0.5f;
-		float acceleration = 0.005f;
+		float acceleration = 0.005f * 100;
 		float movementSpeed;
 
 		/* Constructors */
