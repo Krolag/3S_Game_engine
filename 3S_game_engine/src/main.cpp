@@ -101,8 +101,8 @@ int main()
     GameLogic::Hierarchy hierarchy(&mainScene);
 
     /* Load models */
-    Loader::Model troll_01_model("assets/models/lotr_troll/scene.gltf", true);
     Loader::Model hero_00_model("assets/models/hero/hero_noanim.fbx", true);
+    Loader::Model hero_01_model("assets/models/hero/hero_noanim.fbx", true);
     Loader::Model modelJakis_00_model("assets/models/cube/untitled.obj", false);
     Loader::Model modelJakis_01_model("assets/models/cube/untitled.obj", false);
 
@@ -114,30 +114,30 @@ int main()
     hero_00.setScale(glm::vec3(0.3f));
     // hero_00 - add mesh renderer component
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00);
+    hero_00_mr.setShader(&model3D);
     hero_00_mr.setModel(&hero_00_model);
-    hero_00_mr.setShader(model3D);
     hero_00.addComponent(&hero_00_mr);
     // hero_00 - add movement component
     GameLogic::PlayerInput hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
     hero_00.addComponent(&hero_00_pi);
     // hero_00 - add object to hierarchy
     hierarchy.addObject(&hero_00);
-	
+
     // troll_01 - configure proctor
-    GameLogic::Proctor troll_01("troll_01", 0, NULL);
-    troll_01.setPosition(glm::vec3(0.0f));
-    troll_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
-    troll_01.setScale(glm::vec3(0.02f));
+    GameLogic::Proctor hero_01("hero_01", 0, NULL);
+    hero_01.setPosition(glm::vec3(0.0f));
+    hero_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+    hero_01.setScale(glm::vec3(0.3f));
     // troll_01 - add mesh renderer component
-    GameLogic::MeshRenderer troll_01_mr(GameLogic::C_MESH, &troll_01);
-    troll_01_mr.setModel(&troll_01_model);
-    troll_01_mr.setShader(model3D);
-    troll_01.addComponent(&troll_01_mr);
+    GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01);
+    hero_01_mr.setShader(&model3D);
+    hero_01_mr.setModel(&hero_00_model);
+    hero_01.addComponent(&hero_01_mr);
     // troll_01 - add movement component
-    GameLogic::PlayerInput troll_01_pi(GameLogic::C_MOVEMENT, &troll_01, false);
-    troll_01.addComponent(&troll_01_pi);
+    GameLogic::PlayerInput hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
+    hero_01.addComponent(&hero_01_pi);
     // troll_01 - add object to hierarchy
-    hierarchy.addObject(&troll_01);
+    hierarchy.addObject(&hero_01);
 	
     // JAKIS MODEL 00
     GameLogic::Proctor modelJakis_00("modelJakis_00", 0, NULL);
@@ -145,8 +145,8 @@ int main()
     modelJakis_00.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
     modelJakis_00.setScale(glm::vec3(1.f));
     GameLogic::MeshRenderer modelJakis_mr_00(GameLogic::C_MESH, &modelJakis_00);
+    modelJakis_mr_00.setShader(&model3D);
     modelJakis_mr_00.setModel(&modelJakis_00_model);
-    modelJakis_mr_00.setShader(model3D);
     modelJakis_00.addComponent(&modelJakis_mr_00);
     hierarchy.addObject(&modelJakis_00);
 	
@@ -156,10 +156,12 @@ int main()
     modelJakis_01.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
     modelJakis_01.setScale(glm::vec3(1.f));
     GameLogic::MeshRenderer modelJakis_mr_01(GameLogic::C_MESH, &modelJakis_01);
+    modelJakis_mr_01.setShader(&model3D);
     modelJakis_mr_01.setModel(&modelJakis_01_model);
-    modelJakis_mr_01.setShader(model3D);
     modelJakis_01.addComponent(&modelJakis_mr_01);
     hierarchy.addObject(&modelJakis_01);
+
+
 
     /* Lights */
     DirLight dirLight = {
@@ -193,13 +195,13 @@ int main()
     // Create MeshRenderer component
     GameLogic::MeshRenderer palm_00_mr(GameLogic::C_MESH, &palm_00);
     palm_00_mr.setModel(&palm_00_model);
-    palm_00_mr.setShader(model3D);
+    palm_00_mr.setShader(&model3D);
     GameLogic::MeshRenderer palm_01_mr(GameLogic::C_MESH, &palm_01);
     palm_01_mr.setModel(&palm_01_model);
-    palm_01_mr.setShader(model3D);
+    palm_01_mr.setShader(&model3D);
     GameLogic::MeshRenderer palm_02_mr(GameLogic::C_MESH, &palm_02);
     palm_02_mr.setModel(&palm_02_model);
-    palm_02_mr.setShader(model3D);
+    palm_02_mr.setShader(&model3D);
     // Add MeshRenderer component
     palm_00.addComponent(&palm_00_mr);
     palm_01.addComponent(&palm_01_mr);
@@ -223,7 +225,7 @@ int main()
 
         /* Use InputSystem to move camera */
         /* Use 'P' to switch between camera modes, CTRL to look around, 'R' to get cursor position*/
-        cameraSwitch(35,60,90,45, mouseInput, keyboardInput, &mainScene, &hero_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+        cameraSwitch(35,60,90,45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         glEnable(GL_DEPTH_TEST);
     	

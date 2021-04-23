@@ -23,7 +23,7 @@ namespace GameLogic
 		model->scale = transform.scale;
 
 		/* Render model with given shader */
-		model->render(shader);
+		model->render(*shader);
 	}
 
 	void MeshRenderer::cleanup()
@@ -31,7 +31,7 @@ namespace GameLogic
 		model->cleanup();
 	}
 
-	void MeshRenderer::setShader(Shader _shader)
+	void MeshRenderer::setShader(Shader* _shader)
 	{
 		shader = _shader;
 	}

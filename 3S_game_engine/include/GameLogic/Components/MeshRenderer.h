@@ -12,14 +12,14 @@ namespace GameLogic
 	{
 	public:
 		Loader::Model* model = nullptr;
-		Shader shader;
+		Shader* shader;
 
 		/* Constructors */
 		MeshRenderer(ComponentType _type, Proctor* _proctor);
 
 		/* Model methods */
 		void setModel(Loader::Model* _model);
-		void setShader(Shader _shader);
+		void setShader(Shader* _shader);
 
 		void update();
 		void cleanup();
