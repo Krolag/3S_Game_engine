@@ -11,7 +11,9 @@ namespace GameLogic
 	class PlayerInput : public Component
 	{
 	public:
-		float movementSpeed = 0.2f;
+		float maxSpeed = 0.5f;
+		float acceleration = 0.005f;
+		float movementSpeed;
 
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);

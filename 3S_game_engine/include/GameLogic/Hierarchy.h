@@ -2,6 +2,7 @@
 #ifndef HIERARCHY_H
 #define HIERARCHY_H
 
+#include "Application/Application.h"
 #include "GameLogic/Proctor.h"
 #include <vector>
 
@@ -12,6 +13,7 @@ namespace GameLogic
 	public:
 		/* Constructors */
 		Hierarchy(bool _state = true);
+		Hierarchy(Application::Scene* _scene, bool _state = true);
 
 		/* Objects method */
 		void addObject(Proctor* _proctor);
@@ -19,6 +21,9 @@ namespace GameLogic
 		Proctor* getObject(std::string _name);
 		Proctor* getObject(unsigned int _uuid);
 		std::vector<Proctor*> getObjects();
+
+		/* Scene method */
+		float getDeltaTime();
 
 		/* State methods */
 		void setState(bool _state);
@@ -32,6 +37,7 @@ namespace GameLogic
 
 	private:
 		std::vector<Proctor*> objects;
+		Application::Scene* scene;
 
 		/* Debug window variables */
 		bool active;

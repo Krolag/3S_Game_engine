@@ -37,4 +37,12 @@ namespace Application
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		#endif
 	}
+
+	void Scene::update()
+	{
+		/* Per-frame time logic */
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+	}
 }

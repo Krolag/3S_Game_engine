@@ -125,6 +125,16 @@ namespace GameLogic
 		components.push_back(_component);
 	}
 
+	void Proctor::setDeltaTime(float _value)
+	{
+		deltaTime = _value;
+	}
+
+	float Proctor::getDeltaTime()
+	{
+		return deltaTime;
+	}
+
 	void Proctor::drawDebugWindow()
 	{
 		ImGui::Text("|--------| NAME |-------------|");

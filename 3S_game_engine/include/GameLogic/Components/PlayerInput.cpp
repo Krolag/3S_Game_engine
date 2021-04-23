@@ -38,6 +38,13 @@ namespace GameLogic
 		/* Get proctors parent transform */
 		Transform transform = proctor->getTransform();
 
+		/* Calculate speed */
+		movementSpeed += acceleration;
+		if (movementSpeed >= maxSpeed)
+		{
+			movementSpeed = maxSpeed;
+		}
+
 		/* Horizontal movement */
 		if (keyboard->isKeyDown(GLFW_KEY_A))
 		{
@@ -98,14 +105,31 @@ namespace GameLogic
 			std::cout << "secondary button" << std::endl;
 		}
 
+		/* Check if player is holding any movement button */
+		if (!keyboard->isKeyDown(GLFW_KEY_W) && !keyboard->isKeyDown(GLFW_KEY_S)
+			&& !keyboard->isKeyDown(GLFW_KEY_A) && !keyboard->isKeyDown(GLFW_KEY_D))
+		{
+			movementSpeed = 0.0f;
+		}
+
 		/* Update players transform */
 		proctor->setTransform(transform);
 	}
 
 	void PlayerInput::usePlayerTwoInput()
 	{
+		// Ignacy, tu masz jak sie dostac do delta time
+		// proctor->getDeltaTime();
+
 		/* Get proctors parent transform */
 		Transform transform = proctor->getTransform();
+
+		/* Calculate speed */
+		movementSpeed += acceleration;
+		if (movementSpeed >= maxSpeed)
+		{
+			movementSpeed = maxSpeed;
+		}
 
 		/* Horizontal movement */
 		if (keyboard->isKeyDown(GLFW_KEY_J))
@@ -165,6 +189,13 @@ namespace GameLogic
 		if (keyboard->isKeyDown(GLFW_KEY_SLASH))
 		{
 			std::cout << "secondary button" << std::endl;
+		}
+
+		/* Check if player is holding any movement button */
+		if (!keyboard->isKeyDown(GLFW_KEY_I) && !keyboard->isKeyDown(GLFW_KEY_K)
+			&& !keyboard->isKeyDown(GLFW_KEY_J) && !keyboard->isKeyDown(GLFW_KEY_L))
+		{
+			movementSpeed = 0.0f;
 		}
 
 		/* Update players transform */

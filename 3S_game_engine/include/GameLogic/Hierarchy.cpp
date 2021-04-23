@@ -9,6 +9,10 @@ namespace GameLogic
 		: active(_state)
 	{ }
 
+	Hierarchy::Hierarchy(Application::Scene* _scene, bool _state)
+		: scene(_scene), active(_state)
+	{ }
+
 	void Hierarchy::addObject(Proctor* _proctor)
 	{
 		/* Check if given ohject is already assigned to hierarchy */
@@ -68,6 +72,11 @@ namespace GameLogic
 		return objects;
 	}
 
+	float Hierarchy::getDeltaTime()
+	{
+		return scene->deltaTime;
+	}
+
 	void Hierarchy::setState(bool _state)
 	{
 		active = _state;
@@ -110,9 +119,13 @@ namespace GameLogic
 
 	void Hierarchy::update()
 	{
+		/* At first, update scene time */
+		scene->update();
+
 		/* Update all proctors in objects vector */
 		for (auto& a : objects)
 		{
+			a->setDeltaTime(scene->deltaTime);
 			a->update();
 		}
 

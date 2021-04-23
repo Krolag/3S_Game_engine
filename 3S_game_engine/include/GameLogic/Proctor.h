@@ -53,6 +53,8 @@ namespace GameLogic
 
 		/* Components methods */
 		void addComponent(Component* _component);
+		void setDeltaTime(float _value);
+		float getDeltaTime();
 
 		/* Debug window methods */
 		void drawDebugWindow();
@@ -68,6 +70,7 @@ namespace GameLogic
 		/* Proctor data */
 		bool active = true;
 		bool isStatic = false;
+		float deltaTime;
 		std::vector<Component*> components;
 	};
 }

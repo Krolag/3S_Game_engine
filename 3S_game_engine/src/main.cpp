@@ -28,16 +28,12 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
-void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput* keyboard);
+void cameraKeyboardInput(Application::Scene* _scene, InputSystem::KeyboardInput* _keyboard);
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
-
-// Those functions will define position of given model 
-void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed);
-void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed);
 
 //Switch camera position(debug)
 //maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
-void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
+void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Scene* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
 // Collision functions
@@ -57,10 +53,6 @@ bool firstMouse = true;
 float positionOfWsadObject[3] = { 0, 0, 0 };
 float positionOfIjklObject[3] = { 0, 0, 0 };
 const float acceleration = 0.005f;
-
-// timing
-float deltaTime = 0.0f;	// time between current frame and last frame
-float lastFrame = 0.0f;
 
 bool isDebugModeOn = false;
 
@@ -91,7 +83,6 @@ int main()
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     ImGui::StyleColorsDark();
     int hierarchyCurrentItem = 0;
-
 #pragma endregion
 
     /* Create shaders */
@@ -112,18 +103,15 @@ int main()
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(mainScene.window);
 
     /* Create object hierarchy */
-    GameLogic::Hierarchy hierarchy;
+    GameLogic::Hierarchy hierarchy(&mainScene);
 
     /* Load models */
     Loader::Model troll_01_model;
     troll_01_model.loadModel("assets/models/lotr_troll/scene.gltf");
-
     Loader::Model hero_00_model;
     hero_00_model.loadModel("assets/models/hero/hero_noanim.fbx");
-
     Loader::Model modelJakis_00_model;
     modelJakis_00_model.loadModel("assets/models/cube/untitled.obj");
-
     Loader::Model modelJakis_01_model;
     modelJakis_01_model.loadModel("assets/models/cube/untitled.obj");
 
@@ -157,7 +145,7 @@ int main()
     // troll_01 - add movement component
     GameLogic::PlayerInput troll_01_pi(GameLogic::C_MOVEMENT, &troll_01, false);
     troll_01.addComponent(&troll_01_pi);
-    // TROLL 01 - add object to hierarchy
+    // troll_01 - add object to hierarchy
     hierarchy.addObject(&troll_01);
 	
     // JAKIS MODEL 00
@@ -213,14 +201,9 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        /* Per-frame time logic */
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
         /* Use InputSystem to move camera */
         /* Use 'P' to switch between camera modes, CTRL to look around, 'R' to get cursor position*/
-        cameraSwitch(35,60,90,45, mouseInput, keyboardInput, mainScene.window, &hero_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+        cameraSwitch(35,60,90,45, mouseInput, keyboardInput, &mainScene, &hero_00, &troll_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         glEnable(GL_DEPTH_TEST);
     	
@@ -234,10 +217,6 @@ int main()
 
     	/* Render lights */
         dirLight.render(model3D);
-
-        /* Collect input */
-        keyboardMovementWSAD(positionOfWsadObject, &hero_00, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, WSADSpeed);
-        keyboardMovementIJKL(positionOfIjklObject, &troll_01, keyboardInput, yValueUp, yValueDown, xValueLeft, xValueRight, IJKLSpeed);
 
         /* Render models */
         hierarchy.update();
@@ -318,18 +297,18 @@ void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse)
     camera.ProcessMouseScroll(mouse->getScrollValue());
 }
 
-void cameraKeyboardInput(GLFWwindow* window, InputSystem::KeyboardInput* keyboard)
+void cameraKeyboardInput(Application::Scene* _scene, InputSystem::KeyboardInput* _keyboard)
 {
-    if (keyboard->isKeyDown(GLFW_KEY_ESCAPE))
-        glfwSetWindowShouldClose(window, true);
-    if (keyboard->isKeyDown(GLFW_KEY_UP))
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (keyboard->isKeyDown(GLFW_KEY_DOWN))
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (keyboard->isKeyDown(GLFW_KEY_LEFT))
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (keyboard->isKeyDown(GLFW_KEY_RIGHT))
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (_keyboard->isKeyDown(GLFW_KEY_ESCAPE))
+        glfwSetWindowShouldClose(_scene->window, true);
+    if (_keyboard->isKeyDown(GLFW_KEY_UP))
+        camera.ProcessKeyboard(FORWARD, _scene->deltaTime);
+    if (_keyboard->isKeyDown(GLFW_KEY_DOWN))
+        camera.ProcessKeyboard(BACKWARD, _scene->deltaTime);
+    if (_keyboard->isKeyDown(GLFW_KEY_LEFT))
+        camera.ProcessKeyboard(LEFT, _scene->deltaTime);
+    if (_keyboard->isKeyDown(GLFW_KEY_RIGHT))
+        camera.ProcessKeyboard(RIGHT, _scene->deltaTime);
 }
 
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse)
@@ -348,85 +327,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
-{
-    if (keyboard->isKeyDown(GLFW_KEY_W))
-    {
-        speed += acceleration;
-        if (speed >= yValueUp)
-        {
-            speed = yValueUp;
-        }
-    }
-
-    if (keyboard->isKeyDown(GLFW_KEY_S))
-    {
-        speed += acceleration;
-        if (speed >= yValueDown)
-        {
-            speed = yValueDown;
-        }
-    }
-
-    if (keyboard->isKeyDown(GLFW_KEY_A))
-    {
-        speed += acceleration;
-        if (speed >= xValueRight)
-        {
-            speed = xValueRight;
-        }
-    }
-
-    if (keyboard->isKeyDown(GLFW_KEY_D))
-    {
-        speed += acceleration;
-        if (speed >= xValueLeft)
-        {
-            speed = xValueLeft;
-        }
-    }
-}
-
-void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
-{
-    if (keyboard->isKeyDown(GLFW_KEY_I))
-    {
-        speed += acceleration;
-        if (speed >= yValueDown)
-        {
-            speed = yValueDown;
-        }
-    }
-
-    if (keyboard->isKeyDown(GLFW_KEY_K))
-    {
-        speed += acceleration;
-        if (speed >= yValueUp)
-        {
-            speed = yValueUp;
-        }
-    }
-
-    if (keyboard->isKeyDown(GLFW_KEY_J))
-    {
-        speed += acceleration;
-        if (speed >= xValueLeft)
-        {
-            speed = xValueLeft;
-        }
-    }
-
-    if (keyboard->isKeyDown(GLFW_KEY_L))
-    {
-        speed += acceleration;
-        if (speed >= xValueRight)
-        {
-            speed = xValueRight;
-        }
-    }
-}
-
-void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
+void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Scene* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight)
 {
     if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
@@ -435,12 +336,12 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
 
     if (isDebugModeOn)
     {
-        cameraKeyboardInput(window, keyboardInput);
+        cameraKeyboardInput(_scene, keyboardInput);
         mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
 
         if (keyboardInput->isKeyDown(GLFW_KEY_RIGHT_CONTROL))
         {
-            cameraMouseInput(window, mouseInput);
+            cameraMouseInput(_scene->window, mouseInput);
             mouseInput->cursorDisable();
         }
         if (keyboardInput->isKeyReleased(GLFW_KEY_RIGHT_CONTROL))
