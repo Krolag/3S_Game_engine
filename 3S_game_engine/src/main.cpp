@@ -101,8 +101,8 @@ int main()
     GameLogic::Hierarchy hierarchy(&mainScene);
 
     /* Load models */
-    Loader::Model hero_00_model("assets/models/hero/hero_noanim.fbx", true);
-    Loader::Model hero_01_model("assets/models/hero/hero_noanim.fbx", true);
+    Loader::Model hero_00_model("assets/models/hero/untitled.fbx", true);
+    Loader::Model hero_01_model("assets/models/hero/untitled.fbx", true);
     Loader::Model modelJakis_00_model("assets/models/cube/untitled.obj", false);
     Loader::Model modelJakis_01_model("assets/models/cube/untitled.obj", false);
 
@@ -146,8 +146,10 @@ int main()
     };
 
     /* Init Box Colliders for the models */
-    BoxCollider someModelCollider_00(collisionBoxShader, &modelJakis_00_model, modelJakis_00_model.position, modelJakis_00_model.rotation , modelJakis_00_model.scale);
-    BoxCollider someModelCollider_01(collisionBoxShader, &modelJakis_01_model, modelJakis_01_model.position, modelJakis_01_model.rotation, modelJakis_01_model.scale);
+    //BoxCollider someModelCollider_00(collisionBoxShader, &modelJakis_00_model, modelJakis_00_model.position, modelJakis_00_model.rotation , modelJakis_00_model.scale);
+    //BoxCollider someModelCollider_01(collisionBoxShader, &modelJakis_01_model, modelJakis_01_model.position, modelJakis_01_model.rotation, modelJakis_01_model.scale);
+    BoxCollider heroCollider_00(collisionBoxShader, &hero_00_model, hero_00_model.position, hero_00_model.rotation, hero_00_model.scale);
+    BoxCollider heroCollider_01(collisionBoxShader, &hero_01_model, hero_01_model.position, hero_01_model.rotation, hero_01_model.scale);
     
     float xValueRight = 0.2;
     float xValueLeft = 0.2;
@@ -236,6 +238,7 @@ int main()
         /* Render models */
         hierarchy.update();
 
+    	// COLLISIONS BELOW
         /* Set up universal collisionBoxShader uniforms */
         collisionBoxShader.use();
         collisionBoxShader.setUniform("view", view);
@@ -243,27 +246,64 @@ int main()
     	
         /* Update colliders positions, calc collisions */
     	// box 00
-        someModelCollider_00.setScale(modelJakis_00_model.scale);
-        someModelCollider_00.setRotation(modelJakis_00_model.rotation);
-        someModelCollider_00.setPosition(modelJakis_00_model.position);
+        //someModelCollider_00.setScale(modelJakis_00_model.scale);
+        //someModelCollider_00.setRotation(modelJakis_00_model.rotation);
+        //someModelCollider_00.setPosition(modelJakis_00_model.position);
 
     	// box 01
-        someModelCollider_01.setScale(modelJakis_01_model.scale);
-        someModelCollider_01.setRotation(modelJakis_01_model.rotation);
-        someModelCollider_01.setPosition(modelJakis_01_model.position);
+        //someModelCollider_01.setScale(modelJakis_01_model.scale);
+        //someModelCollider_01.setRotation(modelJakis_01_model.rotation);
+        //someModelCollider_01.setPosition(modelJakis_01_model.position);
 
+    	// hero 00
+        heroCollider_00.setScale(hero_00_model.scale);
+        heroCollider_00.setRotation(hero_00_model.rotation);
+        heroCollider_00.setPosition(hero_00_model.position);
+
+    	// hero 01
+        heroCollider_01.setScale(hero_01_model.scale);
+        heroCollider_01.setRotation(hero_01_model.rotation);
+        heroCollider_01.setPosition(hero_01_model.position);
+
+        // DEBUG
+        //std::cout << "==========================================" << std::endl;
+        //std::cout << "HERO 00 VALUES AFTER UPDATE METHOD IN MAIN" << std::endl;
+        //std::cout << "==========================================" << std::endl;
+        //std::cout << "POSITION VECTOR: " << hero_00_model.position.x << " " << hero_00_model.position.y << " " << hero_00_model.position.z << std::endl;
+        //std::cout << "ROTATION VECTOR: " << hero_00_model.rotation.x << " " << hero_00_model.rotation.y << " " << hero_00_model.rotation.z << std::endl;
+        //std::cout << "SCALE VECTOR: " << hero_00_model.scale.x << " " << hero_00_model.scale.y << " " << hero_00_model.scale.z << std::endl << std::endl;
+
+        //std::cout << "==========================================" << std::endl;
+        //std::cout << "HERO 01 VALUES AFTER UPDATE METHOD IN MAIN" << std::endl;
+        //std::cout << "==========================================" << std::endl;
+        //std::cout << "POSITION VECTOR: " << hero_01_model.position.x << " " << hero_01_model.position.y << " " << hero_01_model.position.z << std::endl;
+        //std::cout << "ROTATION VECTOR: " << hero_01_model.rotation.x << " " << hero_01_model.rotation.y << " " << hero_01_model.rotation.z << std::endl;
+        //std::cout << "SCALE VECTOR: " << hero_01_model.scale.x << " " << hero_01_model.scale.y << " " << hero_01_model.scale.z << std::endl << std::endl;
+    	
         /* Update uniforms and render colliders */
     	// box 00
-        collisionBoxShader.setUniform("model", someModelCollider_00.getTranslateMatrix() * someModelCollider_00.getScaleMatrix());
-        collisionBoxShader.setUniform("radius", someModelCollider_00.getRadius() / someModelCollider_00.scale);
-        collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
-        someModelCollider_00.render();
+        //collisionBoxShader.setUniform("model", someModelCollider_00.getTranslateMatrix() * someModelCollider_00.getScaleMatrix());
+        //collisionBoxShader.setUniform("radius", someModelCollider_00.getRadius() / someModelCollider_00.scale);
+        //collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
+        //someModelCollider_00.render();
     	
         // box 01
-        collisionBoxShader.setUniform("model", someModelCollider_01.getTranslateMatrix() * someModelCollider_01.getScaleMatrix());
-        collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale);
-        collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
-        someModelCollider_01.render();
+        //collisionBoxShader.setUniform("model", someModelCollider_01.getTranslateMatrix() * someModelCollider_01.getScaleMatrix());
+        //collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale);
+        //collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
+        //someModelCollider_01.render();
+
+        // hero 00
+        collisionBoxShader.setUniform("model", heroCollider_00.getTranslateMatrix() * heroCollider_00.getScaleMatrix());
+        collisionBoxShader.setUniform("radius", heroCollider_00.getRadius() / heroCollider_00.scale);
+        collisionBoxShader.setUniformBool("collision", false);
+        heroCollider_00.render();
+    	
+        // hero 01
+        collisionBoxShader.setUniform("model", heroCollider_01.getTranslateMatrix() * heroCollider_01.getScaleMatrix());
+        collisionBoxShader.setUniform("radius", heroCollider_01.getRadius() / heroCollider_01.scale);
+        collisionBoxShader.setUniformBool("collision", false);
+        heroCollider_01.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
