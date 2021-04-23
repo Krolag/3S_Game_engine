@@ -9,7 +9,6 @@ namespace GameLogic
 		if (_proctor != NULL)
 		{
 			proctor->addComponent(this);
-
 		}
 	}
 

@@ -55,6 +55,7 @@ namespace GameLogic
 
 		/* Components methods */
 		void addComponent(Component* _component);
+		Component* getComponentOfType(ComponentType _type);
 		void setDeltaTime(float _value);
 		float getDeltaTime();
 

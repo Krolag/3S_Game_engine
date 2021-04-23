@@ -3,12 +3,22 @@
 namespace GameLogic
 {
 	PlayerInput::PlayerInput(ComponentType _type, Proctor* _proctor)
-		: Component(_type, _proctor), parent(proctor)
-	{ }
+		: Component(_type, _proctor), parent(_proctor)
+	{ 
+		if (_proctor != NULL)
+		{
+			proctor->addComponent(this);
+		}
+	}
 
 	PlayerInput::PlayerInput(ComponentType _type, Proctor* _proctor, bool _isPlayerOne)
-		: Component(_type, _proctor), parent(proctor), isPlayerOne(_isPlayerOne)
-	{ }
+		: Component(_type, _proctor), parent(_proctor), isPlayerOne(_isPlayerOne)
+	{ 
+		if (_proctor != NULL)
+		{
+			proctor->addComponent(this);
+		}
+	}
 
 	void PlayerInput::setScheme(bool _isPlayerOne)
 	{

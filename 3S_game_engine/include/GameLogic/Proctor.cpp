@@ -125,6 +125,17 @@ namespace GameLogic
 		components.push_back(_component);
 	}
 
+	Component* Proctor::getComponentOfType(ComponentType _type)
+	{
+		for (auto& a : components)
+		{
+			if (a->type == _type)
+			{
+				return a;
+			}
+		}
+	}
+
 	void Proctor::setDeltaTime(float _value)
 	{
 		deltaTime = _value;
