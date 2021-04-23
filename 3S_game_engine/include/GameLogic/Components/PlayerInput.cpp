@@ -88,10 +88,86 @@ namespace GameLogic
 			}
 		}
 
+		/* Collect players update */
+		if (keyboard->isKeyDown(GLFW_KEY_V))
+		{
+			std::cout << "primary button" << std::endl;
+		}
+		if (keyboard->isKeyDown(GLFW_KEY_B))
+		{
+			std::cout << "secondary button" << std::endl;
+		}
+
+		/* Update players transform */
 		proctor->setTransform(transform);
 	}
 
 	void PlayerInput::usePlayerTwoInput()
 	{
+		/* Get proctors parent transform */
+		Transform transform = proctor->getTransform();
+
+		/* Horizontal movement */
+		if (keyboard->isKeyDown(GLFW_KEY_J))
+		{
+			transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f);
+			transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(270.0f), 0.0f);
+		}
+		else if (keyboard->isKeyDown(GLFW_KEY_L))
+		{
+			transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f);
+			transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f);
+		}
+
+		/* Vertical movement */
+		if (keyboard->isKeyDown(GLFW_KEY_I))
+		{
+			transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed);
+
+			/* Check for diagonal movement */
+			if (keyboard->isKeyDown(GLFW_KEY_J))
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(225.0f), 0.0f);
+			}
+			else if (keyboard->isKeyDown(GLFW_KEY_L))
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f);
+			}
+			else
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f);
+			}
+		}
+		else if (keyboard->isKeyDown(GLFW_KEY_K))
+		{
+			transform.position += glm::vec3(0.0f, 0.0f, movementSpeed);
+
+			/* Check for diagonal movement */
+			if (keyboard->isKeyDown(GLFW_KEY_J))
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f);
+			}
+			else if (keyboard->isKeyDown(GLFW_KEY_L))
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f);
+			}
+			else
+			{
+				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f);
+			}
+		}
+
+		/* Collect players update */
+		if (keyboard->isKeyDown(GLFW_KEY_PERIOD))
+		{
+			std::cout << "primary button" << std::endl;
+		}
+		if (keyboard->isKeyDown(GLFW_KEY_SLASH))
+		{
+			std::cout << "secondary button" << std::endl;
+		}
+
+		/* Update players transform */
+		proctor->setTransform(transform);
 	}
 }

@@ -115,13 +115,6 @@ int main()
     GameLogic::Hierarchy hierarchy;
 
     /* Load models */
-    positionOfWsadObject[0] = -12.0f;
-    positionOfWsadObject[1] = -12.0f;
-    positionOfWsadObject[2] = -12.0f;
-    positionOfIjklObject[0] = 12.0f;
-    positionOfIjklObject[1] = -12.0f;
-    positionOfIjklObject[2] = -12.0f;
-	
     Loader::Model troll_01_model;
     troll_01_model.loadModel("assets/models/lotr_troll/scene.gltf");
 
@@ -151,16 +144,19 @@ int main()
     // hero_00 - add object to hierarchy
     hierarchy.addObject(&hero_00);
 	
-    // TROLL 01 - configure proctor
+    // troll_01 - configure proctor
     GameLogic::Proctor troll_01("troll_01", 0, NULL);
     troll_01.setPosition(glm::vec3(0.0f));
     troll_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     troll_01.setScale(glm::vec3(0.02f));
-    // TROLL 01 - load model
+    // troll_01 - add mesh renderer component
     GameLogic::MeshRenderer troll_01_mr(GameLogic::C_MESH, &troll_01);
     troll_01_mr.setModel(&troll_01_model);
     troll_01_mr.setShader(model3D);
     troll_01.addComponent(&troll_01_mr);
+    // troll_01 - add movement component
+    GameLogic::PlayerInput troll_01_pi(GameLogic::C_MOVEMENT, &troll_01, false);
+    troll_01.addComponent(&troll_01_pi);
     // TROLL 01 - add object to hierarchy
     hierarchy.addObject(&troll_01);
 	
@@ -361,9 +357,6 @@ void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = yValueUp;
         }
-        //positionData[2] -= speed;
-        //_proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_S))
@@ -373,9 +366,6 @@ void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = yValueDown;
         }
-        //positionData[2] += speed;
-        //_proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_A))
@@ -385,10 +375,6 @@ void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = xValueRight;
         }
-    
-        //positionData[0] -= speed;
-        //_proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_D))
@@ -398,33 +384,7 @@ void keyboardMovementWSAD(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = xValueLeft;
         }
-        //positionData[0] += speed;
-        //_proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
-
-    //if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyDown(GLFW_KEY_A))
-    //{
-        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-135.0f), 0.0f));
-    //}
-    //if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyDown(GLFW_KEY_D))
-    //{
-        //_proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f));
-    //}
-    //if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyDown(GLFW_KEY_A))
-    //{
-    //    _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f));
-    //}
-    //if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyDown(GLFW_KEY_D))
-    //{
-    //    _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f));
-    //}
-
-    //if (!keyboard->isKeyDown(GLFW_KEY_W) && !keyboard->isKeyDown(GLFW_KEY_S) && !keyboard->isKeyDown(GLFW_KEY_A) && !keyboard->isKeyDown(GLFW_KEY_D))
-    //{
-    //    speed = 0.f;
-    //}
-    //std::cout << "WSAD Speed: " << speed << std::endl;
 }
 
 void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, InputSystem::KeyboardInput* keyboard, float yValueUp, float yValueDown, float xValueLeft, float xValueRight, float &speed)
@@ -436,9 +396,6 @@ void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = yValueDown;
         }
-        positionData[2] -= speed;
-        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_K))
@@ -448,9 +405,6 @@ void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = yValueUp;
         }
-        positionData[2] += speed;
-        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_J))
@@ -460,10 +414,6 @@ void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = xValueLeft;
         }
-
-        positionData[0] -= speed;
-        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-90.0f), 0.0f));
     }
 
     if (keyboard->isKeyDown(GLFW_KEY_L))
@@ -473,34 +423,7 @@ void keyboardMovementIJKL(float* positionData, GameLogic::Proctor* _proctor, Inp
         {
             speed = xValueRight;
         }
-
-        positionData[0] += speed;
-        _proctor->setPosition(glm::vec3(positionData[0], positionData[1], positionData[2]));
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f));
     }
-
-    if (keyboard->isKeyDown(GLFW_KEY_I) && keyboard->isKeyDown(GLFW_KEY_J))
-    {
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-135.0f), 0.0f));
-    }
-    if (keyboard->isKeyDown(GLFW_KEY_I) && keyboard->isKeyDown(GLFW_KEY_L))
-    {
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f));
-    }
-    if (keyboard->isKeyDown(GLFW_KEY_K) && keyboard->isKeyDown(GLFW_KEY_J))
-    {
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f));
-    }
-    if (keyboard->isKeyDown(GLFW_KEY_K) && keyboard->isKeyDown(GLFW_KEY_L))
-    {
-        _proctor->setRotation(glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f));
-    }
-
-    if (!keyboard->isKeyDown(GLFW_KEY_I) && !keyboard->isKeyDown(GLFW_KEY_J) && !keyboard->isKeyDown(GLFW_KEY_K) && !keyboard->isKeyDown(GLFW_KEY_L))
-    {
-        speed = 0.f;
-    }
-    //std::cout << "IJKL Speed: " << speed << std::endl;
 }
 
 void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, GLFWwindow* window, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,

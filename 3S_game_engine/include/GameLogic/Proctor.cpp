@@ -158,13 +158,13 @@ namespace GameLogic
 				ImGui::Text("|--------| MOVEMENT |---------|");
 				if (((PlayerInput*)a)->getScheme())
 				{
-					ImGui::Text("Up:    W");
-					ImGui::Text("Down:  S");
-					ImGui::Text("Left:  A");
+					ImGui::Text("Up:    W"); ImGui::SameLine();
+					ImGui::Text("Down:  S"); ImGui::SameLine();
+					ImGui::Text("Left:  A"); ImGui::SameLine();
 					ImGui::Text("Right: D");
-					ImGui::Text("Use:   V");
+					ImGui::Text("Use:   V"); ImGui::SameLine();
 					ImGui::Text("Row:   B");
-				}
+					}
 				else
 				{
 					ImGui::Text("Up:    I");
@@ -174,6 +174,8 @@ namespace GameLogic
 					ImGui::Text("Use:   .");
 					ImGui::Text("Row:   /");
 				}
+				ImGui::Text("Speed:  "); ImGui::SameLine();
+				ImGui::DragFloat("s", &((PlayerInput*)a)->movementSpeed);
 			}
 		}
 	}
