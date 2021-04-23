@@ -11,7 +11,7 @@
 
 /* Constructor will make bounding box around given model */
 BoxCollider::BoxCollider(Shader _colliderShader, Loader::Model* _model, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale) :
-	colliderShader(_colliderShader), position(glm::vec3(_position)), rotation(glm::quat(_rotation)), scale(glm::vec3(_scale)), min(_position), max(_position)
+	colliderShader(_colliderShader), position(glm::vec3(_position)), rotation(glm::quat(_rotation)), scale(glm::vec3(_scale)), min(glm::vec3(1000.0f)), max(glm::vec3(-1000.0f))
 {
 	std::cout << "Initializing the box collider based on the model... Be patient if model has many vertices and wait until finish..." << std::endl;
 
@@ -93,9 +93,20 @@ void BoxCollider::update()
 		if (updateMax.z < vertices.at(i).z) updateMax.z = vertices.at(i).z;
 	}
 	
-	radius.x = glm::abs(position.x - updateMin.x);
-	radius.y = glm::abs(position.y - updateMin.y);
-	radius.z = glm::abs(position.z - updateMin.z);
+	radius.x = glm::abs(updateMax.x - updateMin.x) / 2.0f;
+	radius.y = glm::abs(updateMax.y - updateMin.y) / 2.0f;
+	radius.z = glm::abs(updateMax.z - updateMin.z) / 2.0f;
+
+	// DEBUG
+	std::cout << "=============================================" << std::endl;
+	std::cout << "BOX COLLIDER CLASS VALUES AFTER UPDATE METHOD" << std::endl;
+	std::cout << "=============================================" << std::endl;
+	std::cout << "MIN VECTOR: " << updateMin.x << " " << updateMin.y << " " << updateMin.z << std::endl;
+	std::cout << "MAX VECTOR: " << updateMax.x << " " << updateMax.y << " " << updateMax.z << std::endl;
+	std::cout << "RADIUS VECTOR: " << radius.x << " " << radius.y << " " << radius.z << std::endl;
+	std::cout << "POSITION VECTOR: " << position.x << " " << position.y << " " << position.z << std::endl;
+	std::cout << "ROTATION VECTOR: " << rotation.x << " " << rotation.y << " " << rotation.z << std::endl;
+	std::cout << "SCALE VECTOR: " << scale.x << " " << scale.y << " " << scale.z << std::endl << std::endl;
 }
 
 /* Method will render bounding box around the model if necessary */

@@ -101,15 +101,15 @@ int main()
     GameLogic::Hierarchy hierarchy(&mainScene);
 
     /* Load models */
-    Loader::Model hero_00_model("assets/models/hero/hero_noanim.fbx", true);
-    Loader::Model hero_01_model("assets/models/hero/hero_noanim.fbx", true);
+    Loader::Model hero_00_model("assets/models/hero/untitled.fbx", true);
+    Loader::Model hero_01_model("assets/models/hero/untitled.fbx", true);
     Loader::Model modelJakis_00_model("assets/models/cube/untitled.obj", false);
     Loader::Model modelJakis_01_model("assets/models/cube/untitled.obj", false);
 
     /* Load hierarchy */
     // hero_00 - configure proctor
     GameLogic::Proctor hero_00("hero_00", 0, NULL);
-    hero_00.setPosition(glm::vec3(0.0f));
+    hero_00.setPosition(glm::vec3(-2.0f, 0.0f, -2.0f));
     hero_00.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     hero_00.setScale(glm::vec3(0.3f));
     // hero_00 - add mesh renderer component
@@ -125,13 +125,13 @@ int main()
 
     // troll_01 - configure proctor
     GameLogic::Proctor hero_01("hero_01", 0, NULL);
-    hero_01.setPosition(glm::vec3(0.0f));
+    hero_01.setPosition(glm::vec3(2.0f, 0.0f, 2.0f));
     hero_01.setRotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
     hero_01.setScale(glm::vec3(0.3f));
     // troll_01 - add mesh renderer component
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01);
     hero_01_mr.setShader(&model3D);
-    hero_01_mr.setModel(&hero_00_model);
+    hero_01_mr.setModel(&hero_01_model);
     hero_01.addComponent(&hero_01_mr);
     // troll_01 - add movement component
     GameLogic::PlayerInput hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
@@ -139,27 +139,27 @@ int main()
     // troll_01 - add object to hierarchy
     hierarchy.addObject(&hero_01);
 	
-    // JAKIS MODEL 00
-    GameLogic::Proctor modelJakis_00("modelJakis_00", 0, NULL);
-    modelJakis_00.setPosition(glm::vec3(-4.0f));
-    modelJakis_00.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
-    modelJakis_00.setScale(glm::vec3(1.f));
-    GameLogic::MeshRenderer modelJakis_mr_00(GameLogic::C_MESH, &modelJakis_00);
-    modelJakis_mr_00.setShader(&model3D);
-    modelJakis_mr_00.setModel(&modelJakis_00_model);
-    modelJakis_00.addComponent(&modelJakis_mr_00);
-    hierarchy.addObject(&modelJakis_00);
+    //// JAKIS MODEL 00
+    //GameLogic::Proctor modelJakis_00("modelJakis_00", 0, NULL);
+    //modelJakis_00.setPosition(glm::vec3(-4.0f));
+    //modelJakis_00.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
+    //modelJakis_00.setScale(glm::vec3(1.f));
+    //GameLogic::MeshRenderer modelJakis_mr_00(GameLogic::C_MESH, &modelJakis_00);
+    //modelJakis_mr_00.setShader(&model3D);
+    //modelJakis_mr_00.setModel(&modelJakis_00_model);
+    //modelJakis_00.addComponent(&modelJakis_mr_00);
+    //hierarchy.addObject(&modelJakis_00);
 	
-    // JAKIS MODEL 01
-    GameLogic::Proctor modelJakis_01("modelJakis_01", 0, NULL);
-    modelJakis_01.setPosition(glm::vec3(-10.0f));
-    modelJakis_01.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
-    modelJakis_01.setScale(glm::vec3(1.f));
-    GameLogic::MeshRenderer modelJakis_mr_01(GameLogic::C_MESH, &modelJakis_01);
-    modelJakis_mr_01.setShader(&model3D);
-    modelJakis_mr_01.setModel(&modelJakis_01_model);
-    modelJakis_01.addComponent(&modelJakis_mr_01);
-    hierarchy.addObject(&modelJakis_01);
+    //// JAKIS MODEL 01
+    //GameLogic::Proctor modelJakis_01("modelJakis_01", 0, NULL);
+    //modelJakis_01.setPosition(glm::vec3(-10.0f));
+    //modelJakis_01.setRotation(glm::quat(0.0f, 0.0f, 0.0f, 0.0f));
+    //modelJakis_01.setScale(glm::vec3(1.f));
+    //GameLogic::MeshRenderer modelJakis_mr_01(GameLogic::C_MESH, &modelJakis_01);
+    //modelJakis_mr_01.setShader(&model3D);
+    //modelJakis_mr_01.setModel(&modelJakis_01_model);
+    //modelJakis_01.addComponent(&modelJakis_mr_01);
+    //hierarchy.addObject(&modelJakis_01);
 
 
 
@@ -172,8 +172,10 @@ int main()
     };
 
     /* Init Box Colliders for the models */
-    BoxCollider someModelCollider_00(collisionBoxShader, &modelJakis_00_model, modelJakis_00_model.position, modelJakis_00_model.rotation , modelJakis_00_model.scale);
-    BoxCollider someModelCollider_01(collisionBoxShader, &modelJakis_01_model, modelJakis_01_model.position, modelJakis_01_model.rotation, modelJakis_01_model.scale);
+    //BoxCollider someModelCollider_00(collisionBoxShader, &modelJakis_00_model, modelJakis_00_model.position, modelJakis_00_model.rotation , modelJakis_00_model.scale);
+    //BoxCollider someModelCollider_01(collisionBoxShader, &modelJakis_01_model, modelJakis_01_model.position, modelJakis_01_model.rotation, modelJakis_01_model.scale);
+    BoxCollider heroCollider_00(collisionBoxShader, &hero_00_model, hero_00_model.position, hero_00_model.rotation, hero_00_model.scale);
+    BoxCollider heroCollider_01(collisionBoxShader, &hero_01_model, hero_01_model.position, hero_01_model.rotation, hero_01_model.scale);
     
     float xValueRight = 0.2;
     float xValueLeft = 0.2;
@@ -243,6 +245,7 @@ int main()
         /* Render models */
         hierarchy.update();
 
+    	// COLLISIONS BELOW
         /* Set up universal collisionBoxShader uniforms */
         collisionBoxShader.use();
         collisionBoxShader.setUniform("view", view);
@@ -250,27 +253,64 @@ int main()
     	
         /* Update colliders positions, calc collisions */
     	// box 00
-        someModelCollider_00.setScale(modelJakis_00_model.scale);
-        someModelCollider_00.setRotation(modelJakis_00_model.rotation);
-        someModelCollider_00.setPosition(modelJakis_00_model.position);
+        //someModelCollider_00.setScale(modelJakis_00_model.scale);
+        //someModelCollider_00.setRotation(modelJakis_00_model.rotation);
+        //someModelCollider_00.setPosition(modelJakis_00_model.position);
 
     	// box 01
-        someModelCollider_01.setScale(modelJakis_01_model.scale);
-        someModelCollider_01.setRotation(modelJakis_01_model.rotation);
-        someModelCollider_01.setPosition(modelJakis_01_model.position);
+        //someModelCollider_01.setScale(modelJakis_01_model.scale);
+        //someModelCollider_01.setRotation(modelJakis_01_model.rotation);
+        //someModelCollider_01.setPosition(modelJakis_01_model.position);
 
+    	// hero 00
+        heroCollider_00.setScale(hero_00_model.scale);
+        heroCollider_00.setRotation(hero_00_model.rotation);
+        heroCollider_00.setPosition(hero_00_model.position);
+
+    	// hero 01
+        heroCollider_01.setScale(hero_01_model.scale);
+        heroCollider_01.setRotation(hero_01_model.rotation);
+        heroCollider_01.setPosition(hero_01_model.position);
+
+        // DEBUG
+        //std::cout << "==========================================" << std::endl;
+        //std::cout << "HERO 00 VALUES AFTER UPDATE METHOD IN MAIN" << std::endl;
+        //std::cout << "==========================================" << std::endl;
+        //std::cout << "POSITION VECTOR: " << hero_00_model.position.x << " " << hero_00_model.position.y << " " << hero_00_model.position.z << std::endl;
+        //std::cout << "ROTATION VECTOR: " << hero_00_model.rotation.x << " " << hero_00_model.rotation.y << " " << hero_00_model.rotation.z << std::endl;
+        //std::cout << "SCALE VECTOR: " << hero_00_model.scale.x << " " << hero_00_model.scale.y << " " << hero_00_model.scale.z << std::endl << std::endl;
+
+        //std::cout << "==========================================" << std::endl;
+        //std::cout << "HERO 01 VALUES AFTER UPDATE METHOD IN MAIN" << std::endl;
+        //std::cout << "==========================================" << std::endl;
+        //std::cout << "POSITION VECTOR: " << hero_01_model.position.x << " " << hero_01_model.position.y << " " << hero_01_model.position.z << std::endl;
+        //std::cout << "ROTATION VECTOR: " << hero_01_model.rotation.x << " " << hero_01_model.rotation.y << " " << hero_01_model.rotation.z << std::endl;
+        //std::cout << "SCALE VECTOR: " << hero_01_model.scale.x << " " << hero_01_model.scale.y << " " << hero_01_model.scale.z << std::endl << std::endl;
+    	
         /* Update uniforms and render colliders */
     	// box 00
-        collisionBoxShader.setUniform("model", someModelCollider_00.getTranslateMatrix() * someModelCollider_00.getScaleMatrix());
-        collisionBoxShader.setUniform("radius", someModelCollider_00.getRadius() / someModelCollider_00.scale);
-        collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
-        someModelCollider_00.render();
+        //collisionBoxShader.setUniform("model", someModelCollider_00.getTranslateMatrix() * someModelCollider_00.getScaleMatrix());
+        //collisionBoxShader.setUniform("radius", someModelCollider_00.getRadius() / someModelCollider_00.scale);
+        //collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
+        //someModelCollider_00.render();
     	
         // box 01
-        collisionBoxShader.setUniform("model", someModelCollider_01.getTranslateMatrix() * someModelCollider_01.getScaleMatrix());
-        collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale);
-        collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
-        someModelCollider_01.render();
+        //collisionBoxShader.setUniform("model", someModelCollider_01.getTranslateMatrix() * someModelCollider_01.getScaleMatrix());
+        //collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale);
+        //collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
+        //someModelCollider_01.render();
+
+        // hero 00
+        collisionBoxShader.setUniform("model", heroCollider_00.getTranslateMatrix() * heroCollider_00.getScaleMatrix());
+        collisionBoxShader.setUniform("radius", heroCollider_00.getRadius() / heroCollider_00.scale);
+        collisionBoxShader.setUniformBool("collision", false);
+        heroCollider_00.render();
+    	
+        // hero 01
+        collisionBoxShader.setUniform("model", heroCollider_01.getTranslateMatrix() * heroCollider_01.getScaleMatrix());
+        collisionBoxShader.setUniform("radius", heroCollider_01.getRadius() / heroCollider_01.scale);
+        collisionBoxShader.setUniformBool("collision", false);
+        heroCollider_01.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
