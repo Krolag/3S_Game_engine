@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <assimp/scene.h>
 
 class Shader
 {
@@ -26,7 +27,8 @@ public:
     void setUniform(const std::string& name, const glm::vec3& value) const;
     void setUniform(const std::string& name, float x, float y, float z) const;
     void setUniform(const std::string& name, const glm::vec4& value) const;
-    void setUniform(const std::string& name, float x, float y, float z, float w);
+    void setUniform(const std::string& name, float x, float y, float z, float w) const;
+    void setUniform(const std::string& name, aiColor4D color) const;
     void setUniform(const std::string& name, const glm::mat2& mat) const;
     void setUniform(const std::string& name, const glm::mat3& mat) const;
     void setUniform(const std::string& name, const glm::mat4& mat) const;

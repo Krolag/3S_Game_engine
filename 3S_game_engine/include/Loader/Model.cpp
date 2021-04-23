@@ -2,8 +2,15 @@
 
 namespace Loader
 {
-	Model::Model(glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
-		: position(_position), rotation(_rotation), scale(_scale) {}
+	Model::Model(std::string _path, bool _noTex, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
+		: position(_position), rotation(_rotation), scale(_scale), path(_path), noTex(_noTex)
+	{
+		loadModel(path);
+	}
+
+	Model::Model(bool _noTex, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
+		: position(_position), rotation(_rotation), scale(_scale), noTex(_noTex)
+	{}
 
 	void Model::init() {}
 
@@ -116,6 +123,18 @@ namespace Loader
 		if (_mesh->mMaterialIndex >= 0)
 		{
 			aiMaterial* material = _scene->mMaterials[_mesh->mMaterialIndex];
+
+			if (noTex)
+			{
+				/* Diffuse color */
+				aiColor4D diff(1.0f);
+				aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diff);
+				/* Specular color*/
+				aiColor4D spec(1.0f);
+				aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &spec);
+
+				return Mesh(vertices, indices, diff, spec);
+			}
 
 			/* Diffuse maps */
 			std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE);

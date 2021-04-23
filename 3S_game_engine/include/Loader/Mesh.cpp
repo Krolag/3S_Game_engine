@@ -34,38 +34,53 @@ namespace Loader
 
 
 	Mesh::Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture> _textures)
-		: vertices(_vertices), indices(_indices), textures(_textures)
+		: vertices(_vertices), indices(_indices), textures(_textures), noTex(false)
 	{
+		setup();
+	}
+
+	Mesh::Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, aiColor4D _diffuse, aiColor4D _specular)
+		: vertices(_vertices), indices(_indices), diffuse(_diffuse), specular(_specular), noTex(true)
+	{ 
 		setup();
 	}
 
 	void Mesh::render(Shader shader)
 	{
-		/* Textures */
-		unsigned int diffuseIdx = 0;
-		unsigned int specularIdx = 0;
-
-		for (unsigned int i = 0; i < textures.size(); i++)
+		if (noTex)
 		{
-			/* Activate textures */
-			glActiveTexture(GL_TEXTURE + i);
-			/* Retrive texture info */
-			std::string name;
-			switch (textures[i].type)
-			{
-			case aiTextureType_DIFFUSE:
-				name = "diffuse" + std::to_string(diffuseIdx++);
-				break;
-			case aiTextureType_SPECULAR:
-				name = "specular" + std::to_string(specularIdx++);
-				break;
-			}
-
-			/* Set texture value in the shader */
-			shader.setUniformInt(name, i);
-			textures[i].bind();
+			/* Materials */
+			shader.setUniform("material.diffuse", diffuse);
+			shader.setUniform("material.specular", specular);
+			shader.setUniformInt("noTex", 1);
 		}
+		else
+		{
+			/* Textures */
+			unsigned int diffuseIdx = 0;
+			unsigned int specularIdx = 0;
 
+			for (unsigned int i = 0; i < textures.size(); i++)
+			{
+				/* Activate textures */
+				glActiveTexture(GL_TEXTURE + i);
+				/* Retrive texture info */
+				std::string name;
+				switch (textures[i].type)
+				{
+				case aiTextureType_DIFFUSE:
+					name = "diffuse" + std::to_string(diffuseIdx++);
+					break;
+				case aiTextureType_SPECULAR:
+					name = "specular" + std::to_string(specularIdx++);
+					break;
+				}
+
+				/* Set texture value in the shader */
+				shader.setUniformInt(name, i);
+				textures[i].bind();
+			}
+		}
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

@@ -26,15 +26,21 @@ namespace Loader
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		std::vector<Texture> textures;
+		aiColor4D diffuse;
+		aiColor4D specular;
 		unsigned int VAO;
 
+		/* Constructors */
 		Mesh();
 		Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture> _textures);
+		Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, aiColor4D _diffuse, aiColor4D _specular);
+
 		void render(Shader shader);
 		void cleanup();
 
 	private:
 		unsigned int VBO, EBO;
+		bool noTex;
 		void setup();
 	};
 }

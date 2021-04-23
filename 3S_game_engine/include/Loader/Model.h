@@ -29,7 +29,8 @@ namespace Loader
 		Material material;
 
 		/* Construtor / destructor */
-		Model(glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
+		Model(std::string _path, bool _noTex = false, glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
+		Model(bool _noTex = false, glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
 
 		void init();
 		void render(Shader _shader);
@@ -45,6 +46,7 @@ namespace Loader
 		std::vector<Mesh> meshes;
 		std::string directory;
 		std::vector<Texture> texturesLoaded;
+		bool noTex;
 
 		void processNode(aiNode* _node, const aiScene* _scene);
 		Mesh processMesh(aiMesh* _mesh, const aiScene* _scene);

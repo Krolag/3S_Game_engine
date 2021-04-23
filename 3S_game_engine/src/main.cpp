@@ -106,14 +106,10 @@ int main()
     GameLogic::Hierarchy hierarchy(&mainScene);
 
     /* Load models */
-    Loader::Model troll_01_model;
-    troll_01_model.loadModel("assets/models/lotr_troll/scene.gltf");
-    Loader::Model hero_00_model;
-    hero_00_model.loadModel("assets/models/hero/hero_noanim.fbx");
-    Loader::Model modelJakis_00_model;
-    modelJakis_00_model.loadModel("assets/models/cube/untitled.obj");
-    Loader::Model modelJakis_01_model;
-    modelJakis_01_model.loadModel("assets/models/cube/untitled.obj");
+    Loader::Model troll_01_model("assets/models/lotr_troll/scene.gltf", true);
+    Loader::Model hero_00_model("assets/models/hero/hero_noanim.fbx", true);
+    Loader::Model modelJakis_00_model("assets/models/cube/untitled.obj", false);
+    Loader::Model modelJakis_01_model("assets/models/cube/untitled.obj", false);
 
     /* Load hierarchy */
     // hero_00 - configure proctor
@@ -173,9 +169,9 @@ int main()
     /* Lights */
     DirLight dirLight = {
         glm::vec3(-0.2f, -1.0f, -0.3f),
-        glm::vec3(0.9f),
-        glm::vec3(0.6f),
-        glm::vec3(0.75f)
+        glm::vec4(0.1f, 0.1f, 0.1f, 1.0f),
+        glm::vec4(0.4f, 0.4f, 0.4f, 1.0f),
+        glm::vec4(0.75f, 0.75f, 0.75f, 1.0f)
     };
 
     /* Init Box Colliders for the models */
@@ -188,6 +184,37 @@ int main()
     float yValueDown = 0.2;
     float WSADSpeed = 0.0;
     float IJKLSpeed = 0.0;
+
+    /* Load models for PGK task */
+    // Load environment objects 
+    Loader::Model palm_00_model("assets/models/task_models/palm_detailed_short.gltf", true);
+    Loader::Model palm_01_model("assets/models/task_models/palm_long.gltf", true);
+    Loader::Model palm_02_model("assets/models/task_models/palm_short.gltf", true);
+    // Create proctors 
+    GameLogic::Proctor palm_00("palm_00", 0, NULL);
+    palm_00.setTransform(glm::vec3(0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
+    GameLogic::Proctor palm_01("palm_01", 0, NULL);
+    palm_01.setTransform(glm::vec3(0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
+    GameLogic::Proctor palm_02("palm_02", 0, NULL);
+    palm_02.setTransform(glm::vec3(0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
+    // Create MeshRenderer component
+    GameLogic::MeshRenderer palm_00_mr(GameLogic::C_MESH, &palm_00);
+    palm_00_mr.setModel(&palm_00_model);
+    palm_00_mr.setShader(model3D);
+    GameLogic::MeshRenderer palm_01_mr(GameLogic::C_MESH, &palm_01);
+    palm_01_mr.setModel(&palm_01_model);
+    palm_01_mr.setShader(model3D);
+    GameLogic::MeshRenderer palm_02_mr(GameLogic::C_MESH, &palm_02);
+    palm_02_mr.setModel(&palm_02_model);
+    palm_02_mr.setShader(model3D);
+    // Add MeshRenderer component
+    palm_00.addComponent(&palm_00_mr);
+    palm_01.addComponent(&palm_01_mr);
+    palm_02.addComponent(&palm_02_mr);
+    // Add objects to hierarchy
+    hierarchy.addObject(&palm_00);
+    hierarchy.addObject(&palm_01);
+    hierarchy.addObject(&palm_02);
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
