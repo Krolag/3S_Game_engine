@@ -38,6 +38,7 @@ void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanc
 
 // Collision functions
 bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
+void separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
 
 // settings
 const unsigned int SCREEN_WIDTH = 1280;
@@ -276,14 +277,15 @@ int main()
     	
         /* Update uniforms and render colliders */
     	// box 00
-        collisionBoxShader.setUniform("model", 
-            ((GameLogic::BoxCollider*) hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getTranslateMatrix() *
-            ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getScaleMatrix());
-        collisionBoxShader.setUniform("radius",
-            ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getRadius() *
-            hero_00.transform.scale);
+        //collisionBoxShader.setUniform("model", 
+        //    ((GameLogic::BoxCollider*) hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getTranslateMatrix() *
+        //    ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getScaleMatrix());
+        //collisionBoxShader.setUniform("radius",
+        //    ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getRadius() *
+        //    hero_00.transform.scale);
         collisionBoxShader.setUniformBool("collision", checkAABBCollision(&hero_00, &hero_01));
         ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->render();
+        if (checkAABBCollision(&hero_00, &hero_01)) separateAABBCollision(&hero_00, &hero_01);
         //checkAABBCollision(&hero_00, &hero_01);
     	
         // box 01
@@ -432,6 +434,8 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
     }
 }
 
+// COLLISION FUNCTIONS
+
 bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
 {
     if (glm::abs(_a->transform.position.x - _b->transform.position.x) >
@@ -454,4 +458,40 @@ bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
     }
     std::cout << "COLLISION" << std::endl;
     return true;
+}
+
+void separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
+{
+    /* Calculate separation direction */
+    glm::vec3 separationDirection;
+    if (_a->transform.position.x >= _b->transform.position.x) separationDirection.x = 1.0f;
+    else separationDirection.x = -1.0f;
+    if (_a->transform.position.y >= _b->transform.position.y) separationDirection.y = 1.0f;
+    else separationDirection.y = -1.0f;
+    if (_a->transform.position.z >= _b->transform.position.z) separationDirection.z = 1.0f;
+    else separationDirection.z = -1.0f;
+	
+	/* Calculate distance between objects positions */
+    glm::vec3 distanceAB;
+    distanceAB.x = glm::abs(_a->transform.position.x - _b->transform.position.x);
+    distanceAB.y = glm::abs(_a->transform.position.y - _b->transform.position.y);
+    distanceAB.z = glm::abs(_a->transform.position.z - _b->transform.position.z);
+	
+    /* Calculate the sum of radians of the both objects */
+    glm::vec3 radiusABSum;
+    radiusABSum.x = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x;
+    radiusABSum.y = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y;
+    radiusABSum.z = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z;
+
+    /* Calculate separation vector */
+    glm::vec3 separationVector;
+    separationVector.x = (radiusABSum.x - distanceAB.x)*separationDirection.x;
+    separationVector.y = (radiusABSum.y - distanceAB.y)*separationDirection.y;
+    separationVector.z = (radiusABSum.z - distanceAB.z)*separationDirection.z;
+
+    /* Add separation vector to the objects */
+    _a->transform.position.x += separationVector.x;
+    _a->transform.position.y += separationVector.y;
+    _a->transform.position.z += separationVector.z;
+
 }
