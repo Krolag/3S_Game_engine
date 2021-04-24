@@ -20,7 +20,7 @@
 #include "Skybox/Skybox.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
-#include "GameLogic/Collisions/BoxCollider.h"
+//#include "GameLogic/Collisions/BoxCollider.h"
 
 //#include <iostream>
 #include <map>
@@ -37,7 +37,7 @@ void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanc
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
 // Collision functions
-bool checkAABBCollision(BoxCollider a, BoxCollider b);
+bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
 
 // settings
 const unsigned int SCREEN_WIDTH = 1280;
@@ -84,7 +84,7 @@ int main()
     Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
     Shader collisionBoxShader("assets/shaders/boxCollider.vert", "assets/shaders/boxCollider.frag", "assets/shaders/boxCollider.geom");
-	
+
     /* Text init */
     textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCREEN_WIDTH), 0.0f, static_cast<GLfloat>(SCREEN_WIDTH));
     textShader.use();
@@ -108,23 +108,17 @@ int main()
 
     /* Load hierarchy */
     // hero_00 - configure proctor
-    GameLogic::Proctor hero_00("hero_00", glm::vec3(0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.2f));
-    // hero_00 - add mesh renderer component
+    GameLogic::Proctor hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
-    // hero_00 - add movement component
     GameLogic::PlayerInput hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
-    hero_00.addComponent(&hero_00_pi);
-    // hero_00 - add object to hierarchy
+    GameLogic::BoxCollider hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader);
     hierarchy.addObject(&hero_00);
 
     // hero_01 - configure proctor
-    GameLogic::Proctor hero_01("hero_01", glm::vec3(0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.2f));
-    // hero_01 - add mesh renderer component
+    GameLogic::Proctor hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_00_model, &model3D);
-    // hero_01 - add movement component
     GameLogic::PlayerInput hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
-    hero_01.addComponent(&hero_01_pi);
-    // hero_01 - add object to hierarchy
+    GameLogic::BoxCollider hero_01_bc(GameLogic::C_COLLIDER, &hero_01_model, &hero_01, &collisionBoxShader);
     hierarchy.addObject(&hero_01);
 	
     // JAKIS MODEL 00
@@ -148,8 +142,8 @@ int main()
     /* Init Box Colliders for the models */
     //BoxCollider someModelCollider_00(collisionBoxShader, &modelJakis_00_model, modelJakis_00_model.position, modelJakis_00_model.rotation , modelJakis_00_model.scale);
     //BoxCollider someModelCollider_01(collisionBoxShader, &modelJakis_01_model, modelJakis_01_model.position, modelJakis_01_model.rotation, modelJakis_01_model.scale);
-    BoxCollider heroCollider_00(collisionBoxShader, &hero_00_model, hero_00_model.position, hero_00_model.rotation, hero_00_model.scale);
-    BoxCollider heroCollider_01(collisionBoxShader, &hero_01_model, hero_01_model.position, hero_01_model.rotation, hero_01_model.scale);
+    //BoxCollider heroCollider_00(collisionBoxShader, &hero_00_model, hero_00_model.position, hero_00_model.rotation, hero_00_model.scale);
+    //BoxCollider heroCollider_01(collisionBoxShader, &hero_01_model, hero_01_model.position, hero_01_model.rotation, hero_01_model.scale);
     
     float xValueRight = 0.2;
     float xValueLeft = 0.2;
@@ -256,14 +250,14 @@ int main()
         //someModelCollider_01.setPosition(modelJakis_01_model.position);
 
     	// hero 00
-        heroCollider_00.setScale(hero_00_model.scale);
-        heroCollider_00.setRotation(hero_00_model.rotation);
-        heroCollider_00.setPosition(hero_00_model.position);
+     //   heroCollider_00.setScale(hero_00_model.scale);
+     //   heroCollider_00.setRotation(hero_00_model.rotation);
+     //   heroCollider_00.setPosition(hero_00_model.position);
 
-    	// hero 01
-        heroCollider_01.setScale(hero_01_model.scale);
-        heroCollider_01.setRotation(hero_01_model.rotation);
-        heroCollider_01.setPosition(hero_01_model.position);
+    	//// hero 01
+     //   heroCollider_01.setScale(hero_01_model.scale);
+     //   heroCollider_01.setRotation(hero_01_model.rotation);
+     //   heroCollider_01.setPosition(hero_01_model.position);
 
         // DEBUG
         //std::cout << "==========================================" << std::endl;
@@ -282,10 +276,15 @@ int main()
     	
         /* Update uniforms and render colliders */
     	// box 00
-        //collisionBoxShader.setUniform("model", someModelCollider_00.getTranslateMatrix() * someModelCollider_00.getScaleMatrix());
-        //collisionBoxShader.setUniform("radius", someModelCollider_00.getRadius() / someModelCollider_00.scale);
-        //collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
-        //someModelCollider_00.render();
+        collisionBoxShader.setUniform("model", 
+            ((GameLogic::BoxCollider*) hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getTranslateMatrix() *
+            ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getScaleMatrix());
+        collisionBoxShader.setUniform("radius",
+            ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getRadius() *
+            hero_00.transform.scale);
+        collisionBoxShader.setUniformBool("collision", checkAABBCollision(&hero_00, &hero_01));
+        ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->render();
+        //checkAABBCollision(&hero_00, &hero_01);
     	
         // box 01
         //collisionBoxShader.setUniform("model", someModelCollider_01.getTranslateMatrix() * someModelCollider_01.getScaleMatrix());
@@ -293,17 +292,17 @@ int main()
         //collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
         //someModelCollider_01.render();
 
-        // hero 00
-        collisionBoxShader.setUniform("model", heroCollider_00.getTranslateMatrix() * heroCollider_00.getScaleMatrix());
-        collisionBoxShader.setUniform("radius", heroCollider_00.getRadius() / heroCollider_00.scale);
-        collisionBoxShader.setUniformBool("collision", false);
-        heroCollider_00.render();
+        //// hero 00
+        //collisionBoxShader.setUniform("model", heroCollider_00.getTranslateMatrix() * heroCollider_00.getScaleMatrix());
+        //collisionBoxShader.setUniform("radius", heroCollider_00.getRadius() / heroCollider_00.scale);
+        //collisionBoxShader.setUniformBool("collision", false);
+        //heroCollider_00.render();
     	
-        // hero 01
-        collisionBoxShader.setUniform("model", heroCollider_01.getTranslateMatrix() * heroCollider_01.getScaleMatrix());
-        collisionBoxShader.setUniform("radius", heroCollider_01.getRadius() / heroCollider_01.scale);
-        collisionBoxShader.setUniformBool("collision", false);
-        heroCollider_01.render();
+        //// hero 01
+        //collisionBoxShader.setUniform("model", heroCollider_01.getTranslateMatrix() * heroCollider_01.getScaleMatrix());
+        //collisionBoxShader.setUniform("radius", heroCollider_01.getRadius() / heroCollider_01.scale);
+        //collisionBoxShader.setUniformBool("collision", false);
+        //heroCollider_01.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
@@ -433,10 +432,26 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
     }
 }
 
-bool checkAABBCollision(BoxCollider a, BoxCollider b)
+bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
 {
-    if (glm::abs(a.position.x - b.position.x) > (a.getRadius().x + b.getRadius().x)) return false;
-    if (glm::abs(a.position.y - b.position.y) > (a.getRadius().y + b.getRadius().y)) return false;
-    if (glm::abs(a.position.z - b.position.z) > (a.getRadius().z + b.getRadius().z)) return false;
+    if (glm::abs(_a->transform.position.x - _b->transform.position.x) >
+        (((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x +
+            ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x))
+    {
+        return false;
+    }
+    if (glm::abs(_a->transform.position.y - _b->transform.position.y) >
+        (((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y +
+            ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y))
+    {
+        return false;
+    }
+    if (glm::abs(_a->transform.position.z - _b->transform.position.z) >
+        (((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z +
+            ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z))
+    {
+        return false;
+    }
+    std::cout << "COLLISION" << std::endl;
     return true;
 }
