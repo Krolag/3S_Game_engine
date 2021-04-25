@@ -20,6 +20,7 @@
 #include "Skybox/Skybox.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
+#include "Points/Points.h"
 //#include "GameLogic/Collisions/BoxCollider.h"
 
 //#include <iostream>
@@ -93,6 +94,15 @@ int main()
 
     /* Create Skybox */
     Skybox skybox(&view, &projection, &camera);
+
+    /* Create UIElements */
+    //UIRender::UIElement gold("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "assets/textures/wall.jpg", 100, 200, 300, 400);
+
+    /* Create text */
+    UIRender::TextRender points("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    
+    /* Create points */
+    Points score(0);
 
     /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(mainScene.window);
@@ -312,6 +322,13 @@ int main()
         /* DEBUG - Draw DearImGUI */
         ImGui::Render();
 
+        /* Render text */
+        score.addPoints(100);
+        points.render(std::to_string(score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
+
+        /* Render gold */
+        //gold.render();
+        
         /* Update InputSystem */
         keyboardInput->update();
         mouseInput->update();

@@ -185,6 +185,7 @@
     <ClCompile Include="include\Shader\Shader.cpp" />
     <ClCompile Include="include\Skybox\Skybox.cpp" />
     <ClCompile Include="include\UIRender\TextRender.cpp" />
+    <ClCompile Include="include\Points\Points.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="include\Texture\Texture.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="include\UIRender\TextRender.h" />
     <ClInclude Include="include\UIRender\UIElement.h" />
     <ClInclude Include="include\UIRender\UIRender.h" />
+    <ClInclude Include="include\Points\Points.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
