@@ -21,11 +21,6 @@
 #include "Camera/Camera.h"
 #include "Light/Light.h"
 #include "Points/Points.h"
-//#include "GameLogic/Collisions/BoxCollider.h"
-
-//#include <iostream>
-#include <map>
-//#include <string>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -112,35 +107,81 @@ int main()
     GameLogic::Hierarchy hierarchy(&mainScene);
 
     /* Load models */
-    Loader::Model hero_00_model("assets/models/hero/untitled.fbx", true);
-    Loader::Model hero_01_model("assets/models/hero/untitled.fbx", true);
-    Loader::Model modelJakis_00_model("assets/models/cube/untitled.obj", false);
-    Loader::Model modelJakis_01_model("assets/models/cube/untitled.obj", false);
+    clock_t begin_time = clock(); // Calculate time for loading models
+    // Create model library
+    Loader::ModelLibrary modelLibrary;
+    // PLAYERS
+    modelLibrary.addModel("assets/models/hero/untitled.fbx",                    "hero_00",  true);
+    modelLibrary.addModel("assets/models/hero/untitled.fbx",                    "hero_01",  true);
+    // ENVIR
+    modelLibrary.addModel("assets/models/cube/untitled.obj",                    "ground",   false);
+    modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_00",  true);
+    modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_01",  true);
+    modelLibrary.addModel("assets/models/task_models/palm_long.gltf",           "palm_02",  true);
+    modelLibrary.addModel("assets/models/task_models/palm_short.gltf",          "palm_03",  true);
+    modelLibrary.addModel("assets/models/task_models/boat_small.gltf",          "boat",     true);
+    modelLibrary.addModel("assets/models/task_models/chest.gltf",               "chest",    true);
+    modelLibrary.addModel("assets/models/task_models/formation_rock.gltf",      "rocks_00", true);
+    modelLibrary.addModel("assets/models/task_models/formation_rock.gltf",      "rocks_01", true);
+    modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_00", true);
+    modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_01", true);
+    modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_02", true);
+    modelLibrary.addModel("assets/models/task_models/tower.gltf",               "tower",    true);
+    
+    std::cout << "models loaded in:   " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
 
-    /* Load hierarchy */
-    // hero_00 - configure proctor
-    GameLogic::Proctor hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
-    GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
-    GameLogic::PlayerInput hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
-    GameLogic::BoxCollider hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader);
+    /* Configure proctors */
+    begin_time = clock(); // Calculate time for creating proctors 
+    GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+    GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
+    GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
+    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("hero_00"), &hero_00, &collisionBoxShader);
     hierarchy.addObject(&hero_00);
-
-    // hero_01 - configure proctor
-    GameLogic::Proctor hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
-    GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_00_model, &model3D);
-    GameLogic::PlayerInput hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
-    GameLogic::BoxCollider hero_01_bc(GameLogic::C_COLLIDER, &hero_01_model, &hero_01, &collisionBoxShader);
+    GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+    GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
+    GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
+    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader);
     hierarchy.addObject(&hero_01);
-	
-    // JAKIS MODEL 00
-    GameLogic::Proctor modelJakis_00("modelJakis_00", glm::vec3(0.0f, -1.0f, 0.0f), glm::quat(1.0f, glm::vec3(0.0f)), glm::vec3(50.0f, 1.0f, 50.0f));
-    GameLogic::MeshRenderer modelJakis_mr_00(GameLogic::C_MESH, &modelJakis_00, &modelJakis_00_model, &model3D);
-    hierarchy.addObject(&modelJakis_00);
-	
-    // JAKIS MODEL 01
-    GameLogic::Proctor modelJakis_01("modelJakis_01", glm::vec3(-10.0f));
-    GameLogic::MeshRenderer modelJakis_mr_01(GameLogic::C_MESH, &modelJakis_01, &modelJakis_01_model, &model3D);
-    hierarchy.addObject(&modelJakis_01);
+    GameLogic::Proctor      ground("ground", glm::vec3(0.0f, -1.0f, 0.0f), glm::quat(1.0f, glm::vec3(0.0f)), glm::vec3(50.0f, 1.0f, 50.0f));
+    GameLogic::MeshRenderer ground_mr(GameLogic::C_MESH, &ground, modelLibrary.getModel(ground.name), &model3D);
+    hierarchy.addObject(&ground);
+    GameLogic::Proctor      palm_00("palm_00", glm::vec3(-01.83f, 00.00f, 75.63f), glm::quat(1.0f, 0.0f, 00.00f, 0.0f), glm::vec3(10.0f));
+    GameLogic::MeshRenderer palm_00_mr(GameLogic::C_MESH, &palm_00, modelLibrary.getModel(palm_00.name), &model3D);
+    hierarchy.addObject(&palm_00);
+    GameLogic::Proctor      palm_01("palm_01", glm::vec3(-6.29f, 00.00f, 75.96f), glm::quat(1.0f, 0.0f, 00.35f, 0.0f), glm::vec3(10.0f));
+    GameLogic::MeshRenderer palm_01_mr(GameLogic::C_MESH, &palm_01, modelLibrary.getModel(palm_01.name), &model3D);
+    hierarchy.addObject(&palm_01);
+    GameLogic::Proctor      palm_02("palm_02", glm::vec3( 03.86f, 00.00f, 48.67f), glm::quat(1.0f, 0.0f, 00.72f, 0.0f), glm::vec3(10.0f));
+    GameLogic::MeshRenderer palm_02_mr(GameLogic::C_MESH, &palm_02, modelLibrary.getModel(palm_02.name), &model3D);
+    hierarchy.addObject(&palm_02);
+    GameLogic::Proctor      palm_03("palm_03", glm::vec3(-03.86f, 00.00f, 48.67f), glm::quat(1.0f, 0.0f, 00.72f, 0.0f), glm::vec3(10.0f));
+    GameLogic::MeshRenderer palm_03_mr(GameLogic::C_MESH, &palm_03, modelLibrary.getModel(palm_03.name), &model3D);
+    hierarchy.addObject(&palm_03);
+    GameLogic::Proctor      boat("boat", glm::vec3(21.48f, 00.00f, 57.05f), glm::quat(1.0f, 0.0f, 00.41f, 0.0f), glm::vec3(6.0f));
+    GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
+    hierarchy.addObject(&boat);
+    GameLogic::Proctor      chest("chest", glm::vec3(18.37f, 00.00f, -63.33f), glm::quat(1.0f, 0.0f, 02.34f, 0.0f), glm::vec3(6.0f));
+    GameLogic::MeshRenderer chest_mr(GameLogic::C_MESH, &chest, modelLibrary.getModel(chest.name), &model3D);
+    hierarchy.addObject(&chest);
+    GameLogic::Proctor      rocks_00("rocks_00", glm::vec3(-13.06f, 00.00f, 27.38f), glm::quat(1.0f, 0.0f, 00.25f, 0.0f), glm::vec3(6.0f));
+    GameLogic::MeshRenderer rocks_00_mr(GameLogic::C_MESH, &rocks_00, modelLibrary.getModel(rocks_00.name), &model3D);
+    hierarchy.addObject(&rocks_00);
+    GameLogic::Proctor      rocks_01("rocks_01", glm::vec3(-30.35f, 00.00f, 88.90f), glm::quat(1.0f, 0.0f, 00.25f, 0.0f), glm::vec3(6.0f));
+    GameLogic::MeshRenderer rocks_01_mr(GameLogic::C_MESH, &rocks_01, modelLibrary.getModel(rocks_01.name), &model3D);
+    hierarchy.addObject(&rocks_01);
+    GameLogic::Proctor      plant_00("plant_00", glm::vec3(06.66f, 00.00f, -19.76f), glm::quat(1.0f, 0.0f, -03.54f, 0.0f), glm::vec3(6.0f));
+    GameLogic::MeshRenderer plant_00_mr(GameLogic::C_MESH, &plant_00, modelLibrary.getModel(plant_00.name), &model3D);
+    hierarchy.addObject(&plant_00);
+    GameLogic::Proctor      plant_01("plant_01", glm::vec3(-08.50f, 00.00f, -02.50f), glm::quat(1.0f, 0.0f, -01.28f, 0.0f), glm::vec3(6.0f));
+    GameLogic::MeshRenderer plant_01_mr(GameLogic::C_MESH, &plant_01, modelLibrary.getModel(plant_01.name), &model3D);
+    hierarchy.addObject(&plant_01);
+    GameLogic::Proctor      plant_02("plant_02", glm::vec3(17.73f, 00.00f, 10.50f), glm::quat(1.0f, 0.0f, -00.03f, 0.0f), glm::vec3(6.0f));
+    GameLogic::MeshRenderer plant_02_mr(GameLogic::C_MESH, &plant_02, modelLibrary.getModel(plant_02.name), &model3D);
+    hierarchy.addObject(&plant_02);
+    GameLogic::Proctor      tower("tower", glm::vec3(03.50f, 00.00f, -42.00f), glm::quat(1.0f, 0.0f, -03.50f, 0.0f), glm::vec3(6.0f));
+    GameLogic::MeshRenderer tower_mr(GameLogic::C_MESH, &tower, modelLibrary.getModel(tower.name), &model3D);
+    hierarchy.addObject(&tower);
+    std::cout << "proctors created in:    " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
 
     /* Lights */
     DirLight dirLight = {
@@ -160,56 +201,6 @@ int main()
     float xValueLeft = 0.2;
     float yValueUp = 0.2;
     float yValueDown = 0.2;
-
-    /* Load models for PGK task */
-    // Load environment objects 
-    Loader::Model palm_00_model("assets/models/task_models/palm_detailed_short.gltf", true);
-    Loader::Model palm_01_model("assets/models/task_models/palm_long.gltf", true);
-    Loader::Model palm_02_model("assets/models/task_models/palm_short.gltf", true);
-    Loader::Model boat_small_model("assets/models/task_models/boat_small.gltf", true);
-    Loader::Model chest_model("assets/models/task_models/chest.gltf", true);
-    Loader::Model formationRock_00_model("assets/models/task_models/formation_rock.gltf", true);
-    Loader::Model formationRock_01_model("assets/models/task_models/formation_rock.gltf", true);
-    Loader::Model plant_00_model("assets/models/task_models/plant.gltf", true);
-    Loader::Model plant_01_model("assets/models/task_models/plant.gltf", true);
-    Loader::Model plant_02_model("assets/models/task_models/plant.gltf", true);
-    Loader::Model tower_model("assets/models/task_models/tower.gltf", true);
-    // Create proctors 
-    GameLogic::Proctor palm_00          ("palm_00",          glm::vec3(-01.83f, 00.00f,  75.63f), glm::quat(1.0f, 0.0f,  00.00f, 0.0f), glm::vec3(10.0f));
-    GameLogic::Proctor palm_01          ("palm_01",          glm::vec3(-46.29f, 00.00f,  75.96f), glm::quat(1.0f, 0.0f,  00.35f, 0.0f), glm::vec3(10.0f));
-    GameLogic::Proctor palm_02          ("palm_02",          glm::vec3( 03.86f, 00.00f,  48.67f), glm::quat(1.0f, 0.0f,  00.72f, 0.0f), glm::vec3(10.0f));
-    GameLogic::Proctor boat_small       ("boat_small",       glm::vec3( 21.48f, 00.00f,  57.05f), glm::quat(1.0f, 0.0f,  00.41f, 0.0f), glm::vec3(6.0f));
-    GameLogic::Proctor chest            ("chest",            glm::vec3( 18.37f, 00.00f, -63.33f), glm::quat(1.0f, 0.0f,  02.34f, 0.0f), glm::vec3(6.0f));
-    GameLogic::Proctor formationRock_00 ("formationRock_00", glm::vec3(-13.06f, 00.00f,  27.38f), glm::quat(1.0f, 0.0f,  00.25f, 0.0f), glm::vec3(6.0f));
-    GameLogic::Proctor formationRock_01 ("formationRock_01", glm::vec3(-30.35f, 00.00f,  88.90f), glm::quat(1.0f, 0.0f,  00.25f, 0.0f), glm::vec3(6.0f));
-    GameLogic::Proctor plant_00         ("plant_00",         glm::vec3( 06.66f, 00.00f, -19.76f), glm::quat(1.0f, 0.0f, -03.54f, 0.0f), glm::vec3(6.0f));
-    GameLogic::Proctor plant_01         ("plant_01",         glm::vec3(-08.50f, 00.00f, -02.50f), glm::quat(1.0f, 0.0f, -01.28f, 0.0f), glm::vec3(6.0f));
-    GameLogic::Proctor plant_02         ("plant_02",         glm::vec3( 17.73f, 00.00f,  10.50f), glm::quat(1.0f, 0.0f, -00.03f, 0.0f), glm::vec3(6.0f));
-    GameLogic::Proctor tower            ("tower",            glm::vec3( 03.50f, 00.00f, -42.00f), glm::quat(1.0f, 0.0f, -03.50f, 0.0f), glm::vec3(6.0f));
-    // Create MeshRenderer component
-    GameLogic::MeshRenderer palm_00_mr(GameLogic::C_MESH, &palm_00, &palm_00_model, &model3D);
-    GameLogic::MeshRenderer palm_01_mr(GameLogic::C_MESH, &palm_01, &palm_01_model, &model3D);
-    GameLogic::MeshRenderer palm_02_mr(GameLogic::C_MESH, &palm_02, &palm_02_model, &model3D);
-    GameLogic::MeshRenderer boat_small_mr(GameLogic::C_MESH, &boat_small, &boat_small_model, &model3D);
-    GameLogic::MeshRenderer chest_mr(GameLogic::C_MESH, &chest, &chest_model, &model3D);
-    GameLogic::MeshRenderer formationRock_00_mr(GameLogic::C_MESH, &formationRock_00, &formationRock_00_model, &model3D);
-    GameLogic::MeshRenderer formationRock_01_mr(GameLogic::C_MESH, &formationRock_01, &formationRock_01_model, &model3D);
-    GameLogic::MeshRenderer plant_00_mr(GameLogic::C_MESH, &plant_00, &plant_00_model, &model3D);
-    GameLogic::MeshRenderer plant_01_mr(GameLogic::C_MESH, &plant_01, &plant_01_model, &model3D);
-    GameLogic::MeshRenderer plant_02_mr(GameLogic::C_MESH, &plant_02, &plant_02_model, &model3D);
-    GameLogic::MeshRenderer tower_mr(GameLogic::C_MESH, &tower, &tower_model, &model3D);
-    // Add objects to hierarchy
-    hierarchy.addObject(&palm_00);
-    hierarchy.addObject(&palm_01);
-    hierarchy.addObject(&palm_02);
-    hierarchy.addObject(&boat_small);
-    hierarchy.addObject(&chest);
-    hierarchy.addObject(&formationRock_00);
-    hierarchy.addObject(&formationRock_01);
-    hierarchy.addObject(&plant_00);
-    hierarchy.addObject(&plant_01);
-    hierarchy.addObject(&plant_02);
-    hierarchy.addObject(&tower);
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -473,7 +464,6 @@ bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
     {
         return false;
     }
-    std::cout << "COLLISION" << std::endl;
     return true;
 }
 
@@ -493,6 +483,8 @@ void separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
     distanceAB.x = glm::abs(_a->transform.position.x - _b->transform.position.x);
     distanceAB.y = glm::abs(_a->transform.position.y - _b->transform.position.y);
     distanceAB.z = glm::abs(_a->transform.position.z - _b->transform.position.z);
+
+    // TODO: get _a as boxcollider erlier for memory optimalization
 	
     /* Calculate the sum of radians of the both objects */
     glm::vec3 radiusABSum;

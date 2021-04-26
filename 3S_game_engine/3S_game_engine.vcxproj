@@ -166,6 +166,7 @@
     <ClCompile Include="include\GameLogic\Components\PlayerInput.cpp" />
     <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
     <ClCompile Include="include\GameLogic\Proctor.cpp" />
+    <ClCompile Include="include\Loader\ModelLibrary.cpp" />
     <ClCompile Include="include\Primitives\Box\Box.cpp" />
     <ClCompile Include="include\UIRender\BackgroundImage.cpp" />
     <ClCompile Include="include\Camera\Camera.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="include\GameLogic\GameLogic.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />
     <ClInclude Include="include\Application\Randomizer.h" />
+    <ClInclude Include="include\Loader\ModelLibrary.h" />
     <ClInclude Include="include\Primitives\Box\Box.h" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\GameLogic\Components\Component.h" />

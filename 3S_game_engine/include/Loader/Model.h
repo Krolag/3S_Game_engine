@@ -22,6 +22,7 @@ namespace Loader
 	{
 	public:
 		std::string path;
+		std::string name;
 		/* Model transformation */
 		glm::vec3 position;
 		glm::quat rotation;
@@ -29,7 +30,7 @@ namespace Loader
 		Material material;
 
 		/* Construtor / destructor */
-		Model(std::string _path, bool _noTex = false, glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
+		Model(std::string _path, std::string _name, bool _noTex = false, glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
 		Model(bool _noTex = false, glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
 
 		void init();

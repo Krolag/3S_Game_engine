@@ -2,8 +2,8 @@
 
 namespace Loader
 {
-	Model::Model(std::string _path, bool _noTex, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
-		: position(_position), rotation(_rotation), scale(_scale), path(_path), noTex(_noTex)
+	Model::Model(std::string _path, std::string _name, bool _noTex, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
+		: position(_position), rotation(_rotation), scale(_scale), path(_path), noTex(_noTex), name(_name)
 	{
 		loadModel(path);
 	}

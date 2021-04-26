@@ -35,6 +35,7 @@
     <ClCompile Include="include\GameLogic\Components\PlayerInput.cpp" />
     <ClCompile Include="include\GameLogic\Components\BoxCollider.cpp" />
     <ClCompile Include="include\Points\Points.cpp" />
+    <ClCompile Include="include\Loader\ModelLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="include\GameLogic\Components\PlayerInput.h" />
     <ClInclude Include="include\GameLogic\Components\BoxCollider.h" />
     <ClInclude Include="include\Points\Points.h" />
+    <ClInclude Include="include\Loader\ModelLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
