@@ -294,9 +294,12 @@ int main()
         //collisionBoxShader.setUniform("radius",
         //    ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getRadius() *
         //    hero_00.transform.scale);
-        collisionBoxShader.setUniformBool("collision", checkAABBCollision(&hero_00, &hero_01));
+        collisionBoxShader.setUniformBool("collision", true);
         ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->render();
-        if (checkAABBCollision(&hero_00, &hero_01)) separateAABBCollision(&hero_00, &hero_01);
+        if (checkAABBCollision(&hero_00, &hero_01))
+        {
+            separateAABBCollision(&hero_00, &hero_01);
+        }
         //checkAABBCollision(&hero_00, &hero_01);
     	
         // box 01
@@ -511,13 +514,13 @@ void separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
 
     /* Calculate separation vector */
     glm::vec3 separationVector;
-    separationVector.x = (radiusABSum.x - distanceAB.x)*separationDirection.x;
-    separationVector.y = (radiusABSum.y - distanceAB.y)*separationDirection.y;
-    separationVector.z = (radiusABSum.z - distanceAB.z)*separationDirection.z;
+    separationVector.x = (radiusABSum.x - distanceAB.x + 0.01f);
+    separationVector.y = (radiusABSum.y - distanceAB.y + 0.01f);
+    separationVector.z = (radiusABSum.z - distanceAB.z + 0.01f);
 
     /* Add separation vector to the objects */
-    _a->transform.position.x += separationVector.x;
-    _a->transform.position.y += separationVector.y;
-    _a->transform.position.z += separationVector.z;
+    if (glm::min(separationVector.x, separationVector.z) == separationVector.x) _a->transform.position.x += separationVector.x * separationDirection.x;
+    else _a->transform.position.z += separationVector.z * separationDirection.z;
+	if(checkAABBCollision(_a, _b)) _a->transform.position.y += separationVector.y * separationDirection.y;
 
 }
