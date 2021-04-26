@@ -90,9 +90,6 @@ int main()
     /* Create Skybox */
     Skybox skybox(&view, &projection, &camera);
 
-    /* Create UIElements */
-    //UIRender::UIElement gold("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "assets/textures/wall.jpg", 100, 200, 300, 400);
-
     /* Create text */
     UIRender::TextRender points("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
     
@@ -197,10 +194,23 @@ int main()
     //BoxCollider heroCollider_00(collisionBoxShader, &hero_00_model, hero_00_model.position, hero_00_model.rotation, hero_00_model.scale);
     //BoxCollider heroCollider_01(collisionBoxShader, &hero_01_model, hero_01_model.position, hero_01_model.rotation, hero_01_model.scale);
     
+     /* Animated mario */
+    UIRender::UIElement marioWalking[4] = {
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_01.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_03.png", 0.01, 0.045, 0.97, 0.91),
+
+    };
+
+    int marioWalkingIndex = 0;
+    float timeBetweenFrames = 0.15f;
+
     float xValueRight = 0.2;
     float xValueLeft = 0.2;
     float yValueUp = 0.2;
     float yValueDown = 0.2;
+
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -314,11 +324,18 @@ int main()
         ImGui::Render();
 
         /* Render text */
-        score.addPoints(100);
         points.render(std::to_string(score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
 
-        /* Render gold */
-        //gold.render();
+        /* Render cute Mario as placeholder to coin */
+        marioWalking[marioWalkingIndex].render();
+        timeBetweenFrames -= mainScene.deltaTime;
+        if (timeBetweenFrames <= 0)
+        {
+            marioWalkingIndex++;
+            timeBetweenFrames = 0.15f;
+        }
+        if (marioWalkingIndex >= 4)
+            marioWalkingIndex = 0;
         
         /* Update InputSystem */
         keyboardInput->update();
