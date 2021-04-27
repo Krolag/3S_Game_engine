@@ -55,5 +55,4 @@ namespace GameLogic
 	};
 }
 
-
 #endif // !BOXCOLLIDER_H

@@ -39,7 +39,7 @@ namespace GameLogic
 		{
 			if(a->type == C_COLLIDER)
 			{
-				if (!((BoxCollider*)a)->isStatic)
+				if (!((BoxCollider*)a)->isStatic || !((BoxCollider*)a)->isUpdated)
 					a->update();
 			}
 			else 
