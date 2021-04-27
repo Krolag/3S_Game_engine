@@ -2,9 +2,9 @@
 
 namespace GameLogic
 {
-	BoxCollider::BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor, Shader* _shader,
+	BoxCollider::BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor, Shader* _shader, bool _isStatic,
 		glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
-		: Component(_type, _proctor), model(_model), colliderShader(_shader), isStatic(false)
+		: Component(_type, _proctor), model(_model), colliderShader(_shader), isStatic(_isStatic), isUpdated(false)
 	{
 		if (model != NULL)
 		{
@@ -23,18 +23,11 @@ namespace GameLogic
 		{
 			for (unsigned int j = 0; j < model->getMeshes().at(i).vertices.size(); j++)
 			{
-				/*std::cout << "vert number " << j << "position: "
-					<< model->getMeshes().at(i).vertices.at(j).position.x
-					<< " " << model->getMeshes().at(i).vertices.at(j).position.y
-					<< " " << model->getMeshes().at(i).vertices.at(j).position.z
-					<< std::endl;*/
 				glm::vec3 tmp = model->getMeshes().at(i).vertices.at(j).position;
 				compareAndUpdateMin(tmp);
 				compareAndUpdateMax(tmp);
 			}
-			//std::cout << "PROCESSING MESH NUMBER " << i << " FINISHED" << std::endl;
 		}
-		//std::cout << "MODEL POSITION FROM CONSTRUCTOR COLLIDER:\nx: " << _model->position.x << ", y: " << _model->position.y << ", z: " << _model->position.z << std::endl;
 
 		/* Transform the min and max vectors with the model transform */
 		glm::mat4 modelTrans = model->getModelMatrix();
@@ -44,11 +37,6 @@ namespace GameLogic
 		/* Calculate center point of the cube */
 		calcCenter();
 		calcRadius();
-
-		//std::cout << "RADIUS VECTOR: " << radius.x << " " << radius.y << " " << radius.z << std::endl;
-		//std::cout << "MIN VECTOR: " << min.x << " " << min.y << " " << min.z << std::endl;
-		//std::cout << "MAX VECTOR: " << max.x << " " << max.y << " " << max.z << std::endl;
-		//std::cout << "CENTER POINT: " << centerPoint[0] << " " << centerPoint[1] << " " << centerPoint[2] << std::endl;
 
 		/* Initialize gl objects for correct rendering collider box */
 		glGenBuffers(1, &colliderVBO);
@@ -68,12 +56,16 @@ namespace GameLogic
 	void BoxCollider::setModel(Loader::Model* _model)
 	{
 		model = _model;
+		init();
 	}
 
 	/* Method will render bounding box around the model if necessary */
 	void BoxCollider::render()
 	{
 		// Render it using gl lines with some color and transform with appropriate model matrix
+		colliderShader->setUniform("model", model->getModelMatrix());
+		colliderShader->setUniform("radius", radius);
+		colliderShader->setUniformBool("collision", false);
 		glBindVertexArray(colliderVAO);
 		glDrawArrays(GL_POINTS, 0, 1);
 		glBindVertexArray(0);
@@ -81,15 +73,17 @@ namespace GameLogic
 
 	void BoxCollider::update()
 	{
+		if(model == NULL)
+		{
+			return;
+		}
 		/* Transform the bounding box to the same position as model */
 		std::vector<glm::vec3> vertices = getColliderBoxVertices();
-		//glm::vec3 updateMin = glm::vec3(position);
-		//glm::vec3 updateMax = glm::vec3(position);
-		glm::vec3 updateMin = glm::vec3(proctor->transform.position);
-		glm::vec3 updateMax = glm::vec3(proctor->transform.position);
 
-		if (!isStatic)
+		if (!isStatic || !isUpdated)
 		{
+			glm::vec3 updateMin = glm::vec3(proctor->transform.position);
+			glm::vec3 updateMax = glm::vec3(proctor->transform.position);
 			for (unsigned int i = 0; i < vertices.size(); i++)
 			{
 				/* Update vertices */
@@ -107,6 +101,10 @@ namespace GameLogic
 			radius.x = glm::abs(updateMax.x - updateMin.x) / 2.0f;
 			radius.y = glm::abs(updateMax.y - updateMin.y) / 2.0f;
 			radius.z = glm::abs(updateMax.z - updateMin.z) / 2.0f;
+		}
+		if(!isUpdated)
+		{
+			isUpdated = true;
 		}
 	}
 

@@ -160,9 +160,6 @@
     <ClCompile Include="include\GameLogic\Components\BoxCollider.cpp" />
     <ClCompile Include="include\GameLogic\Components\Component.cpp" />
     <ClCompile Include="include\GameLogic\Components\MeshRenderer.cpp" />
-    <ClCompile Include="include\GameLogic\Collisions\BoxCollider.cpp" />
-    <ClCompile Include="include\GameLogic\Collisions\Collider.cpp" />
-    <ClCompile Include="include\GameLogic\Collisions\CollisionsManager.cpp" />
     <ClCompile Include="include\GameLogic\Components\PlayerInput.cpp" />
     <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
     <ClCompile Include="include\GameLogic\Proctor.cpp" />
@@ -197,9 +194,6 @@
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\GameLogic\Components\BoxCollider.h" />
     <ClInclude Include="include\GameLogic\Components\MeshRenderer.h" />
-    <ClInclude Include="include\GameLogic\Collisions\BoxCollider.h" />
-    <ClInclude Include="include\GameLogic\Collisions\Collider.h" />
-    <ClInclude Include="include\GameLogic\Collisions\CollisionsManager.h" />
     <ClInclude Include="include\GameLogic\Components\PlayerInput.h" />
     <ClInclude Include="include\GameLogic\GameLogic.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />

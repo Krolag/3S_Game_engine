@@ -14,10 +14,11 @@ namespace GameLogic
 	{
 	public:
 		bool isStatic;
+		bool isUpdated;
 		Shader* colliderShader;
 
 		/* Constructors */
-		BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor = NULL, Shader* _shader = NULL,
+		BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor = NULL, Shader* _shader = NULL, bool _isStatic = true,
 			glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, glm::vec3(0.0f)),
 			glm::vec3 _scale = glm::vec3(1.0f));
 

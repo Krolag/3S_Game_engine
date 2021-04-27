@@ -10,6 +10,7 @@
 #include "Shader/Shader.h"
 #include "Components/MeshRenderer.h"
 #include "Components/PlayerInput.h"
+#include "Components/BoxCollider.h"
 
 namespace GameLogic
 {

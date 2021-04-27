@@ -37,7 +37,13 @@ namespace GameLogic
 		/* First update components for current hierarchy level */
 		for (auto& a : components)
 		{
-			a->update();
+			if(a->type == C_COLLIDER)
+			{
+				if (!((BoxCollider*)a)->isStatic)
+					a->update();
+			}
+			else 
+				a->update();
 		}
 
 		/* Next update children */
@@ -197,6 +203,11 @@ namespace GameLogic
 				}
 				ImGui::Text("Speed:  "); ImGui::SameLine();
 				ImGui::DragFloat("s", &((PlayerInput*)a)->movementSpeed);
+			}
+
+			if(a->type == GameLogic::C_COLLIDER)
+			{
+				((BoxCollider*)a)->render();
 			}
 		}
 	}

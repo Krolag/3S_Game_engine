@@ -32,10 +32,6 @@ void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputS
 void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Scene* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
-// Collision functions
-bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
-void separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
-
 // settings
 const unsigned int SCREEN_WIDTH = 1280;
 const unsigned int SCREEN_HEIGHT = 720;
@@ -132,7 +128,7 @@ int main()
     GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
-    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("hero_00"), &hero_00, &collisionBoxShader);
+    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("hero_00"), &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
@@ -187,12 +183,6 @@ int main()
         glm::vec4(0.4f, 0.4f, 0.4f, 1.0f),
         glm::vec4(0.75f, 0.75f, 0.75f, 1.0f)
     };
-
-    /* Init Box Colliders for the models */
-    //BoxCollider someModelCollider_00(collisionBoxShader, &modelJakis_00_model, modelJakis_00_model.position, modelJakis_00_model.rotation , modelJakis_00_model.scale);
-    //BoxCollider someModelCollider_01(collisionBoxShader, &modelJakis_01_model, modelJakis_01_model.position, modelJakis_01_model.rotation, modelJakis_01_model.scale);
-    //BoxCollider heroCollider_00(collisionBoxShader, &hero_00_model, hero_00_model.position, hero_00_model.rotation, hero_00_model.scale);
-    //BoxCollider heroCollider_01(collisionBoxShader, &hero_01_model, hero_01_model.position, hero_01_model.rotation, hero_01_model.scale);
     
      /* Animated mario */
     UIRender::UIElement marioWalking[4] = {
@@ -200,7 +190,6 @@ int main()
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_01.png", 0.01, 0.045, 0.97, 0.91),
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_03.png", 0.01, 0.045, 0.97, 0.91),
-
     };
 
     int marioWalkingIndex = 0;
@@ -210,7 +199,6 @@ int main()
     float xValueLeft = 0.2;
     float yValueUp = 0.2;
     float yValueDown = 0.2;
-
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -249,76 +237,6 @@ int main()
         collisionBoxShader.use();
         collisionBoxShader.setUniform("view", view);
         collisionBoxShader.setUniform("projection", projection);
-    	
-        /* Update colliders positions, calc collisions */
-    	// box 00
-        //someModelCollider_00.setScale(modelJakis_00_model.scale);
-        //someModelCollider_00.setRotation(modelJakis_00_model.rotation);
-        //someModelCollider_00.setPosition(modelJakis_00_model.position);
-
-    	// box 01
-        //someModelCollider_01.setScale(modelJakis_01_model.scale);
-        //someModelCollider_01.setRotation(modelJakis_01_model.rotation);
-        //someModelCollider_01.setPosition(modelJakis_01_model.position);
-
-    	// hero 00
-     //   heroCollider_00.setScale(hero_00_model.scale);
-     //   heroCollider_00.setRotation(hero_00_model.rotation);
-     //   heroCollider_00.setPosition(hero_00_model.position);
-
-    	//// hero 01
-     //   heroCollider_01.setScale(hero_01_model.scale);
-     //   heroCollider_01.setRotation(hero_01_model.rotation);
-     //   heroCollider_01.setPosition(hero_01_model.position);
-
-        // DEBUG
-        //std::cout << "==========================================" << std::endl;
-        //std::cout << "HERO 00 VALUES AFTER UPDATE METHOD IN MAIN" << std::endl;
-        //std::cout << "==========================================" << std::endl;
-        //std::cout << "POSITION VECTOR: " << hero_00_model.position.x << " " << hero_00_model.position.y << " " << hero_00_model.position.z << std::endl;
-        //std::cout << "ROTATION VECTOR: " << hero_00_model.rotation.x << " " << hero_00_model.rotation.y << " " << hero_00_model.rotation.z << std::endl;
-        //std::cout << "SCALE VECTOR: " << hero_00_model.scale.x << " " << hero_00_model.scale.y << " " << hero_00_model.scale.z << std::endl << std::endl;
-
-        //std::cout << "==========================================" << std::endl;
-        //std::cout << "HERO 01 VALUES AFTER UPDATE METHOD IN MAIN" << std::endl;
-        //std::cout << "==========================================" << std::endl;
-        //std::cout << "POSITION VECTOR: " << hero_01_model.position.x << " " << hero_01_model.position.y << " " << hero_01_model.position.z << std::endl;
-        //std::cout << "ROTATION VECTOR: " << hero_01_model.rotation.x << " " << hero_01_model.rotation.y << " " << hero_01_model.rotation.z << std::endl;
-        //std::cout << "SCALE VECTOR: " << hero_01_model.scale.x << " " << hero_01_model.scale.y << " " << hero_01_model.scale.z << std::endl << std::endl;
-    	
-        /* Update uniforms and render colliders */
-    	// box 00
-        //collisionBoxShader.setUniform("model", 
-        //    ((GameLogic::BoxCollider*) hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getTranslateMatrix() *
-        //    ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getScaleMatrix());
-        //collisionBoxShader.setUniform("radius",
-        //    ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->getRadius() *
-        //    hero_00.transform.scale);
-        collisionBoxShader.setUniformBool("collision", true);
-        ((GameLogic::BoxCollider*)hero_00.getComponentOfType(GameLogic::C_COLLIDER))->render();
-        if (checkAABBCollision(&hero_00, &hero_01))
-        {
-            separateAABBCollision(&hero_00, &hero_01);
-        }
-        //checkAABBCollision(&hero_00, &hero_01);
-    	
-        // box 01
-        //collisionBoxShader.setUniform("model", someModelCollider_01.getTranslateMatrix() * someModelCollider_01.getScaleMatrix());
-        //collisionBoxShader.setUniform("radius", someModelCollider_01.getRadius() / someModelCollider_01.scale);
-        //collisionBoxShader.setUniformBool("collision", checkAABBCollision(someModelCollider_00, someModelCollider_01));
-        //someModelCollider_01.render();
-
-        //// hero 00
-        //collisionBoxShader.setUniform("model", heroCollider_00.getTranslateMatrix() * heroCollider_00.getScaleMatrix());
-        //collisionBoxShader.setUniform("radius", heroCollider_00.getRadius() / heroCollider_00.scale);
-        //collisionBoxShader.setUniformBool("collision", false);
-        //heroCollider_00.render();
-    	
-        //// hero 01
-        //collisionBoxShader.setUniform("model", heroCollider_01.getTranslateMatrix() * heroCollider_01.getScaleMatrix());
-        //collisionBoxShader.setUniform("radius", heroCollider_01.getRadius() / heroCollider_01.scale);
-        //collisionBoxShader.setUniformBool("collision", false);
-        //heroCollider_01.render();
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
@@ -460,67 +378,4 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
 
         mouseInput->cursorEnable();
     }
-}
-
-// COLLISION FUNCTIONS
-
-bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
-{
-    if (glm::abs(_a->transform.position.x - _b->transform.position.x) >
-        (((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x +
-            ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x))
-    {
-        return false;
-    }
-    if (glm::abs(_a->transform.position.y - _b->transform.position.y) >
-        (((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y +
-            ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y))
-    {
-        return false;
-    }
-    if (glm::abs(_a->transform.position.z - _b->transform.position.z) >
-        (((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z +
-            ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z))
-    {
-        return false;
-    }
-    return true;
-}
-
-void separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
-{
-    /* Calculate separation direction */
-    glm::vec3 separationDirection;
-    if (_a->transform.position.x >= _b->transform.position.x) separationDirection.x = 1.0f;
-    else separationDirection.x = -1.0f;
-    if (_a->transform.position.y >= _b->transform.position.y) separationDirection.y = 1.0f;
-    else separationDirection.y = -1.0f;
-    if (_a->transform.position.z >= _b->transform.position.z) separationDirection.z = 1.0f;
-    else separationDirection.z = -1.0f;
-	
-	/* Calculate distance between objects positions */
-    glm::vec3 distanceAB;
-    distanceAB.x = glm::abs(_a->transform.position.x - _b->transform.position.x);
-    distanceAB.y = glm::abs(_a->transform.position.y - _b->transform.position.y);
-    distanceAB.z = glm::abs(_a->transform.position.z - _b->transform.position.z);
-
-    // TODO: get _a as boxcollider erlier for memory optimalization
-	
-    /* Calculate the sum of radians of the both objects */
-    glm::vec3 radiusABSum;
-    radiusABSum.x = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x;
-    radiusABSum.y = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y;
-    radiusABSum.z = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z;
-
-    /* Calculate separation vector */
-    glm::vec3 separationVector;
-    separationVector.x = (radiusABSum.x - distanceAB.x + 0.01f);
-    separationVector.y = (radiusABSum.y - distanceAB.y + 0.01f);
-    separationVector.z = (radiusABSum.z - distanceAB.z + 0.01f);
-
-    /* Add separation vector to the objects */
-    if (glm::min(separationVector.x, separationVector.z) == separationVector.x) _a->transform.position.x += separationVector.x * separationDirection.x;
-    else _a->transform.position.z += separationVector.z * separationDirection.z;
-	if(checkAABBCollision(_a, _b)) _a->transform.position.y += separationVector.y * separationDirection.y;
-
 }

@@ -22,6 +22,10 @@ namespace GameLogic
 		Proctor* getObject(unsigned int _uuid);
 		std::vector<Proctor*> getObjects();
 
+		/* Collider methods */
+		bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
+		void separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
+
 		/* Scene method */
 		float getDeltaTime();
 
@@ -36,7 +40,9 @@ namespace GameLogic
 		void cleanup();
 
 	private:
+		bool collidersLoaded;
 		std::vector<Proctor*> objects;
+		//std::vector<BoxCollider*> colliders;
 		Application::Scene* scene;
 
 		/* Debug window variables */
