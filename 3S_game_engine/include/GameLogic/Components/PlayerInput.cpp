@@ -1,4 +1,6 @@
 #include "PlayerInput.h"
+#include "GameLogic/Proctor.h"
+#include "GameLogic/Hierarchy.h"
 
 namespace GameLogic
 {
@@ -108,12 +110,19 @@ namespace GameLogic
 			}
 		}
 
-		/* Collect players update */
-		if (keyboard->isKeyDown(GLFW_KEY_V))
+		/* Collect players primary and secondary button info */
+		if (keyboard->isKeyPressed(GLFW_KEY_V))
 		{
-			std::cout << "primary button" << std::endl;
+			/* Create tmp for easy acces */
+			std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
+
+			/* Check if player is near the interactable proctor */
+			for (unsigned int i = 0; i < tmp.size(); i++)
+			{
+				/* TODO: Check for distance */
+			}
 		}
-		if (keyboard->isKeyDown(GLFW_KEY_B))
+		if (keyboard->isKeyPressed(GLFW_KEY_B))
 		{
 			std::cout << "secondary button" << std::endl;
 		}
@@ -195,11 +204,18 @@ namespace GameLogic
 		}
 
 		/* Collect players update */
-		if (keyboard->isKeyDown(GLFW_KEY_PERIOD))
+		if (keyboard->isKeyPressed(GLFW_KEY_PERIOD))
 		{
-			std::cout << "primary button" << std::endl;
+			/* Create tmp for easy acces */
+			std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
+
+			/* Check if player is near the interactable proctor */
+			for (unsigned int i = 0; i < tmp.size(); i++)
+			{
+				/* TODO: Check for distance */
+			}
 		}
-		if (keyboard->isKeyDown(GLFW_KEY_SLASH))
+		if (keyboard->isKeyPressed(GLFW_KEY_SLASH))
 		{
 			std::cout << "secondary button" << std::endl;
 		}

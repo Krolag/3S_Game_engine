@@ -16,7 +16,7 @@ namespace GameLogic
 	}
 
 	Proctor::Proctor(const char* _name, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale, Proctor* _parent, unsigned int _uuid, bool _active, bool _isStatic)
-		: name(_name), uuid(_uuid), parent(_parent), active(_active), isStatic(_isStatic)
+		: name(_name), uuid(_uuid), parentProctor(_parent), active(_active), isStatic(_isStatic)
 	{
 		/* Assign uuid */
 		if (uuid == 0)
@@ -101,14 +101,24 @@ namespace GameLogic
 		children.clear();
 	}
 
-	Proctor* Proctor::getParent() const
+	Proctor* Proctor::getParentProctor() const
 	{
-		return parent;
+		return parentProctor;
+	}
+
+	Hierarchy* Proctor::getParentHierarchy() const
+	{
+		return parentHierarchy;
 	}
 
 	void Proctor::setParent(Proctor* _proctor)
 	{
-		parent = _proctor;
+		parentProctor = _proctor;
+	}
+
+	void Proctor::setParent(Hierarchy* _hierarchy)
+	{
+		parentHierarchy = _hierarchy;
 	}
 
 	unsigned int Proctor::childCount()
@@ -194,11 +204,11 @@ namespace GameLogic
 					}
 				else
 				{
-					ImGui::Text("Up:    I");
-					ImGui::Text("Down:  K");
-					ImGui::Text("Left:  J");
+					ImGui::Text("Up:    I"); ImGui::SameLine();
+					ImGui::Text("Down:  K"); ImGui::SameLine();
+					ImGui::Text("Left:  J"); ImGui::SameLine();
 					ImGui::Text("Right: L");
-					ImGui::Text("Use:   .");
+					ImGui::Text("Use:   ."); ImGui::SameLine();
 					ImGui::Text("Row:   /");
 				}
 				ImGui::Text("Speed:  "); ImGui::SameLine();
@@ -207,6 +217,8 @@ namespace GameLogic
 
 			if(a->type == GameLogic::C_COLLIDER)
 			{
+				ImGui::Text("|--------| COLLIDER |---------|");
+				ImGui::Checkbox("static", &((BoxCollider*)a)->isStatic);
 				((BoxCollider*)a)->render();
 			}
 		}

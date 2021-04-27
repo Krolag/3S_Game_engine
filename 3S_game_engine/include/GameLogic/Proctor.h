@@ -14,6 +14,8 @@
 
 namespace GameLogic
 {
+	class Hierarchy;
+
 	struct Transform
 	{
 		glm::vec3 position;
@@ -39,8 +41,10 @@ namespace GameLogic
 		void addChild(Proctor* _proctor);
 		void removeChild(Proctor* _proctor);
 		void removeChildren();
-		Proctor* getParent() const;
+		Proctor* getParentProctor() const;
+		Hierarchy* getParentHierarchy() const;
 		void setParent(Proctor* _proctor);
+		void setParent(Hierarchy* _hierarchy);
 		unsigned int childCount();
 
 		/* Transform methods */
@@ -68,7 +72,8 @@ namespace GameLogic
 
 	private:
 		/* Hierarchy data */
-		Proctor* parent = NULL;
+		Proctor* parentProctor = NULL;
+		Hierarchy* parentHierarchy = NULL;
 		std::vector<Proctor*> children;
 
 		/* Proctor data */

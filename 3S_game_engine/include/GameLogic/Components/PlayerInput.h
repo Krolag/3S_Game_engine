@@ -36,5 +36,4 @@ namespace GameLogic
 		void usePlayerTwoInput();
 	};
 }
-
 #endif // !PLAYERINPUT_H

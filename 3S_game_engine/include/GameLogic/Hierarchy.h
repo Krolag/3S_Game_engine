@@ -20,7 +20,8 @@ namespace GameLogic
 		void removeObject(Proctor* _proctor);
 		Proctor* getObject(std::string _name);
 		Proctor* getObject(unsigned int _uuid);
-		std::vector<Proctor*> getObjects();
+		std::vector<Proctor*> getProctors();
+		std::vector<Proctor*> getInteractable();
 
 		/* Collider methods */
 		bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
@@ -41,8 +42,8 @@ namespace GameLogic
 
 	private:
 		bool collidersLoaded;
-		std::vector<Proctor*> objects;
-		//std::vector<BoxCollider*> colliders;
+		std::vector<Proctor*> proctors;
+		std::vector<Proctor*> interactable;
 		Application::Scene* scene;
 
 		/* Debug window variables */

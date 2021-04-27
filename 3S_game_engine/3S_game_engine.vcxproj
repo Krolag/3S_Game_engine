@@ -159,6 +159,7 @@
     <ClCompile Include="include\Application\Scene.cpp" />
     <ClCompile Include="include\GameLogic\Components\BoxCollider.cpp" />
     <ClCompile Include="include\GameLogic\Components\Component.cpp" />
+    <ClCompile Include="include\GameLogic\Components\Interactable.cpp" />
     <ClCompile Include="include\GameLogic\Components\MeshRenderer.cpp" />
     <ClCompile Include="include\GameLogic\Components\PlayerInput.cpp" />
     <ClCompile Include="include\GameLogic\Hierarchy.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="include\Application\Application.h" />
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\GameLogic\Components\BoxCollider.h" />
+    <ClInclude Include="include\GameLogic\Components\Interactable.h" />
     <ClInclude Include="include\GameLogic\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameLogic\Components\PlayerInput.h" />
     <ClInclude Include="include\GameLogic\GameLogic.h" />

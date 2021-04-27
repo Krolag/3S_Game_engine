@@ -16,27 +16,31 @@ namespace GameLogic
 	void Hierarchy::addObject(Proctor* _proctor)
 	{
 		/* Check if given ohject is already assigned to hierarchy */
-		for (unsigned int i = 0; i < objects.size(); i++)
+		for (unsigned int i = 0; i < proctors.size(); i++)
 		{
-			if (objects[i] == _proctor)
+			if (proctors[i] == _proctor)
 			{
 				return;
 			}
 		}
 
+		_proctor->setParent(this);
 		/* If none found, assing it to objects vector */
-		objects.push_back(_proctor);
+		proctors.push_back(_proctor);
+		/* Check if proctor has a Interactable component */
+		if (_proctor->getComponentOfType(C_INTERACTABLE) != NULL)
+			interactable.push_back(_proctor);
 	}
 
 	void Hierarchy::removeObject(Proctor* _proctor)
 	{
 		/* Check if any given proctor is in use */
-		for (unsigned int i = 0; i < objects.size(); i++)
+		for (unsigned int i = 0; i < proctors.size(); i++)
 		{
 			/* If given proctor is in use, remove it */
-			if (objects[i] == _proctor)
+			if (proctors[i] == _proctor)
 			{
-				objects.erase(objects.begin() + i);
+				proctors.erase(proctors.begin() + i);
 			}
 		}
 	}
@@ -44,12 +48,12 @@ namespace GameLogic
 	Proctor* Hierarchy::getObject(std::string _name)
 	{
 		/* Check if proctor with given name is in use */
-		for (unsigned int i = 0; i < objects.size(); i++)
+		for (unsigned int i = 0; i < proctors.size(); i++)
 		{
 			/* If proctor with given name is in use, return it */
-			if (objects[i]->name == _name)
+			if (proctors[i]->name == _name)
 			{
-				return objects[i];
+				return proctors[i];
 			}
 		}
 	}
@@ -57,19 +61,24 @@ namespace GameLogic
 	Proctor* Hierarchy::getObject(unsigned int _uuid)
 	{
 		/* Check if proctor with given uuid is in use */
-		for (unsigned int i = 0; i < objects.size(); i++)
+		for (unsigned int i = 0; i < proctors.size(); i++)
 		{
 			/* If proctor with given uuid is in use, return it */
-			if (objects[i]->uuid == _uuid)
+			if (proctors[i]->uuid == _uuid)
 			{
-				return objects[i];
+				return proctors[i];
 			}
 		}
 	}
 
-	std::vector<Proctor*> Hierarchy::getObjects()
+	std::vector<Proctor*> Hierarchy::getProctors()
 	{
-		return objects;
+		return proctors;
+	}
+
+	std::vector<Proctor*> Hierarchy::getInteractable()
+	{
+		return interactable;
 	}
 
 	// COLLIDER METHODS
@@ -154,7 +163,7 @@ namespace GameLogic
 	{
 		/* Draw hierarchy as buttons */
 		ImGui::Begin("Hierarchy");
-		for (auto& a : objects)
+		for (auto& a : proctors)
 		{
 			if (ImGui::Button(a->name.c_str(), { 100.0f, 25.0f }))
 			{
@@ -174,7 +183,7 @@ namespace GameLogic
 
 	void Hierarchy::cleanup()
 	{
-		for (auto& a : objects)
+		for (auto& a : proctors)
 		{
 			a->cleanup();
 		}
@@ -186,21 +195,21 @@ namespace GameLogic
 		scene->update();
 
 		/* Update all proctors in objects vector */
-		for (auto& a : objects)
+		for (auto& a : proctors)
 		{
 			a->setDeltaTime(scene->deltaTime);
 			a->update();
 		}
 
-		for (int i = 0; i < objects.size(); ++i)
+		for (int i = 0; i < proctors.size(); ++i)
 		{
-			if(!((BoxCollider*)objects[i]->getComponentOfType(C_COLLIDER))->isStatic)
+			if(!((BoxCollider*)proctors[i]->getComponentOfType(C_COLLIDER))->isStatic)
 			{
-				for (int j = 0; j < objects.size(); ++j)
+				for (int j = 0; j < proctors.size(); ++j)
 				{
-					if (checkAABBCollision(objects[i], objects[j]))
+					if (checkAABBCollision(proctors[i], proctors[j]))
 					{
-						if (objects[i] != objects[j]) separateAABBCollision(objects[i], objects[j]);
+						if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
 					}
 				}
 			}

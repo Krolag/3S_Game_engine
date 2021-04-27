@@ -107,7 +107,7 @@ int main()
     modelLibrary.addModel("assets/models/hero/pirat_po_obrocie_na_plecki.fbx",  "hero_00",  true);
     modelLibrary.addModel("assets/models/hero/pirat_po_obrocie_na_plecki.fbx",  "hero_01",  true);
     // ENVIR
-    modelLibrary.addModel("assets/models/cube/untitled.obj",                    "ground",   false);
+    modelLibrary.addModel("assets/models/cube/untitled.obj",                    "ground",   true);
     modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_00",  true);
     modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_01",  true);
     modelLibrary.addModel("assets/models/task_models/palm_long.gltf",           "palm_02",  true);
@@ -232,7 +232,6 @@ int main()
         /* Render models */
         hierarchy.update();
 
-    	// COLLISIONS BELOW
         /* Set up universal collisionBoxShader uniforms */
         collisionBoxShader.use();
         collisionBoxShader.setUniform("view", view);
