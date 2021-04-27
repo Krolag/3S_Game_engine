@@ -77,6 +77,7 @@ namespace GameLogic
 		{
 			return;
 		}
+		
 		/* Transform the bounding box to the same position as model */
 		std::vector<glm::vec3> vertices = getColliderBoxVertices();
 
@@ -84,14 +85,17 @@ namespace GameLogic
 		{
 			glm::vec3 updateMin = glm::vec3(proctor->transform.position);
 			glm::vec3 updateMax = glm::vec3(proctor->transform.position);
+			
 			for (unsigned int i = 0; i < vertices.size(); i++)
 			{
 				/* Update vertices */
 				vertices.at(i) = getModelMatrix() * glm::vec4(vertices.at(i).x, vertices.at(i).y, vertices.at(i).z, 1.0f);
+				
 				/* Check min */
 				if (updateMin.x > vertices.at(i).x) updateMin.x = vertices.at(i).x;
 				if (updateMin.y > vertices.at(i).y) updateMin.y = vertices.at(i).y;
 				if (updateMin.z > vertices.at(i).z) updateMin.z = vertices.at(i).z;
+				
 				/* Check max */
 				if (updateMax.x < vertices.at(i).x) updateMax.x = vertices.at(i).x;
 				if (updateMax.y < vertices.at(i).y) updateMax.y = vertices.at(i).y;
@@ -102,6 +106,7 @@ namespace GameLogic
 			radius.y = glm::abs(updateMax.y - updateMin.y) / 2.0f;
 			radius.z = glm::abs(updateMax.z - updateMin.z) / 2.0f;
 		}
+		
 		if(!isUpdated)
 		{
 			isUpdated = true;

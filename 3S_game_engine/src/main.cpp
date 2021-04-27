@@ -107,7 +107,7 @@ int main()
     modelLibrary.addModel("assets/models/hero/pirat_po_obrocie_na_plecki.fbx",  "hero_00",  true);
     modelLibrary.addModel("assets/models/hero/pirat_po_obrocie_na_plecki.fbx",  "hero_01",  true);
     // ENVIR
-    modelLibrary.addModel("assets/models/cube/untitled.obj",                    "ground",   false);
+    modelLibrary.addModel("assets/models/cube/untitled.obj",                    "ground",   true);
     modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_00",  true);
     modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_01",  true);
     modelLibrary.addModel("assets/models/task_models/palm_long.gltf",           "palm_02",  true);
@@ -133,7 +133,7 @@ int main()
     GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
-    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader);
+    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     GameLogic::Proctor      ground("ground", glm::vec3(0.0f, -1.0f, 0.0f), glm::quat(1.0f, glm::vec3(0.0f)), glm::vec3(50.0f, 1.0f, 50.0f));
     GameLogic::MeshRenderer ground_mr(GameLogic::C_MESH, &ground, modelLibrary.getModel(ground.name), &model3D);
