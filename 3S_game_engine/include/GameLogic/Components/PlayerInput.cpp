@@ -111,7 +111,7 @@ namespace GameLogic
 		}
 
 		/* Collect players primary and secondary button info */
-		if (keyboard->isKeyPressed(GLFW_KEY_V))
+		if (keyboard->isKeyReleased(GLFW_KEY_V))
 		{
 			/* Create tmp for easy acces */
 			std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
@@ -120,6 +120,15 @@ namespace GameLogic
 			for (unsigned int i = 0; i < tmp.size(); i++)
 			{
 				/* TODO: @Ignacy Check for distance */
+				float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
+				float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
+				float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
+				std::cout << tmp.at(i)->name << ": " << distance << std::endl;
+
+				if (distance <= maxInteractionDistance)
+				{
+					std::cout << tmp.at(i)->name << std::endl;
+				}
 			}
 		}
 		if (keyboard->isKeyPressed(GLFW_KEY_B))
@@ -204,7 +213,7 @@ namespace GameLogic
 		}
 
 		/* Collect players update */
-		if (keyboard->isKeyPressed(GLFW_KEY_PERIOD))
+		if (keyboard->isKeyReleased(GLFW_KEY_PERIOD))
 		{
 			/* Create tmp for easy acces */
 			std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
@@ -213,6 +222,15 @@ namespace GameLogic
 			for (unsigned int i = 0; i < tmp.size(); i++)
 			{
 				/* TODO: @Ignacy Check for distance */
+				float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
+				float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
+				float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
+				std::cout << tmp.at(i)->name << ": " << distance << std::endl;
+
+				if (distance <= maxInteractionDistance)
+				{
+					std::cout << tmp.at(i)->name << std::endl;
+				}
 			}
 		}
 		if (keyboard->isKeyPressed(GLFW_KEY_SLASH))

@@ -14,6 +14,7 @@ namespace GameLogic
 		float maxSpeed = 0.5f;
 		float acceleration = 0.005f * 100;
 		float movementSpeed;
+		float maxInteractionDistance = 3.0f;
 
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);
