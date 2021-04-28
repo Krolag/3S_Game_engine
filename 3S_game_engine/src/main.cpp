@@ -112,25 +112,25 @@ int main()
     modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_01",  true);
     modelLibrary.addModel("assets/models/task_models/palm_long.gltf",           "palm_02",  true);
     modelLibrary.addModel("assets/models/task_models/palm_short.gltf",          "palm_03",  true);
-    modelLibrary.addModel("assets/models/task_models/boat_small.gltf",          "boat",     true);
-    modelLibrary.addModel("assets/models/task_models/chest.gltf",               "chest",    true);
+    modelLibrary.addModel("assets/models/task_models_update/boat_small.fbx",    "boat",     true);
+    modelLibrary.addModel("assets/models/task_models_update/chest.fbx",         "chest",    true);
     modelLibrary.addModel("assets/models/task_models/formation_rock.gltf",      "rocks_00", true);
     modelLibrary.addModel("assets/models/task_models/formation_rock.gltf",      "rocks_01", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_00", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_01", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_02", true);
-    modelLibrary.addModel("assets/models/task_models/tower.gltf",               "tower",    true);
+    modelLibrary.addModel("assets/models/task_models_update/tower.fbx",         "tower",    true);
     
     std::cout << "models loaded in:   " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
 
     /* Configure proctors */
     begin_time = clock(); // Calculate time for creating proctors 
-    GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+    GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("hero_00"), &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
-    GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+    GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
@@ -150,12 +150,14 @@ int main()
     GameLogic::Proctor      palm_03("palm_03", glm::vec3(-03.86f, 00.00f, 48.67f), glm::quat(1.0f, 0.0f, 00.72f, 0.0f), glm::vec3(10.0f));
     GameLogic::MeshRenderer palm_03_mr(GameLogic::C_MESH, &palm_03, modelLibrary.getModel(palm_03.name), &model3D);
     hierarchy.addObject(&palm_03);
-    GameLogic::Proctor      boat("boat", glm::vec3(21.48f, 00.00f, 57.05f), glm::quat(1.0f, 0.0f, 00.41f, 0.0f), glm::vec3(6.0f));
+    GameLogic::Proctor      boat("boat", glm::vec3(-3.0f, 1.1f, 5.0f), glm::quat(1.0f, 0.0f, 00.41f, 0.0f), glm::vec3(1.0f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
+    GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("boat"), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
-    GameLogic::Proctor      chest("chest", glm::vec3(18.37f, 00.00f, -63.33f), glm::quat(1.0f, 0.0f, 02.34f, 0.0f), glm::vec3(6.0f));
+    GameLogic::Proctor      chest("chest", glm::vec3(1.37f, 1.00f, -1.33f), glm::quat(1.0f, 0.0f, 02.34f, 0.0f), glm::vec3(1.0f));
     GameLogic::MeshRenderer chest_mr(GameLogic::C_MESH, &chest, modelLibrary.getModel(chest.name), &model3D);
     GameLogic::Interactable chest_ible(GameLogic::C_INTERACTABLE, &chest);
+    GameLogic::BoxCollider  chest_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("chest"), &chest, &collisionBoxShader, false);
     hierarchy.addObject(&chest);
     GameLogic::Proctor      rocks_00("rocks_00", glm::vec3(-13.06f, 00.00f, 27.38f), glm::quat(1.0f, 0.0f, 00.25f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer rocks_00_mr(GameLogic::C_MESH, &rocks_00, modelLibrary.getModel(rocks_00.name), &model3D);
@@ -172,8 +174,9 @@ int main()
     GameLogic::Proctor      plant_02("plant_02", glm::vec3(17.73f, 00.00f, 10.50f), glm::quat(1.0f, 0.0f, -00.03f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer plant_02_mr(GameLogic::C_MESH, &plant_02, modelLibrary.getModel(plant_02.name), &model3D);
     hierarchy.addObject(&plant_02);
-    GameLogic::Proctor      tower("tower", glm::vec3(03.50f, 00.00f, -42.00f), glm::quat(1.0f, 0.0f, -03.50f, 0.0f), glm::vec3(6.0f));
+    GameLogic::Proctor      tower("tower", glm::vec3(36.00f, 9.620f, -22.00f), glm::quat(1.0f, 0.0f, -03.50f, 0.0f), glm::vec3(1.0f));
     GameLogic::MeshRenderer tower_mr(GameLogic::C_MESH, &tower, modelLibrary.getModel(tower.name), &model3D);
+    GameLogic::BoxCollider  tower_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("tower"), &tower, &collisionBoxShader, false);
     hierarchy.addObject(&tower);
     std::cout << "proctors created in:    " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
 

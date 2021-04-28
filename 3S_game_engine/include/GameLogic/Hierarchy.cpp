@@ -126,13 +126,14 @@ namespace GameLogic
 		distanceAB.y = glm::abs(_a->transform.position.y - _b->transform.position.y);
 		distanceAB.z = glm::abs(_a->transform.position.z - _b->transform.position.z);
 
-		// TODO: @Krolag get _a as boxcollider erlier for memory optimalization
-
-		/* Calculate the sum of radians of the both objects */
+		BoxCollider* acol = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER));
+		BoxCollider* bcol = ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER));
+		
+		/* Calculate the sum of radiuses of the both objects */
 		glm::vec3 radiusABSum;
-		radiusABSum.x = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x;
-		radiusABSum.y = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y;
-		radiusABSum.z = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z + ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z;
+		radiusABSum.x = acol->getRadius().x + bcol->getRadius().x;
+		radiusABSum.y = acol->getRadius().y + bcol->getRadius().y;
+		radiusABSum.z = acol->getRadius().z + bcol->getRadius().z;
 
 		/* Calculate separation vector */
 		glm::vec3 separationVector;
@@ -144,7 +145,6 @@ namespace GameLogic
 		if (glm::min(separationVector.x, separationVector.z) == separationVector.x) _a->transform.position.x += separationVector.x * separationDirection.x;
 		else _a->transform.position.z += separationVector.z * separationDirection.z;
 		if (checkAABBCollision(_a, _b)) _a->transform.position.y += separationVector.y * separationDirection.y;
-
 	}
 
 	float Hierarchy::getDeltaTime()
