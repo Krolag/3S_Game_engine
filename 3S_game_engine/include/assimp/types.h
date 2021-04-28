@@ -164,17 +164,14 @@ struct aiColor3D
     aiColor3D (const aiColor3D& o) : r(o.r), g(o.g), b(o.b) {}
 
     /** Component-wise comparison */
-    // TODO: add epsilon?
     bool operator == (const aiColor3D& other) const
         {return r == other.r && g == other.g && b == other.b;}
 
     /** Component-wise inverse comparison */
-    // TODO: add epsilon?
     bool operator != (const aiColor3D& other) const
         {return r != other.r || g != other.g || b != other.b;}
 
     /** Component-wise comparison */
-    // TODO: add epsilon?
     bool operator < (const aiColor3D& other) const {
         return r < other.r || ( r == other.r && (g < other.g || (g == other.g && b < other.b ) ) );
     }

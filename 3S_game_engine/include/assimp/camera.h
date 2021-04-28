@@ -187,8 +187,6 @@ struct aiCamera
      */
     void GetCameraMatrix (aiMatrix4x4& out) const
     {
-        /** todo: test ... should work, but i'm not absolutely sure */
-
         /** We don't know whether these vectors are already normalized ...*/
         aiVector3D zaxis = mLookAt;     zaxis.Normalize();
         aiVector3D yaxis = mUp;         yaxis.Normalize();

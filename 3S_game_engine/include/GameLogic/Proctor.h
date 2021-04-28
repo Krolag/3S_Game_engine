@@ -11,6 +11,7 @@
 #include "Components/MeshRenderer.h"
 #include "Components/PlayerInput.h"
 #include "Components/BoxCollider.h"
+#include "Components/Interactable.h"
 
 namespace GameLogic
 {

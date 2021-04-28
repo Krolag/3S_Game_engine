@@ -211,8 +211,10 @@ namespace GameLogic
 					ImGui::Text("Use:   ."); ImGui::SameLine();
 					ImGui::Text("Row:   /");
 				}
-				ImGui::Text("Speed:  "); ImGui::SameLine();
-				ImGui::DragFloat("s", &((PlayerInput*)a)->movementSpeed);
+				ImGui::Text("max speed:   "); ImGui::SameLine();
+				ImGui::InputFloat("ms", &((PlayerInput*)a)->maxSpeed);
+				ImGui::Text("curr speed:  "); ImGui::SameLine();
+				ImGui::InputFloat("cs", &((PlayerInput*)a)->movementSpeed);
 			}
 
 			if(a->type == GameLogic::C_COLLIDER)
@@ -220,6 +222,11 @@ namespace GameLogic
 				ImGui::Text("|--------| COLLIDER |---------|");
 				ImGui::Checkbox("static", &((BoxCollider*)a)->isStatic);
 				((BoxCollider*)a)->render();
+			}
+
+			if (a->type == GameLogic::C_INTERACTABLE)
+			{
+				ImGui::Text("|--------| INTERACTABLE |-----|");
 			}
 		}
 	}

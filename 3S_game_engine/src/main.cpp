@@ -155,6 +155,7 @@ int main()
     hierarchy.addObject(&boat);
     GameLogic::Proctor      chest("chest", glm::vec3(18.37f, 00.00f, -63.33f), glm::quat(1.0f, 0.0f, 02.34f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer chest_mr(GameLogic::C_MESH, &chest, modelLibrary.getModel(chest.name), &model3D);
+    GameLogic::Interactable chest_ible(GameLogic::C_INTERACTABLE, &chest);
     hierarchy.addObject(&chest);
     GameLogic::Proctor      rocks_00("rocks_00", glm::vec3(-13.06f, 00.00f, 27.38f), glm::quat(1.0f, 0.0f, 00.25f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer rocks_00_mr(GameLogic::C_MESH, &rocks_00, modelLibrary.getModel(rocks_00.name), &model3D);
