@@ -23,13 +23,16 @@ namespace GameLogic
 				return;
 			}
 		}
-
 		_proctor->setParent(this);
+
 		/* If none found, assing it to objects vector */
 		proctors.push_back(_proctor);
+
 		/* Check if proctor has a Interactable component */
-		if (((Interactable*)_proctor->getComponentOfType(C_INTERACTABLE)) != NULL)
+		if (_proctor->getComponentOfType(C_INTERACTABLE)->type == C_INTERACTABLE)
+		{
 			interactable.push_back(_proctor);
+		}
 	}
 
 	void Hierarchy::removeObject(Proctor* _proctor)
