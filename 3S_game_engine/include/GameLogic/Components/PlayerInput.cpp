@@ -119,7 +119,7 @@ namespace GameLogic
 			/* Check if player is near the interactable proctor */
 			for (unsigned int i = 0; i < tmp.size(); i++)
 			{
-				/* TODO: Check for distance */
+				/* TODO: @Ignacy Check for distance */
 			}
 		}
 		if (keyboard->isKeyPressed(GLFW_KEY_B))
@@ -212,7 +212,7 @@ namespace GameLogic
 			/* Check if player is near the interactable proctor */
 			for (unsigned int i = 0; i < tmp.size(); i++)
 			{
-				/* TODO: Check for distance */
+				/* TODO: @Ignacy Check for distance */
 			}
 		}
 		if (keyboard->isKeyPressed(GLFW_KEY_SLASH))

@@ -28,7 +28,7 @@ namespace GameLogic
 		/* If none found, assing it to objects vector */
 		proctors.push_back(_proctor);
 		/* Check if proctor has a Interactable component */
-		if (_proctor->getComponentOfType(C_INTERACTABLE) != NULL)
+		if (((Interactable*)_proctor->getComponentOfType(C_INTERACTABLE)) != NULL)
 			interactable.push_back(_proctor);
 	}
 
@@ -123,7 +123,7 @@ namespace GameLogic
 		distanceAB.y = glm::abs(_a->transform.position.y - _b->transform.position.y);
 		distanceAB.z = glm::abs(_a->transform.position.z - _b->transform.position.z);
 
-		// TODO: get _a as boxcollider erlier for memory optimalization
+		// TODO: @Krolag get _a as boxcollider erlier for memory optimalization
 
 		/* Calculate the sum of radians of the both objects */
 		glm::vec3 radiusABSum;
