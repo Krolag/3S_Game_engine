@@ -1,5 +1,7 @@
 #include "MeshRenderer.h"
 #include "GameLogic/Proctor.h"
+#include "GameLogic/Hierarchy.h"
+#include "Camera/FrustumCulling.h"
 
 namespace GameLogic
 {
@@ -33,7 +35,26 @@ namespace GameLogic
 		model->scale = transform.scale;
 
 		/* Render model with given shader */
-		model->render(*shader);
+		/* Check if proctor is in camera view */
+		if (proctor->getComponentOfType(C_COLLIDER)->type == C_COLLIDER)
+		{
+			if (FrustumCulling::boxAABBInFrustum(
+				proctor->transform.position.x,
+				proctor->transform.position.y,
+				proctor->transform.position.z,
+				((BoxCollider*)proctor->getComponentOfType(C_COLLIDER))->getRadius().x,
+				proctor->getParentHierarchy()->getCamera()
+			))
+			{
+				model->render(*shader);
+				std::cout << "renderuje: " << proctor->name << std::endl;
+			}
+		}
+		else
+		{
+			true;
+			//model->render(*shader);
+		}
 	}
 
 	void MeshRenderer::cleanup()

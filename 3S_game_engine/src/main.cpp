@@ -1,10 +1,4 @@
-/* Load 3SE packages */
-#include "Application/Application.h"
-#include "Loader/Loader.h"
-#include "InputSystem/InputSystem.h"
-#include "GameLogic/GameLogic.h"
-#include "UIRender/UIRender.h"
- 
+#include <windows.h>
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw.h"
 #include "ImGUI/imgui_impl_opengl3.h"
@@ -16,11 +10,19 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+/* Load 3SE packages */
+#include "Application/Application.h"
+#include "Loader/Loader.h"
+#include "InputSystem/InputSystem.h"
+#include "GameLogic/GameLogic.h"
+#include "UIRender/UIRender.h"
+
 #include "Shader/Shader.h"
 #include "Skybox/Skybox.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
 #include "Points/Points.h"
+#include "Camera/FrustumCulling.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -29,7 +31,8 @@ void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputS
 
 //Switch camera position(debug)
 //maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
-void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Scene* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
+void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, 
+    Application::Scene* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
 // settings
@@ -112,28 +115,28 @@ int main()
     modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_01",  true);
     modelLibrary.addModel("assets/models/task_models/palm_long.gltf",           "palm_02",  true);
     modelLibrary.addModel("assets/models/task_models/palm_short.gltf",          "palm_03",  true);
-    modelLibrary.addModel("assets/models/task_models_update/boat_small.fbx",    "boat",     true);
-    modelLibrary.addModel("assets/models/task_models_update/chest.fbx",         "chest",    true);
+    modelLibrary.addModel("assets/models/task_models/boat_small.gltf",          "boat",     true);
+    modelLibrary.addModel("assets/models/task_models/chest.gltf",               "chest",    true);
     modelLibrary.addModel("assets/models/task_models/formation_rock.gltf",      "rocks_00", true);
     modelLibrary.addModel("assets/models/task_models/formation_rock.gltf",      "rocks_01", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_00", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_01", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_02", true);
-    modelLibrary.addModel("assets/models/task_models_update/tower.fbx",         "tower",    true);
+    modelLibrary.addModel("assets/models/task_models/tower.gltf",               "tower",    true);
     
     std::cout << "models loaded in:   " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
 
     /* Configure proctors */
     begin_time = clock(); // Calculate time for creating proctors 
-    GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
+    GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("hero_00"), &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
-    GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
+    GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
-    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
+    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader);
     hierarchy.addObject(&hero_01);
     GameLogic::Proctor      ground("ground", glm::vec3(0.0f, -1.0f, 0.0f), glm::quat(1.0f, glm::vec3(0.0f)), glm::vec3(50.0f, 1.0f, 50.0f));
     GameLogic::MeshRenderer ground_mr(GameLogic::C_MESH, &ground, modelLibrary.getModel(ground.name), &model3D);
@@ -150,14 +153,12 @@ int main()
     GameLogic::Proctor      palm_03("palm_03", glm::vec3(-03.86f, 00.00f, 48.67f), glm::quat(1.0f, 0.0f, 00.72f, 0.0f), glm::vec3(10.0f));
     GameLogic::MeshRenderer palm_03_mr(GameLogic::C_MESH, &palm_03, modelLibrary.getModel(palm_03.name), &model3D);
     hierarchy.addObject(&palm_03);
-    GameLogic::Proctor      boat("boat", glm::vec3(-3.0f, 1.1f, 5.0f), glm::quat(1.0f, 0.0f, 00.41f, 0.0f), glm::vec3(1.0f));
+    GameLogic::Proctor      boat("boat", glm::vec3(21.48f, 00.00f, 57.05f), glm::quat(1.0f, 0.0f, 00.41f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
-    GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("boat"), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
-    GameLogic::Proctor      chest("chest", glm::vec3(1.37f, 1.00f, -1.33f), glm::quat(1.0f, 0.0f, 02.34f, 0.0f), glm::vec3(1.0f));
+    GameLogic::Proctor      chest("chest", glm::vec3(18.37f, 00.00f, -63.33f), glm::quat(1.0f, 0.0f, 02.34f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer chest_mr(GameLogic::C_MESH, &chest, modelLibrary.getModel(chest.name), &model3D);
-    GameLogic::Interactable chest_ible(GameLogic::C_INTERACTABLE, &chest);
-    GameLogic::BoxCollider  chest_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("chest"), &chest, &collisionBoxShader, false);
+    GameLogic::Interactable chest_ible(GameLogic::C_INTERACTABLE, &chest); 
     hierarchy.addObject(&chest);
     GameLogic::Proctor      rocks_00("rocks_00", glm::vec3(-13.06f, 00.00f, 27.38f), glm::quat(1.0f, 0.0f, 00.25f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer rocks_00_mr(GameLogic::C_MESH, &rocks_00, modelLibrary.getModel(rocks_00.name), &model3D);
@@ -174,11 +175,12 @@ int main()
     GameLogic::Proctor      plant_02("plant_02", glm::vec3(17.73f, 00.00f, 10.50f), glm::quat(1.0f, 0.0f, -00.03f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer plant_02_mr(GameLogic::C_MESH, &plant_02, modelLibrary.getModel(plant_02.name), &model3D);
     hierarchy.addObject(&plant_02);
-    GameLogic::Proctor      tower("tower", glm::vec3(36.00f, 9.620f, -22.00f), glm::quat(1.0f, 0.0f, -03.50f, 0.0f), glm::vec3(1.0f));
+    GameLogic::Proctor      tower("tower", glm::vec3(03.50f, 00.00f, -42.00f), glm::quat(1.0f, 0.0f, -03.50f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer tower_mr(GameLogic::C_MESH, &tower, modelLibrary.getModel(tower.name), &model3D);
-    GameLogic::BoxCollider  tower_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("tower"), &tower, &collisionBoxShader, false);
+    GameLogic::BoxCollider  tower_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(tower.name), &tower, &collisionBoxShader);
     hierarchy.addObject(&tower);
     std::cout << "proctors created in:    " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
+    hierarchy.setCamera(&camera);
 
     /* Lights */
     DirLight dirLight = {
@@ -229,6 +231,14 @@ int main()
         view = camera.GetViewMatrix(); //glm::mat4(1.0f);
         model3D.setUniform("view", view);
         model = glm::mat4(1.0f);
+        
+        camera.setProjection(projection);   
+        FrustumCulling::createViewFrustumFromMatrix(&camera);
+
+
+
+        //camera.createViewFrustumFromMatrix(&camera);
+
 
     	/* Render lights */
         dirLight.render(model3D);
@@ -236,6 +246,7 @@ int main()
         /* Render models */
         hierarchy.update();
 
+    	// COLLISIONS BELOW
         /* Set up universal collisionBoxShader uniforms */
         collisionBoxShader.use();
         collisionBoxShader.setUniform("view", view);

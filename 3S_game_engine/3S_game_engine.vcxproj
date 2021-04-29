@@ -193,6 +193,7 @@
   <ItemGroup>
     <ClInclude Include="include\Application\Application.h" />
     <ClInclude Include="include\Application\Scene.h" />
+    <ClInclude Include="include\Camera\FrustumCulling.h" />
     <ClInclude Include="include\GameLogic\Components\BoxCollider.h" />
     <ClInclude Include="include\GameLogic\Components\Interactable.h" />
     <ClInclude Include="include\GameLogic\Components\MeshRenderer.h" />

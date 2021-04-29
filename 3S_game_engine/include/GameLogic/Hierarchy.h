@@ -4,6 +4,7 @@
 
 #include "Application/Application.h"
 #include "GameLogic/Proctor.h"
+#include "Camera/Camera.h"
 #include <vector>
 
 namespace GameLogic
@@ -13,7 +14,7 @@ namespace GameLogic
 	public:
 		/* Constructors */
 		Hierarchy(bool _state = true);
-		Hierarchy(Application::Scene* _scene, bool _state = true);
+		Hierarchy(Application::Scene* _scene, Camera* _camera = NULL, bool _state = true);
 
 		/* Objects method */
 		void addObject(Proctor* _proctor);
@@ -30,6 +31,10 @@ namespace GameLogic
 		/* Scene method */
 		float getDeltaTime();
 
+		/* Camera method */
+		void setCamera(Camera* _camera);
+		Camera* getCamera();
+
 		/* State methods */
 		void setState(bool _state);
 		bool getState();
@@ -45,6 +50,7 @@ namespace GameLogic
 		std::vector<Proctor*> proctors;
 		std::vector<Proctor*> interactable;
 		Application::Scene* scene;
+		Camera* camera;
 
 		/* Debug window variables */
 		bool active;

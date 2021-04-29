@@ -119,7 +119,6 @@ namespace GameLogic
 			/* Check if player is near the interactable proctor */
 			for (unsigned int i = 0; i < tmp.size(); i++)
 			{
-				/* TODO: @Ignacy Check for distance */
 				float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
 				float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
 				float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
@@ -221,7 +220,6 @@ namespace GameLogic
 			/* Check if player is near the interactable proctor */
 			for (unsigned int i = 0; i < tmp.size(); i++)
 			{
-				/* TODO: @Ignacy Check for distance */
 				float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
 				float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
 				float distance = sqrt(xDistance * xDistance + zDistance * zDistance);

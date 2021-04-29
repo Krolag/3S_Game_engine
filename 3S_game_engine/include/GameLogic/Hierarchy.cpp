@@ -9,8 +9,8 @@ namespace GameLogic
 		: active(_state), collidersLoaded(false)
 	{ }
 
-	Hierarchy::Hierarchy(Application::Scene* _scene, bool _state)
-		: scene(_scene), active(_state), collidersLoaded(false)
+	Hierarchy::Hierarchy(Application::Scene* _scene, Camera* _camera, bool _state)
+		: scene(_scene), active(_state), collidersLoaded(false), camera(_camera)
 	{ }
 
 	void Hierarchy::addObject(Proctor* _proctor)
@@ -150,6 +150,16 @@ namespace GameLogic
 	float Hierarchy::getDeltaTime()
 	{
 		return scene->deltaTime;
+	}
+
+	void Hierarchy::setCamera(Camera* _camera)
+	{
+		camera = _camera;
+	}
+
+	Camera* Hierarchy::getCamera()
+	{
+		return camera;
 	}
 
 	void Hierarchy::setState(bool _state)
