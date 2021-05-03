@@ -23,6 +23,7 @@
 #include "Light/Light.h"
 #include "Points/Points.h"
 #include "Camera/FrustumCulling.h"
+#include "Water/WaterMesh.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -206,6 +207,9 @@ int main()
     float yValueUp = 0.2;
     float yValueDown = 0.2;
 
+    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/textures/wall.jpg",10,20);
+    
+
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
@@ -231,20 +235,17 @@ int main()
         view = camera.GetViewMatrix(); //glm::mat4(1.0f);
         model3D.setUniform("view", view);
         model = glm::mat4(1.0f);
-        
+
         camera.setProjection(projection);   
         FrustumCulling::createViewFrustumFromMatrix(&camera);
 
-
-
         //camera.createViewFrustumFromMatrix(&camera);
-
 
     	/* Render lights */
         dirLight.render(model3D);
 
         /* Render models */
-        hierarchy.update();
+        hierarchy.update();       
 
     	// COLLISIONS BELOW
         /* Set up universal collisionBoxShader uniforms */
@@ -252,6 +253,11 @@ int main()
         collisionBoxShader.setUniform("view", view);
         collisionBoxShader.setUniform("projection", projection);
 
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        water.render(model, projection, view);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
 
@@ -273,6 +279,7 @@ int main()
             marioWalkingIndex = 0;
         
         /* Update InputSystem */
+
         keyboardInput->update();
         mouseInput->update();
 

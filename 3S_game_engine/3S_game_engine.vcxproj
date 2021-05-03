@@ -189,6 +189,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="include\Texture\Texture.cpp" />
     <ClCompile Include="include\UIRender\UIElement.cpp" />
+    <ClCompile Include="include\Water\WaterMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Application\Application.h" />
@@ -233,6 +234,7 @@
     <ClInclude Include="include\UIRender\UIElement.h" />
     <ClInclude Include="include\UIRender\UIRender.h" />
     <ClInclude Include="include\Points\Points.h" />
+    <ClInclude Include="include\Water\WaterMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
