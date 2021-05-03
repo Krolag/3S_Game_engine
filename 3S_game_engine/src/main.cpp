@@ -208,7 +208,6 @@ int main()
     float yValueDown = 0.2;
 
     WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/textures/wall.jpg",10,20);
-    
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -255,7 +254,7 @@ int main()
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         water.render(model, projection, view);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         /* Sky-box -- Must be rendered almost last, before hud */

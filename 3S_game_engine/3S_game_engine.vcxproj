@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Framebuffer\Framebuffer.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
     <ClCompile Include="include\GameLogic\Components\BoxCollider.cpp" />
     <ClCompile Include="include\GameLogic\Components\Component.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="include\Water\WaterMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Framebuffer\Framebuffer.h" />
     <ClInclude Include="include\Application\Application.h" />
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Camera\FrustumCulling.h" />
