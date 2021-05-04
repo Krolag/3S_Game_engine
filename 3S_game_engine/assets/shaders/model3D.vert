@@ -10,9 +10,13 @@ out vec2 TexCoord;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform vec4 plane;
 
 void main()
 {
+	vec4 worldPos = model * vec4(aPos,1.0);
+	gl_ClipDistance[0] = dot(worldPos,plane);
+
     FragPos = vec3(model * vec4(aPos, 1.0f));
     Normal = mat3(transpose(inverse(model))) * aNormal;
 

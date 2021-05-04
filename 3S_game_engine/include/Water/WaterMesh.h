@@ -4,17 +4,17 @@ class WaterMesh
 {
 public:
 
-	WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPath, std::string texturePath, int VertexCount, int size);
+	WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPath, std::string dudvTexturePath, std::string normalTexturePath, int VertexCount, int size);
 	~WaterMesh();
-	void render(glm::mat4 model, glm::mat4 projection, glm::mat4 view);
-	void loadTexture(std::string texturePath);	
+	void render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, int reflectionTex, int refractionTex, float time, glm::vec3 cameraPos);
+	void loadTexture(std::string texturePath, std::string normalMapPath);
 	void generateMesh(int vertexCount, int size);
 
 private:
 
 	Shader waterShader;
 	unsigned int VAO, VBO, VBO_Texture,EBO;
-	unsigned int texture1;
+	unsigned int reflectionTexture, refractionTexture, dudvMap, normalMap;
 
 	float* vertices;
 	float* textureCoords;
@@ -26,5 +26,7 @@ private:
 
 	int vertexCountSquared;
 
+	const float WATER_SPEED = 0.1;
+	float waveSpeed = 0;
 };
 
