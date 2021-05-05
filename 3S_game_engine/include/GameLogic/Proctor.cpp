@@ -32,24 +32,34 @@ namespace GameLogic
 
 	Proctor::~Proctor() { }
 
-	void Proctor::update()
+	void Proctor::update(bool _onlyRender)
 	{
 		/* First update components for current hierarchy level */
 		for (auto& a : components)
 		{
-			if(a->type == C_COLLIDER)
+			if (_onlyRender)
 			{
-				if (!((BoxCollider*)a)->isStatic || !((BoxCollider*)a)->isUpdated)
+				if (a->type == C_MESH)
+				{
+					a->update();
+				}
+			}
+			else
+			{
+				if (a->type == C_COLLIDER)
+				{
+					if (!((BoxCollider*)a)->isStatic || !((BoxCollider*)a)->isUpdated)
+						a->update();
+				}
+				else
 					a->update();
 			}
-			else 
-				a->update();
 		}
 
 		/* Next update children */
 		for (auto& a : children)
 		{
-			a->update();
+			a->update(_onlyRender);
 		}
 	}
 

@@ -43,11 +43,13 @@ namespace GameLogic
 		/* Render methods */
 		void drawHierarchyWindow();
 
-		void update(bool onlyRender = false);
+		void update(bool _onlyRender = false, bool _drawDebug = false);
 		void cleanup();
 
 	private:
 		bool collidersLoaded;
+		/* TODO: @Ignacy - znajdz lepszy sposob na dostep do danych, bez tworzenia kolejnych vectorow */
+		// Szanujmy pamiec
 		std::vector<Proctor*> proctors;
 		std::vector<Proctor*> interactable;
 		std::vector<Proctor*> treasure;

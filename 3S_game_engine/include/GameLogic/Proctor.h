@@ -69,7 +69,7 @@ namespace GameLogic
 		/* Debug window methods */
 		void drawDebugWindow();
 
-		void update();
+		void update(bool _onlyRender = false);
 		void cleanup();
 
 	private:

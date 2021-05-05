@@ -33,6 +33,7 @@ namespace GameLogic
 		{
 			interactable.push_back(_proctor);
 		}
+		// TODO: @Ignacy - tak samo tutaj jak w Hierarchy.h line 51
 		if (_proctor->getComponentOfType(C_TREASURE)->type == C_TREASURE)
 		{
 			treasure.push_back(_proctor);
@@ -212,36 +213,46 @@ namespace GameLogic
 		}
 	}
 
-	void Hierarchy::update(bool _onlyRender)
+	void Hierarchy::update(bool _onlyRender, bool _drawDebug)
 	{
-		/* At first, update scene time */
-		scene->update();
-
 		/* Update all proctors in objects vector */
 		for (auto& a : proctors)
 		{
-			a->setDeltaTime(scene->deltaTime);
 			a->update();
-		}
-
-		for (int i = 0; i < proctors.size(); ++i)
-		{
-			if(!((BoxCollider*)proctors[i]->getComponentOfType(C_COLLIDER))->isStatic)
+			
+			/* Check if delta time should be set */
+			if (!_onlyRender)
 			{
-				for (int j = 0; j < proctors.size(); ++j)
-				{
-					if (checkAABBCollision(proctors[i], proctors[j]))
-					{
-						if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
-					}
-				}
+				a->setDeltaTime(scene->deltaTime);
 			}
 		}
 
-		/* If hierarchy is active, draw debug window */
-		if (active)
+		/* Check if hierarchy should be only rendering meshes */
+		if (!_onlyRender)
 		{
-			drawHierarchyWindow();
+			/* At first, update scene time */
+			scene->update();
+
+			/* Check for collisions */
+			for (int i = 0; i < proctors.size(); ++i)
+			{
+				if (!((BoxCollider*)proctors[i]->getComponentOfType(C_COLLIDER))->isStatic)
+				{
+					for (int j = 0; j < proctors.size(); ++j)
+					{
+						if (checkAABBCollision(proctors[i], proctors[j]))
+						{
+							if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
+						}
+					}
+				}
+			}
+
+			/* If hierarchy is active and _drawDebug is true, draw debug window */
+			if (active && _drawDebug)
+			{
+				drawHierarchyWindow();
+			}
 		}
 	}
 }
