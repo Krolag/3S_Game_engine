@@ -228,6 +228,11 @@ namespace GameLogic
 			{
 				ImGui::Text("|--------| INTERACTABLE |-----|");
 			}
+
+			if (a->type == GameLogic::C_TREASURE)
+			{
+				ImGui::Text("|--------| TREASURE |-----|");
+			}
 		}
 	}
 

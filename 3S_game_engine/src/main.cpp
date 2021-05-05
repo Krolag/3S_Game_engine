@@ -125,6 +125,8 @@ int main()
     modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_01", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf",               "plant_02", true);
     modelLibrary.addModel("assets/models/task_models/tower.gltf",               "tower",    true);
+    modelLibrary.addModel("assets/models/environment/chestBody.fbx",           "chestBody_00", true);
+    modelLibrary.addModel("assets/models/environment/chestBody.fbx",           "chestBody_01", true);
     
     std::cout << "models loaded in:   " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
 
@@ -181,6 +183,18 @@ int main()
     GameLogic::MeshRenderer tower_mr(GameLogic::C_MESH, &tower, modelLibrary.getModel(tower.name), &model3D);
     GameLogic::BoxCollider  tower_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(tower.name), &tower, &collisionBoxShader);
     hierarchy.addObject(&tower);
+    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(0.00f, 02.50f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
+    GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
+    GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
+    GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
+    GameLogic::BoxCollider  chestBody_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody_00.name), &chestBody_00, &collisionBoxShader);
+    hierarchy.addObject(&chestBody_00);    
+    GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 02.50f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
+    GameLogic::MeshRenderer chestBody2_mr(GameLogic::C_MESH, &chestBody2, modelLibrary.getModel(chestBody2.name), &model3D);
+    GameLogic::Interactable chestBody2_ible(GameLogic::C_INTERACTABLE, &chestBody2);
+    //GameLogic::Treasure     chestBody2_tre(GameLogic::C_TREASURE, &chestBody2);
+    GameLogic::BoxCollider  chestBody2_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody2.name), &chestBody2, &collisionBoxShader);
+    hierarchy.addObject(&chestBody2);
     std::cout << "proctors created in:    " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
     hierarchy.setCamera(&camera);
 
@@ -313,8 +327,9 @@ int main()
         /* DEBUG - Draw DearImGUI */
         ImGui::Render();
 
+        int scoreOfBoth = hero_00_pi.score.getScore() + hero_01_pi.score.getScore();
         /* Render text */
-        points.render(std::to_string(score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
+        points.render(std::to_string(scoreOfBoth), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
 
         /* Render cute Mario as placeholder to coin */
         marioWalking[marioWalkingIndex].render();

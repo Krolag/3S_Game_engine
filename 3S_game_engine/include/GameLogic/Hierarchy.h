@@ -23,6 +23,7 @@ namespace GameLogic
 		Proctor* getObject(unsigned int _uuid);
 		std::vector<Proctor*> getProctors();
 		std::vector<Proctor*> getInteractable();
+		std::vector<Proctor*> getTreasure();
 
 		/* Collider methods */
 		bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
@@ -49,6 +50,7 @@ namespace GameLogic
 		bool collidersLoaded;
 		std::vector<Proctor*> proctors;
 		std::vector<Proctor*> interactable;
+		std::vector<Proctor*> treasure;
 		Application::Scene* scene;
 		Camera* camera;
 

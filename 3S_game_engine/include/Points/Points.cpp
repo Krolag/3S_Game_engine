@@ -1,4 +1,9 @@
 #include "Points.h"
+Points::Points()
+{
+	score = 0;
+}
+
 Points::Points(int _score)
 {
 	score = _score;

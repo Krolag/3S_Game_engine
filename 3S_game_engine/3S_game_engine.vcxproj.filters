@@ -36,6 +36,7 @@
     <ClCompile Include="include\GameLogic\Components\Interactable.cpp" />
     <ClCompile Include="include\Water\WaterMesh.cpp" />
     <ClCompile Include="include\Framebuffer\Framebuffer.cpp" />
+    <ClCompile Include="include\GameLogic\Components\Treasure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -82,6 +83,7 @@
     <ClInclude Include="include\Camera\FrustumCulling.h" />
     <ClInclude Include="include\Water\WaterMesh.h" />
     <ClInclude Include="include\Framebuffer\Framebuffer.h" />
+    <ClInclude Include="include\GameLogic\Components\Treasure.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
