@@ -9,7 +9,8 @@ namespace GameLogic
 		C_MESH = 1,
 		C_COLLIDER = 2,
 		C_MOVEMENT = 3,
-		C_INTERACTABLE = 4
+		C_INTERACTABLE = 4,
+		C_TREASURE = 5
 	};
 
 	class Proctor;

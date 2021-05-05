@@ -5,16 +5,18 @@
 #include "Component.h"
 #include "GameLogic/Proctor.h"
 #include "InputSystem/KeyboardInput.h"
+#include "Points/Points.h"
 
 namespace GameLogic
 {
-	class PlayerInput : public Component
+	class PlayerInput : public Component, Points
 	{
 	public:
 		float maxSpeed = 0.5f;
 		float acceleration = 0.005f * 100;
 		float movementSpeed;
 		float maxInteractionDistance = 3.0f;
+		Points score = 0;
 
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);

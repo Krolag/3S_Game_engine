@@ -3,6 +3,7 @@ class Points
 {
 public:
 	int score = 0;
+	Points();
 	Points(int _score);
 	~Points();
 

@@ -9,6 +9,7 @@
 #include "Components/PlayerInput.h"
 #include "Components/BoxCollider.h"
 #include "Components/Interactable.h"
+#include "Components/Treasure.h"
 
 namespace GameLogic {}
 
