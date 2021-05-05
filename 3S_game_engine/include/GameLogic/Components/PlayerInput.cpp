@@ -122,14 +122,14 @@ namespace GameLogic
 				float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
 				float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
 				float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
-				std::cout << tmp.at(i)->name << ": " << distance << std::endl;
+				//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
 				if (distance <= maxInteractionDistance)
 				{
-					std::cout << tmp.at(i)->name << std::endl;
+					//std::cout << tmp.at(i)->name << std::endl;
 					if (tmp.at(i)->getComponentOfType(C_TREASURE)->type == C_TREASURE)
 					{
-						score.addPoints(100);
+						tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 					}
 				}
 			}
@@ -220,7 +220,7 @@ namespace GameLogic
 		{
 			/* Create tmp for easy acces */
 			std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
-			std::vector<Proctor*> tmp_01 = proctor->getParentHierarchy()->getTreasure();
+			std::vector<Proctor*> tmp_01 = proctor->getParentHierarchy()->getCash();
 
 			/* Check if player is near the interactable proctor */
 			for (unsigned int i = 0; i < tmp.size(); i++)
@@ -228,14 +228,16 @@ namespace GameLogic
 				float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
 				float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
 				float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
-				std::cout << tmp.at(i)->name << ": " << distance << std::endl;
+				//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
 				if (distance <= maxInteractionDistance)
 				{
-					std::cout << tmp.at(i)->name << std::endl;
+					//std::cout << tmp.at(i)->name << std::endl;
 					if (tmp.at(i)->getComponentOfType(C_TREASURE)->type == C_TREASURE)
 					{
-						score.addPoints(100);
+						//coinProctor->getParentHierarchy()->addObject(coinProctor);
+						//tmp_01.at(0)->setPosition(tmp.at(i)->getPosition());
+						tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 					}
 				}
 			}

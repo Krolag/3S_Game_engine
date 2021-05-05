@@ -109,8 +109,8 @@ int main()
     // Create model library
     Loader::ModelLibrary modelLibrary;
     // PLAYERS
-    modelLibrary.addModel("assets/models/hero/pirat_po_obrocie_na_plecki.fbx",  "hero_00",  true);
-    modelLibrary.addModel("assets/models/hero/pirat_po_obrocie_na_plecki.fbx",  "hero_01",  true);
+    modelLibrary.addModel("assets/models/hero/player_concept.fbx",  "hero_00",  true);
+    modelLibrary.addModel("assets/models/hero/player_concept.fbx",  "hero_01",  true);
     // ENVIR
     modelLibrary.addModel("assets/models/cube/untitled.obj",                    "ground",   true);
     modelLibrary.addModel("assets/models/task_models/palm_detailed_short.gltf", "palm_00",  true);
@@ -127,6 +127,7 @@ int main()
     modelLibrary.addModel("assets/models/task_models/tower.gltf",               "tower",    true);
     modelLibrary.addModel("assets/models/environment/chestBody.fbx",           "chestBody_00", true);
     modelLibrary.addModel("assets/models/environment/chestBody.fbx",           "chestBody_01", true);
+    modelLibrary.addModel("assets/models/environment/coin.fbx",           "coin", true);
     
     std::cout << "models loaded in:   " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
 
@@ -192,9 +193,13 @@ int main()
     GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 02.50f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
     GameLogic::MeshRenderer chestBody2_mr(GameLogic::C_MESH, &chestBody2, modelLibrary.getModel(chestBody2.name), &model3D);
     GameLogic::Interactable chestBody2_ible(GameLogic::C_INTERACTABLE, &chestBody2);
-    //GameLogic::Treasure     chestBody2_tre(GameLogic::C_TREASURE, &chestBody2);
+    GameLogic::Treasure     chestBody2_tre(GameLogic::C_TREASURE, &chestBody2);
     GameLogic::BoxCollider  chestBody2_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody2.name), &chestBody2, &collisionBoxShader);
     hierarchy.addObject(&chestBody2);
+    GameLogic::Proctor      coin("coin", glm::vec3(0.0f, 3.500f, -20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
+    GameLogic::MeshRenderer coin_mr(GameLogic::C_MESH, &coin, modelLibrary.getModel(coin.name), &model3D);
+    GameLogic::Cash         coin_csh(GameLogic::C_CASH, &coin, &hero_00, &hero_01);
+    hierarchy.addObject(&coin);
     std::cout << "proctors created in:    " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
     hierarchy.setCamera(&camera);
 
@@ -327,7 +332,8 @@ int main()
         /* DEBUG - Draw DearImGUI */
         ImGui::Render();
 
-        int scoreOfBoth = hero_00_pi.score.getScore() + hero_01_pi.score.getScore();
+        int scoreOfBoth = coin_csh.score.getScore();
+
         /* Render text */
         points.render(std::to_string(scoreOfBoth), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
 

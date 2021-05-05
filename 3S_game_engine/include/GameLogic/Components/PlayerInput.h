@@ -17,6 +17,7 @@ namespace GameLogic
 		float movementSpeed;
 		float maxInteractionDistance = 3.0f;
 		Points score = 0;
+		Proctor* coinProctor;
 
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);
