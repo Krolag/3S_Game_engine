@@ -274,7 +274,7 @@ int main()
         dirLight.render(model3D);
 
         /* Render models */
-        hierarchy.update(true);       
+        hierarchy.update(true, false);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
@@ -299,7 +299,7 @@ int main()
         model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
 
         dirLight.render(model3D);
-        hierarchy.update(false);
+        hierarchy.update(true, false);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();

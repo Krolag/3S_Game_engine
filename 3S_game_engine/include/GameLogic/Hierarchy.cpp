@@ -103,9 +103,6 @@ namespace GameLogic
 		return cash;
 	}
 
-
-	// COLLIDER METHODS
-	
 	bool Hierarchy::checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
 	{
 		if (glm::abs(_a->transform.position.x - _b->transform.position.x) >
@@ -227,7 +224,7 @@ namespace GameLogic
 		/* Update all proctors in objects vector */
 		for (auto& a : proctors)
 		{
-			a->update();
+			a->update(_onlyRender);
 			
 			/* Check if delta time should be set */
 			if (!_onlyRender)
