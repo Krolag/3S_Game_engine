@@ -37,6 +37,10 @@ namespace GameLogic
 		if (_proctor->getComponentOfType(C_TREASURE)->type == C_TREASURE)
 		{
 			treasure.push_back(_proctor);
+		}		
+		if (_proctor->getComponentOfType(C_CASH)->type == C_CASH)
+		{
+			cash.push_back(_proctor);
 		}
 	}
 
@@ -92,6 +96,11 @@ namespace GameLogic
 	std::vector<Proctor*> Hierarchy::getTreasure()
 	{
 		return treasure;
+	}	
+	
+	std::vector<Proctor*> Hierarchy::getCash()
+	{
+		return cash;
 	}
 
 

@@ -159,6 +159,7 @@
     <ClCompile Include="include\Framebuffer\Framebuffer.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
     <ClCompile Include="include\GameLogic\Components\BoxCollider.cpp" />
+    <ClCompile Include="include\GameLogic\Components\Cash.cpp" />
     <ClCompile Include="include\GameLogic\Components\Component.cpp" />
     <ClCompile Include="include\GameLogic\Components\Interactable.cpp" />
     <ClCompile Include="include\GameLogic\Components\MeshRenderer.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Camera\FrustumCulling.h" />
     <ClInclude Include="include\GameLogic\Components\BoxCollider.h" />
+    <ClInclude Include="include\GameLogic\Components\Cash.h" />
     <ClInclude Include="include\GameLogic\Components\Interactable.h" />
     <ClInclude Include="include\GameLogic\Components\MeshRenderer.h" />
     <ClInclude Include="include\GameLogic\Components\PlayerInput.h" />
