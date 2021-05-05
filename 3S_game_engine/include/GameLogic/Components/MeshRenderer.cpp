@@ -47,13 +47,11 @@ namespace GameLogic
 			))
 			{
 				model->render(*shader);
-				//std::cout << "renderuje: " << proctor->name << std::endl;
 			}
 		}
 		else
 		{
-			true;
-			//model->render(*shader);
+			model->render(*shader);
 		}
 	}
 

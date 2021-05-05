@@ -202,7 +202,7 @@ namespace GameLogic
 		}
 	}
 
-	void Hierarchy::update()
+	void Hierarchy::update(bool _onlyRender)
 	{
 		/* At first, update scene time */
 		scene->update();

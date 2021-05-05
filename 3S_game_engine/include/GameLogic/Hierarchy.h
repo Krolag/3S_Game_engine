@@ -42,7 +42,7 @@ namespace GameLogic
 		/* Render methods */
 		void drawHierarchyWindow();
 
-		void update();
+		void update(bool onlyRender = false);
 		void cleanup();
 
 	private:
