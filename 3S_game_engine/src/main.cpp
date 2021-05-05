@@ -129,6 +129,9 @@ int main()
     modelLibrary.addModel("assets/models/task_models/plant.gltf", "plant_01", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf", "plant_02", true);
     modelLibrary.addModel("assets/models/task_models/tower.gltf", "tower", true);
+    modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_00", true);
+    modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_01", true);
+    modelLibrary.addModel("assets/models/environment/coin.fbx", "coin", true);
 
     std::cout << "models loaded in:   " << float(clock() - begin_time) / CLOCKS_PER_SEC << "\t seconds" << std::endl;
 
@@ -296,7 +299,7 @@ int main()
         model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
 
         dirLight.render(model3D);
-        hierarchy.update();
+        hierarchy.update(false);
 
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
