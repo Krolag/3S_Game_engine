@@ -121,14 +121,14 @@ int main()
     modelLibrary.addModel("assets/models/environment/palm_foliage_02.fbx", "palm_foliage_02", true);
 
     // TO REWORK
-    modelLibrary.addModel("assets/models/task_models/boat_small.gltf", "boat", true);
-    modelLibrary.addModel("assets/models/task_models/chest.gltf", "chest", true);
+    modelLibrary.addModel("assets/models/task_models_update/boat_small.fbx", "boat", true);
+    modelLibrary.addModel("assets/models/task_models_update/chest.fbx", "chest", true);
     modelLibrary.addModel("assets/models/task_models/formation_rock.gltf", "rocks_00", true);
     modelLibrary.addModel("assets/models/task_models/formation_rock.gltf", "rocks_01", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf", "plant_00", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf", "plant_01", true);
     modelLibrary.addModel("assets/models/task_models/plant.gltf", "plant_02", true);
-    modelLibrary.addModel("assets/models/task_models/tower.gltf", "tower", true);
+    modelLibrary.addModel("assets/models/task_models_update/tower.fbx", "tower", true);
     modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_00", true);
     modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/environment/coin.fbx", "coin", true);
@@ -146,25 +146,26 @@ int main()
     GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
-    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader);
+    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     // Ground
     GameLogic::Proctor      ground("ground", glm::vec3(0.0f, -1.0f, 0.0f), glm::quat(1.0f, glm::vec3(0.0f)), glm::vec3(50.0f, 1.0f, 50.0f));
     GameLogic::MeshRenderer ground_mr(GameLogic::C_MESH, &ground, modelLibrary.getModel(ground.name), &model3D);
     hierarchy.addObject(&ground);
     // palm___00
-    GameLogic::Proctor      palm_trunk_00("palm_trunk_00");// , glm::vec3(-01.83f, 00.00f, 75.63f), glm::quat(1.0f, 0.0f, 00.00f, 0.0f), glm::vec3(10.0f));
+    GameLogic::Proctor      palm_trunk_00("palm_trunk_00", glm::vec3(-9.0f, 2.9f, -11.0f), glm::quat(1.0f, 0.0f, 00.00f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer palm_00_mr(GameLogic::C_MESH, &palm_trunk_00, modelLibrary.getModel(palm_trunk_00.name), &model3D);
     hierarchy.addObject(&palm_trunk_00);
-    //GameLogic::Proctor      palm_foliage_00("palm_foliage_00");
-    //GameLogic::MeshRenderer palm_foliage_00_mr(GameLogic::C_MESH, &palm_foliage_00, modelLibrary.getModel(palm_foliage_00.name), &model3D);
-    //palm_foliage_00.setParent(&palm_trunk_00);
+    GameLogic::Proctor      palm_foliage_00("palm_foliage_00", glm::vec3(-10.33f, 13.29f, -11.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.25f), glm::vec3(0.05f));
+    GameLogic::MeshRenderer palm_foliage_00_mr(GameLogic::C_MESH, &palm_foliage_00, modelLibrary.getModel(palm_foliage_00.name), &model3D);
+    //palm_trunk_00.addChild(&palm_foliage_00);
+    hierarchy.addObject(&palm_foliage_00);
     // palm___01
     // boat
     GameLogic::Proctor      boat("boat", glm::vec3(21.48f, 00.00f, 57.05f), glm::quat(1.0f, 0.0f, 00.41f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
     hierarchy.addObject(&boat);
-    GameLogic::Proctor      chest("chest", glm::vec3(18.37f, 00.00f, -63.33f), glm::quat(1.0f, 0.0f, 02.34f, 0.0f), glm::vec3(6.0f));
+    GameLogic::Proctor      chest("chest", glm::vec3(-2.41f, 3.4f, -11.33f), glm::quat(1.0f, 0.0f, -3.16f, 0.0f), glm::vec3(0.5f));
     GameLogic::MeshRenderer chest_mr(GameLogic::C_MESH, &chest, modelLibrary.getModel(chest.name), &model3D);
     GameLogic::Interactable chest_ible(GameLogic::C_INTERACTABLE, &chest); 
     hierarchy.addObject(&chest);
@@ -183,23 +184,23 @@ int main()
     GameLogic::Proctor      plant_02("plant_02", glm::vec3(17.73f, 00.00f, 10.50f), glm::quat(1.0f, 0.0f, -00.03f, 0.0f), glm::vec3(6.0f));
     GameLogic::MeshRenderer plant_02_mr(GameLogic::C_MESH, &plant_02, modelLibrary.getModel(plant_02.name), &model3D);
     hierarchy.addObject(&plant_02);
-    GameLogic::Proctor      tower("tower", glm::vec3(03.50f, 00.00f, -42.00f), glm::quat(1.0f, 0.0f, -03.50f, 0.0f), glm::vec3(6.0f));
+    GameLogic::Proctor      tower("tower", glm::vec3(03.50f, 12.57f, -42.00f), glm::quat(1.0f, 0.0f, -1.71f, 0.0f), glm::vec3(1.0f));
     GameLogic::MeshRenderer tower_mr(GameLogic::C_MESH, &tower, modelLibrary.getModel(tower.name), &model3D);
-    GameLogic::BoxCollider  tower_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(tower.name), &tower, &collisionBoxShader);
+    GameLogic::BoxCollider  tower_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(tower.name), &tower, &collisionBoxShader, true);
     hierarchy.addObject(&tower);
-    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(0.00f, 02.50f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
+    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(0.00f, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
     GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
     GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
     GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
     GameLogic::BoxCollider  chestBody_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody_00.name), &chestBody_00, &collisionBoxShader);
     hierarchy.addObject(&chestBody_00);    
-    GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 02.50f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
+    GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
     GameLogic::MeshRenderer chestBody2_mr(GameLogic::C_MESH, &chestBody2, modelLibrary.getModel(chestBody2.name), &model3D);
     GameLogic::Interactable chestBody2_ible(GameLogic::C_INTERACTABLE, &chestBody2);
     GameLogic::Treasure     chestBody2_tre(GameLogic::C_TREASURE, &chestBody2);
     GameLogic::BoxCollider  chestBody2_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody2.name), &chestBody2, &collisionBoxShader);
     hierarchy.addObject(&chestBody2);
-    GameLogic::Proctor      coin("coin", glm::vec3(0.0f, 3.500f, -20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
+    GameLogic::Proctor      coin("coin", glm::vec3(0.0f, 5.0f, -20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
     GameLogic::MeshRenderer coin_mr(GameLogic::C_MESH, &coin, modelLibrary.getModel(coin.name), &model3D);
     GameLogic::Cash         coin_csh(GameLogic::C_CASH, &coin, &hero_00, &hero_01);
     hierarchy.addObject(&coin);

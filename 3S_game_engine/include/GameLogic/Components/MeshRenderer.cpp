@@ -49,6 +49,8 @@ namespace GameLogic
 				model->render(*shader);
 			}
 		}
+		// TODO: @Dawid - gdy beda collidery, zmien to
+		/* temporary solution for proctors without colliders */
 		else
 		{
 			model->render(*shader);

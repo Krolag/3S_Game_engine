@@ -89,6 +89,7 @@ namespace GameLogic
 		}
 
 		/* If proctor cannot be found in children vector, add it */
+		_proctor->setParent(this);
 		children.push_back(_proctor);
 	}
 
