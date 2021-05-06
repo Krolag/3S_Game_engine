@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Loader\Importer.cpp" />
     <ClCompile Include="include\Framebuffer\Framebuffer.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
     <ClCompile Include="include\GameLogic\Components\BoxCollider.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="include\Water\WaterMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Loader\Importer.h" />
     <ClInclude Include="include\Framebuffer\Framebuffer.h" />
     <ClInclude Include="include\Application\Application.h" />
     <ClInclude Include="include\Application\Scene.h" />
@@ -210,6 +212,10 @@
     <ClInclude Include="include\Application\Randomizer.h" />
     <ClInclude Include="include\Loader\ModelLibrary.h" />
     <ClInclude Include="include\Primitives\Box\Box.h" />
+    <ClInclude Include="include\RapidXml\rapidxml.hpp" />
+    <ClInclude Include="include\RapidXml\rapidxml_iterators.hpp" />
+    <ClInclude Include="include\RapidXml\rapidxml_print.hpp" />
+    <ClInclude Include="include\RapidXml\rapidxml_utils.hpp" />
     <ClInclude Include="include\SceneGraph\SceneGraph.h" />
     <ClInclude Include="include\GameLogic\Components\Component.h" />
     <ClInclude Include="include\GameLogic\Proctor.h" />
@@ -244,9 +250,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
+    <None Include="include\RapidXml\manual.html" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\shaders\model_loading.frag" />
+    <Text Include="include\RapidXml\license.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

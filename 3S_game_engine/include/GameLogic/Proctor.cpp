@@ -161,6 +161,7 @@ namespace GameLogic
 				return a;
 			}
 		}
+		return NULL;
 	}
 
 	void Proctor::setDeltaTime(float _value)

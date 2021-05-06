@@ -36,7 +36,7 @@ namespace GameLogic
 
 		/* Render model with given shader */
 		/* Check if proctor is in camera view */
-		if (proctor->getComponentOfType(C_COLLIDER)->type == C_COLLIDER)
+		if (proctor->getComponentOfType(C_COLLIDER) != NULL)
 		{
 			if (FrustumCulling::boxAABBInFrustum(
 				proctor->transform.position.x,
@@ -60,5 +60,10 @@ namespace GameLogic
 	void MeshRenderer::cleanup()
 	{
 		model->cleanup();
+	}
+
+	void MeshRenderer::assignToProctor(Proctor* _proctor)
+	{
+		proctor->addComponent(this);
 	}
 }

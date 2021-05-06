@@ -25,20 +25,20 @@ namespace GameLogic
 		}
 		_proctor->setParent(this);
 
-		/* If none found, assing it to objects vector */
+		/* If none found, assign it to objects vector */
 		proctors.push_back(_proctor);
 
 		/* Check if proctor has a Interactable component */
-		if (_proctor->getComponentOfType(C_INTERACTABLE)->type == C_INTERACTABLE)
+		if (_proctor->getComponentOfType(C_INTERACTABLE) != NULL)
 		{
 			interactable.push_back(_proctor);
 		}
 		// TODO: @Ignacy - tak samo tutaj jak w Hierarchy.h line 51
-		if (_proctor->getComponentOfType(C_TREASURE)->type == C_TREASURE)
+		if (_proctor->getComponentOfType(C_TREASURE) != NULL)
 		{
 			treasure.push_back(_proctor);
 		}		
-		if (_proctor->getComponentOfType(C_CASH)->type == C_CASH)
+		if (_proctor->getComponentOfType(C_CASH) != NULL)
 		{
 			cash.push_back(_proctor);
 		}
@@ -242,13 +242,18 @@ namespace GameLogic
 			/* Check for collisions */
 			for (int i = 0; i < proctors.size(); ++i)
 			{
-				if (!((BoxCollider*)proctors[i]->getComponentOfType(C_COLLIDER))->isStatic)
+				/* If there is collider on proctor, check collisions on it */
+				if (proctors[i]->getComponentOfType(C_COLLIDER) != NULL)
 				{
-					for (int j = 0; j < proctors.size(); ++j)
+					if (!((BoxCollider*)proctors[i]->getComponentOfType(C_COLLIDER))->isStatic)
 					{
-						if (checkAABBCollision(proctors[i], proctors[j]))
+						for (int j = 0; j < proctors.size(); ++j)
 						{
-							if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
+							if (checkAABBCollision(proctors[i], proctors[j]))
+							{
+								// TODO: maybe its no need here for checking objects and checking if i = j will be enough
+								if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
+							}
 						}
 					}
 				}

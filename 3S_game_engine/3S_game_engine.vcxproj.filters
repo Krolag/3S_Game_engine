@@ -38,6 +38,7 @@
     <ClCompile Include="include\Framebuffer\Framebuffer.cpp" />
     <ClCompile Include="include\GameLogic\Components\Treasure.cpp" />
     <ClCompile Include="include\GameLogic\Components\Cash.cpp" />
+    <ClCompile Include="include\Loader\Importer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -86,11 +87,18 @@
     <ClInclude Include="include\Framebuffer\Framebuffer.h" />
     <ClInclude Include="include\GameLogic\Components\Treasure.h" />
     <ClInclude Include="include\GameLogic\Components\Cash.h" />
+    <ClInclude Include="include\RapidXml\rapidxml_utils.hpp" />
+    <ClInclude Include="include\RapidXml\rapidxml_iterators.hpp" />
+    <ClInclude Include="include\RapidXml\rapidxml_print.hpp" />
+    <ClInclude Include="include\RapidXml\rapidxml.hpp" />
+    <ClInclude Include="include\Loader\Importer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
+    <None Include="include\RapidXml\manual.html" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\shaders\model_loading.frag" />
+    <Text Include="include\RapidXml\license.txt" />
   </ItemGroup>
 </Project>

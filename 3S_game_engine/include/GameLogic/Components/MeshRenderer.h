@@ -23,7 +23,7 @@ namespace GameLogic
 
 		void update();
 		void cleanup();
-
+		void assignToProctor(Proctor* _proctor);
 	private:
 		Proctor* parent = nullptr;
 	};
