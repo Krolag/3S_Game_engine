@@ -7,7 +7,7 @@
 
 namespace Loader
 {	
-	Importer::Importer(const std::string xmlPath, Shader* _model3DShader, float divider) : model3DShader(_model3DShader)
+	Importer::Importer(const std::string xmlPath, Shader* _model3DShader, float _divider) : model3DShader(_model3DShader)
 	{
 		// Get xml document to work with
 		auto xmlFileContext = file2char(xmlPath.c_str());
@@ -29,10 +29,10 @@ namespace Loader
 		rootNode = rootNode->first_node()->first_node();
 
 		// Process scene nodes and init proctors
-		processElements(rootNode);
+		processElements(rootNode, _divider);
 	}
 	
-	void Importer::processElements(xml_node<>* firstNode, bool ifProcessingChild, float divider)
+	void Importer::processElements(xml_node<>* firstNode, float _divider, bool ifProcessingChild)
 	{
 		// Iterate over the elements
 		for(firstNode;firstNode;firstNode=firstNode->next_sibling())
@@ -58,9 +58,9 @@ namespace Loader
 			// Position
 			xml_node<>* childElement = firstNode->first_node("Position");
 			glm::vec3 proctorPosition(
-				(float)strtod(childElement->first_node("x")->value(), NULL)/divider,
-				(float)strtod(childElement->first_node("y")->value(), NULL)/divider,
-				(float)strtod(childElement->first_node("z")->value(), NULL)/divider
+				(float)strtod(childElement->first_node("x")->value(), NULL) / _divider,
+				(float)strtod(childElement->first_node("y")->value(), NULL) / _divider,
+				(float)strtod(childElement->first_node("z")->value(), NULL) / _divider
 			);
 
 			// TODO: quats x,y,z,w or angles x,y,z?
@@ -77,9 +77,9 @@ namespace Loader
 			// Scale
 			childElement = firstNode->first_node("Scale");
 			glm::vec3 proctorScale(
-				(float)strtod(childElement->first_node("x")->value(), NULL)/divider,
-				(float)strtod(childElement->first_node("y")->value(), NULL)/divider,
-				(float)strtod(childElement->first_node("z")->value(), NULL)/divider
+				(float)strtod(childElement->first_node("x")->value(), NULL) / _divider,
+				(float)strtod(childElement->first_node("y")->value(), NULL) / _divider,
+				(float)strtod(childElement->first_node("z")->value(), NULL) / _divider
 			);
 
 			importedProctors.push_back(std::make_shared<GameLogic::Proctor>(proctorName.c_str(), proctorPosition, proctorRotation, proctorScale));

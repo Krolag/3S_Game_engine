@@ -114,7 +114,7 @@ int main()
 
     
     /* Import models from xml file */
-    Loader::Importer importer("assets/scenes/testing_scene.xml", &model3D);
+    Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
 	
     for (int i = 0; i < importer.importedProctors.size(); ++i)
     {
