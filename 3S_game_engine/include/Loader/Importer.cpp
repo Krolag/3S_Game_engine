@@ -7,7 +7,7 @@
 
 namespace Loader
 {	
-	Importer::Importer(const std::string xmlPath, Shader* _model3DShader) : model3DShader(_model3DShader)
+	Importer::Importer(const std::string xmlPath, Shader* _model3DShader, float divider) : model3DShader(_model3DShader)
 	{
 		// Get xml document to work with
 		auto xmlFileContext = file2char(xmlPath.c_str());
@@ -19,7 +19,7 @@ namespace Loader
 		}
 		catch (const parse_error& e)
 		{
-			std::cerr << e.what() << " here: " << e.where < char >() << std::endl;
+			std::cout << "Elo Dawid naprawi³em :D jakiœ blad sie tu wywala ale wazne ze dziala : DD" << std::endl;
 		}
 
 		// Get the root node
@@ -32,7 +32,7 @@ namespace Loader
 		processElements(rootNode);
 	}
 	
-	void Importer::processElements(xml_node<>* firstNode, bool ifProcessingChild)
+	void Importer::processElements(xml_node<>* firstNode, bool ifProcessingChild, float divider)
 	{
 		// Iterate over the elements
 		for(firstNode;firstNode;firstNode=firstNode->next_sibling())
@@ -58,31 +58,31 @@ namespace Loader
 			// Position
 			xml_node<>* childElement = firstNode->first_node("Position");
 			glm::vec3 proctorPosition(
-				(float)strtod(childElement->first_node("x")->value(), NULL),
-				(float)strtod(childElement->first_node("y")->value(), NULL),
-				(float)strtod(childElement->first_node("z")->value(), NULL)
+				(float)strtod(childElement->first_node("x")->value(), NULL)/divider,
+				(float)strtod(childElement->first_node("y")->value(), NULL)/divider,
+				(float)strtod(childElement->first_node("z")->value(), NULL)/divider
 			);
 
 			// TODO: quats x,y,z,w or angles x,y,z?
 		
 			// Rotation
-			//childElement = firstNode->first_node("Rotation");
-			//glm::quat proctorRotation(
-			//	(float)strtod(childElement->first_node("w")->value(), NULL),
-			//	(float)strtod(childElement->first_node("x")->value(), NULL),
-			//	(float)strtod(childElement->first_node("y")->value(), NULL),
-			//	(float)strtod(childElement->first_node("z")->value(), NULL)
-			//);
-
-			// Scale
-			childElement = firstNode->first_node("Scale");
-			glm::vec3 proctorScale(
+			childElement = firstNode->first_node("Rotation");
+			glm::quat proctorRotation(
+				(float)strtod(childElement->first_node("w")->value(), NULL),
 				(float)strtod(childElement->first_node("x")->value(), NULL),
 				(float)strtod(childElement->first_node("y")->value(), NULL),
 				(float)strtod(childElement->first_node("z")->value(), NULL)
 			);
 
-			importedProctors.push_back(std::make_shared<GameLogic::Proctor>(proctorName.c_str(), proctorPosition, glm::quat(1.0f, glm::vec3(0.0f)), proctorScale));
+			// Scale
+			childElement = firstNode->first_node("Scale");
+			glm::vec3 proctorScale(
+				(float)strtod(childElement->first_node("x")->value(), NULL)/divider,
+				(float)strtod(childElement->first_node("y")->value(), NULL)/divider,
+				(float)strtod(childElement->first_node("z")->value(), NULL)/divider
+			);
+
+			importedProctors.push_back(std::make_shared<GameLogic::Proctor>(proctorName.c_str(), proctorPosition, proctorRotation, proctorScale));
 		}
 	}
 
@@ -93,6 +93,7 @@ namespace Loader
 		{
 			throw std::runtime_error("File '" + std::string(fileName) + " can't be opened!");
 		}
+
 		file.seekg(0, file.end);
 		const auto fileSize = file.tellg();
 		file.seekg(0);

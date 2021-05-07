@@ -48,6 +48,18 @@ namespace Loader
 				
 				/* Rotation */
 				xml_node<>* rotation = sceneDocument.allocate_node(node_element, "Rotation");
+				xml_node<>* w = sceneDocument.allocate_node(node_element, "w");
+				w->value(sceneDocument.allocate_string(std::to_string(proctors.at(i)->transform.rotation.w).c_str()));
+				rotation->append_node(w);
+				x = sceneDocument.clone_node(x);
+				x->value(sceneDocument.allocate_string(std::to_string(proctors.at(i)->transform.rotation.x).c_str()));
+				rotation->append_node(x);
+				y = sceneDocument.clone_node(y);
+				y->value(sceneDocument.allocate_string(std::to_string(proctors.at(i)->transform.rotation.y).c_str()));
+				rotation->append_node(y);
+				z = sceneDocument.clone_node(z);
+				z->value(sceneDocument.allocate_string(std::to_string(proctors.at(i)->transform.rotation.z).c_str()));
+				rotation->append_node(z);
 				gameModel->append_node(rotation);
 				
 				/* Scale */

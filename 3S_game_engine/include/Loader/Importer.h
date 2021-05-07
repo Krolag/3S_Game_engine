@@ -16,7 +16,7 @@ namespace Loader
 		std::vector<std::shared_ptr<GameLogic::MeshRenderer>> meshRenderers;
 		
 		/* Constructor */
-		Importer(const std::string xmlPath, Shader* _model3DShader);
+		Importer(const std::string xmlPath, Shader* _model3DShader, float divider = 1.0f);
 
 		/* Public methods */
 		std::string prepareModelName(std::string name);
@@ -24,7 +24,7 @@ namespace Loader
 		Shader * model3DShader;
 		
 		/* Importer methods used for load */
-		void processElements(xml_node<>* firstNode, bool ifProcessingChild = false);
+		void processElements(xml_node<>* firstNode, bool ifProcessingChild = false, float divider = 1.0f);
 		std::unique_ptr<char[]> file2char(const char* fileName);
 		bool isNameInImportedList(std::string name);
 	};
