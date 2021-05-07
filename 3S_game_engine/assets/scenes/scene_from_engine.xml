@@ -79,9 +79,9 @@
 		</GameModel>
 		<GameModel name="hero_00">
 			<Position>
-				<x>2.000000</x>
-				<y>2.500000</y>
-				<z>0.000000</z>
+				<x>1.402804</x>
+				<y>10.380000</y>
+				<z>-2.599158</z>
 			</Position>
 			<Rotation>
 				<w>1.000000</w>

@@ -19,6 +19,7 @@ namespace Loader
 		}
 		catch (const parse_error& e)
 		{
+			// TODO: @Kuba - to nie jest jakis blad, jak zrobisz obb sprawdz to
 			std::cout << "Elo Dawid naprawi³em :D jakiœ blad sie tu wywala ale wazne ze dziala : DD" << std::endl;
 		}
 

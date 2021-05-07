@@ -54,11 +54,7 @@ bool isDebugModeOn = false;
 
 int main()
 {
-    glm::mat4 projection;
-    glm::mat4 textProjection;
-    glm::mat4 view;
-    glm::mat4 model;
-
+#pragma region Scene init
     /* Load scene */
     Application::Scene mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
     glfwMakeContextCurrent(mainScene.window);
@@ -71,6 +67,7 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+#pragma endregion
 
 #pragma region ImGUI init
     IMGUI_CHECKVERSION();
@@ -81,56 +78,70 @@ int main()
     int hierarchyCurrentItem = 0;
 #pragma endregion
 
+#pragma region Shaders and shader variables
+    glm::mat4 projection;
+    glm::mat4 textProjection;
+    glm::mat4 view;
+    glm::mat4 model;
+
     /* Create shaders */
     Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
     Shader collisionBoxShader("assets/shaders/boxCollider.vert", "assets/shaders/boxCollider.frag", "assets/shaders/boxCollider.geom");
+#pragma endregion
 
+#pragma region UI init
     /* Text init */
     textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCREEN_WIDTH), 0.0f, static_cast<GLfloat>(SCREEN_WIDTH));
     textShader.use();
     glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "textProjection"), 1, GL_FALSE, glm::value_ptr(textProjection));
 
-    /* Create Skybox */
-    Skybox skybox(&view, &projection, &camera);
-
     /* Create text */
     UIRender::TextRender points("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
-    
+
     /* Create points */
     Points score(0);
 
-    /* Create InputSystem elements */
-    InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(mainScene.window);
-    InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(mainScene.window);
+    /* Animated mario */
+    // TODO: @Ignacy zmien to na monete gdy bedzie gotowa
+    UIRender::UIElement marioWalking[4] = {
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_01.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_03.png", 0.01, 0.045, 0.97, 0.91),
+    };
 
+    int marioWalkingIndex = 0;
+    float timeBetweenFrames = 0.15f;
+#pragma endregion
+
+#pragma region Proctors init
     /* Create object hierarchy */
     GameLogic::Hierarchy hierarchy(&mainScene);
+    hierarchy.setCamera(&camera);
 
-    /* Load models */
-    clock_t begin_time = clock(); // Calculate time for loading models
-    // Create model library
+    /* Create models library */
     Loader::ModelLibrary modelLibrary;
 
-    
-    /* Import models from xml file */
+    /* Create importer with given *.xml file */
     Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
-	
+
+    /* Load models to hierarchy */
     for (int i = 0; i < importer.importedProctors.size(); ++i)
     {
         importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
-	
-    // PLAYERS
+
+    // TODO: @Dawid czy te modele beda serializowane?
+    /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_00", true);
     modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_01", true);
     modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_00", true);
     modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/environment/coin.fbx", "coin", true);
-	
+
     /* Configure proctors */
-    begin_time = clock(); // Calculate time for creating proctors 
     // Players
     GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
@@ -143,25 +154,28 @@ int main()
     //GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader);
     hierarchy.addObject(&hero_01);
 
-	// Chests and coins
+    // Chests and coins
     GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(0.00f, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
     GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
     GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
     GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
-    GameLogic::BoxCollider  chestBody_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody_00.name), &chestBody_00, &collisionBoxShader);
+    //GameLogic::BoxCollider  chestBody_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody_00.name), &chestBody_00, &collisionBoxShader);
     hierarchy.addObject(&chestBody_00);
     GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
     GameLogic::MeshRenderer chestBody2_mr(GameLogic::C_MESH, &chestBody2, modelLibrary.getModel(chestBody2.name), &model3D);
     GameLogic::Interactable chestBody2_ible(GameLogic::C_INTERACTABLE, &chestBody2);
     GameLogic::Treasure     chestBody2_tre(GameLogic::C_TREASURE, &chestBody2);
-    GameLogic::BoxCollider  chestBody2_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody2.name), &chestBody2, &collisionBoxShader);
+    //GameLogic::BoxCollider  chestBody2_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody2.name), &chestBody2, &collisionBoxShader);
     hierarchy.addObject(&chestBody2);
     GameLogic::Proctor      coin("coin", glm::vec3(0.0f, 5.0f, -20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
     GameLogic::MeshRenderer coin_mr(GameLogic::C_MESH, &coin, modelLibrary.getModel(coin.name), &model3D);
     GameLogic::Cash         coin_csh(GameLogic::C_CASH, &coin, &hero_00, &hero_01);
     hierarchy.addObject(&coin);
+#pragma endregion
 
-    hierarchy.setCamera(&camera);
+#pragma region Environment
+    /* Create Skybox */
+    Skybox skybox(&view, &projection, &camera);
 
     /* Lights */
     DirLight dirLight = {
@@ -170,27 +184,22 @@ int main()
         glm::vec4(0.4f, 0.4f, 0.4f, 1.0f),
         glm::vec4(0.75f, 0.75f, 0.75f, 1.0f)
     };
-    
-     /* Animated mario */
-    UIRender::UIElement marioWalking[4] = {
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_01.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_03.png", 0.01, 0.045, 0.97, 0.91),
-    };
 
-    int marioWalkingIndex = 0;
-    float timeBetweenFrames = 0.15f;
+    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/textures/dd.bmp", "assets/textures/nn.bmp", 2, 200);
+    int waterYpos = 3;
+    Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
+    Framebuffer refractFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
+#pragma endregion
+
+    /* Create InputSystem elements */
+    InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(mainScene.window);
+    InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(mainScene.window);
 
     float xValueRight = 0.2;
     float xValueLeft = 0.2;
     float yValueUp = 0.2;
     float yValueDown = 0.2;
 
-    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/textures/dd.bmp", "assets/textures/nn.bmp",2,200);
-    int waterYpos = 3;  
-    Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
-    Framebuffer refractFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -217,6 +226,7 @@ int main()
 
         camera.setProjection(projection);   
         FrustumCulling::createViewFrustumFromMatrix(&camera);
+
     	
     	/* Set up model 3D shader uniforms*/
         model3D.use();
@@ -227,10 +237,7 @@ int main()
         model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
         model = glm::mat4(1.0f);
 
-    	/* Render lights */
         dirLight.render(model3D);
-
-        /* Render models */
         hierarchy.update(true, false);
 
         /* Sky-box -- Must be rendered almost last, before hud */
@@ -279,23 +286,12 @@ int main()
         dirLight.render(model3D);
         hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
 
-        // COLLISIONS BELOW
-        /* Set up universal collisionBoxShader uniforms */
-        collisionBoxShader.use();
-        collisionBoxShader.setUniform("view", view);
-        collisionBoxShader.setUniform("projection", projection);
-
         model = glm::translate(model, glm::vec3(-100, waterYpos, -100));
         water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, camera.Position);
         skybox.render();
-       
-        /* DEBUG - Draw DearImGUI */
-        ImGui::Render();
-
-        int scoreOfBoth = coin_csh.score.getScore();
 
         /* Render text */
-        points.render(std::to_string(scoreOfBoth), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
+        points.render(std::to_string(coin_csh.score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
 
         /* Render cute Mario as placeholder to coin */
         marioWalking[marioWalkingIndex].render();
@@ -309,9 +305,12 @@ int main()
             marioWalkingIndex = 0;
         
         /* Update InputSystem */
-
         keyboardInput->update();
         mouseInput->update();
+
+        /* DEBUG - Draw DearImGUI */
+        // THIS SHOULD BE THE LAST, DO NOT TOUCH IT
+        ImGui::Render();
 
         /* Clear frame at the end of the loop */
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -327,8 +326,6 @@ int main()
 
     hierarchy.cleanup();
 
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
 }
