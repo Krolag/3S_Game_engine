@@ -27,6 +27,8 @@
 #include "Water/WaterMesh.h"
 #include <Framebuffer/Framebuffer.h>
 
+#include "Loader/Exporter.h"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
 void cameraKeyboardInput(Application::Scene* _scene, InputSystem::KeyboardInput* _keyboard);
@@ -315,7 +317,9 @@ int main()
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(mainScene.window);
         glfwPollEvents();
+
     }
+    Loader::Exporter::exportScene(hierarchy.getProctors());
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

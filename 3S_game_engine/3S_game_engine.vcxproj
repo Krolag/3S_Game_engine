@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Loader\Exporter.cpp" />
     <ClCompile Include="include\Loader\Importer.cpp" />
     <ClCompile Include="include\Framebuffer\Framebuffer.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="include\Water\WaterMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Loader\Exporter.h" />
     <ClInclude Include="include\Loader\Importer.h" />
     <ClInclude Include="include\Framebuffer\Framebuffer.h" />
     <ClInclude Include="include\Application\Application.h" />

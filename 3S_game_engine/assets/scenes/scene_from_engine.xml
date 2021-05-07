@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<GameModelsCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<GameModels>
+		<GameModel name="boat_small-1">
+			<Position>
+				<x>2.294224</x>
+				<y>0.340000</y>
+				<z>-2.317724</z>
+			</Position>
+			<Rotation/>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<ChildrenModels/>
+		</GameModel>
+		<GameModel name="tower-1">
+			<Position>
+				<x>0.000000</x>
+				<y>1.920000</y>
+				<z>-0.000000</z>
+			</Position>
+			<Rotation/>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<ChildrenModels/>
+		</GameModel>
+		<GameModel name="boat_small-2">
+			<Position>
+				<x>0.893559</x>
+				<y>0.170000</y>
+				<z>-2.925100</z>
+			</Position>
+			<Rotation/>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<ChildrenModels/>
+		</GameModel>
+		<GameModel name="cube-1">
+			<Position>
+				<x>0.000000</x>
+				<y>-1.000000</y>
+				<z>0.000000</z>
+			</Position>
+			<Rotation/>
+			<Scale>
+				<x>0.001000</x>
+				<y>0.001000</y>
+				<z>0.001000</z>
+			</Scale>
+			<ChildrenModels/>
+		</GameModel>
+		<GameModel name="hero_00">
+			<Position>
+				<x>2.000000</x>
+				<y>2.500000</y>
+				<z>0.000000</z>
+			</Position>
+			<Rotation/>
+			<Scale>
+				<x>0.050000</x>
+				<y>0.050000</y>
+				<z>0.050000</z>
+			</Scale>
+			<ChildrenModels/>
+		</GameModel>
+		<GameModel name="hero_01">
+			<Position>
+				<x>-2.000000</x>
+				<y>2.500000</y>
+				<z>0.000000</z>
+			</Position>
+			<Rotation/>
+			<Scale>
+				<x>0.050000</x>
+				<y>0.050000</y>
+				<z>0.050000</z>
+			</Scale>
+			<ChildrenModels/>
+		</GameModel>
+		<GameModel name="chestBody_00">
+			<Position>
+				<x>0.000000</x>
+				<y>2.970000</y>
+				<z>-5.000000</z>
+			</Position>
+			<Rotation/>
+			<Scale>
+				<x>0.005000</x>
+				<y>0.005000</y>
+				<z>0.005000</z>
+			</Scale>
+			<ChildrenModels/>
+		</GameModel>
+		<GameModel name="chestBody_01">
+			<Position>
+				<x>0.000000</x>
+				<y>2.970000</y>
+				<z>10.000000</z>
+			</Position>
+			<Rotation/>
+			<Scale>
+				<x>0.005000</x>
+				<y>0.005000</y>
+				<z>0.005000</z>
+			</Scale>
+			<ChildrenModels/>
+		</GameModel>
+	</GameModels>
+</GameModelsCollection>
+

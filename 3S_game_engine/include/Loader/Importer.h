@@ -9,6 +9,17 @@ namespace Loader
 	
 	class Importer
 	{
+	public:
+		/* Public fields */
+		Loader::ModelLibrary importedModelLibrary;
+		std::vector<std::shared_ptr<GameLogic::Proctor>> importedProctors;
+		std::vector<std::shared_ptr<GameLogic::MeshRenderer>> meshRenderers;
+		
+		/* Constructor */
+		Importer(const std::string xmlPath, Shader* _model3DShader);
+
+		/* Public methods */
+		std::string prepareModelName(std::string name);
 	private:
 		Shader * model3DShader;
 		
@@ -16,16 +27,5 @@ namespace Loader
 		void processElements(xml_node<>* firstNode, bool ifProcessingChild = false);
 		std::unique_ptr<char[]> file2char(const char* fileName);
 		bool isNameInImportedList(std::string name);
-	public:
-		/* Constructor */
-		Importer(const std::string xmlPath, Shader* _model3DShader);
-		
-		/* Public methods */
-		std::string prepareModelName(std::string name);
-
-		/* Public fields */
-		Loader::ModelLibrary importedModelLibrary;
-		std::vector<std::shared_ptr<GameLogic::Proctor>> importedProctors;
-		std::vector<std::shared_ptr<GameLogic::MeshRenderer>> meshRenderers;
 	};
 }

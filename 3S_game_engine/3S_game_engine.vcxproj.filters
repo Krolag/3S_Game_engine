@@ -39,6 +39,7 @@
     <ClCompile Include="include\GameLogic\Components\Treasure.cpp" />
     <ClCompile Include="include\GameLogic\Components\Cash.cpp" />
     <ClCompile Include="include\Loader\Importer.cpp" />
+    <ClCompile Include="include\Loader\Exporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="include\RapidXml\rapidxml_print.hpp" />
     <ClInclude Include="include\RapidXml\rapidxml.hpp" />
     <ClInclude Include="include\Loader\Importer.h" />
+    <ClInclude Include="include\Loader\Exporter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
