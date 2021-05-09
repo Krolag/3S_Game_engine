@@ -21,6 +21,8 @@ Framebuffer::Framebuffer(int screen_width, int screen_height) : SCREEN_WIDTH(scr
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
 }
 
 void Framebuffer::bindFramebuffer()

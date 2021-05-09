@@ -127,11 +127,11 @@ int main()
     Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
 
     /* Load models to hierarchy */
-    for (int i = 0; i < importer.importedProctors.size(); ++i)
-    {
-        importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
-        hierarchy.addObject(importer.importedProctors.at(i).get());
-    }
+  //for (int i = 0; i < importer.importedProctors.size(); ++i)
+  //{
+  //    importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
+  //    hierarchy.addObject(importer.importedProctors.at(i).get());
+  //}
 
     // TODO: @Dawid czy te modele beda serializowane?
     /* Load models that probably won't be serialized */
@@ -185,8 +185,9 @@ int main()
         glm::vec4(0.75f, 0.75f, 0.75f, 1.0f)
     };
 
-    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/textures/dd.bmp", "assets/textures/nn.bmp", 2, 200);
-    int waterYpos = 3;
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 1000, 2000);
+    int waterYpos = 0;
     Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
     Framebuffer refractFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 #pragma endregion
@@ -286,13 +287,15 @@ int main()
         dirLight.render(model3D);
         hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
 
-        model = glm::translate(model, glm::vec3(-100, waterYpos, -100));
-        water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, camera.Position);
+        model = glm::translate(model, glm::vec3(0, waterYpos, 0));
+        water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
+
+
         skybox.render();
 
         /* Render text */
         points.render(std::to_string(coin_csh.score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
-
+        
         /* Render cute Mario as placeholder to coin */
         marioWalking[marioWalkingIndex].render();
         timeBetweenFrames -= mainScene.deltaTime;

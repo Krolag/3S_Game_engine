@@ -2,15 +2,15 @@
 #include <iostream>
 #include <stb_image.h>
 
-WaterMesh::WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPath, std::string dudvTexturePath, std::string normalTexturePath, int vertexCount,int size) :waterShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str()), VAO(0), VBO(0), VBO_Texture(0),EBO(0)
+WaterMesh::WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPath, std::string geometryShaderPath , int vertexCount,int size) :waterShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str(), geometryShaderPath.c_str()), VAO(0), VBO(0), VBO_Texture(0), EBO(0)
 
-{
-	
+{	
 	generateMesh(vertexCount, size);
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO); //vbo buffer for vertices 
 	glGenBuffers(1, &VBO_Texture); //vbo buffer for textureCords 
+
 	glGenBuffers(1, &EBO);
 	glBindVertexArray(VAO);
 
@@ -28,6 +28,7 @@ WaterMesh::WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPat
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
+
 	//bind EBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesArraySize * sizeof(float), indices, GL_STATIC_DRAW);
@@ -42,20 +43,18 @@ WaterMesh::WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPat
 	waterShader.setUniformInt("reflectionTexture", 0);
 	waterShader.setUniformInt("refractionTexture", 1);
 
-	loadTexture(dudvTexturePath,normalTexturePath);
 }
 
 void WaterMesh::render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, int reflectionTex, int refractionTex, float time,glm::vec3 cameraPos)
 {
 	waveSpeed += WATER_SPEED * time;
-	if (waveSpeed > 1) waveSpeed = 0.f;
 	waterShader.use();
 	waterShader.setUniform("model", model);
 	waterShader.setUniform("projection", projection);
 	waterShader.setUniform("view", view);
 	waterShader.setUniformFloat("waveSpeed", waveSpeed);
 	waterShader.setUniform("camPos", cameraPos);
-	waterShader.setUniform("lightPos", cameraPos.x, cameraPos.y, cameraPos.z);
+	waterShader.setUniform("lightPos", cameraPos.x, 10000, cameraPos.z);
 	waterShader.setUniform("lightColor", 0.8f, 0.8f, 0.8f);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -64,12 +63,6 @@ void WaterMesh::render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, in
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, refractionTex);
 
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, dudvMap);
-
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, normalMap);
-
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glDrawElements(GL_TRIANGLES, indicesArraySize, GL_UNSIGNED_INT, 0);
@@ -77,79 +70,6 @@ void WaterMesh::render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, in
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-}
-
-void WaterMesh::loadTexture(std::string dudvMapPath, std::string normalMapPath)
-{
-	glGenTextures(1, &dudvMap);
-	glBindTexture(GL_TEXTURE_2D, dudvMap);
-
-	int width, height, nrComponents;
-	unsigned char* data = stbi_load(dudvMapPath.c_str(), &width, &height, &nrComponents, 0);
-
-	if (data)
-	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, dudvMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-		stbi_image_free(data);
-	}
-	else
-	{
-		std::cout << "Texture failed to load at path: " << dudvMapPath.c_str() << std::endl;
-		stbi_image_free(data);
-	}
-
-	//normalmap
-	glGenTextures(1, &normalMap);
-	glBindTexture(GL_TEXTURE_2D, normalMap);
-
-	data = stbi_load(normalMapPath.c_str(), &width, &height, &nrComponents, 0);
-
-	if (data)
-	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, normalMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-		stbi_image_free(data);
-	}
-	else
-	{
-		std::cout << "Texture failed to load at path: " << dudvMapPath.c_str() << std::endl;
-		stbi_image_free(data);
-	}
-
-	waterShader.use();
-	waterShader.setUniformInt("dudvMap", 2);
-	waterShader.setUniformInt("normalMap", 3);
 }
 
 void WaterMesh::generateMesh(int vertexCount,int size) //vertexCount - number of vertices per side , size - scale
@@ -189,6 +109,7 @@ void WaterMesh::generateMesh(int vertexCount,int size) //vertexCount - number of
 			indices[pointer++] = bottomRight;
 		}
 	}
+
 }
 
 WaterMesh::~WaterMesh()
@@ -198,5 +119,6 @@ WaterMesh::~WaterMesh()
 	delete indices;
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &VBO_Texture);
 	glDeleteBuffers(1, &EBO);
 }
