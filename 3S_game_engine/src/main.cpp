@@ -205,56 +205,52 @@ int main()
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
-        //enable cliping
-        glEnable(GL_CLIP_DISTANCE0);
-
-        //bind buffer and render scene to it
-        reflectFramebuffer.bindFramebuffer();
-        glEnable(GL_DEPTH_TEST);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         /* Dear ImGUI new frame setup */
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // camera underwater - to get reflection
+        camera.setProjection(projection);
+        FrustumCulling::createViewFrustumFromMatrix(&camera);
+
+        //enable cliping
+        glEnable(GL_CLIP_DISTANCE0);
+
+        //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
+        reflectFramebuffer.bindFramebuffer();
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // set camera underwater - to get reflection
         float distance = 2 * (camera.Position.y - waterYpos);
         camera.Position.y -= distance;
         camera.Pitch = -camera.Pitch;
         camera.updateCameraVectors();
-
-        camera.setProjection(projection);   
-        FrustumCulling::createViewFrustumFromMatrix(&camera);
-
-    	
-    	/* Set up model 3D shader uniforms*/
+   	
         model3D.use();
-        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);
+        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         model3D.setUniform("projection", projection);
-        view = camera.GetViewMatrix(); //glm::mat4(1.0f);
+        view = camera.GetViewMatrix();
         model3D.setUniform("view", view);
         model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
         model = glm::mat4(1.0f);
 
         dirLight.render(model3D);
         hierarchy.update(true, false);
+        skybox.render(); // render skybox only for reflectionbuffer
 
-        /* Sky-box -- Must be rendered almost last, before hud */
-        skybox.render();
-
+        //set camera position to default
         camera.Position.y += distance;
         camera.Pitch = -camera.Pitch;
         camera.updateCameraVectors();
-        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);//glm::mat4(1.0f);        
-        view = camera.GetViewMatrix(); //glm::mat4(1.0f);
+
+        //close reflectframebuffer
         reflectFramebuffer.unbindFramebuffer();
 
-        //bind refract buffer and render scene to it
+        //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
         refractFramebuffer.bindFramebuffer();
-
-        glEnable(GL_DEPTH_TEST);
+      
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -263,41 +259,35 @@ int main()
         model3D.setUniform("view", view);
         model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
 
-        dirLight.render(model3D);
-    	
-        collisionBoxShader.use();
-        collisionBoxShader.setUniform("projection", projection);
-        collisionBoxShader.setUniform("view", view);
-        collisionBoxShader.setUniformBool("collision", true);
-    	
+        dirLight.render(model3D);   	   	
         hierarchy.update(true, false);
-    	
-        /* Sky-box -- Must be rendered almost last, before hud */
-        skybox.render();
 
+        //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
         refractFramebuffer.unbindFramebuffer();
-
-        // disable cliping and buffers
-        // and render objects on screen
         glDisable(GL_CLIP_DISTANCE0); 
+
+        //---------------------------------------------------------------------------------------------------------
+        //HERE STARTS DEFAULT RENDERING
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_DEPTH_TEST);
-
+       
         model3D.use();
         model3D.setUniform("projection", projection);
-        view = camera.GetViewMatrix(); //glm::mat4(1.0f);
+        view = camera.GetViewMatrix();
         model3D.setUniform("view", view);
         cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         dirLight.render(model3D);
-        hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
 
+        collisionBoxShader.use();
+        collisionBoxShader.setUniform("projection", projection);
+        collisionBoxShader.setUniform("view", view);
+        collisionBoxShader.setUniformBool("collision", true);
+
+        hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
+       
         model = glm::translate(model, glm::vec3(0, waterYpos, 0));
         water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
-
-
-        skybox.render();
 
         /* Render text */
         points.render(std::to_string(coin_csh.score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));

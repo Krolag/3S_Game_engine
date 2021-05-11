@@ -3,9 +3,9 @@
 	<GameModels>
 		<GameModel name="hero_00">
 			<Position>
-				<x>11.187742</x>
+				<x>22.201607</x>
 				<y>2.500000</y>
-				<z>-2.273843</z>
+				<z>16.775326</z>
 			</Position>
 			<Rotation>
 				<w>1.0</w>
@@ -22,14 +22,14 @@
 		</GameModel>
 		<GameModel name="hero_01">
 			<Position>
-				<x>-2.000000</x>
+				<x>18.555874</x>
 				<y>2.500000</y>
-				<z>0.000000</z>
+				<z>15.777328</z>
 			</Position>
 			<Rotation>
 				<w>1.0</w>
 				<x>0.000000</x>
-				<y>0.000000</y>
+				<y>1.570796</y>
 				<z>0.000000</z>
 			</Rotation>
 			<Scale>
