@@ -37,8 +37,10 @@ namespace GameLogic
 		/* First update components for current hierarchy level */
 		for (auto& a : components)
 		{
+			// TODO: @Dawid ? (chyba, nwm kto to robil sr jesli zle trafilem) W RENDER LOOPIE PRZECHODZA OBA IFY XD
 			if (_onlyRender)
 			{
+				std::cout << "ONLY RENDER!\n";
 				if (a->type == C_MESH)
 				{
 					a->update();
@@ -46,10 +48,10 @@ namespace GameLogic
 			}
 			else
 			{
+				std::cout << "NOT ONLY RENDER!\n";
 				if (a->type == C_COLLIDER)
 				{
-					if (!((BoxCollider*)a)->isStatic || !((BoxCollider*)a)->isUpdated)
-						a->update();
+					((BoxCollider*)a)->render();
 				}
 				else
 					a->update();
@@ -233,7 +235,7 @@ namespace GameLogic
 			{
 				ImGui::Text("|--------| COLLIDER |---------|");
 				ImGui::Checkbox("static", &((BoxCollider*)a)->isStatic);
-				((BoxCollider*)a)->render();
+				//((BoxCollider*)a)->render();
 			}
 
 			if (a->type == GameLogic::C_INTERACTABLE)

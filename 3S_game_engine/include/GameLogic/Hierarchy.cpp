@@ -239,26 +239,29 @@ namespace GameLogic
 			/* At first, update scene time */
 			scene->update();
 
-			/* Check for collisions */
-			for (int i = 0; i < proctors.size(); ++i)
-			{
-				// TODO: @Kuba - do naprawy sa ponizsze linie, byc moze to problem z przekazywaniem modeli i informacji o nich - sprawdz to
-				/* If there is collider on proctor, check collisions on it */
-				//if (proctors[i]->getComponentOfType(C_COLLIDER) != NULL)
-				//{
-				//	if (!((BoxCollider*)proctors[i]->getComponentOfType(C_COLLIDER))->isStatic)
-				//	{
-				//		for (int j = 0; j < proctors.size(); ++j)
-				//		{
-				//			if (checkAABBCollision(proctors[i], proctors[j]))
-				//			{
-				//				// TODO: maybe its no need here for checking objects and checking if i = j will be enough
-				//				if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
-				//			}
-				//		}
-				//	}
-				//}
-			}
+			///* Check for collisions */
+			//for (int i = 0; i < proctors.size(); ++i)
+			//{
+			//	// TODO: @Kuba - do naprawy sa ponizsze linie, byc moze to problem z przekazywaniem modeli i informacji o nich - sprawdz to
+			//	/* If there is collider on proctor, check collisions on it */
+			//	if (proctors[i]->getComponentOfType(C_COLLIDER) != NULL)
+			//	{
+			//		if (!((BoxCollider*)proctors[i]->getComponentOfType(C_COLLIDER))->isStatic)
+			//		{
+			//			for (int j = 0; j < proctors.size(); ++j)
+			//			{
+			//				if(proctors[j]->getComponentOfType(C_COLLIDER) != NULL)
+			//				{
+			//					if (checkAABBCollision(proctors[i], proctors[j]))
+			//					{
+			//						// TODO: maybe its no need here for checking objects and checking if i = j will be enough
+			//						if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
+			//					}
+			//				}
+			//			}
+			//		}
+			//	}
+			//}
 
 			/* If hierarchy is active and _drawDebug is true, draw debug window */
 			if (active && _drawDebug)

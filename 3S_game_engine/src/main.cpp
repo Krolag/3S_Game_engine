@@ -124,14 +124,14 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
+    //Loader::Importer importer("assets/scenes/scene.xml", &model3D, 1.0f);
 
-    /* Load models to hierarchy */
-  //for (int i = 0; i < importer.importedProctors.size(); ++i)
-  //{
-  //    importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
-  //    hierarchy.addObject(importer.importedProctors.at(i).get());
-  //}
+    /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
+	//for (int i = 0; i < importer.importedProctors.size(); ++i)
+	//{
+	//   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
+	//   hierarchy.addObject(importer.importedProctors.at(i).get());
+	//}
 
     // TODO: @Dawid czy te modele beda serializowane?
     /* Load models that probably won't be serialized */
@@ -146,12 +146,12 @@ int main()
     GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
-    //GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("hero_00"), &hero_00, &collisionBoxShader, false);
+    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("hero_00"), &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
-    //GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader);
+    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
 
     // Chests and coins
@@ -264,8 +264,14 @@ int main()
         model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
 
         dirLight.render(model3D);
+    	
+        collisionBoxShader.use();
+        collisionBoxShader.setUniform("projection", projection);
+        collisionBoxShader.setUniform("view", view);
+        collisionBoxShader.setUniformBool("collision", true);
+    	
         hierarchy.update(true, false);
-
+    	
         /* Sky-box -- Must be rendered almost last, before hud */
         skybox.render();
 
@@ -319,8 +325,9 @@ int main()
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(mainScene.window);
         glfwPollEvents();
-
     }
+
+	/* Export scene to xml file */
     Loader::Exporter::exportScene(hierarchy.getProctors());
 
     ImGui_ImplOpenGL3_Shutdown();

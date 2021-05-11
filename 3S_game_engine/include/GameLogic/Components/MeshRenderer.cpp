@@ -46,6 +46,7 @@ namespace GameLogic
 				proctor->getParentHierarchy()->getCamera()
 			))
 			{
+				shader->use();
 				model->render(*shader);
 			}
 		}
@@ -53,6 +54,7 @@ namespace GameLogic
 		/* temporary solution for proctors without colliders */
 		else
 		{
+			shader->use();
 			model->render(*shader);
 		}
 	}

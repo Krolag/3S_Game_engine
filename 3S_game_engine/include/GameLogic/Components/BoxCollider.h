@@ -15,7 +15,6 @@ namespace GameLogic
 	public:
 		bool isStatic;
 		bool isUpdated;
-		Shader* colliderShader;
 
 		/* Constructors */
 		BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor = NULL, Shader* _shader = NULL, bool _isStatic = true,
@@ -25,32 +24,26 @@ namespace GameLogic
 		/* Set up methods */
 		void init();
 		void setModel(Loader::Model* _model);
-
-		void render();
 		void update();
+		void render();
 
 		/* Variable methods */
 		glm::vec3 getRadius();
 		glm::mat4 getTranslateMatrix();
 		glm::mat4 getScaleMatrix();
-
-	protected:
+	private:
 		/* BoxCollider data */
 		Loader::Model* model;
-		glm::vec3 min;
-		glm::vec3 max;
+		glm::vec3 center;
 		glm::vec3 radius;
 
-		/* Variables for drawing */
-		float centerPoint[3];
-		unsigned int colliderVBO, colliderVAO;
-
-	private:
-		void compareAndUpdateMin(glm::vec3 _value);
-		void compareAndUpdateMax(glm::vec3 _value);
-		void calcCenter();
-		void calcRadius();
-		std::vector<glm::vec3> getColliderBoxVertices();
+		/* Render data */
+		Shader* colliderShader;
+		float colliderVertices[3];
+		unsigned int colliderVAO, colliderVBO;
+		
+		/* Private methods */
+		void extremePointsAlongDirection(glm::vec3 point, glm::vec3& min, glm::vec3& max);
 		glm::mat4 getModelMatrix() const;
 	};
 }

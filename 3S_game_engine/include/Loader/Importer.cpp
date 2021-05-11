@@ -19,8 +19,8 @@ namespace Loader
 		}
 		catch (const parse_error& e)
 		{
-			// TODO: @Kuba - to nie jest jakis blad, jak zrobisz obb sprawdz to
-			std::cout << "Elo Dawid naprawi³em :D jakiœ blad sie tu wywala ale wazne ze dziala : DD" << std::endl;
+			// TODO: @Kuba - wyskakuje blad, oczekuje znaku <, pomimo ze nie powinien, bo plik jest stworzony dobrze
+			std::cout << e.what() << std::endl;
 		}
 
 		// Get the root node
@@ -63,13 +63,11 @@ namespace Loader
 				(float)strtod(childElement->first_node("y")->value(), NULL) / _divider,
 				(float)strtod(childElement->first_node("z")->value(), NULL) / _divider
 			);
-
-			// TODO: quats x,y,z,w or angles x,y,z?
 		
 			// Rotation
 			childElement = firstNode->first_node("Rotation");
 			glm::quat proctorRotation(
-				(float)strtod(childElement->first_node("w")->value(), NULL),
+				1.0f,
 				(float)strtod(childElement->first_node("x")->value(), NULL),
 				(float)strtod(childElement->first_node("y")->value(), NULL),
 				(float)strtod(childElement->first_node("z")->value(), NULL)
