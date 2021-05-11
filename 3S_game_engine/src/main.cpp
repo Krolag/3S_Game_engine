@@ -256,6 +256,7 @@ int main()
 
         model3D.use();
         model3D.setUniform("projection", projection);
+        view = camera.GetViewMatrix();
         model3D.setUniform("view", view);
         model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
 
