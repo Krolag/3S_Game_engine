@@ -1,7 +1,7 @@
 #version 330 core
 // input
 layout (points) in;
-layout (line_strip, max_vertices = 30) out;
+layout (line_strip, max_vertices = 20) out;
 
 // output
 out vec3 fColor;
@@ -17,9 +17,13 @@ uniform bool collision;
 void emitFaces();
 
 void main() {
-	if(collision) fColor = vec3(1.0, 0.0, 0.0);
-	else fColor = vec3(0.0, 1.0, 0.0);
+	if(collision) 
+		fColor = vec3(1.0, 0.0, 0.0);
+	else 
+		fColor = vec3(0.0, 1.0, 0.0);
+	
 	emitFaces();
+	
 	EndPrimitive();
 }
 
@@ -109,5 +113,4 @@ void emitFaces() {
 	offset = gl_in[0].gl_Position + vec4(-radius.x, -radius.y, -radius.z, 0.0);
 	gl_Position = projection * view * model * offset;
     EmitVertex();
-
 }

@@ -49,7 +49,7 @@ namespace Loader
 				/* Rotation */
 				xml_node<>* rotation = sceneDocument.allocate_node(node_element, "Rotation");
 				xml_node<>* w = sceneDocument.allocate_node(node_element, "w");
-				w->value(sceneDocument.allocate_string(std::to_string(proctors.at(i)->transform.rotation.w).c_str()));
+				w->value(sceneDocument.allocate_string("1.0"));
 				rotation->append_node(w);
 				x = sceneDocument.clone_node(x);
 				x->value(sceneDocument.allocate_string(std::to_string(proctors.at(i)->transform.rotation.x).c_str()));
