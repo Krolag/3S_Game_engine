@@ -15,7 +15,7 @@ Animation::Animation(const std::string& _animationPath, Loader::Model* _model)
 Bone* Animation::findBone(const std::string& _name)
 {
 	auto iter = std::find_if(bones.begin(), bones.end(),
-		[&](const Bone& Bone)
+		[&](Bone& Bone) // TODO: @Dawid const?
 		{
 			return Bone.getBoneName() == _name;
 		}
@@ -47,7 +47,7 @@ void Animation::readMissingBones(const aiAnimation* _animation, Loader::Model& _
 		bones.push_back(Bone(channel->mNodeName.data, localBoneInfoMap[channel->mNodeName.data].id, channel));
 	}
 
-	boneInfoMap = localBoneInfoMap;
+	//boneInfoMap = localBoneInfoMap;
 }
 
 void Animation::readHierarchyData(AssimpNodeData& _dest, const aiNode* _src)

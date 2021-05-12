@@ -29,6 +29,9 @@
 
 #include "Loader/Exporter.h"
 
+//#include "Animator/Animation.h"
+#include "Animator/Animator.h"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
 void cameraKeyboardInput(Application::Scene* _scene, InputSystem::KeyboardInput* _keyboard);
@@ -171,6 +174,10 @@ int main()
     GameLogic::MeshRenderer coin_mr(GameLogic::C_MESH, &coin, modelLibrary.getModel(coin.name), &model3D);
     GameLogic::Cash         coin_csh(GameLogic::C_CASH, &coin, &hero_00, &hero_01);
     hierarchy.addObject(&coin);
+
+    Loader::Model player_one("assets/models/hero/player_concept.fbx", "hero_00", true);
+    Animation movement("assets/models/hero/player_concept.fbx", &player_one);
+    Animator animator(&movement);
 #pragma endregion
 
 #pragma region Environment
@@ -289,6 +296,16 @@ int main()
        
         model = glm::translate(model, glm::vec3(0, waterYpos, 0));
         water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
+
+        animator.updateAniamtion(mainScene.deltaTime);
+        auto transforms = animator.getFinalBoneMatrices();
+        for (int i = 0; i < transforms.size(); i++)
+            model3D.setUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f));
+        model = glm::scale(model, glm::vec3(.5f, .5f, .5f));
+        model3D.setUniform("model", model);
+        player_one.render(model3D);
 
         /* Render text */
         points.render(std::to_string(coin_csh.score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
