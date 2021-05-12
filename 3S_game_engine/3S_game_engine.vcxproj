@@ -156,6 +156,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Animator\Animation.cpp" />
+    <ClCompile Include="include\Animator\Animator.cpp" />
+    <ClCompile Include="include\Animator\Bone.cpp" />
     <ClCompile Include="include\Loader\Importer.cpp" />
     <ClCompile Include="include\Framebuffer\Framebuffer.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
@@ -196,6 +199,10 @@
     <ClCompile Include="include\Water\WaterMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Animator\Animation.h" />
+    <ClInclude Include="include\Animator\Animator.h" />
+    <ClInclude Include="include\Animator\Bone.h" />
+    <ClInclude Include="include\assimp\AssimpGLMHelpers.h" />
     <ClInclude Include="include\Loader\Exporter.h" />
     <ClInclude Include="include\Loader\Importer.h" />
     <ClInclude Include="include\Framebuffer\Framebuffer.h" />

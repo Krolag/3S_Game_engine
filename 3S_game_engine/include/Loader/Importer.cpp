@@ -43,7 +43,7 @@ namespace Loader
 
 			// Make a path with accurate extension
 			std::string modelPath = "assets/models/task_models_update/" + modelName + ".fbx";
-			// TODO: ask if xml file shouldn't include model extension type and process elements shouldn't tak it into account
+			// TODO: @Kuba - ask if xml file shouldn't include model extension type and process elements shouldn't take it into account
 			
 			// Add model to the model library if it is not already on the list
 			if (!isNameInImportedList(modelName))
@@ -64,13 +64,13 @@ namespace Loader
 				(float)strtod(childElement->first_node("z")->value(), NULL) / _divider
 			);
 
-			// TODO: quats x,y,z,w or angles x,y,z?
+			// TODO: @Dawid - quats x,y,z,w or angles x,y,z?
 		
 			// Rotation
 			childElement = firstNode->first_node("Rotation");
 			glm::quat proctorRotation(
-				(float)strtod(childElement->first_node("w")->value(), NULL),
-				(float)strtod(childElement->first_node("x")->value(), NULL),
+				1.0f/*(float)strtod(childElement->first_node("w")->value(), NULL)*/,
+				0.0f/*(float)strtod(childElement->first_node("x")->value(), NULL)*/,
 				(float)strtod(childElement->first_node("y")->value(), NULL),
 				(float)strtod(childElement->first_node("z")->value(), NULL)
 			);

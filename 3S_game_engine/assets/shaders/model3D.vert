@@ -2,6 +2,8 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
+layout (location = 3) in ivec4 bondeIds;
+layout (location = 4) in vec4 weights;
 
 out vec3 FragPos;
 out vec3 Normal;
@@ -12,14 +14,42 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform vec4 plane;
 
+const int MAX_BONES = 100;
+const int MAX_BONE_INFLUENCE = 4;
+uniform mat4 finalBonesMatrices[MAX_BONES];
+
 void main()
 {
-	vec4 worldPos = model * vec4(aPos,1.0);
-	gl_ClipDistance[0] = dot(worldPos,plane);
+    /* Calculate total position */
+    vec4 totalPosition = vec4(0.0f);
+    vec3 localNormal = vec3(0.0f);
+    for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+    {
+        if (bondeIds[i] == -1)
+        {
+            continue;
+        }
+        if (bondeIds[i] >= MAX_BONES)
+        {
+            totalPosition = vec4(aPos, 1.0f);
+            break;
+        }
 
-    FragPos = vec3(model * vec4(aPos, 1.0f));
-    Normal = mat3(transpose(inverse(model))) * aNormal;
+        vec4 localPosition = finalBonesMatrices[bondeIds[i]] * vec4(aPos, 1.0f);
+        totalPosition += localPosition * weights[i];
+        localNormal = mat3(finalBonesMatrices[bondeIds[i]]) * aNormal;
+    }
 
-    gl_Position = projection * view * vec4(FragPos, 1.0f);
-    TexCoord = aTexCoords;    
+    // TODO: @Weronika - sprawdz prosze ten kod, jesli cos jest zle to prosze o fix
+    gl_Position = projection * view * model * totalPosition;
+    TexCoord = aTexCoords;
+
+//	vec4 worldPos = model * vec4(aPos,1.0);
+//	gl_ClipDistance[0] = dot(worldPos,plane);
+//
+//    FragPos = vec3(model * vec4(aPos, 1.0f));
+//    Normal = mat3(transpose(inverse(model))) * aNormal;
+//
+//    gl_Position = projection * view * vec4(FragPos, 1.0f);
+//    TexCoord = aTexCoords;    
 }

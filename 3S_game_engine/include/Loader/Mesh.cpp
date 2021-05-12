@@ -104,6 +104,7 @@ namespace Loader
 
 		glBindVertexArray(VAO);
 
+		
 		/* Load data */
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
@@ -121,6 +122,12 @@ namespace Loader
 		/* Vertex.texCoord */
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+		/* Vertex.boneIDs*/
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 4,   GL_INT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneIDs));
+		/* Vertex.weights */
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
 		glBindVertexArray(0);
 	}

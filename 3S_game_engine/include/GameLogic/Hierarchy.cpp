@@ -33,7 +33,7 @@ namespace GameLogic
 		{
 			interactable.push_back(_proctor);
 		}
-		// TODO: @Ignacy - tak samo tutaj jak w Hierarchy.h line 51
+		// TODO: @Ignacy - tak samo tutaj jak w Hierarchy.h line 52
 		if (_proctor->getComponentOfType(C_TREASURE) != NULL)
 		{
 			treasure.push_back(_proctor);
@@ -252,7 +252,7 @@ namespace GameLogic
 				//		{
 				//			if (checkAABBCollision(proctors[i], proctors[j]))
 				//			{
-				//				// TODO: maybe its no need here for checking objects and checking if i = j will be enough
+				//				// TODO: @Kuba - maybe its no need here for checking objects and checking if i = j will be enough
 				//				if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
 				//			}
 				//		}
