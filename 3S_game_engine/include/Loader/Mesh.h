@@ -19,9 +19,9 @@ namespace Loader
 		glm::vec3 normal;
 		glm::vec2 texCoord;
 
-		/* Bone indexes which will influence this vertex and weights from each bone */
-		int boneIDs[MAX_BONE_INFLUENCE];
-		float weights[MAX_BONE_INFLUENCE];
+		///* Bone indexes which will influence this vertex and weights from each bone */
+		//int boneIDs[MAX_BONE_INFLUENCE];
+		//float weights[MAX_BONE_INFLUENCE];
 
 		static std::vector<Vertex> genList(float* _vertices, int _noVertices);
 	};

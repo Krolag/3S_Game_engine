@@ -67,9 +67,9 @@ namespace Loader
 
 		void processNode(aiNode* _node, const aiScene* _scene);
 		Mesh processMesh(aiMesh* _mesh, const aiScene* _scene);
-		void setVertexBoneDataToDefault(Vertex& _vertex);
-		void setVertexBoneData(Vertex& _vertex, int _boneID, float _weight);
-		void extractBoneWeightForVertices(std::vector<Vertex>& _vertices, aiMesh* _mesh, const aiScene* _scene);
+		//void setVertexBoneDataToDefault(Vertex& _vertex);
+		//void setVertexBoneData(Vertex& _vertex, int _boneID, float _weight);
+		//void extractBoneWeightForVertices(std::vector<Vertex>& _vertices, aiMesh* _mesh, const aiScene* _scene);
 
 		std::vector<Texture> loadTextures(aiMaterial* _material, aiTextureType _type);
 	};
