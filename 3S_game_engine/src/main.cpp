@@ -127,7 +127,7 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("assets/scenes/scene.xml", &model3D, 1.0f);
+    Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
 
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
 	for (int i = 0; i < importer.importedProctors.size(); ++i)
@@ -187,7 +187,7 @@ int main()
     /* Lights */
     DirLight dirLight = {
         glm::vec3(-0.2f, -1.0f, -0.3f),
-        glm::vec4(0.1f, 0.1f, 0.1f, 1.0f),
+        glm::vec4(0.5f, 0.5f, 0.5f, 1.0f),
         glm::vec4(0.4f, 0.4f, 0.4f, 1.0f),
         glm::vec4(0.75f, 0.75f, 0.75f, 1.0f)
     };
@@ -236,7 +236,7 @@ int main()
         camera.updateCameraVectors();
    	
         model3D.use();
-        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
         model3D.setUniform("projection", projection);
         view = camera.GetViewMatrix();
         model3D.setUniform("view", view);
@@ -336,7 +336,11 @@ int main()
     }
 
 	/* Export scene to xml file */
-    Loader::Exporter::exportScene(hierarchy.getProctors());
+    std::cout << "Save scene? [y/n]" << std::endl;
+    std::string check;
+    std::cin >> check;
+    if (check == "y")
+        Loader::Exporter::exportScene(hierarchy.getProctors());
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

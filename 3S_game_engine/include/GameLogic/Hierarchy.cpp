@@ -195,7 +195,7 @@ namespace GameLogic
 		ImGui::Begin("Hierarchy");
 		for (auto& a : proctors)
 		{
-			if (ImGui::Button(a->name.c_str(), { 100.0f, 25.0f }))
+			if (ImGui::Button(a->name.c_str(), { 150.0f, 25.0f }))
 			{
 				activeProctorName = a->name;
 			}

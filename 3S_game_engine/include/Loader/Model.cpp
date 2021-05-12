@@ -39,10 +39,8 @@ namespace Loader
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(_path,
 			aiProcess_Triangulate |
-			aiProcess_GenSmoothNormals |
-			aiProcess_CalcTangentSpace
-			/*aiProcess_FlipUVs |
-			aiProcess_PreTransformVertices*/);
+			aiProcess_FlipUVs |
+			aiProcess_PreTransformVertices);
 
 		/* Check if scene is imported properly */
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
