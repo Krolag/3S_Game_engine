@@ -127,22 +127,22 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
+    //Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
 
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
-	for (int i = 0; i < importer.importedProctors.size(); ++i)
-	{
-	   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
-	   hierarchy.addObject(importer.importedProctors.at(i).get());
-	}
+	//for (int i = 0; i < importer.importedProctors.size(); ++i)
+	//{
+	//   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
+	//   hierarchy.addObject(importer.importedProctors.at(i).get());
+	//}
 
-    // TODO: @Dawid czy te modele beda serializowane?
     /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_00", true);
     modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_01", true);
     modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_00", true);
     modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_01", true);
-    modelLibrary.addModel("assets/models/environment/coin.fbx", "coin", true);
+    modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);
+    modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true);
 
     /* Configure proctors */
     // Players
@@ -170,10 +170,10 @@ int main()
     GameLogic::Treasure     chestBody2_tre(GameLogic::C_TREASURE, &chestBody2);
     //GameLogic::BoxCollider  chestBody2_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody2.name), &chestBody2, &collisionBoxShader);
     hierarchy.addObject(&chestBody2);
-    GameLogic::Proctor      coin("coin", glm::vec3(0.0f, 5.0f, -20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
-    GameLogic::MeshRenderer coin_mr(GameLogic::C_MESH, &coin, modelLibrary.getModel(coin.name), &model3D);
-    GameLogic::Cash         coin_csh(GameLogic::C_CASH, &coin, &hero_00, &hero_01);
-    hierarchy.addObject(&coin);
+    GameLogic::Proctor      coin_00("coin_00", glm::vec3(-30.0f, 5.0f, -20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
+    GameLogic::MeshRenderer coin_00_mr(GameLogic::C_MESH, &coin_00, modelLibrary.getModel(coin_00.name), &model3D);
+    GameLogic::Cash         coin_00_csh(GameLogic::C_CASH, &coin_00, &hero_00, &hero_01);
+    hierarchy.addObject(&coin_00);
 
     //Loader::Model player_one("assets/models/vampire/dancing_vampire.fbx", "", true);
     //Animation movement("assets/models/vampire/dancing_vampire.fbx", &player_one);
@@ -295,7 +295,7 @@ int main()
         hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
        
         model = glm::translate(model, glm::vec3(0, waterYpos, 0));
-        water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
+        //water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
         //animator.updateAniamtion(mainScene.deltaTime);
         //auto transforms = animator.getFinalBoneMatrices();
@@ -308,7 +308,7 @@ int main()
         //player_one.render(model3D);
 
         /* Render text */
-        points.render(std::to_string(coin_csh.score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
+        points.render(std::to_string(coin_00_csh.score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
         
         /* Render cute Mario as placeholder to coin */
         marioWalking[marioWalkingIndex].render();
@@ -336,11 +336,11 @@ int main()
     }
 
 	/* Export scene to xml file */
-    std::cout << "Save scene? [y/n]" << std::endl;
-    std::string check;
-    std::cin >> check;
-    if (check == "y")
-        Loader::Exporter::exportScene(hierarchy.getProctors());
+    //std::cout << "Save scene? [y/n]" << std::endl;
+    //std::string check;
+    //std::cin >> check;
+    //if (check == "y")
+    //    Loader::Exporter::exportScene(hierarchy.getProctors());
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

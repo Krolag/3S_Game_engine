@@ -63,8 +63,7 @@ namespace Loader
 				(float)strtod(childElement->first_node("z")->value(), NULL)
 			);
 
-			// TODO: @Dawid - quats x,y,z,w or angles x,y,z?
-		
+			// TODO: @Kuba - imo powinny byc eulerAngles
 			// Rotation
 			childElement = firstNode->first_node("Rotation");
 			childElement = childElement->first_node("eulerAngles");
