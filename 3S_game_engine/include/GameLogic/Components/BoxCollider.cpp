@@ -137,14 +137,14 @@ namespace GameLogic
 
 	void BoxCollider::render()
 	{
-		std::cout << "====================\nBOX COLLIDER RENDER:\n" << std::endl;
+		//std::cout << "====================\nBOX COLLIDER RENDER:\n" << std::endl;
 
 		/* Update vertex data */
 		colliderVertices[0] = center.x;
 		colliderVertices[1] = center.y;
 		colliderVertices[2] = center.z;
 
-		std::cout << "----------\nvert data:\n" << colliderVertices[0] << " " << colliderVertices[1] << " " << colliderVertices[2] << std::endl;
+		//std::cout << "----------\nvert data:\n" << colliderVertices[0] << " " << colliderVertices[1] << " " << colliderVertices[2] << std::endl;
 		
 		/* Use collider shader and bind appropriate vertex array and buffer */
 		colliderShader->use();

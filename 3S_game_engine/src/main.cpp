@@ -25,12 +25,13 @@
 #include "Camera/FrustumCulling.h"
 #include "Loader/Importer.h"
 #include "Water/WaterMesh.h"
-#include <Framebuffer/Framebuffer.h>
+#include "Framebuffer/Framebuffer.h"
 
 #include "Loader/Exporter.h"
 
 //#include "Animator/Animation.h"
 #include "Animator/Animator.h"
+#include <Monster/Monster.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -143,6 +144,7 @@ int main()
     modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true);
+    modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
     // Players
@@ -174,6 +176,12 @@ int main()
     GameLogic::MeshRenderer coin_00_mr(GameLogic::C_MESH, &coin_00, modelLibrary.getModel(coin_00.name), &model3D);
     GameLogic::Cash         coin_00_csh(GameLogic::C_CASH, &coin_00, &hero_00, &hero_01);
     hierarchy.addObject(&coin_00);
+    GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+    GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
+    hierarchy.addObject(&island_00);
+    GameLogic::Proctor      island_01("island_01", glm::vec3(20.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, -1.57f, 0.0f), glm::vec3(0.05f));
+    GameLogic::MeshRenderer island_01_mr(GameLogic::C_MESH, &island_01, modelLibrary.getModel("island_00"), &model3D);
+    hierarchy.addObject(&island_01);
 
     //Loader::Model player_one("assets/models/vampire/dancing_vampire.fbx", "", true);
     //Animation movement("assets/models/vampire/dancing_vampire.fbx", &player_one);
@@ -208,6 +216,10 @@ int main()
     float yValueUp = 0.2;
     float yValueDown = 0.2;
 
+    std::vector<GameLogic::Proctor*> tiles;
+    tiles.push_back(&island_00);
+    tiles.push_back(&island_01);
+    Monster monsterSystem(&hero_00, tiles);
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -320,6 +332,8 @@ int main()
         }
         if (marioWalkingIndex >= 4)
             marioWalkingIndex = 0;
+
+        monsterSystem.update();
         
         /* Update InputSystem */
         keyboardInput->update();

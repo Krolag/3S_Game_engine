@@ -42,6 +42,7 @@
     <ClCompile Include="include\Animator\Bone.cpp" />
     <ClCompile Include="include\Animator\Animation.cpp" />
     <ClCompile Include="include\Animator\Animator.cpp" />
+    <ClCompile Include="include\Monster\Monster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="include\Animator\Bone.h" />
     <ClInclude Include="include\Animator\Animation.h" />
     <ClInclude Include="include\Animator\Animator.h" />
+    <ClInclude Include="include\Monster\Monster.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

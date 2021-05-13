@@ -192,6 +192,7 @@
     <ClCompile Include="include\Skybox\Skybox.cpp" />
     <ClCompile Include="include\UIRender\TextRender.cpp" />
     <ClCompile Include="include\Points\Points.cpp" />
+    <ClCompile Include="include\Monster\Monster.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="include\Texture\Texture.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="include\UIRender\UIRender.h" />
     <ClInclude Include="include\Points\Points.h" />
     <ClInclude Include="include\Water\WaterMesh.h" />
+    <ClInclude Include="include\Monster\Monster.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
