@@ -128,14 +128,15 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Create importer with given *.xml file */
-    //Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
+    Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
 
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
-	//for (int i = 0; i < importer.importedProctors.size(); ++i)
-	//{
-	//   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
-	//   hierarchy.addObject(importer.importedProctors.at(i).get());
-	//}
+	for (int i = 0; i < importer.importedProctors.size(); ++i)
+	{
+	   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
+	   hierarchy.addObject(importer.importedProctors.at(i).get());
+	}
+
 
     /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_00", true);
@@ -144,7 +145,7 @@ int main()
     modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true);
-    modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
+    //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
     // Players
@@ -176,12 +177,12 @@ int main()
     GameLogic::MeshRenderer coin_00_mr(GameLogic::C_MESH, &coin_00, modelLibrary.getModel(coin_00.name), &model3D);
     GameLogic::Cash         coin_00_csh(GameLogic::C_CASH, &coin_00, &hero_00, &hero_01);
     hierarchy.addObject(&coin_00);
-    GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+  /*  GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
     hierarchy.addObject(&island_00);
     GameLogic::Proctor      island_01("island_01", glm::vec3(20.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, -1.57f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_01_mr(GameLogic::C_MESH, &island_01, modelLibrary.getModel("island_00"), &model3D);
-    hierarchy.addObject(&island_01);
+    hierarchy.addObject(&island_01);*/
 
     //Loader::Model player_one("assets/models/vampire/dancing_vampire.fbx", "", true);
     //Animation movement("assets/models/vampire/dancing_vampire.fbx", &player_one);
@@ -217,8 +218,8 @@ int main()
     float yValueDown = 0.2;
 
     std::vector<GameLogic::Proctor*> tiles;
-    tiles.push_back(&island_00);
-    tiles.push_back(&island_01);
+    //tiles.push_back(&island_00);
+    //tiles.push_back(&island_01);
     Monster monsterSystem(&hero_00, tiles);
 
     /* Render loop */

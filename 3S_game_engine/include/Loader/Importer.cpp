@@ -60,18 +60,24 @@ namespace Loader
 			glm::vec3 proctorPosition(
 				(float)strtod(childElement->first_node("x")->value(), NULL),
 				(float)strtod(childElement->first_node("y")->value(), NULL),
-				(float)strtod(childElement->first_node("z")->value(), NULL)
+				-(float)strtod(childElement->first_node("z")->value(), NULL)
 			);
 
 			// TODO: @Kuba - imo powinny byc eulerAngles
 			// Rotation
 			childElement = firstNode->first_node("Rotation");
 			childElement = childElement->first_node("eulerAngles");
+			//glm::vec3 eulerAngles(
+			//	glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)),
+			//	glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)),
+			//	glm::radians((float)strtod(childElement->first_node("z")->value(), NULL))
+			//);
 			glm::quat proctorRotation(
-				1.0f, 
-				0.0f,
-				glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)),
-				0.0f);
+				1.0f,
+				0.0f,//glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)),
+				-glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
+				0.0f//glm::radians((float)strtod(childElement->first_node("z")->value(), NULL))
+			);
 			//	1.0f/*(float)strtod(childElement->first_node("w")->value(), NULL)*/,
 			//	0.0f/*(float)strtod(childElement->first_node("x")->value(), NULL)*/,
 			//	(float)strtod(childElement->first_node("y")->value(), NULL),

@@ -1,11 +1,35 @@
 <?xml version="1.0"?>
 <GameModelsCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <GameModels>
-    <GameModel name="rock_01-1" model_id="0">
+    <GameModel name="trunk_walkable-1" model_id="0">
       <Position>
-        <x>-5.766998</x>
-        <y>0.48</y>
-        <z>8.654964</z>
+        <x>60.32</x>
+        <y>-0.09</y>
+        <z>7.4</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>0.500087261</y>
+        <z>0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>90</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>8.642099</x>
+        <y>7.62</y>
+        <z>8.642099</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-1" model_id="1">
+      <Position>
+        <x>1.95</x>
+        <y>2</y>
+        <z>0.2</z>
       </Position>
       <Rotation>
         <x>-0.7071068</x>
@@ -15,117 +39,21 @@
         <eulerAngles>
           <x>270.019775</x>
           <y>0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>2.54</x>
-        <y>2.54</y>
-        <z>2.54</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="rock_00-1" model_id="1">
-      <Position>
-        <x>-5.7</x>
-        <y>0.33</y>
-        <z>6.1</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
-        <y>0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>2.54</x>
-        <y>2.54</y>
-        <z>2.54</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="plant_01-1" model_id="2">
-      <Position>
-        <x>-6.026</x>
-        <y>0.319</y>
-        <z>4.41899967</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
-        <y>0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>0.762</x>
-        <y>0.762</y>
-        <z>0.762</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="plant_00-1" model_id="3">
-      <Position>
-        <x>-3.837</x>
-        <y>0.338</y>
-        <z>4.91</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
-        <y>0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>0.762</x>
-        <y>0.5471916</y>
-        <z>0.762</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="palm_foliage_01-1" model_id="4">
-      <Position>
-        <x>-3.86952758</x>
-        <y>1.56544471</y>
-        <z>6.14398956</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
-        <y>-0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>-0</y>
           <z>0</z>
         </eulerAngles>
       </Rotation>
       <Scale>
         <x>2.08949018</x>
-        <y>2.0894897</y>
-        <z>2.214435</z>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
       </Scale>
       <ChildrenModels />
     </GameModel>
-    <GameModel name="palm_trunk_01-1" model_id="5">
+    <GameModel name="palm_foliage_00-1" model_id="2">
       <Position>
-        <x>-3.559</x>
-        <y>0.38</y>
-        <z>6.13</z>
+        <x>-1.52</x>
+        <y>2.58144188</y>
+        <z>1.14</z>
       </Position>
       <Rotation>
         <x>-0.7071068</x>
@@ -139,41 +67,17 @@
         </eulerAngles>
       </Rotation>
       <Scale>
-        <x>2.266625</x>
-        <y>1.99858379</y>
-        <z>2.266625</z>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
       </Scale>
       <ChildrenModels />
     </GameModel>
-    <GameModel name="palm_foliage_00-1" model_id="6">
+    <GameModel name="island_terrain-1" model_id="3">
       <Position>
-        <x>-7.29</x>
-        <y>2.14199948</y>
-        <z>4.2</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
-        <y>-0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>-0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>1.82883024</x>
-        <y>1.82883024</y>
-        <z>1.82883024</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="palm_trunk_00-1" model_id="7">
-      <Position>
-        <x>-7.48</x>
-        <y>0.22</y>
-        <z>4.22</z>
+        <x>11</x>
+        <y>0</y>
+        <z>2</z>
       </Position>
       <Rotation>
         <x>-0.7071068</x>
@@ -187,25 +91,25 @@
         </eulerAngles>
       </Rotation>
       <Scale>
-        <x>2.880652</x>
+        <x>2.54</x>
         <y>2.54</y>
-        <z>2.880652</z>
+        <z>2.54</z>
       </Scale>
       <ChildrenModels />
     </GameModel>
-    <GameModel name="island_lateral_00-1" model_id="8">
+    <GameModel name="island_side-1" model_id="4">
       <Position>
-        <x>-3.82</x>
+        <x>2</x>
         <y>0</y>
-        <z>8.16</z>
+        <z>0</z>
       </Position>
       <Rotation>
-        <x>0.5</x>
-        <y>-0.5</y>
-        <z>-0.5</z>
-        <w>-0.5</w>
+        <x>-0.499912739</x>
+        <y>0.500087261</y>
+        <z>0.499912739</z>
+        <w>0.500087261</w>
         <eulerAngles>
-          <x>270</x>
+          <x>270.019775</x>
           <y>90</y>
           <z>0</z>
         </eulerAngles>
@@ -217,43 +121,19 @@
       </Scale>
       <ChildrenModels />
     </GameModel>
-    <GameModel name="island_lateral_00-2" model_id="8">
+    <GameModel name="island_corner_00-1" model_id="5">
       <Position>
-        <x>-7.81999969</x>
+        <x>2</x>
         <y>0</y>
-        <z>8.16</z>
+        <z>4</z>
       </Position>
       <Rotation>
-        <x>-0.5</x>
-        <y>-0.5</y>
-        <z>-0.5</z>
-        <w>0.5</w>
-        <eulerAngles>
-          <x>270</x>
-          <y>270</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>2.54</x>
-        <y>2.54</y>
-        <z>2.54</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="island_corner_00-1" model_id="10">
-      <Position>
-        <x>-3.82</x>
+        <x>-0.7071068</x>
         <y>0</y>
-        <z>4.16</z>
-      </Position>
-      <Rotation>
-        <x>0.7071068</x>
-        <y>-0</y>
         <z>-0</z>
-        <w>-0.7071068</w>
+        <w>0.7071067</w>
         <eulerAngles>
-          <x>270</x>
+          <x>270.019775</x>
           <y>0</y>
           <z>0</z>
         </eulerAngles>
@@ -265,43 +145,19 @@
       </Scale>
       <ChildrenModels />
     </GameModel>
-    <GameModel name="island_corner_00-2" model_id="10">
+    <GameModel name="island_corner_00-2" model_id="5">
       <Position>
-        <x>-7.81999969</x>
+        <x>-2</x>
         <y>0</y>
-        <z>4.16</z>
+        <z>4</z>
       </Position>
       <Rotation>
-        <x>0.5</x>
-        <y>-0.5</y>
-        <z>-0.5</z>
-        <w>-0.5</w>
+        <x>-0.499912739</x>
+        <y>-0.500087261</y>
+        <z>-0.499912739</z>
+        <w>0.500087261</w>
         <eulerAngles>
-          <x>270</x>
-          <y>90</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>2.54</x>
-        <y>2.54</y>
-        <z>2.54</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="island_corner_00-3" model_id="10">
-      <Position>
-        <x>-3.82</x>
-        <y>0</y>
-        <z>12.16</z>
-      </Position>
-      <Rotation>
-        <x>-0.5</x>
-        <y>-0.5</y>
-        <z>-0.5</z>
-        <w>0.5</w>
-        <eulerAngles>
-          <x>270</x>
+          <x>270.019775</x>
           <y>270</y>
           <z>0</z>
         </eulerAngles>
@@ -313,16 +169,88 @@
       </Scale>
       <ChildrenModels />
     </GameModel>
-    <GameModel name="island_corner_00-4" model_id="10">
+    <GameModel name="island_corner_00-3" model_id="5">
       <Position>
-        <x>-7.81999969</x>
+        <x>15</x>
         <y>0</y>
-        <z>12.16</z>
+        <z>6</z>
       </Position>
       <Rotation>
-        <x>0</x>
-        <y>-0.7071068</y>
-        <z>-0.7071068</z>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-2" model_id="4">
+      <Position>
+        <x>-2</x>
+        <y>0</y>
+        <z>0</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>-0.500087261</y>
+        <z>-0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>270</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_corner_00-4" model_id="5">
+      <Position>
+        <x>2</x>
+        <y>0</y>
+        <z>-4</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>0.500087261</y>
+        <z>0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>90</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_corner_00-5" model_id="5">
+      <Position>
+        <x>-2</x>
+        <y>0</y>
+        <z>-4</z>
+      </Position>
+      <Rotation>
+        <x>-0</x>
+        <y>-0.7072302</y>
+        <z>-0.7069834</z>
         <w>0</w>
         <eulerAngles>
           <x>270</x>
@@ -337,131 +265,35 @@
       </Scale>
       <ChildrenModels />
     </GameModel>
-    <GameModel name="palm_foliage_00-2" model_id="6">
+    <GameModel name="island_corner_00-6" model_id="5">
       <Position>
-        <x>-5.23</x>
-        <y>2.14199948</y>
-        <z>10.43</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
-        <y>-0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>-0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>1.82883024</x>
-        <y>1.82883024</y>
-        <z>1.82883024</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="palm_trunk_00-2" model_id="7">
-      <Position>
-        <x>-5.42</x>
-        <y>0.22</y>
-        <z>10.45</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
+        <x>7</x>
         <y>0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>-0.500087261</y>
+        <z>-0.499912739</z>
+        <w>0.500087261</w>
         <eulerAngles>
           <x>270.019775</x>
-          <y>0</y>
+          <y>270</y>
           <z>0</z>
         </eulerAngles>
       </Rotation>
       <Scale>
-        <x>2.880652</x>
+        <x>2.54</x>
         <y>2.54</y>
-        <z>2.880652</z>
+        <z>2.54</z>
       </Scale>
       <ChildrenModels />
     </GameModel>
-    <GameModel name="plant_00-2" model_id="3">
+    <GameModel name="island_side-3" model_id="4">
       <Position>
-        <x>-6.51</x>
-        <y>0.36</y>
-        <z>6.27999973</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
+        <x>15</x>
         <y>0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>0.762</x>
-        <y>0.5471916</y>
-        <z>0.762</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="plant_00-3" model_id="3">
-      <Position>
-        <x>-4.85</x>
-        <y>0.36</y>
-        <z>8.09</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
-        <y>0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>0.762</x>
-        <y>0.5471916</y>
-        <z>0.762</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="plant_00-4" model_id="3">
-      <Position>
-        <x>-8.07</x>
-        <y>0.36</y>
-        <z>8.09</z>
-      </Position>
-      <Rotation>
-        <x>-0.7071068</x>
-        <y>0</y>
-        <z>-0</z>
-        <w>0.7071067</w>
-        <eulerAngles>
-          <x>270.019775</x>
-          <y>0</y>
-          <z>0</z>
-        </eulerAngles>
-      </Rotation>
-      <Scale>
-        <x>0.762</x>
-        <y>0.5471916</y>
-        <z>0.762</z>
-      </Scale>
-      <ChildrenModels />
-    </GameModel>
-    <GameModel name="plant_01-2" model_id="2">
-      <Position>
-        <x>-7.58</x>
-        <y>0.32</y>
-        <z>10.29</z>
+        <z>2.00000024</z>
       </Position>
       <Rotation>
         <x>-0.499912739</x>
@@ -475,9 +307,1713 @@
         </eulerAngles>
       </Rotation>
       <Scale>
-        <x>0.762</x>
-        <y>0.762</y>
-        <z>0.762</z>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-4" model_id="4">
+      <Position>
+        <x>7</x>
+        <y>0</y>
+        <z>2.00000024</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>-0.500087261</y>
+        <z>-0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>270</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_corner_00-7" model_id="5">
+      <Position>
+        <x>7</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0</x>
+        <y>-0.7072302</y>
+        <z>-0.7069834</z>
+        <w>0</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>180</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_corner_00-8" model_id="5">
+      <Position>
+        <x>15</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>0.500087261</y>
+        <z>0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>90</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-5" model_id="4">
+      <Position>
+        <x>7</x>
+        <y>0</y>
+        <z>-2</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>-0.500087261</y>
+        <z>-0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>270</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-6" model_id="4">
+      <Position>
+        <x>15</x>
+        <y>0</y>
+        <z>-2.00000024</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>0.500087261</y>
+        <z>0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>90</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-7" model_id="4">
+      <Position>
+        <x>11</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0</x>
+        <y>-0.7072302</y>
+        <z>-0.7069834</z>
+        <w>0</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>180</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-8" model_id="4">
+      <Position>
+        <x>11</x>
+        <y>0</y>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7069834</x>
+        <y>0</y>
+        <z>0</z>
+        <w>0.7072302</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-2" model_id="3">
+      <Position>
+        <x>11</x>
+        <y>0</y>
+        <z>-2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-3" model_id="3">
+      <Position>
+        <x>24</x>
+        <y>0</y>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-9" model_id="4">
+      <Position>
+        <x>20</x>
+        <y>0</y>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>-0.500087261</y>
+        <z>-0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>270</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-4" model_id="3">
+      <Position>
+        <x>28</x>
+        <y>0</y>
+        <z>2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-5" model_id="3">
+      <Position>
+        <x>28</x>
+        <y>0</y>
+        <z>-2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-6" model_id="3">
+      <Position>
+        <x>28</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-7" model_id="3">
+      <Position>
+        <x>32</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-8" model_id="3">
+      <Position>
+        <x>36</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-9" model_id="3">
+      <Position>
+        <x>36</x>
+        <y>0</y>
+        <z>-2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-10" model_id="3">
+      <Position>
+        <x>36</x>
+        <y>0</y>
+        <z>2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-11" model_id="3">
+      <Position>
+        <x>36</x>
+        <y>0</y>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-12" model_id="3">
+      <Position>
+        <x>32</x>
+        <y>0</y>
+        <z>2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-13" model_id="3">
+      <Position>
+        <x>28</x>
+        <y>0</y>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-14" model_id="3">
+      <Position>
+        <x>36</x>
+        <y>0</y>
+        <z>10</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-10" model_id="4">
+      <Position>
+        <x>52</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0</x>
+        <y>-0.7072302</y>
+        <z>-0.7069834</z>
+        <w>0</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>180</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-15" model_id="3">
+      <Position>
+        <x>52</x>
+        <y>0</y>
+        <z>-2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-16" model_id="3">
+      <Position>
+        <x>52</x>
+        <y>0</y>
+        <z>2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-17" model_id="3">
+      <Position>
+        <x>48</x>
+        <y>0</y>
+        <z>2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-18" model_id="3">
+      <Position>
+        <x>52</x>
+        <y>0</y>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-19" model_id="3">
+      <Position>
+        <x>56</x>
+        <y>0</y>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-20" model_id="3">
+      <Position>
+        <x>60</x>
+        <y>0</y>
+        <z>6</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-21" model_id="3">
+      <Position>
+        <x>60</x>
+        <y>0</y>
+        <z>14</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-22" model_id="3">
+      <Position>
+        <x>52</x>
+        <y>0</y>
+        <z>14</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-23" model_id="3">
+      <Position>
+        <x>48</x>
+        <y>0</y>
+        <z>14</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_terrain-24" model_id="3">
+      <Position>
+        <x>64</x>
+        <y>0</y>
+        <z>14</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_corner_00-9" model_id="5">
+      <Position>
+        <x>100</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>0.500087261</y>
+        <z>0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>90</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_corner_00-10" model_id="5">
+      <Position>
+        <x>88</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0</x>
+        <y>-0.7072302</y>
+        <z>-0.7069834</z>
+        <w>0</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>180</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-11" model_id="4">
+      <Position>
+        <x>92</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0</x>
+        <y>-0.7072302</y>
+        <z>-0.7069834</z>
+        <w>0</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>180</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_side-12" model_id="4">
+      <Position>
+        <x>96</x>
+        <y>0</y>
+        <z>-6</z>
+      </Position>
+      <Rotation>
+        <x>-0</x>
+        <y>-0.7072302</y>
+        <z>-0.7069834</z>
+        <w>0</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>180</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_corner_00-11" model_id="5">
+      <Position>
+        <x>88</x>
+        <y>0</y>
+        <z>-2</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>-0.500087261</y>
+        <z>-0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>270</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="island_corner_00-12" model_id="5">
+      <Position>
+        <x>100</x>
+        <y>0</y>
+        <z>-2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.54</x>
+        <y>2.54</y>
+        <z>2.54</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-2" model_id="2">
+      <Position>
+        <x>1.83</x>
+        <y>2.58144188</y>
+        <z>4.01</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-2" model_id="1">
+      <Position>
+        <x>-1.32</x>
+        <y>2</y>
+        <z>-3.52</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="trunk_walkable-2" model_id="0">
+      <Position>
+        <x>52.38</x>
+        <y>-0.09</y>
+        <z>12.8</z>
+      </Position>
+      <Rotation>
+        <x>-0.499912739</x>
+        <y>-0.500087261</y>
+        <z>-0.499912739</z>
+        <w>0.500087261</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>270</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>8.642099</x>
+        <y>7.62</y>
+        <z>8.642099</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="trunk_walkable-3" model_id="0">
+      <Position>
+        <x>58.6</x>
+        <y>-0.09</y>
+        <z>14</z>
+      </Position>
+      <Rotation>
+        <x>-0.7069834</x>
+        <y>0</y>
+        <z>0</z>
+        <w>0.7072302</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>8.642099</x>
+        <y>7.62</y>
+        <z>8.642099</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-3" model_id="2">
+      <Position>
+        <x>11.02</x>
+        <y>2.58144188</y>
+        <z>-5.67</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-3" model_id="1">
+      <Position>
+        <x>14.49</x>
+        <y>2</y>
+        <z>0.2</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-4" model_id="1">
+      <Position>
+        <x>12.94</x>
+        <y>2</y>
+        <z>-3.52</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-4" model_id="2">
+      <Position>
+        <x>14.37</x>
+        <y>2.58144188</y>
+        <z>4.01</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-5" model_id="2">
+      <Position>
+        <x>11.18</x>
+        <y>2.58144188</y>
+        <z>2.85000038</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-5" model_id="1">
+      <Position>
+        <x>7.48</x>
+        <y>2</y>
+        <z>-4.68</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-6" model_id="1">
+      <Position>
+        <x>14.31</x>
+        <y>2</y>
+        <z>-5.08</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-6" model_id="2">
+      <Position>
+        <x>8.51</x>
+        <y>2.58144188</y>
+        <z>4.64</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-7" model_id="2">
+      <Position>
+        <x>7.99</x>
+        <y>2.58144188</y>
+        <z>-1.33</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-8" model_id="2">
+      <Position>
+        <x>27.9700012</x>
+        <y>2.58144188</y>
+        <z>5.77000046</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-7" model_id="1">
+      <Position>
+        <x>28.09</x>
+        <y>2</y>
+        <z>1.96</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-9" model_id="2">
+      <Position>
+        <x>24.78</x>
+        <y>2.58144188</y>
+        <z>4.61000061</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-10" model_id="2">
+      <Position>
+        <x>32.95</x>
+        <y>2.58144188</y>
+        <z>0.88</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-8" model_id="1">
+      <Position>
+        <x>36.2600021</x>
+        <y>2</y>
+        <z>-1.77000046</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-11" model_id="2">
+      <Position>
+        <x>36.14</x>
+        <y>2.58144188</y>
+        <z>2.04</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-12" model_id="2">
+      <Position>
+        <x>36.74</x>
+        <y>2.58144188</y>
+        <z>-7.63</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-9" model_id="1">
+      <Position>
+        <x>31.5600014</x>
+        <y>2</y>
+        <z>-7.77000046</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-13" model_id="2">
+      <Position>
+        <x>28.25</x>
+        <y>2.58144188</y>
+        <z>-5.12</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-14" model_id="2">
+      <Position>
+        <x>34.63</x>
+        <y>2.58144188</y>
+        <z>8.99</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-15" model_id="2">
+      <Position>
+        <x>56.6</x>
+        <y>2.58144188</y>
+        <z>4.32</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-10" model_id="1">
+      <Position>
+        <x>52.24</x>
+        <y>2</y>
+        <z>-1.77000046</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-16" model_id="2">
+      <Position>
+        <x>48.93</x>
+        <y>2.58144188</y>
+        <z>0.88</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-17" model_id="2">
+      <Position>
+        <x>47.85</x>
+        <y>2.58144188</y>
+        <z>11.75</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-11" model_id="1">
+      <Position>
+        <x>53.17</x>
+        <y>2</y>
+        <z>12.07</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-18" model_id="2">
+      <Position>
+        <x>50.73</x>
+        <y>2.58144188</y>
+        <z>14.39</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-19" model_id="2">
+      <Position>
+        <x>62.69</x>
+        <y>2.58144188</y>
+        <z>14.39</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_01-12" model_id="1">
+      <Position>
+        <x>65.13</x>
+        <y>2</y>
+        <z>12.07</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>2.08949018</x>
+        <y>2.08949041</y>
+        <z>2.21443558</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-20" model_id="2">
+      <Position>
+        <x>59.43</x>
+        <y>2.58144188</y>
+        <z>14.45</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
+      </Scale>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="palm_foliage_00-21" model_id="2">
+      <Position>
+        <x>60.92</x>
+        <y>2.58144188</y>
+        <z>4.32</z>
+      </Position>
+      <Rotation>
+        <x>-0.6531675</x>
+        <y>0.2706453</y>
+        <z>0.270550817</z>
+        <w>0.653395534</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>45</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1.82883036</x>
+        <y>1.82883036</y>
+        <z>1.82883048</z>
       </Scale>
       <ChildrenModels />
     </GameModel>
