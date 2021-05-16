@@ -91,7 +91,7 @@ int main()
     /* Create shaders */
     Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
-    Shader collisionBoxShader("assets/shaders/boxCollider.vert", "assets/shaders/boxCollider.frag", "assets/shaders/boxCollider.geom");
+    Shader collisionBoxShader("assets/shaders/boxCollider2.vert", "assets/shaders/boxCollider2.frag");
 #pragma endregion
 
 #pragma region UI init

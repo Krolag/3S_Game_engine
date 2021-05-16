@@ -41,17 +41,66 @@ namespace GameLogic
 			{
 				if (a->type == C_MESH)
 				{
-					a->update();
+					if(this->getComponentOfType(C_COLLIDER)!=NULL)
+					{
+						//glm::vec3 oldPos = ((MeshRenderer*)a)->model->position;
+						//glm::quat oldRot = ((MeshRenderer*)a)->model->rotation;
+						//glm::vec3 oldScal = ((MeshRenderer*)a)->model->scale;
+						//
+						//a->update();
+						//
+						//glm::vec3 newPos = ((MeshRenderer*)a)->model->position;
+						//glm::quat newRot = ((MeshRenderer*)a)->model->rotation;
+						//glm::vec3 newScal = ((MeshRenderer*)a)->model->scale;
+
+						//if(oldScal != newScal)
+						//{
+						//	((BoxCollider*)this->getComponentOfType(C_COLLIDER))->updateScale(oldScal, newScal);
+						//}
+						//if(oldRot != newRot)
+						//{
+						//	((BoxCollider*)this->getComponentOfType(C_COLLIDER))->updateRotation(oldRot, newRot);
+						//}
+						//if (oldPos != newPos)
+						//{
+						//	((BoxCollider*)this->getComponentOfType(C_COLLIDER))->updatePosition(oldPos, newPos);
+						//}
+						//((BoxCollider*)this->getComponentOfType(C_COLLIDER))->update();
+					}
+					else
+					{
+						//if (a->type != C_COLLIDER)
+							//a->update();
+					}
 				}
 			}
 			else
 			{
-				if (a->type == C_COLLIDER)
+				//std::cout << "NOT ONLY RENDER!\n";
+				if((a->type == C_MESH))
 				{
+					glm::vec3 oldPos = ((MeshRenderer*)a)->model->position;
+					glm::quat oldRot = ((MeshRenderer*)a)->model->rotation;
+					glm::vec3 oldScal = ((MeshRenderer*)a)->model->scale;
+					a->update();
+					glm::vec3 newPos = ((MeshRenderer*)a)->model->position;
+					glm::quat newRot = ((MeshRenderer*)a)->model->rotation;
+					glm::vec3 newScal = ((MeshRenderer*)a)->model->scale;
+					if(oldPos.x != newPos.x || oldPos.y != newPos.y || oldPos.z != newPos.z)
+					{
+						//std::cout << "\nOLD TRANSFORM:\npos: " << oldPos.x << " " << oldPos.y << " " << oldPos.z << std::endl;
+						//std::cout << "\nNEW TRANSFORM:\npos: " << newPos.x << " " << newPos.y << " " << newPos.z << std::endl;
+					}
+				}
+				else if (a->type == C_COLLIDER)
+				{
+					((BoxCollider*)a)->update();
 					((BoxCollider*)a)->render();
 				}
 				else
+				{
 					a->update();
+				}
 			}
 		}
 

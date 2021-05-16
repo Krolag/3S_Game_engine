@@ -39,7 +39,7 @@ namespace Loader
 		{
 			std::string proctorName = firstNode->first_attribute("name")->value();
 			std::string modelName = prepareModelName(proctorName);	// just proctor name without number
-
+			std::cout << "model name" << modelName;
 			// Make a path with accurate extension
 			std::string modelPath = "assets/models/serializable/" + modelName + ".fbx";
 			// TODO: @Kuba - ask if xml file shouldn't include model extension type and process elements shouldn't take it into account
@@ -123,7 +123,7 @@ namespace Loader
 		std::string retStr = "";
 		for(char c : name)
 		{
-			if (c == '-') break;
+			if (c == '-' || c == '_') break;
 			retStr += c;
 		}
 		return retStr;
