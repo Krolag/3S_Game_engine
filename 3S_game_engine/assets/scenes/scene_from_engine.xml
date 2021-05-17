@@ -396,7 +396,7 @@
 			<Scale>
 				<x>0.050000</x>
 				<y>0.050000</y>
-				<z>0.050000</z>
+				<z>0.000000</z>
 			</Scale>
 			<ChildrenModels/>
 		</GameModel>

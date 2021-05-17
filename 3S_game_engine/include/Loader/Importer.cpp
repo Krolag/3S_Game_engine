@@ -39,7 +39,7 @@ namespace Loader
 		{
 			std::string proctorName = firstNode->first_attribute("name")->value();
 			std::string modelName = prepareModelName(proctorName);	// just proctor name without number
-
+			std::cout << "model name" << modelName;
 			// Make a path with accurate extension
 			std::string modelPath = "assets/models/serializable/" + modelName + ".fbx";
 			// TODO: @Kuba - ask if xml file shouldn't include model extension type and process elements shouldn't take it into account
@@ -60,18 +60,24 @@ namespace Loader
 			glm::vec3 proctorPosition(
 				(float)strtod(childElement->first_node("x")->value(), NULL),
 				(float)strtod(childElement->first_node("y")->value(), NULL),
-				(float)strtod(childElement->first_node("z")->value(), NULL)
+				-(float)strtod(childElement->first_node("z")->value(), NULL)
 			);
 
 			// TODO: @Kuba - imo powinny byc eulerAngles
 			// Rotation
 			childElement = firstNode->first_node("Rotation");
 			childElement = childElement->first_node("eulerAngles");
+			//glm::vec3 eulerAngles(
+			//	glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)),
+			//	glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)),
+			//	glm::radians((float)strtod(childElement->first_node("z")->value(), NULL))
+			//);
 			glm::quat proctorRotation(
-				1.0f, 
-				0.0f,
-				glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)),
-				0.0f);
+				1.0f,
+				0.0f,//glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)),
+				-glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
+				0.0f//glm::radians((float)strtod(childElement->first_node("z")->value(), NULL))
+			);
 			//	1.0f/*(float)strtod(childElement->first_node("w")->value(), NULL)*/,
 			//	0.0f/*(float)strtod(childElement->first_node("x")->value(), NULL)*/,
 			//	(float)strtod(childElement->first_node("y")->value(), NULL),
@@ -117,7 +123,7 @@ namespace Loader
 		std::string retStr = "";
 		for(char c : name)
 		{
-			if (c == '-') break;
+			if (c == '-' || c == '_') break;
 			retStr += c;
 		}
 		return retStr;

@@ -9,14 +9,13 @@
 
 namespace GameLogic
 {
-	class PlayerInput : public Component, Points
+	class PlayerInput : public Component
 	{
 	public:
 		float maxSpeed = 0.5f;
 		float acceleration = 0.005f * 100;
 		float movementSpeed;
 		float maxInteractionDistance = 3.0f;
-		Points score = 0;
 		Proctor* coinProctor;
 
 		/* Constructors */

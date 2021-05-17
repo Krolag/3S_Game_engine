@@ -1,12 +1,9 @@
 #include "Points.h"
-Points::Points()
-{
-	score = 0;
-}
 
-Points::Points(int _score)
-{
-	score = _score;
+Points* Points::getInstance()
+{	
+	static Points instance;
+	return &instance;
 }
 
 Points::~Points()

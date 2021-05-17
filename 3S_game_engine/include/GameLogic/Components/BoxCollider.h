@@ -24,26 +24,37 @@ namespace GameLogic
 		/* Set up methods */
 		void init();
 		void setModel(Loader::Model* _model);
-		void update();
-		void render();
 
-		/* Variable methods */
+		/* Update methods */
+		void updatePosition(glm::vec3 oldPosition, glm::vec3 newPosition);
+		void updateRotation(glm::quat oldRotation, glm::quat newRotation);
+		void updateScale(glm::vec3 oldScale, glm::vec3 newScale);
+		void update();
+
+		/* Getters */
 		glm::vec3 getRadius();
-		glm::mat4 getTranslateMatrix();
-		glm::mat4 getScaleMatrix();
+		glm::vec3 getCenter();
+		glm::mat4 getTranslationMatrix();
+		glm::mat4 getRotationMatrix();
+		glm::vec3 getScalingFactorFromMatrix();
+
+		void render();
 	private:
 		/* BoxCollider data */
 		Loader::Model* model;
 		glm::vec3 center;
 		glm::vec3 radius;
-
+		glm::mat4 orientationMatrix;
+		
 		/* Render data */
 		Shader* colliderShader;
-		float colliderVertices[3];
+		float colliderVertices[72];
 		unsigned int colliderVAO, colliderVBO;
 		
 		/* Private methods */
+		void initVerticesData();
 		void extremePointsAlongDirection(glm::vec3 point, glm::vec3& min, glm::vec3& max);
+		std::vector<glm::vec3> calcVertices();
 		glm::mat4 getModelMatrix() const;
 	};
 }
