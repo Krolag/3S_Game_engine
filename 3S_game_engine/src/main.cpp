@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H 
 #define STB_IMAGE_IMPLEMENTATION
@@ -26,12 +27,15 @@
 #include "Loader/Importer.h"
 #include "Water/WaterMesh.h"
 #include "Framebuffer/Framebuffer.h"
+#include <Monster/Monster.h>
 
 #include "Loader/Exporter.h"
 
-//#include "Animator/Animation.h"
+// ANIMATION REWORK
+#include "Loader/_Mesh.h"
+#include "Animator/Animation.h"
 #include "Animator/Animator.h"
-#include <Monster/Monster.h>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -182,10 +186,6 @@ int main()
     GameLogic::Proctor      island_01("island_01", glm::vec3(20.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, -1.57f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_01_mr(GameLogic::C_MESH, &island_01, modelLibrary.getModel("island_00"), &model3D);
     hierarchy.addObject(&island_01);
-
-    //Loader::Model player_one("assets/models/vampire/dancing_vampire.fbx", "", true);
-    //Animation movement("assets/models/vampire/dancing_vampire.fbx", &player_one);
-    //Animator animator(&movement);
 #pragma endregion
 
 #pragma region Environment
@@ -221,6 +221,16 @@ int main()
     tiles.push_back(&island_01);
     Monster monsterSystem(&hero_00, tiles);
 
+    //Loader::Model player_one("assets/models/vampire.dae", "red_run", true);
+    Loader::Model player_one("assets/models/red_rot_0_2020.fbx", "red_run", true);
+    GameLogic::Proctor test_anim("test_anim", glm::vec3(0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.01f));
+    Animation movement(player_one.path.c_str(), &player_one);
+    Animator animator(&movement);
+    GameLogic::MeshRenderer test_anim_mr(GameLogic::C_MESH, &test_anim, &player_one, &model3D);
+    //Animation movement(test_anim_mr.model->path, test_anim_mr.model);
+    animator.playAnimation(&movement);
+    hierarchy.addObject(&test_anim);
+
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
@@ -246,8 +256,9 @@ int main()
         camera.Position.y -= distance;
         camera.Pitch = -camera.Pitch;
         camera.updateCameraVectors();
-   	
+
         model3D.use();
+
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
         model3D.setUniform("projection", projection);
         view = camera.GetViewMatrix();
@@ -256,7 +267,7 @@ int main()
         model = glm::mat4(1.0f);
 
         dirLight.render(model3D);
-        hierarchy.update(true, false);
+        //hierarchy.update(true, false);
         skybox.render(); // render skybox only for reflectionbuffer
 
         //set camera position to default
@@ -280,7 +291,7 @@ int main()
         model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
 
         dirLight.render(model3D);   	   	
-        hierarchy.update(true, false);
+        //hierarchy.update(true, false);
 
         //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
         refractFramebuffer.unbindFramebuffer();
@@ -291,10 +302,29 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
        
+
+
         model3D.use();
         model3D.setUniform("projection", projection);
         view = camera.GetViewMatrix();
         model3D.setUniform("view", view);
+        animator.updateAniamtion(mainScene.deltaTime);
+        auto transforms = animator.getFinalBoneMatrices();
+        for (int i = 0; i < transforms.size(); ++i)
+            model3D.setUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+
+        //for (int i = 0; i < transforms.size(); ++i)
+        //{
+        //    model3D.setUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+        //    if (i <= 30)
+        //    {
+        //        std::cout << "BONE NR: '\s'  " << i << std::endl;
+        //        std::cout << glm::to_string(transforms[i]).c_str() << std::endl;
+        //    }
+        //}
+
+        //player_one.render(model3D);
+
         cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         dirLight.render(model3D);
@@ -305,19 +335,12 @@ int main()
         collisionBoxShader.setUniformBool("collision", true);
 
         hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
-       
+
+        //player_one.scale = (glm::vec3(1.0f));
+        //player_one.render(model3D);
+
         model = glm::translate(model, glm::vec3(0, waterYpos, 0));
         //water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
-
-        //animator.updateAniamtion(mainScene.deltaTime);
-        //auto transforms = animator.getFinalBoneMatrices();
-        //for (int i = 0; i < transforms.size(); i++)
-        //    model3D.setUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-        //glm::mat4 model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f));
-        //model = glm::scale(model, glm::vec3(.5f, .5f, .5f));
-        //model3D.setUniform("model", model);
-        //player_one.render(model3D);
 
         /* Render text */
         points.render(std::to_string(coin_00_csh.score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
