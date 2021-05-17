@@ -10,7 +10,9 @@ namespace Loader
 
 	Model::Model(bool _noTex, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
 		: position(_position), rotation(_rotation), scale(_scale), noTex(_noTex)
-	{}
+	{
+		loadModel(path);
+	}
 
 	void Model::init() {}
 
@@ -38,9 +40,9 @@ namespace Loader
 		/* Read file via Assimp */
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(_path,
-			aiProcess_Triangulate |
-			aiProcess_FlipUVs |
-			aiProcess_PreTransformVertices);
+			aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+
+		this->scene = scene;
 
 		/* Check if scene is imported properly */
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
@@ -81,7 +83,7 @@ namespace Loader
 		{
 			Vertex vertex;
 
-			//setVertexBoneDataToDefault(vertex);
+			setVertexBoneDataToDefault(vertex);
 
 			/* Position */
 			vertex.position = AssimpGLMHelpers::GetGLMVec(_mesh->mVertices[i]);
@@ -120,6 +122,8 @@ namespace Loader
 		{
 			aiMaterial* material = _scene->mMaterials[_mesh->mMaterialIndex];
 
+			extractBoneWeightForVertices(vertices, _mesh, _scene);
+
 			if (noTex)
 			{
 				/* Diffuse color */
@@ -129,81 +133,83 @@ namespace Loader
 				aiColor4D spec(1.0f);
 				aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &spec);
 
-				//extractBoneWeightForVertices(vertices, _mesh, _scene);
-
+				/* Return properly collected data */
 				return Mesh(vertices, indices, diff, spec);
 			}
-
-			/* Diffuse maps */
-			std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE);
-			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-			/* Specular maps */
-			std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR);
-			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+			else
+			{
+				/* Diffuse maps */
+				std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE);
+				textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+				/* Specular maps */
+				std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR);
+				textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+				
+				/* Return properly collected data */
+				return Mesh(vertices, indices, textures);
+			}
 		}
-
-		//extractBoneWeightForVertices(vertices, _mesh, _scene);
-
-		/* Return properly collected data */
-		return Mesh(vertices, indices, textures);
 	}
 
-	//void Model::setVertexBoneDataToDefault(Vertex& vertex)
-	//{
-	//	for (int i = 0; i < MAX_BONE_WEIGHTS; i++)
-	//	{
-	//		vertex.boneIDs[i] = -1;
-	//		vertex.weights[i] = 0.0f;
-	//	}
-	//}
+	void Model::setVertexBoneDataToDefault(Vertex& _vertex)
+	{
+		for (int i = 0; i < MAX_BONE_WEIGHTS; i++)
+		{
+			_vertex.boneIDs[i] = -1;
+			_vertex.weights[i] = 0.0f;
+		}
+	}
 
-	//void Model::setVertexBoneData(Vertex& _vertex, int _boneID, float _weight)
-	//{
-	//	for (int i = 0; i < MAX_BONE_WEIGHTS; i++)
-	//	{
-	//		if (_vertex.boneIDs[i] < 0)
-	//		{
-	//			_vertex.weights[i] = _weight;
-	//			_vertex.boneIDs[i] = _boneID;
-	//			break;
-	//		}
-	//	}
-	//}
+	void Model::setVertexBoneData(Vertex& _vertex, int _boneID, float _weight)
+	{
+		for (int i = 0; i < MAX_BONE_WEIGHTS; i++)
+		{
+			if (_vertex.boneIDs[i] < 0)
+			{
+				_vertex.weights[i] = _weight;
+				_vertex.boneIDs[i] = _boneID;
+				break;
+			}
+		}
+	}
 
-	//void Model::extractBoneWeightForVertices(std::vector<Vertex>& _vertices, aiMesh* _mesh, const aiScene* _scene)
-	//{
-	//	for (int boneIndex = 0; boneIndex < _mesh->mNumBones; boneIndex++)
-	//	{
-	//		int boneID = -1;
-	//		std::string boneName = _mesh->mBones[boneIndex]->mName.C_Str();
+	void Model::extractBoneWeightForVertices(std::vector<Vertex>& _vertices, aiMesh* _mesh, const aiScene* _scene)
+	{
+		auto& _boneInfoMap = this->boneInfoMap;
+		int& _boneCount = this->boneCount;
 
-	//		if (boneInfoMap.find(boneName) == boneInfoMap.end())
-	//		{
-	//			BoneInfo newBoneInfo;
-	//			newBoneInfo.id = boneCounter;
-	//			newBoneInfo.offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(_mesh->mBones[boneIndex]->mOffsetMatrix);
-	//			boneInfoMap[boneName] = newBoneInfo;
-	//			boneID = boneCounter;
-	//			boneCounter++;
-	//		}
-	//		else
-	//		{
-	//			boneID = boneInfoMap[boneName].id;
-	//		}
+		for (int boneIndex = 0; boneIndex < _mesh->mNumBones; boneIndex++)
+		{
+			int boneID = -1;
+			std::string boneName = _mesh->mBones[boneIndex]->mName.C_Str();
 
-	//		assert(boneID != -1);
-	//		auto weights = _mesh->mBones[boneIndex]->mWeights;
-	//		int numWeights = _mesh->mBones[boneIndex]->mNumWeights;
+			if (_boneInfoMap.find(boneName) == _boneInfoMap.end())
+			{
+				BoneInfo newBoneInfo;
+				newBoneInfo.id = _boneCount;
+				newBoneInfo.offset = AssimpGLMHelpers::ConvertMatrixToGLMFormat(_mesh->mBones[boneIndex]->mOffsetMatrix);
+				_boneInfoMap[boneName] = newBoneInfo;
+				boneID = _boneCount;
+				_boneCount++;
+			}
+			else
+			{
+				boneID = _boneInfoMap[boneName].id;
+			}
 
-	//		for (int weightIndex = 0; weightIndex < numWeights; weightIndex++)
-	//		{
-	//			int vertexID = weights[weightIndex].mVertexId;
-	//			float weight = weights[weightIndex].mWeight;
-	//			assert(vertexID <= _vertices.size());
-	//			setVertexBoneData(_vertices[vertexID], boneID, weight);
-	//		}
-	//	}
-	//}
+			assert(boneID != -1);
+			auto weights = _mesh->mBones[boneIndex]->mWeights;
+			int numWeights = _mesh->mBones[boneIndex]->mNumWeights;
+
+			for (int weightIndex = 0; weightIndex < numWeights; weightIndex++)
+			{
+				int vertexID = weights[weightIndex].mVertexId;
+				float weight = weights[weightIndex].mWeight;
+				assert(vertexID <= _vertices.size());
+				setVertexBoneData(_vertices[vertexID], boneID, weight);
+			}
+		}
+	}
 
 	std::vector<Texture> Model::loadTextures(aiMaterial* _material, aiTextureType _type)
 	{

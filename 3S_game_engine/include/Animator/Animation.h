@@ -28,17 +28,18 @@ public:
 	inline float getTicksPerSecond() { return ticksPerSecond; }
 	inline float getDuration() { return duration; }
 	inline const AssimpNodeData& getRootNode() { return rootNode; }
-	inline const std::map<std::string, BoneInfo>& getBoneIDMap() { return boneInfoMap; }
+	inline const std::map<std::string, Loader::BoneInfo>& getBoneIDMap() { return boneInfoMap; }
 
 private:
 	float duration;
 	int ticksPerSecond;
 	std::vector<Bone> bones;
 	AssimpNodeData rootNode;
-	std::map<std::string, BoneInfo> boneInfoMap;
+	std::map<std::string, Loader::BoneInfo> boneInfoMap;
 
 	void readMissingBones(const aiAnimation* _animation, Loader::Model& _model);
 	void readHierarchyData(AssimpNodeData& _dest, const aiNode* _src);
+	void setupBones(const aiAnimation* _animation, Loader::Model& _model);
 };
 
 #endif // !ANIMATION_H

@@ -8,14 +8,16 @@ Animation::Animation(const std::string& _animationPath, Loader::Model* _model)
 	auto animation = scene->mAnimations[0];
 	duration = animation->mDuration;
 	ticksPerSecond = animation->mTicksPerSecond;
+	aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
+	globalTransformation = globalTransformation.Inverse();
 	readHierarchyData(rootNode, scene->mRootNode);
-	readMissingBones(animation, *_model);
+	setupBones(animation, *_model);
 }
 
 Bone* Animation::findBone(const std::string& _name)
 {
 	auto iter = std::find_if(bones.begin(), bones.end(),
-		[&](Bone& Bone) // TODO: @Dawid const?
+		[&](const Bone& Bone)
 		{
 			return Bone.getBoneName() == _name;
 		}
@@ -23,31 +25,6 @@ Bone* Animation::findBone(const std::string& _name)
 
 	if (iter == bones.end())	return nullptr;
 	else return &(*iter);
-}
-
-void Animation::readMissingBones(const aiAnimation* _animation, Loader::Model& _model)
-{
-	int size = _animation->mNumChannels;
-
-	auto& localBoneInfoMap = _model.getBoneInfoMap();
-	int& boneCount = _model.getBoneCounter();
-
-	/* Reading channels (bones engaged in an animation and their keyframes) */
-	for (int i = 0; i < size; i++)
-	{
-		auto channel = _animation->mChannels[i];
-		std::string boneName = channel->mNodeName.data;
-
-		if (localBoneInfoMap.find(boneName) == localBoneInfoMap.end())
-		{
-			localBoneInfoMap[boneName].id = boneCount;
-			boneCount++;
-		}
-
-		bones.push_back(Bone(channel->mNodeName.data, localBoneInfoMap[channel->mNodeName.data].id, channel));
-	}
-
-	//boneInfoMap = localBoneInfoMap;
 }
 
 void Animation::readHierarchyData(AssimpNodeData& _dest, const aiNode* _src)
@@ -64,4 +41,29 @@ void Animation::readHierarchyData(AssimpNodeData& _dest, const aiNode* _src)
 		readHierarchyData(newData, _src->mChildren[i]);
 		_dest.children.push_back(newData);
 	}
+}
+
+void Animation::setupBones(const aiAnimation* _animation, Loader::Model& _model)
+{
+	int size = _animation->mNumChannels;
+	std::cout << size << std::endl;
+
+	auto& boneInfoMap = _model.getBoneInfoMap();
+	int& boneCount = _model.getBoneCount();
+
+	for (int i = 0; i < size; i++)
+	{
+		auto channel = _animation->mChannels[i];
+		std::string boneName = channel->mNodeName.data;
+
+		if (boneInfoMap.find(boneName) == boneInfoMap.end())
+		{
+			boneInfoMap[boneName].id = boneCount;
+			boneCount++;
+		}
+
+		bones.push_back(Bone(channel->mNodeName.data, boneInfoMap[channel->mNodeName.data].id, channel));
+	}
+
+	this->boneInfoMap = boneInfoMap;
 }

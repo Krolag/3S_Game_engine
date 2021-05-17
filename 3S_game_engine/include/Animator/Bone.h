@@ -28,12 +28,6 @@ struct KeyScale
 	float timeStamp;
 };
 
-struct BoneInfo
-{
-	int id;
-	glm::mat4 offset;
-};
-
 class Bone
 {
 public:
@@ -41,7 +35,7 @@ public:
 
 	void update(float _animationTime);
 	glm::mat4 getLocalTransform() { return localTransform; }
-	std::string getBoneName() { return name; }
+	std::string getBoneName() const { return name; }
 	int getBoneID() { return ID; }
 	int getPositionIndex(float _animationTime);
 	int getRotationIndex(float _animationTime);

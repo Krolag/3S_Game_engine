@@ -15,12 +15,13 @@
 #include <Shader/Shader.h>
 #include "Loader/Mesh.h"
 #include "Material/Material.h"
+#include "Animator/Bone.h"
 #include <vector>
 #include <map>
 
 namespace Loader
 {
-#define MAX_BONE_WEIGHTS 4
+#define MAX_BONE_WEIGHTS 1
 
 	struct BoneInfo
 	{
@@ -30,11 +31,14 @@ namespace Loader
 		glm::mat4 offset;
 	};
 
+
+	// TODO: @Dawid - sprawdz, czy model ma animacje
 	class Model
 	{
 	public:
 		std::string path;
 		std::string name;
+		const aiScene* scene;
 		/* Model transformation */
 		glm::vec3 position;
 		glm::quat rotation;
@@ -54,22 +58,23 @@ namespace Loader
 		std::vector<Mesh> getMeshes() const;
 		glm::mat4 getModelMatrix() const;
 		auto& getBoneInfoMap() { return boneInfoMap; }
-		int& getBoneCounter() { return boneCounter; }
+		int& getBoneCount() { return boneCount; }
 
 	protected:
 		/* Model data */
 		std::vector<Mesh> meshes;
 		std::string directory;
 		std::vector<Texture> texturesLoaded;
-		std::map<std::string, BoneInfo> boneInfoMap;
-		int boneCounter = 0;
 		bool noTex;
+		/* Bones data */
+		std::map<std::string, BoneInfo> boneInfoMap;
+		int boneCount = 0;
 
 		void processNode(aiNode* _node, const aiScene* _scene);
 		Mesh processMesh(aiMesh* _mesh, const aiScene* _scene);
-		//void setVertexBoneDataToDefault(Vertex& _vertex);
-		//void setVertexBoneData(Vertex& _vertex, int _boneID, float _weight);
-		//void extractBoneWeightForVertices(std::vector<Vertex>& _vertices, aiMesh* _mesh, const aiScene* _scene);
+		void setVertexBoneDataToDefault(Vertex& _vertex);
+		void setVertexBoneData(Vertex& _vertex, int _boneID, float _weight);
+		void extractBoneWeightForVertices(std::vector<Vertex>& _vertices, aiMesh* _mesh, const aiScene* _scene);
 
 		std::vector<Texture> loadTextures(aiMaterial* _material, aiTextureType _type);
 	};

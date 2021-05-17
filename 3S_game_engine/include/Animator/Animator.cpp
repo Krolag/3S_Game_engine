@@ -2,9 +2,8 @@
 
 Animator::Animator(Animation* _animation)
 {
-	currentTime = 0.0f;
 	this->currentAnimation = currentAnimation;
-
+	this->currentTime = 0.0f;
 	finalBoneMatrices.reserve(100);
 
 	for (int i = 0; i < 100; i++)

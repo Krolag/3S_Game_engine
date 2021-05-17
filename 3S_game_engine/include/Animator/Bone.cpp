@@ -6,7 +6,7 @@ Bone::Bone(const std::string& _name, int _ID, const aiNodeAnim* _channel)
 {
 	/* Load positions */
 	numPositions = _channel->mNumPositionKeys;
-	for (int positionIndex = 0; positionIndex < numPositions; positionIndex++)
+	for (int positionIndex = 0; positionIndex < numPositions; ++positionIndex)
 	{
 		aiVector3D aiPosition = _channel->mPositionKeys[positionIndex].mValue;
 		float timeStamp = _channel->mPositionKeys[positionIndex].mTime;
@@ -18,7 +18,7 @@ Bone::Bone(const std::string& _name, int _ID, const aiNodeAnim* _channel)
 
 	/* Load rotations */
 	numRotations = _channel->mNumRotationKeys;
-	for (int rotationIndex = 0; rotationIndex < numRotations; rotationIndex++)
+	for (int rotationIndex = 0; rotationIndex < numRotations; ++rotationIndex)
 	{
 		aiQuaternion aiRotation = _channel->mRotationKeys[rotationIndex].mValue;
 		float timeStamp = _channel->mRotationKeys[rotationIndex].mTime;
@@ -30,7 +30,7 @@ Bone::Bone(const std::string& _name, int _ID, const aiNodeAnim* _channel)
 
 	/* Load scales */
 	numScales = _channel->mNumScalingKeys;
-	for (int scaleIndex = 0; scaleIndex < numScales; scaleIndex++)
+	for (int scaleIndex = 0; scaleIndex < numScales; ++scaleIndex)
 	{
 		aiVector3D aiScale = _channel->mScalingKeys[scaleIndex].mValue;
 		float timeStamp = _channel->mScalingKeys[scaleIndex].mTime;
@@ -55,7 +55,7 @@ void Bone::update(float _animationTime)
 /* Gets the current index on KeyPositions to interpolate to based on the current animation time */
 int Bone::getPositionIndex(float _animationTime)
 {
-	for (int index = 0; index < numPositions - 1; index++)
+	for (int index = 0; index < numPositions - 1; ++index)
 	{
 		if (_animationTime < positions[index + 1].timeStamp)
 			return index;
@@ -67,7 +67,7 @@ int Bone::getPositionIndex(float _animationTime)
 /* Gets the current index on KeyRotations to interpolate to based on the current animation time */
 int Bone::getRotationIndex(float _animationTime)
 {
-	for (int index = 0; index < numRotations - 1; index++)
+	for (int index = 0; index < numRotations - 1; ++index)
 	{
 		if (_animationTime < rotations[index + 1].timeStamp)
 			return index;
@@ -79,7 +79,7 @@ int Bone::getRotationIndex(float _animationTime)
 /* Gets the current index on KeyScale to interpolate to based on the current animation time */
 int Bone::getScaleIndex(float _animationTime)
 {
-	for (int index = 0; index < numScales - 1; index++)
+	for (int index = 0; index < numScales - 1; ++index)
 	{
 		if (_animationTime < scales[index + 1].timeStamp)
 			return index;
