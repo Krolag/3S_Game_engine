@@ -12,7 +12,7 @@ namespace GameLogic
 	{
 	public:
 		//Constructor
-		Points score = 0;
+		Points *points = Points::getInstance();
 
 		Proctor* playerOne;
 		Proctor* playerTwo;
@@ -23,6 +23,7 @@ namespace GameLogic
 		float distance = 0;
 
 		Cash(ComponentType _type, Proctor* _proctor, Proctor* _playerOne, Proctor* _playerTwo);
+		~Cash();
 		void followPlayer();
 		void update();
 	};

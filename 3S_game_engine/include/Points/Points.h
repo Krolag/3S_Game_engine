@@ -2,9 +2,9 @@
 class Points
 {
 public:
-	int score = 0;
-	Points();
-	Points(int _score);
+	
+	static Points* getInstance();
+	
 	~Points();
 
 	void setScore(int _score);
@@ -12,7 +12,7 @@ public:
 	int addPoints(int pointsToAdd);
 
 private:
-
-
+	Points() {};
+	int score = 0;
 };
 

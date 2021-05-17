@@ -104,7 +104,6 @@ int main()
     UIRender::TextRender points("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
 
     /* Create points */
-    Points score(0);
 
     /* Animated mario */
     // TODO: @Ignacy zmien to na monete gdy bedzie gotowa
@@ -177,6 +176,10 @@ int main()
     GameLogic::MeshRenderer coin_00_mr(GameLogic::C_MESH, &coin_00, modelLibrary.getModel(coin_00.name), &model3D);
     GameLogic::Cash         coin_00_csh(GameLogic::C_CASH, &coin_00, &hero_00, &hero_01);
     hierarchy.addObject(&coin_00);
+    GameLogic::Proctor      coin_01("coin_01", glm::vec3(-30.0f, 5.0f, 20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
+    GameLogic::MeshRenderer coin_01_mr(GameLogic::C_MESH, &coin_01, modelLibrary.getModel(coin_00.name), &model3D);
+    GameLogic::Cash         coin_01_csh(GameLogic::C_CASH, &coin_01, &hero_00, &hero_01);
+    hierarchy.addObject(&coin_01);
   /*  GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
     hierarchy.addObject(&island_00);
@@ -321,7 +324,7 @@ int main()
         //player_one.render(model3D);
 
         /* Render text */
-        points.render(std::to_string(coin_00_csh.score.getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
+        points.render(std::to_string(Points::getInstance()->getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
         
         /* Render cute Mario as placeholder to coin */
         marioWalking[marioWalkingIndex].render();

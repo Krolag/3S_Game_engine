@@ -12,6 +12,11 @@ namespace GameLogic
 		}
 	}
 
+	Cash::~Cash()
+	{
+		delete points;
+	}
+
 	void Cash::followPlayer()
 	{
 		// Distance between playerOne and a coin
@@ -61,7 +66,7 @@ namespace GameLogic
 
 		if (distance <= minDistance + 0.1)
 		{
-			score.addPoints(100);
+			points->addPoints(100);
 			proctor->getParentHierarchy()->removeObject(proctor);
 		}
 	}
