@@ -224,7 +224,7 @@ int main()
 
     //Loader::Model player_one("assets/models/vampire.dae", "red_run", true);
     GameLogic::Proctor test_anim("test_anim", glm::vec3(0.0f), glm::quat(1.0f, glm::radians(-90.0f), 0.0f, 0.0f), glm::vec3(0.01f));
-    Loader::Model player_one("assets/models/red_reseted_run_export_fixxx.fbx", "red_run", true);
+    Loader::Model player_one("assets/models/uploads_files_600310_skeleton_animated.FBX", "red_run", true);
     Animation movement(player_one.path.c_str(), &player_one);
     Animator animator(&movement);
     animator.playAnimation(&movement);
@@ -232,7 +232,7 @@ int main()
     //Animation movement(test_anim_mr.model->path, test_anim_mr.model);
     //animator.playAnimation(&movement);
     hierarchy.addObject(&test_anim);
-
+   
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
