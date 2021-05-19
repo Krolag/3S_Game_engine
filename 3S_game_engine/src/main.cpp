@@ -31,9 +31,10 @@
 
 #include "Loader/Exporter.h"
 
-// ANIMATION REWORK
-#include "Animator/Animation.h"
-#include "Animator/Animator.h"
+#include "AnimationSystem/System/Animation.h"
+#include "AnimationSystem/System/Animator.h"
+
+//#include "AnimationSystem/AnimationSystem.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -223,12 +224,12 @@ int main()
 
     //Loader::Model player_one("assets/models/vampire.dae", "red_run", true);
     Loader::Model player_one("assets/models/red_rot_0_2020.fbx", "red_run", true);
-    GameLogic::Proctor test_anim("test_anim", glm::vec3(0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.01f));
+    GameLogic::Proctor test_anim("test_anim", glm::vec3(10.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.01f));
     Animation movement(player_one.path.c_str(), &player_one);
     Animator animator(&movement);
     GameLogic::MeshRenderer test_anim_mr(GameLogic::C_MESH, &test_anim, &player_one, &model3D);
     //Animation movement(test_anim_mr.model->path, test_anim_mr.model);
-    animator.playAnimation(&movement);
+    //animator.playAnimation(&movement);
     hierarchy.addObject(&test_anim);
 
     /* Render loop */
@@ -306,10 +307,12 @@ int main()
         view = camera.GetViewMatrix();
         model3D.setUniform("view", view);
 
-        animator.updateAniamtion(mainScene.deltaTime);
         auto transforms = animator.getFinalBoneMatrices();
+        model3D.use();
         for (int i = 0; i < transforms.size(); ++i)
+        {
             model3D.setUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+        }
 
         //for (int i = 0; i < transforms.size(); ++i)
         //{
@@ -330,6 +333,7 @@ int main()
         collisionBoxShader.setUniform("view", view);
         collisionBoxShader.setUniformBool("collision", true);
 
+        animator.updateAniamtion(mainScene.deltaTime);
         hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
 
         model = glm::translate(model, glm::vec3(0, waterYpos, 0));

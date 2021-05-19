@@ -15,22 +15,13 @@
 #include <Shader/Shader.h>
 #include "Loader/Mesh.h"
 #include "Material/Material.h"
-#include "Animator/Bone.h"
+#include "AnimationSystem/System/BoneInfo.h"
 #include <vector>
 #include <map>
 
 namespace Loader
 {
 #define MAX_BONE_WEIGHTS 1
-
-	struct BoneInfo
-	{
-		/* ID is index in finalBoneMatrices */
-		int id;
-		/* Offset matrix transforms vertex from model space to bone space */
-		glm::mat4 offset;
-	};
-
 
 	// TODO: @Dawid - sprawdz, czy model ma animacje
 	class Model
