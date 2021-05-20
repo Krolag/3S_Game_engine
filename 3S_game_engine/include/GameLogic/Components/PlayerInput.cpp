@@ -1,6 +1,7 @@
 #include "PlayerInput.h"
 #include "GameLogic/Proctor.h"
 #include "GameLogic/Hierarchy.h"
+#include "GameLogic/Components/Cash.h"
 
 namespace GameLogic
 {
@@ -130,6 +131,9 @@ namespace GameLogic
 					if (tmp.at(i)->getComponentOfType(C_TREASURE)->type == C_TREASURE)
 					{
 						tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
+						((Cash*) this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
+						// okay musze dodac te monety do skrzyn jeszcze (pod nie)
+						//(GameLogic::C_CASH)(proctor->getParentHierarchy()->getObjectsInRadiusOf(proctor, radius)->getComponentOfType(C_CASH)).
 					}
 				}
 			}

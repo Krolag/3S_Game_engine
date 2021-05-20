@@ -141,8 +141,8 @@ int main()
     /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_00", true);
     modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_01", true);
-    modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_00", true);
-    modelLibrary.addModel("assets/models/environment/chestBody.fbx", "chestBody_01", true);
+    modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_00", true);
+    modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true);
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
@@ -161,23 +161,23 @@ int main()
     hierarchy.addObject(&hero_01);
 
     // Chests and coins
-    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(0.00f, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
+    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(0.00f, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
     GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
     GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
     //GameLogic::BoxCollider  chestBody_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody_00.name), &chestBody_00, &collisionBoxShader);
     hierarchy.addObject(&chestBody_00);
-    GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.005f));
+    GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer chestBody2_mr(GameLogic::C_MESH, &chestBody2, modelLibrary.getModel(chestBody2.name), &model3D);
     GameLogic::Interactable chestBody2_ible(GameLogic::C_INTERACTABLE, &chestBody2);
     GameLogic::Treasure     chestBody2_tre(GameLogic::C_TREASURE, &chestBody2);
     //GameLogic::BoxCollider  chestBody2_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody2.name), &chestBody2, &collisionBoxShader);
     hierarchy.addObject(&chestBody2);
-    GameLogic::Proctor      coin_00("coin_00", glm::vec3(-30.0f, 5.0f, -20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
+    GameLogic::Proctor      coin_00("coin_00", glm::vec3(0.00f, 4.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
     GameLogic::MeshRenderer coin_00_mr(GameLogic::C_MESH, &coin_00, modelLibrary.getModel(coin_00.name), &model3D);
     GameLogic::Cash         coin_00_csh(GameLogic::C_CASH, &coin_00, &hero_00, &hero_01);
     hierarchy.addObject(&coin_00);
-    GameLogic::Proctor      coin_01("coin_01", glm::vec3(-30.0f, 5.0f, 20.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
+    GameLogic::Proctor      coin_01("coin_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
     GameLogic::MeshRenderer coin_01_mr(GameLogic::C_MESH, &coin_01, modelLibrary.getModel(coin_00.name), &model3D);
     GameLogic::Cash         coin_01_csh(GameLogic::C_CASH, &coin_01, &hero_00, &hero_01);
     hierarchy.addObject(&coin_01);
@@ -338,7 +338,7 @@ int main()
         hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
 
         model = glm::translate(model, glm::vec3(0, waterYpos, 0));
-        //water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
+        water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
         /* Render text */
         points.render(std::to_string(Points::getInstance()->getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));

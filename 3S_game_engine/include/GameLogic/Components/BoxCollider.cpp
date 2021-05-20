@@ -113,7 +113,7 @@ namespace GameLogic
 			center.z = colliderVertices[3] - glm::abs(colliderVertices[0] - colliderVertices[3]) / 2.0f;
 			glm::vec4 vec = glm::vec4(radius.x, radius.y, radius.z, 1.0f);
 			vec = orientationMatrix * vec;
-			std::cout << "Update of radius: " << vec.x << " " << vec.y << " " << vec.z << std::endl;
+			//std::cout << "Update of radius: " << vec.x << " " << vec.y << " " << vec.z << std::endl;
 			
 			/* Get min and max vertices */
 			

@@ -21,10 +21,13 @@ namespace GameLogic
 		float xDistance = 0;
 		float zDistance = 0;
 		float distance = 0;
+		float speed = 0.6f;
+		bool isFollowing = false;
 
 		Cash(ComponentType _type, Proctor* _proctor, Proctor* _playerOne, Proctor* _playerTwo);
 		~Cash();
 		void followPlayer();
+		void setFollow(bool _isFollowing);
 		void update();
 	};
 }

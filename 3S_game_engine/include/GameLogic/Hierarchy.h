@@ -19,6 +19,7 @@ namespace GameLogic
 		/* Objects method */
 		void addObject(Proctor* _proctor);
 		void removeObject(Proctor* _proctor);
+		Proctor* getObjectsInRadiusOf(Proctor* _proctor, float _radius);
 		Proctor* getObject(std::string _name);
 		Proctor* getObject(unsigned int _uuid);
 		std::vector<Proctor*> getProctors();

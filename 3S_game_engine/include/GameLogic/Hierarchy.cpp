@@ -57,6 +57,22 @@ namespace GameLogic
 		}
 	}
 
+	Proctor* Hierarchy::getObjectsInRadiusOf(Proctor* _proctor, float _radius)
+	{
+		std::vector<Proctor*> tmp = _proctor->getParentHierarchy()->getCash();
+		for (int i = 0; i < tmp.size(); i++)
+		{
+			float xDistance = tmp.at(i)->getPosition()[0] - _proctor->getPosition()[0];
+			float zDistance = tmp.at(i)->getPosition()[2] - _proctor->getPosition()[2];
+			float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
+			
+			if (distance <= _radius)
+			{
+				return tmp.at(i);
+			}
+		}
+	}
+
 	Proctor* Hierarchy::getObject(std::string _name)
 	{
 		/* Check if proctor with given name is in use */

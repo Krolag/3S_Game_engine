@@ -46,22 +46,22 @@ namespace GameLogic
 		// Follow chosen player
 		if (xDistance > minDistance)
 		{
-			proctor->setPosition(proctor->getPosition() += glm::vec3(.2, 0.0, 0.0));
+			proctor->setPosition(proctor->getPosition() += glm::vec3(speed, 0.0, 0.0));
 		}
 
 		if (xDistance < -minDistance)
 		{
-			proctor->setPosition(proctor->getPosition() - glm::vec3(.2, 0.0, 0.0));
+			proctor->setPosition(proctor->getPosition() - glm::vec3(speed, 0.0, 0.0));
 		}
 
 		if (zDistance > minDistance)
 		{
-			proctor->setPosition(proctor->getPosition() += glm::vec3(0.0, 0.0, .2));
+			proctor->setPosition(proctor->getPosition() += glm::vec3(0.0, 0.0, speed));
 		}
 
 		if (zDistance < -minDistance)
 		{
-			proctor->setPosition(proctor->getPosition() -= glm::vec3(0.0, 0.0, .2));
+			proctor->setPosition(proctor->getPosition() -= glm::vec3(0.0, 0.0, speed));
 		}
 
 		if (distance <= minDistance + 0.1)
@@ -70,8 +70,15 @@ namespace GameLogic
 			proctor->getParentHierarchy()->removeObject(proctor);
 		}
 	}
+
+	void Cash::setFollow(bool _isFollowing)
+	{
+		isFollowing = _isFollowing;
+	}
+
 	void Cash::update()
 	{
-		followPlayer();
+		if(isFollowing)
+			followPlayer();
 	}
 }

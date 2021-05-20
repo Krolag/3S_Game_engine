@@ -40,7 +40,7 @@ namespace Loader
 		/* Read file via Assimp */
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(_path,
-			aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+			aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_PreTransformVertices/*aiProcess_JoinIdenticalVertices*/);
 
 		this->scene = scene;
 

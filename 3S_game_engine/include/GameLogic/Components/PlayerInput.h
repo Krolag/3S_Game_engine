@@ -16,6 +16,7 @@ namespace GameLogic
 		float acceleration = 0.005f * 100;
 		float movementSpeed;
 		float maxInteractionDistance = 3.0f;
+		float radius = 3.0f;
 		Proctor* coinProctor;
 
 		/* Constructors */

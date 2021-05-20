@@ -74,7 +74,7 @@ namespace Loader
 			//);
 			glm::quat proctorRotation(
 				1.0f,
-				0.0f,//glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)),
+				0.0f,//glm::radians(90.0f),//glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)),
 				-glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
 				0.0f//glm::radians((float)strtod(childElement->first_node("z")->value(), NULL))
 			);
@@ -123,7 +123,7 @@ namespace Loader
 		std::string retStr = "";
 		for(char c : name)
 		{
-			if (c == '-' || c == '_') break;
+			if (c == '-') break;
 			retStr += c;
 		}
 		return retStr;

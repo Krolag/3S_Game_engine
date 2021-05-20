@@ -48,7 +48,7 @@ void Monster::update()
 	if (!isInSafeZone())
 	{
 		if (!isPositionChanged()) { 
-			printf("Time to die \n");
+			//printf("Time to die \n");
 		}
 	}
 	else
