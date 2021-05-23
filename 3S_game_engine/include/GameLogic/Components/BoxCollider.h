@@ -15,7 +15,8 @@ namespace GameLogic
 	public:
 		bool isStatic;
 		bool isUpdated;
-
+		bool isColliding;
+		
 		/* Constructors */
 		BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor = NULL, Shader* _shader = NULL, bool _isStatic = true,
 			glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, glm::vec3(0.0f)),
@@ -24,16 +25,16 @@ namespace GameLogic
 		/* Set up methods */
 		void init();
 		void setModel(Loader::Model* _model);
+		bool checkCollisionOBB(BoxCollider* otherCollider);
 
 		/* Update methods */
-		void updatePosition(glm::vec3 oldPosition, glm::vec3 newPosition);
-		void updateRotation(glm::quat oldRotation, glm::quat newRotation);
-		void updateScale(glm::vec3 oldScale, glm::vec3 newScale);
 		void update();
 
 		/* Getters */
 		glm::vec3 getRadius();
 		glm::vec3 getCenter();
+		std::vector<glm::vec3> getColliderVertices();
+		
 		glm::mat4 getTranslationMatrix();
 		glm::mat4 getRotationMatrix();
 		glm::vec3 getScalingFactorFromMatrix();
@@ -54,6 +55,7 @@ namespace GameLogic
 		/* Private methods */
 		void initVerticesData();
 		void extremePointsAlongDirection(glm::vec3 point, glm::vec3& min, glm::vec3& max);
+		bool isBetweenOrdered(float val, float lowerBound, float upperBound);
 		std::vector<glm::vec3> calcVertices();
 		glm::mat4 getModelMatrix() const;
 	};

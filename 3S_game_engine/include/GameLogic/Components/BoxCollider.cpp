@@ -4,7 +4,7 @@ namespace GameLogic
 {
 	BoxCollider::BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor, Shader* _shader, bool _isStatic,
 		glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
-		: Component(_type, _proctor), model(_model), colliderShader(_shader), isStatic(_isStatic), isUpdated(false),
+		: Component(_type, _proctor), model(_model), colliderShader(_shader), isStatic(_isStatic), isUpdated(false), isColliding(false),
 		center(glm::vec3(0.0f)), radius(glm::vec3(0.0f)), orientationMatrix(glm::mat4(1.0f)),
 		colliderVAO(0), colliderVBO(0), colliderVertices{0, 0, 0}
 	{
@@ -95,6 +95,121 @@ namespace GameLogic
 		init();
 	}
 
+	bool BoxCollider::checkCollisionOBB(BoxCollider* otherCollider)
+	{
+		/* Get colliders vertices to check collisions on them */
+		std::vector<glm::vec3> thisVertices = this->getColliderVertices();
+		std::vector<glm::vec3> otherVertices = otherCollider->getColliderVertices();
+		
+		/* Get all 15 axis (6 from normals, 9 from finding cross products of normals A and B) to check collisions on it from both colliders */
+		std::vector<glm::vec3> axes;
+		glm::vec3 axis;
+		glm::vec3 veca, vecb;
+		
+		/* Get normals of this collider faces */
+		veca = thisVertices.at(2) - thisVertices.at(0);
+		vecb = thisVertices.at(1) - thisVertices.at(0);
+		axis = glm::normalize(glm::cross(veca, vecb));
+		axes.push_back(axis);
+
+		veca = thisVertices.at(4) - thisVertices.at(2);
+		vecb = thisVertices.at(3) - thisVertices.at(2);
+		axis = glm::normalize(glm::cross(veca, vecb));
+		axes.push_back(axis);
+
+		veca = thisVertices.at(1) - thisVertices.at(3);
+		vecb = thisVertices.at(5) - thisVertices.at(3);
+		axis = glm::normalize(glm::cross(veca, vecb));
+		axes.push_back(axis);
+
+		/* Get normals of other collider faces */
+		veca = otherVertices.at(2) - otherVertices.at(0);
+		vecb = otherVertices.at(1) - otherVertices.at(0);
+		axis = glm::normalize(glm::cross(veca, vecb));
+		axes.push_back(axis);
+
+		veca = otherVertices.at(4) - otherVertices.at(2);
+		vecb = otherVertices.at(3) - otherVertices.at(2);
+		axis = glm::normalize(glm::cross(veca, vecb));
+		axes.push_back(axis);
+
+		veca = otherVertices.at(1) - otherVertices.at(3);
+		vecb = otherVertices.at(5) - otherVertices.at(3);
+		axis = glm::normalize(glm::cross(veca, vecb));
+		axes.push_back(axis);
+
+		/* Get other 9 axes by using cross product on calculated axes */
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 3; j < 6; ++j)
+			{
+				axes.push_back(glm::cross(axes.at(i), axes.at(j)));
+			}
+		}
+
+		std::cout << "CHECKING FOR OVERLAPS:\n";
+		
+		/* Iterate through all axes */
+		for (int i = 0; i < axes.size(); ++i)
+		{
+			/* Project the points on the axis and get min and max from both colliders by using dot product */
+			float thisMin = FLT_MAX;
+			float thisMax = FLT_MIN;
+			float otherMIn = FLT_MAX;
+			float otherMax = FLT_MIN;
+			
+			/* Iterate through all this and other vertices */
+			for (int j = 0; j < 8; ++j)
+			{
+				/* Calculate current projection for this collider */
+				float currentProjection = glm::dot(thisVertices.at(j), axes.at(i));
+
+				/* Check for min and max values for this collider */
+				if (currentProjection < thisMin)
+					thisMin = currentProjection;
+				if (currentProjection > thisMax)
+					thisMax = currentProjection;
+
+				/* Calculate current projection for other collider */
+				currentProjection = glm::dot(otherVertices.at(j), axes.at(i));
+
+				/* Check for min and max values for other collider */
+				if (currentProjection < otherMIn)
+					otherMIn = currentProjection;
+				if (currentProjection > otherMax)
+					otherMax = currentProjection;
+			}
+			
+			if(isBetweenOrdered(thisMin, otherMIn, otherMax))
+			{
+				/* this collider is further on the axis and needs to be moved in the axis direction */
+				std::cout << "overlap on axis: " << axes.at(i).x << " " << axes.at(i).y << " " << axes.at(i).z << "\n";
+				std::cout << "this min between other values: " << otherMIn << " < " << thisMin << " < " << otherMax << "\n";
+			}
+			else if(isBetweenOrdered(otherMIn, thisMin, thisMax))
+			{
+				/* other collider is further on the axis, this collider needs to be moved in the opposite to the axis direction */
+				std::cout << "overlap on axis: " << axes.at(i).x << " " << axes.at(i).y << " " << axes.at(i).z << "\n";
+				std::cout << "other min between this values: " << thisMin << " < " << otherMIn << " < " << thisMax << "\n";
+			}
+			else
+			{
+				/* If there is no overlap on even one axis, there is no collision */
+				isColliding = false;
+				return false;
+			}
+		}
+
+		/* If there is overlap on every axis there is collision */
+		isColliding = true;
+		return true;
+	}
+
+	bool BoxCollider::isBetweenOrdered(float val, float lowerBound, float upperBound)
+	{
+		return lowerBound <= val && val <= upperBound;
+	}
+
 	void BoxCollider::update()
 	{
 		if(model == NULL)
@@ -147,38 +262,9 @@ namespace GameLogic
 
 	void BoxCollider::render()
 	{
-		//std::cout << "====================\nBOX COLLIDER RENDER:\n" << std::endl;
-
-		///* Update vertex data */
-		//colliderVertices[0] = center.x;
-		//colliderVertices[1] = center.y;
-		//colliderVertices[2] = center.z;
-
-		////std::cout << "----------\nvert data:\n" << colliderVertices[0] << " " << colliderVertices[1] << " " << colliderVertices[2] << std::endl;
-		//
-		///* Use collider shader and bind appropriate vertex array and buffer */
-		//colliderShader->use();
-		//colliderShader->setUniform("radius", radius);
-		//colliderShader->setUniform("model", glm::mat4(1.0f));
-		//
-		//glBindVertexArray(colliderVAO);
-		//glBindBuffer(GL_ARRAY_BUFFER, colliderVBO);
-		//
-		///* Update buffer data */
-		//glBufferData(GL_ARRAY_BUFFER, sizeof(colliderVertices), colliderVertices, GL_DYNAMIC_DRAW);
-
-		///* Draw call */
-		//glDrawArrays(GL_POINTS, 0, 1);
-		//
-		///* Unbind vertex array and buffer */
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
-		//glBindVertexArray(0);
-
-		// set up vertex data (and buffer(s)) and configure vertex attributes
-		// ------------------------------------------------------------------
-
 		colliderShader->use();
-		colliderShader->setUniform("model", orientationMatrix /*glm::mat4(1.0f)*/);
+		colliderShader->setUniform("model", orientationMatrix);
+		colliderShader->setUniformBool("collision", isColliding);
 
 		glBindVertexArray(colliderVAO);
 		glBindBuffer(GL_ARRAY_BUFFER, colliderVBO);
@@ -186,9 +272,9 @@ namespace GameLogic
 		/* Update buffer data */
 		glBufferData(GL_ARRAY_BUFFER, sizeof(colliderVertices), colliderVertices, GL_DYNAMIC_DRAW);
 		
-		/* Draw call */
+		/* Draw call with line option */
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, 24);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		
 		/* Unbind vertex array and buffer */
@@ -228,87 +314,6 @@ namespace GameLogic
 		return vertices;
 	}
 
-	void BoxCollider::updatePosition(glm::vec3 oldPosition, glm::vec3 newPosition)
-	{
-		glm::vec3 difference = newPosition - oldPosition;
-		std::cout << "\POSITION UPDATE:\nvec3(" << newPosition.x << "," << newPosition.y << "," << newPosition.z
-			<< ") - vec3(" << oldPosition.x << "," << oldPosition.y << "," << oldPosition.z
-			<< ") = vec3(" << difference.x << "," << difference.y << "," << difference.z << ")\n";
-
-		std::cout << "PRINTING ORIENTATION MATRIX BEFORE TRANSLATE:\n"
-			<< orientationMatrix[0][0] << " " << orientationMatrix[1][0] << " " << orientationMatrix[2][0] << " " << orientationMatrix[3][0] << "\n"
-			<< orientationMatrix[0][1] << " " << orientationMatrix[1][1] << " " << orientationMatrix[2][1] << " " << orientationMatrix[3][1] << "\n"
-			<< orientationMatrix[0][2] << " " << orientationMatrix[1][2] << " " << orientationMatrix[2][2] << " " << orientationMatrix[3][2] << "\n"
-			<< orientationMatrix[0][3] << " " << orientationMatrix[1][3] << " " << orientationMatrix[2][3] << " " << orientationMatrix[3][3] << "\n";
-		std::cout << "ONLY TRANSLATION MATRIX:\n"
-			<< getTranslationMatrix()[0][0] << " " << getTranslationMatrix()[1][0] << " " << getTranslationMatrix()[2][0] << " " << getTranslationMatrix()[3][0] << "\n"
-			<< getTranslationMatrix()[0][1] << " " << getTranslationMatrix()[1][1] << " " << getTranslationMatrix()[2][1] << " " << getTranslationMatrix()[3][1] << "\n"
-			<< getTranslationMatrix()[0][2] << " " << getTranslationMatrix()[1][2] << " " << getTranslationMatrix()[2][2] << " " << getTranslationMatrix()[3][2] << "\n"
-			<< getTranslationMatrix()[0][3] << " " << getTranslationMatrix()[1][3] << " " << getTranslationMatrix()[2][3] << " " << getTranslationMatrix()[3][3] << "\n";
-		orientationMatrix = glm::translate(orientationMatrix, difference);
-		std::cout << "PRINTING ORIENTATION MATRIX AFTER TRANSLATE:\n"
-			<< orientationMatrix[0][0] << " " << orientationMatrix[1][0] << " " << orientationMatrix[2][0] << " " << orientationMatrix[3][0] << "\n"
-			<< orientationMatrix[0][1] << " " << orientationMatrix[1][1] << " " << orientationMatrix[2][1] << " " << orientationMatrix[3][1] << "\n"
-			<< orientationMatrix[0][2] << " " << orientationMatrix[1][2] << " " << orientationMatrix[2][2] << " " << orientationMatrix[3][2] << "\n"
-			<< orientationMatrix[0][3] << " " << orientationMatrix[1][3] << " " << orientationMatrix[2][3] << " " << orientationMatrix[3][3] << "\n";
-
-		std::cout << "ONLY TRANSLATION MATRIX:\n"
-		<< getTranslationMatrix()[0][0] << " " << getTranslationMatrix()[1][0] << " " << getTranslationMatrix()[2][0] << " " << getTranslationMatrix()[3][0] << "\n"
-		<< getTranslationMatrix()[0][1] << " " << getTranslationMatrix()[1][1] << " " << getTranslationMatrix()[2][1] << " " << getTranslationMatrix()[3][1] << "\n"
-		<< getTranslationMatrix()[0][2] << " " << getTranslationMatrix()[1][2] << " " << getTranslationMatrix()[2][2] << " " << getTranslationMatrix()[3][2] << "\n"
-		<< getTranslationMatrix()[0][3] << " " << getTranslationMatrix()[1][3] << " " << getTranslationMatrix()[2][3] << " " << getTranslationMatrix()[3][3] << "\n";
-		glm::vec4 vec(center.x, center.y, center.z, 1.0f);
-		std::cout << "\nCENTER VEC4 BEFORE MATRIX MULTIPLYING: " << vec.x << " " << vec.y << " " << vec.z << " " << vec.w << "\n";
-		vec = getTranslationMatrix() * vec;
-		std::cout << "\nCENTER VEC4 AFTER MATRIX MULTIPLYING: " << vec.x << " " << vec.y << " " << vec.z << " " << vec.w << "\n";
-
-		std::cout << "\nCENTER UPDATE:\nold: " << center.x << " " << center.y << " " << center.z;
-		center += difference;
-		std::cout << "\nnew: " << center.x << " " << center.y << " " << center.z << "\n";
-	}
-
-	void BoxCollider::updateRotation(glm::quat oldRotation, glm::quat newRotation)
-	{
-		glm::vec3 difference = glm::vec3(newRotation.x, newRotation.y, newRotation.z ) - glm::vec3(oldRotation.x, oldRotation.y, oldRotation.z);
-		std::cout << "\ROTATION UPDATE:\nvec3(" << newRotation.x << "," << newRotation.y << "," << newRotation.z
-			<< ") - vec3(" << oldRotation.x << "," << oldRotation.y << "," << oldRotation.z
-			<< ") = vec3(" << difference.x << "," << difference.y << "," << difference.z << ")\n";
-		std::cout << "PRINTING ORIENTATION MATRIX BEFORE ROTATE:\n"
-			<< orientationMatrix[0][0] << " " << orientationMatrix[1][0] << " " << orientationMatrix[2][0] << " " << orientationMatrix[3][0] << "\n"
-			<< orientationMatrix[0][1] << " " << orientationMatrix[1][1] << " " << orientationMatrix[2][1] << " " << orientationMatrix[3][1] << "\n"
-			<< orientationMatrix[0][2] << " " << orientationMatrix[1][2] << " " << orientationMatrix[2][2] << " " << orientationMatrix[3][2] << "\n"
-			<< orientationMatrix[0][3] << " " << orientationMatrix[1][3] << " " << orientationMatrix[2][3] << " " << orientationMatrix[3][3] << "\n";
-
-		orientationMatrix = glm::rotate(orientationMatrix, difference.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		orientationMatrix = glm::rotate(orientationMatrix, difference.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		orientationMatrix = glm::rotate(orientationMatrix, difference.z, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		std::cout << "PRINTING ORIENTATION MATRIX AFTER ROTATE:\n"
-			<< orientationMatrix[0][0] << " " << orientationMatrix[1][0] << " " << orientationMatrix[2][0] << " " << orientationMatrix[3][0] << "\n"
-			<< orientationMatrix[0][1] << " " << orientationMatrix[1][1] << " " << orientationMatrix[2][1] << " " << orientationMatrix[3][1] << "\n"
-			<< orientationMatrix[0][2] << " " << orientationMatrix[1][2] << " " << orientationMatrix[2][2] << " " << orientationMatrix[3][2] << "\n"
-			<< orientationMatrix[0][3] << " " << orientationMatrix[1][3] << " " << orientationMatrix[2][3] << " " << orientationMatrix[3][3] << "\n";
-
-		std::cout << "ONLY ROTATION MATRIX:\n"
-			<< getRotationMatrix()[0][0] << " " << getRotationMatrix()[1][0] << " " << getRotationMatrix()[2][0] << " " << getRotationMatrix()[3][0] << "\n"
-			<< getRotationMatrix()[0][1] << " " << getRotationMatrix()[1][1] << " " << getRotationMatrix()[2][1] << " " << getRotationMatrix()[3][1] << "\n"
-			<< getRotationMatrix()[0][2] << " " << getRotationMatrix()[1][2] << " " << getRotationMatrix()[2][2] << " " << getRotationMatrix()[3][2] << "\n"
-			<< getRotationMatrix()[0][3] << " " << getRotationMatrix()[1][3] << " " << getRotationMatrix()[2][3] << " " << getRotationMatrix()[3][3] << "\n";
-	}
-
-	void BoxCollider::updateScale(glm::vec3 oldScale, glm::vec3 newScale)
-	{
-		glm::vec3 scalingFactor = newScale / oldScale;
-		std::cout << "\nSCALE UPDATE:\nvec3(" << newScale.x << "," << newScale.y << "," << newScale.z
-			<< ") / vec3(" << oldScale.x << "," << oldScale.y << "," << oldScale.z
-			<< ") = vec3(" << scalingFactor.x << "," << scalingFactor.y << "," << scalingFactor.z << ")\n";
-		orientationMatrix = glm::scale(orientationMatrix, scalingFactor);
-		std::cout << "\nSCALING FACTOR: " << getScalingFactorFromMatrix().x << " " << getScalingFactorFromMatrix().y << " " << getScalingFactorFromMatrix().z << "\n";
-		std::cout << "\nRADIUS UPDATE:\nold: " << radius.x << " " << radius.y << " " << radius.z;
-		radius *= scalingFactor;
-		std::cout << "\nnew: " << radius.x << " " << radius.y << " " << radius.z << "\n";
-	}
-
 	glm::vec3 BoxCollider::getRadius()
 	{
 		return radius;
@@ -317,6 +322,40 @@ namespace GameLogic
 	glm::vec3 BoxCollider::getCenter()
 	{
 		return center;
+	}
+
+	std::vector<glm::vec3> BoxCollider::getColliderVertices()
+	{
+		std::vector<glm::vec3> colliderVerts;
+		glm::vec3 colliderVert;
+
+		for (int i = 0; i < 12; i+=3)
+		{
+			if(i<8)
+			{
+				colliderVert.x = colliderVertices[i];
+				colliderVert.y = colliderVertices[i + 1];
+				colliderVert.z = colliderVertices[i + 2];
+				colliderVerts.push_back(colliderVert);
+				colliderVerts.back() = model->getModelMatrix() * glm::vec4(colliderVerts.back().x, colliderVerts.back().y, colliderVerts.back().z, 1.0f);
+				colliderVert.z = -colliderVert.z;
+				colliderVerts.push_back(colliderVert);
+				colliderVerts.back() = model->getModelMatrix() * glm::vec4(colliderVerts.back().x, colliderVerts.back().y, colliderVerts.back().z, 1.0f);
+			}
+			else
+			{
+				colliderVert.x = colliderVertices[i + 3];
+				colliderVert.y = colliderVertices[i + 4];
+				colliderVert.z = colliderVertices[i + 5];
+				colliderVerts.push_back(colliderVert);
+				colliderVerts.back() = model->getModelMatrix() * glm::vec4(colliderVerts.back().x, colliderVerts.back().y, colliderVerts.back().z, 1.0f);
+				colliderVert.z = -colliderVert.z;
+				colliderVerts.push_back(colliderVert);
+				colliderVerts.back() = model->getModelMatrix() * glm::vec4(colliderVerts.back().x, colliderVerts.back().y, colliderVerts.back().z, 1.0f);
+			}
+		}
+		
+		return colliderVerts;
 	}
 
 	glm::mat4 BoxCollider::getTranslationMatrix()

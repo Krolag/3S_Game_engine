@@ -148,7 +148,7 @@ int main()
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
-    // Players
+    // Players1
     GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
@@ -258,7 +258,7 @@ int main()
         camera.Position.y -= distance;
         camera.Pitch = -camera.Pitch;
         camera.updateCameraVectors();
-
+    	
         model3D.use();
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
         model3D.setUniform("projection", projection);
@@ -294,6 +294,8 @@ int main()
         dirLight.render(model3D);   	   	
         hierarchy.update(true, false);
 
+        hero_00_bc.checkCollisionOBB(&hero_01_bc);
+    	
         //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
         refractFramebuffer.unbindFramebuffer();
         glDisable(GL_CLIP_DISTANCE0); 
