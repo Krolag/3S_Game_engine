@@ -339,7 +339,7 @@ int main()
         animator.updateAniamtion(mainScene.deltaTime);
         hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
 
-        model = glm::translate(model, glm::vec3(0, waterYpos, 0));
+        model = glm::translate(model, glm::vec3(-200, waterYpos, -200));
         water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
         /* Render text */
