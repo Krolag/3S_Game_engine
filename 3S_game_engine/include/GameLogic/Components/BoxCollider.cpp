@@ -151,10 +151,10 @@ namespace GameLogic
 		for (int i = 0; i < axes.size(); ++i)
 		{
 			/* Project the points on the axis and get min and max from both colliders by using dot product */
-			float thisMin = NAN;
-			float thisMax = NAN;
-			float otherMIn = NAN;
-			float otherMax = NAN;
+			float thisMin = FLT_MAX;
+			float thisMax = -FLT_MAX;
+			float otherMIn = FLT_MAX;
+			float otherMax = -FLT_MAX;
 			
 			/* Iterate through all this and other vertices */
 			for (int j = 0; j < 8; ++j)
@@ -163,18 +163,18 @@ namespace GameLogic
 				float currentProjection = glm::dot(thisVertices.at(j), axes.at(i));
 
 				/* Check for min and max values for this collider */
-				if (currentProjection < thisMin || isnan(thisMin))
+				if (currentProjection < thisMin)
 					thisMin = currentProjection;
-				if (currentProjection > thisMax || isnan(thisMax))
+				if (currentProjection > thisMax)
 					thisMax = currentProjection;
 				
 				/* Calculate current projection for other collider */
 				currentProjection = glm::dot(otherVertices.at(j), axes.at(i));
 
 				/* Check for min and max values for other collider */
-				if (currentProjection < otherMIn || isnan(otherMIn))
+				if (currentProjection < otherMIn)
 					otherMIn = currentProjection;
-				if (currentProjection > otherMax || isnan(otherMax))
+				if (currentProjection > otherMax)
 					otherMax = currentProjection;
 			}
 			
