@@ -146,17 +146,15 @@ namespace GameLogic
 				axes.push_back(glm::cross(axes.at(i), axes.at(j)));
 			}
 		}
-
-		std::cout << "CHECKING FOR OVERLAPS:\n";
 		
 		/* Iterate through all axes */
 		for (int i = 0; i < axes.size(); ++i)
 		{
 			/* Project the points on the axis and get min and max from both colliders by using dot product */
-			float thisMin = FLT_MAX;
-			float thisMax = FLT_MIN;
-			float otherMIn = FLT_MAX;
-			float otherMax = FLT_MIN;
+			float thisMin = NAN;
+			float thisMax = NAN;
+			float otherMIn = NAN;
+			float otherMax = NAN;
 			
 			/* Iterate through all this and other vertices */
 			for (int j = 0; j < 8; ++j)
@@ -165,32 +163,28 @@ namespace GameLogic
 				float currentProjection = glm::dot(thisVertices.at(j), axes.at(i));
 
 				/* Check for min and max values for this collider */
-				if (currentProjection < thisMin)
+				if (currentProjection < thisMin || isnan(thisMin))
 					thisMin = currentProjection;
-				if (currentProjection > thisMax)
+				if (currentProjection > thisMax || isnan(thisMax))
 					thisMax = currentProjection;
-
+				
 				/* Calculate current projection for other collider */
 				currentProjection = glm::dot(otherVertices.at(j), axes.at(i));
 
 				/* Check for min and max values for other collider */
-				if (currentProjection < otherMIn)
+				if (currentProjection < otherMIn || isnan(otherMIn))
 					otherMIn = currentProjection;
-				if (currentProjection > otherMax)
+				if (currentProjection > otherMax || isnan(otherMax))
 					otherMax = currentProjection;
 			}
 			
 			if(isBetweenOrdered(thisMin, otherMIn, otherMax))
 			{
 				/* this collider is further on the axis and needs to be moved in the axis direction */
-				std::cout << "overlap on axis: " << axes.at(i).x << " " << axes.at(i).y << " " << axes.at(i).z << "\n";
-				std::cout << "this min between other values: " << otherMIn << " < " << thisMin << " < " << otherMax << "\n";
 			}
 			else if(isBetweenOrdered(otherMIn, thisMin, thisMax))
 			{
 				/* other collider is further on the axis, this collider needs to be moved in the opposite to the axis direction */
-				std::cout << "overlap on axis: " << axes.at(i).x << " " << axes.at(i).y << " " << axes.at(i).z << "\n";
-				std::cout << "other min between this values: " << thisMin << " < " << otherMIn << " < " << thisMax << "\n";
 			}
 			else
 			{
