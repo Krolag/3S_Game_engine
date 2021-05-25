@@ -1,7 +1,7 @@
 #include "BoxCollider.h"
 
 namespace GameLogic
-{
+{	
 	BoxCollider::BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor, Shader* _shader, bool _isStatic,
 		glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
 		: Component(_type, _proctor), model(_model), colliderShader(_shader), isStatic(_isStatic), isUpdated(false), isColliding(false),
@@ -107,11 +107,6 @@ namespace GameLogic
 		glm::vec3 veca, vecb;
 		
 		/* Get normals of this collider faces */
-		veca = thisVertices.at(2) - thisVertices.at(0);
-		vecb = thisVertices.at(1) - thisVertices.at(0);
-		axis = glm::normalize(glm::cross(veca, vecb));
-		axes.push_back(axis);
-
 		veca = thisVertices.at(4) - thisVertices.at(2);
 		vecb = thisVertices.at(3) - thisVertices.at(2);
 		axis = glm::normalize(glm::cross(veca, vecb));
@@ -122,12 +117,12 @@ namespace GameLogic
 		axis = glm::normalize(glm::cross(veca, vecb));
 		axes.push_back(axis);
 
-		/* Get normals of other collider faces */
-		veca = otherVertices.at(2) - otherVertices.at(0);
-		vecb = otherVertices.at(1) - otherVertices.at(0);
+		veca = thisVertices.at(2) - thisVertices.at(0);
+		vecb = thisVertices.at(1) - thisVertices.at(0);
 		axis = glm::normalize(glm::cross(veca, vecb));
 		axes.push_back(axis);
 
+		/* Get normals of other collider faces */
 		veca = otherVertices.at(4) - otherVertices.at(2);
 		vecb = otherVertices.at(3) - otherVertices.at(2);
 		axis = glm::normalize(glm::cross(veca, vecb));
@@ -138,16 +133,26 @@ namespace GameLogic
 		axis = glm::normalize(glm::cross(veca, vecb));
 		axes.push_back(axis);
 
+		veca = otherVertices.at(2) - otherVertices.at(0);
+		vecb = otherVertices.at(1) - otherVertices.at(0);
+		axis = glm::normalize(glm::cross(veca, vecb));
+		axes.push_back(axis);
+
 		/* Get other 9 axes by using cross product on calculated axes */
 		for (int i = 0; i < 3; ++i)
 		{
 			for (int j = 3; j < 6; ++j)
 			{
-				axes.push_back(glm::cross(axes.at(i), axes.at(j)));
+				axis = glm::cross(axes.at(i), axes.at(j));
+				if (axis != glm::vec3(0.0f) && glm::abs(glm::dot(axis, glm::vec3(1.0f))) > FLT_EPSILON)
+					axes.push_back(axis);
 			}
 		}
+
+		glm::vec3 separationVector;
+		float shortestOverlap = FLT_MAX;
 		
-		/* Iterate through all axes */
+		/* Iterate through all axes to detect collision by SAT and to find the shortest overlap */
 		for (int i = 0; i < axes.size(); ++i)
 		{
 			/* Project the points on the axis and get min and max from both colliders by using dot product */
@@ -178,32 +183,55 @@ namespace GameLogic
 					otherMax = currentProjection;
 			}
 			
-			if(isBetweenOrdered(thisMin, otherMIn, otherMax))
-			{
-				/* this collider is further on the axis and needs to be moved in the axis direction */
-			}
-			else if(isBetweenOrdered(otherMIn, thisMin, thisMax))
-			{
-				/* other collider is further on the axis, this collider needs to be moved in the opposite to the axis direction */
-			}
-			else
+			float overlap = lineOverlap(thisMin, thisMax, otherMIn, otherMax);
+			
+			if(overlap == 0.0f)
 			{
 				/* If there is no overlap on even one axis, there is no collision */
 				isColliding = false;
 				return false;
 			}
+			
+			/* We want to keep track of the smallest overlap to be used for collision resolution */
+			if (i == 0)
+			{
+				shortestOverlap = overlap;
+				separationVector = axes.at(i);
+			}
+			else if(overlap < shortestOverlap)
+			{
+				shortestOverlap = overlap;
+				separationVector = axes.at(i);
+			}
+		}
+		/* If there is overlap on every axis there is collision */
+
+		glm::vec3 otherToThisVector = otherCollider->proctor->transform.position - this->proctor->transform.position;
+		if(glm::dot(separationVector, otherToThisVector) >= 0)
+		{
+			separationVector *= -1;
 		}
 
-		/* If there is overlap on every axis there is collision */
+		separationVector *= shortestOverlap;
+		
+		this->proctor->transform.position += separationVector;
+		
 		isColliding = true;
 		return true;
 	}
 
-	bool BoxCollider::isBetweenOrdered(float val, float lowerBound, float upperBound)
+	float BoxCollider::lineOverlap(float minA, float maxA, float minB, float maxB)
 	{
-		return lowerBound <= val && val <= upperBound;
+		return glm::max(0.0f, glm::min(maxA, maxB) - glm::max(minA, minB));
 	}
 
+	float BoxCollider::shortestOverlapBetweenOrdered(float val, float lowerBound, float upperBound)
+	{
+		float overlapLeft = glm::abs(lowerBound - val);
+		float overlapRight = glm::abs(val - upperBound);
+		return overlapLeft < overlapRight ? overlapLeft : overlapRight;
+	}
+	
 	void BoxCollider::update()
 	{
 		if(model == NULL)

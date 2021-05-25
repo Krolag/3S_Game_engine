@@ -55,7 +55,8 @@ namespace GameLogic
 		/* Private methods */
 		void initVerticesData();
 		void extremePointsAlongDirection(glm::vec3 point, glm::vec3& min, glm::vec3& max);
-		bool isBetweenOrdered(float val, float lowerBound, float upperBound);
+		float lineOverlap(float minA, float maxA, float minB, float maxB);
+		float shortestOverlapBetweenOrdered(float val, float lowerBound, float upperBound);
 		std::vector<glm::vec3> calcVertices();
 		glm::mat4 getModelMatrix() const;
 	};
