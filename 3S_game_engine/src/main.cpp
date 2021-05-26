@@ -139,8 +139,8 @@ int main()
 
 
     /* Load models that probably won't be serialized */
-    modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_00", true);
-    modelLibrary.addModel("assets/models/hero/player_concept.fbx", "hero_01", true);
+    modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_00", true);
+    modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_01", true);
     modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_00", true);
     modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);
@@ -165,7 +165,8 @@ int main()
     GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
     GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
     GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
-    //GameLogic::BoxCollider  chestBody_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody_00.name), &chestBody_00, &collisionBoxShader);
+    GameLogic::BoxCollider  chestBody_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody_00.name), &chestBody_00, &collisionBoxShader, false);
+	
     hierarchy.addObject(&chestBody_00);
     GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer chestBody2_mr(GameLogic::C_MESH, &chestBody2, modelLibrary.getModel(chestBody2.name), &model3D);
@@ -293,8 +294,6 @@ int main()
 
         dirLight.render(model3D);   	   	
         hierarchy.update(true, false);
-
-        hero_00_bc.checkCollisionOBB(&hero_01_bc);
     	
         //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
         refractFramebuffer.unbindFramebuffer();
@@ -339,6 +338,7 @@ int main()
         animator.updateAniamtion(mainScene.deltaTime);
         hierarchy.update(false, true); // need to be set this way, otherwise debug window won't appear
 
+
         model = glm::translate(model, glm::vec3(-200, waterYpos, -200));
         water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
@@ -362,6 +362,9 @@ int main()
         keyboardInput->update();
         mouseInput->update();
 
+        hero_00_bc.checkCollisionOBB(&hero_01_bc);
+        hero_01_bc.checkCollisionOBB(&hero_00_bc);
+    	
         /* DEBUG - Draw DearImGUI */
         // THIS SHOULD BE THE LAST, DO NOT TOUCH IT
         ImGui::Render();

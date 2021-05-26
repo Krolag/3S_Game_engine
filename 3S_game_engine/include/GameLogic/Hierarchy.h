@@ -27,10 +27,6 @@ namespace GameLogic
 		std::vector<Proctor*> getTreasure();
 		std::vector<Proctor*> getCash();
 
-		/* Collider methods */
-		bool checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
-		void separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b);
-
 		/* Scene method */
 		float getDeltaTime();
 

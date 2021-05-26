@@ -144,7 +144,7 @@ namespace GameLogic
 			for (int j = 3; j < 6; ++j)
 			{
 				axis = glm::cross(axes.at(i), axes.at(j));
-				if (axis != glm::vec3(0.0f) && glm::abs(glm::dot(axis, glm::vec3(1.0f))) > FLT_EPSILON)
+				if (glm::abs(glm::dot(axis, glm::vec3(1.0f))) > 0.0001)
 					axes.push_back(axis);
 			}
 		}
@@ -213,7 +213,7 @@ namespace GameLogic
 		}
 
 		separationVector *= shortestOverlap;
-		
+
 		this->proctor->transform.position += separationVector;
 		
 		isColliding = true;
@@ -250,30 +250,6 @@ namespace GameLogic
 			center.z = colliderVertices[3] - glm::abs(colliderVertices[0] - colliderVertices[3]) / 2.0f;
 			glm::vec4 vec = glm::vec4(radius.x, radius.y, radius.z, 1.0f);
 			vec = orientationMatrix * vec;
-			//std::cout << "Update of radius: " << vec.x << " " << vec.y << " " << vec.z << std::endl;
-			
-			/* Get min and max vertices */
-			
-			//
-			//for (unsigned int i = 0; i < vertices.size(); i++)
-			//{
-			//	/* Update vertices */
-			//	vertices.at(i) = getModelMatrix() * glm::vec4(vertices.at(i).x, vertices.at(i).y, vertices.at(i).z, 1.0f);
-			//	
-			//	/* Check min */
-			//	if (updateMin.x > vertices.at(i).x) updateMin.x = vertices.at(i).x;
-			//	if (updateMin.y > vertices.at(i).y) updateMin.y = vertices.at(i).y;
-			//	if (updateMin.z > vertices.at(i).z) updateMin.z = vertices.at(i).z;
-			//	
-			//	/* Check max */
-			//	if (updateMax.x < vertices.at(i).x) updateMax.x = vertices.at(i).x;
-			//	if (updateMax.y < vertices.at(i).y) updateMax.y = vertices.at(i).y;
-			//	if (updateMax.z < vertices.at(i).z) updateMax.z = vertices.at(i).z;
-			//}
-
-			//radius.x = glm::abs(updateMax.x - updateMin.x) / 2.0f;
-			//radius.y = glm::abs(updateMax.y - updateMin.y) / 2.0f;
-			//radius.z = glm::abs(updateMax.z - updateMin.z) / 2.0f;
 		}
 		
 		if(!isUpdated)

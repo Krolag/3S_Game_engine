@@ -119,67 +119,6 @@ namespace GameLogic
 		return cash;
 	}
 
-	bool Hierarchy::checkAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
-	{
-		if (glm::abs(_a->transform.position.x - _b->transform.position.x) >
-			(((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x +
-				((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().x))
-		{
-			return false;
-		}
-		if (glm::abs(_a->transform.position.y - _b->transform.position.y) >
-			(((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y +
-				((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().y))
-		{
-			return false;
-		}
-		if (glm::abs(_a->transform.position.z - _b->transform.position.z) >
-			(((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z +
-				((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER))->getRadius().z))
-		{
-			return false;
-		}
-		return true;
-	}
-
-	void Hierarchy::separateAABBCollision(GameLogic::Proctor* _a, GameLogic::Proctor* _b)
-	{
-		/* Calculate separation direction */
-		glm::vec3 separationDirection;
-		if (_a->transform.position.x >= _b->transform.position.x) separationDirection.x = 1.0f;
-		else separationDirection.x = -1.0f;
-		if (_a->transform.position.y >= _b->transform.position.y) separationDirection.y = 1.0f;
-		else separationDirection.y = -1.0f;
-		if (_a->transform.position.z >= _b->transform.position.z) separationDirection.z = 1.0f;
-		else separationDirection.z = -1.0f;
-
-		/* Calculate distance between objects positions */
-		glm::vec3 distanceAB;
-		distanceAB.x = glm::abs(_a->transform.position.x - _b->transform.position.x);
-		distanceAB.y = glm::abs(_a->transform.position.y - _b->transform.position.y);
-		distanceAB.z = glm::abs(_a->transform.position.z - _b->transform.position.z);
-
-		BoxCollider* acol = ((GameLogic::BoxCollider*)_a->getComponentOfType(GameLogic::C_COLLIDER));
-		BoxCollider* bcol = ((GameLogic::BoxCollider*)_b->getComponentOfType(GameLogic::C_COLLIDER));
-		
-		/* Calculate the sum of radiuses of the both objects */
-		glm::vec3 radiusABSum;
-		radiusABSum.x = acol->getRadius().x + bcol->getRadius().x;
-		radiusABSum.y = acol->getRadius().y + bcol->getRadius().y;
-		radiusABSum.z = acol->getRadius().z + bcol->getRadius().z;
-
-		/* Calculate separation vector */
-		glm::vec3 separationVector;
-		separationVector.x = (radiusABSum.x - distanceAB.x + 0.01f);
-		separationVector.y = (radiusABSum.y - distanceAB.y + 0.01f);
-		separationVector.z = (radiusABSum.z - distanceAB.z + 0.01f);
-
-		/* Add separation vector to the objects */
-		if (glm::min(separationVector.x, separationVector.z) == separationVector.x) _a->transform.position.x += separationVector.x * separationDirection.x;
-		else _a->transform.position.z += separationVector.z * separationDirection.z;
-		if (checkAABBCollision(_a, _b)) _a->transform.position.y += separationVector.y * separationDirection.y;
-	}
-
 	float Hierarchy::getDeltaTime()
 	{
 		return scene->deltaTime;
@@ -258,22 +197,7 @@ namespace GameLogic
 			/* Check for collisions */
 			for (int i = 0; i < proctors.size(); ++i)
 			{
-				// TODO: @Kuba - do naprawy sa ponizsze linie, byc moze to problem z przekazywaniem modeli i informacji o nich - sprawdz to
-				/* If there is collider on proctor, check collisions on it */
-				//if (proctors[i]->getComponentOfType(C_COLLIDER) != NULL)
-				//{
-				//	if (!((BoxCollider*)proctors[i]->getComponentOfType(C_COLLIDER))->isStatic)
-				//	{
-				//		for (int j = 0; j < proctors.size(); ++j)
-				//		{
-				//			if (checkAABBCollision(proctors[i], proctors[j]))
-				//			{
-				//				// TODO: @Kuba - maybe its no need here for checking objects and checking if i = j will be enough
-				//				if (proctors[i] != proctors[j]) separateAABBCollision(proctors[i], proctors[j]);
-				//			}
-				//		}
-				//	}
-				//}
+
 			}
 
 			/* If hierarchy is active and _drawDebug is true, draw debug window */
