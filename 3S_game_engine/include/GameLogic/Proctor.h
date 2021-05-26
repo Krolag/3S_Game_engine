@@ -32,6 +32,8 @@ namespace GameLogic
 		std::string name = "none";
 		unsigned int uuid = 0;
 		Transform transform;
+		Transform parentTransform;
+		Transform beginTransform;
 
 		/* Constructors / Destructors */
 		Proctor();
@@ -53,6 +55,7 @@ namespace GameLogic
 		/* Transform methods */
 		void setTransform(glm::vec3 _position = glm::vec3(1.0f), glm::quat _rotation = glm::quat(glm::vec3(1.0f)), glm::vec3 _scale = glm::vec3(1.0f));
 		void setTransform(Transform _transform);
+		void setParentTransform(Transform _transform);
 		void setPosition(glm::vec3 _position);
 		void setRotation(glm::quat _rotation);
 		void setScale(glm::vec3 _scale);

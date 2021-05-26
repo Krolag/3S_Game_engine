@@ -57,7 +57,8 @@ namespace GameLogic
 
 		/* Next update children */
 		for (auto& a : children)
-		{
+		{			
+			a->transform.position = a->getParentProctor()->transform.position + a->beginTransform.position;
 			a->update(_onlyRender);
 		}
 	}
@@ -89,6 +90,7 @@ namespace GameLogic
 
 		/* If proctor cannot be found in children vector, add it */
 		_proctor->setParent(this);
+		_proctor->beginTransform = _proctor->transform;
 		children.push_back(_proctor);
 	}
 
@@ -257,6 +259,11 @@ namespace GameLogic
 	void Proctor::setTransform(Transform _transform)
 	{
 		transform = _transform;
+	}
+
+	void Proctor::setParentTransform(Transform _transform)
+	{
+		parentTransform = _transform;
 	}
 
 	void Proctor::setPosition(glm::vec3 _position)

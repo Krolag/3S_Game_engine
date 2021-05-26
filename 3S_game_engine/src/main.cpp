@@ -128,15 +128,14 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
-
-    /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
-	for (int i = 0; i < importer.importedProctors.size(); ++i)
-	{
-	   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
-	   hierarchy.addObject(importer.importedProctors.at(i).get());
-	}
-
+     Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
+    
+     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
+    for (int i = 0; i < importer.importedProctors.size(); ++i)
+    {
+       importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
+       hierarchy.addObject(importer.importedProctors.at(i).get());
+    }
 
     /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_00", true);
@@ -159,9 +158,9 @@ int main()
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
-
+    
     // Chests and coins
-    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(0.00f, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(10, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
     GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
     GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
@@ -182,6 +181,7 @@ int main()
     GameLogic::MeshRenderer coin_01_mr(GameLogic::C_MESH, &coin_01, modelLibrary.getModel(coin_00.name), &model3D);
     GameLogic::Cash         coin_01_csh(GameLogic::C_CASH, &coin_01, &hero_00, &hero_01);
     hierarchy.addObject(&coin_01);
+    hero_00.addChild(&chestBody_00);
   /*  GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
     hierarchy.addObject(&island_00);
