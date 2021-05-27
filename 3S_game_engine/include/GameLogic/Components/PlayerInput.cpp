@@ -35,15 +35,16 @@ namespace GameLogic
 
 	void PlayerInput::update()
 	{
+		/* Apply gravity */
+		cGravity += gravityAcceleration * proctor->getDeltaTime();
+		if (cGravity >= maxGravity)
+			cGravity = maxGravity;
+
 		/* Check which player should get update */
 		if (isPlayerOne) 
-		{
 			usePlayerOneInput();
-		}
 		else
-		{
 			usePlayerTwoInput();
-		}
 	}
 
 	void PlayerInput::usePlayerOneInput()
@@ -146,6 +147,9 @@ namespace GameLogic
 		{
 			movementSpeed = 0.0f;
 		}
+		
+		/* Update gravity */
+		transform.position += glm::vec3(0.0f, -cGravity, 0.0f) * proctor->getDeltaTime();
 
 		/* Update players transform */
 		proctor->setTransform(transform);
@@ -255,6 +259,9 @@ namespace GameLogic
 		{
 			movementSpeed = 0.0f;
 		}
+
+		/* Update gravity */
+		transform.position += glm::vec3(0.0f, -cGravity, 0.0f) * proctor->getDeltaTime();
 
 		/* Update players transform */
 		proctor->setTransform(transform);

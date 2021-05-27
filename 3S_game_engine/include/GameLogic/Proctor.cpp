@@ -51,7 +51,7 @@ namespace GameLogic
 				a->update();
 				if(a->type == C_COLLIDER)
 				{
-					//((BoxCollider*)a)->render();
+					((BoxCollider*)a)->render();
 				}
 			}
 		}
@@ -215,7 +215,7 @@ namespace GameLogic
 					ImGui::Text("Right: D");
 					ImGui::Text("Use:   V"); ImGui::SameLine();
 					ImGui::Text("Row:   B");
-					}
+				}
 				else
 				{
 					ImGui::Text("Up:    I"); ImGui::SameLine();
@@ -227,8 +227,16 @@ namespace GameLogic
 				}
 				ImGui::Text("max speed:   "); ImGui::SameLine();
 				ImGui::InputFloat("ms", &((PlayerInput*)a)->maxSpeed);
+				ImGui::Text("acc speed:   "); ImGui::SameLine();
+				ImGui::InputFloat("as", &((PlayerInput*)a)->acceleration);
 				ImGui::Text("curr speed:  "); ImGui::SameLine();
 				ImGui::InputFloat("cs", &((PlayerInput*)a)->movementSpeed);
+				ImGui::Text("max gravi:   "); ImGui::SameLine();
+				ImGui::InputFloat("gs", &((PlayerInput*)a)->maxGravity);
+				ImGui::Text("acc gravi:   "); ImGui::SameLine();
+				ImGui::InputFloat("ga", &((PlayerInput*)a)->gravityAcceleration);
+				ImGui::Text("curr gravi:  "); ImGui::SameLine();
+				ImGui::InputFloat("cg", &((PlayerInput*)a)->cGravity);
 			}
 
 			if(a->type == GameLogic::C_COLLIDER)

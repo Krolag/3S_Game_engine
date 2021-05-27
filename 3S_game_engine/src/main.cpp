@@ -236,7 +236,7 @@ int main()
     GameLogic::MeshRenderer test_anim_mr(GameLogic::C_MESH, &test_anim, &player_one, &model3D);
     //Animation movement(test_anim_mr.model->path, test_anim_mr.model);
     //animator.playAnimation(&movement);
-    hierarchy.addObject(&test_anim);
+    //hierarchy.addObject(&test_anim);
    
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
