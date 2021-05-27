@@ -51,7 +51,7 @@ namespace GameLogic
 				a->update();
 				if(a->type == C_COLLIDER)
 				{
-					//((BoxCollider*)a)->render();
+					((BoxCollider*)a)->render();
 				}
 			}
 		}

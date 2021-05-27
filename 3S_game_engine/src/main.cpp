@@ -136,11 +136,11 @@ int main()
      Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
     
      /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
-    for (int i = 0; i < importer.importedProctors.size(); ++i)
-    {
-       importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
-       hierarchy.addObject(importer.importedProctors.at(i).get());
-    }
+   //for (int i = 0; i < importer.importedProctors.size(); ++i)
+   //{
+   //   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
+   //   hierarchy.addObject(importer.importedProctors.at(i).get());
+   //}
 
     /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_00", true, true); // If last value is set to true, there is no animation
@@ -149,6 +149,7 @@ int main()
     modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true);
+    modelLibrary.addModel("assets/models/boat/boat_final.fbx", "boat", true);
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
@@ -163,9 +164,14 @@ int main()
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
+
+    GameLogic::Proctor      boat("boat", glm::vec3(-5.0f, 2.5f, -5.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.06f));
+    GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
+    GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
+    hierarchy.addObject(&boat);
     
     // Chests and coins
-    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(10, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(10, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.9f));
     GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
     GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
     GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
@@ -186,7 +192,7 @@ int main()
     GameLogic::Cash         coin_01_csh(GameLogic::C_CASH, &coin_01, &hero_00, &hero_01);
     hierarchy.addObject(&coin_01);
 	
-  /*  GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+  /* GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
     hierarchy.addObject(&island_00);
     GameLogic::Proctor      island_01("island_01", glm::vec3(20.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, -1.57f, 0.0f), glm::vec3(0.05f));
@@ -236,7 +242,7 @@ int main()
     GameLogic::MeshRenderer test_anim_mr(GameLogic::C_MESH, &test_anim, &player_one, &model3D);
     //Animation movement(test_anim_mr.model->path, test_anim_mr.model);
     //animator.playAnimation(&movement);
-    hierarchy.addObject(&test_anim);
+    //hierarchy.addObject(&test_anim);
    
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
