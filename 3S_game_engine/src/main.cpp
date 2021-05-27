@@ -144,8 +144,8 @@ int main()
     }
 
     /* Load models that probably won't be serialized */
-    modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_00", true);
-    modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_01", true);
+    modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_00", true, true); // If last value is set to true, there is no animation
+    modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_01", true, true);
     modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_00", true);
     modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);

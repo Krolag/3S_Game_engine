@@ -46,7 +46,7 @@ namespace Loader
 			// Add model to the model library if it is not already on the list
 			if (!isNameInImportedList(modelName))
 			{
-				importedModelLibrary.addModel(modelPath, modelName, true);
+				importedModelLibrary.addModel(modelPath, modelName, true, true);
 			}
 
 			// no need for this probably
