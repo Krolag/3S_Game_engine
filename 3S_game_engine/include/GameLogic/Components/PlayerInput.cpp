@@ -127,8 +127,7 @@ namespace GameLogic
 
 				if (distance <= maxInteractionDistance)
 				{
-					//std::cout << tmp.at(i)->name << std::endl;
-					if (tmp.at(i)->getComponentOfType(C_TREASURE)->type == C_TREASURE)
+					if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
 					{
 						tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 						((Cash*) this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
