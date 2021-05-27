@@ -84,6 +84,7 @@ namespace GameLogic
 				return proctors[i];
 			}
 		}
+		return NULL;
 	}
 
 	Proctor* Hierarchy::getObject(unsigned int _uuid)
@@ -174,7 +175,7 @@ namespace GameLogic
 		}
 	}
 
-	void Hierarchy::update(bool _onlyRender, bool _drawDebug)
+	void Hierarchy::update(bool _onlyRender, bool _drawDebug, int collisionIncrement)
 	{
 		/* Update all proctors in objects vector */
 		for (auto& a : proctors)
@@ -194,12 +195,57 @@ namespace GameLogic
 			/* At first, update scene time */
 			scene->update();
 
-			/* Check for collisions */
+			/* COLLISION DETECTION */
+			/* First we want to check collsiions between players, swapping order each frame */
+			Proctor* hero_00 = getObject("hero_00");
+			Proctor* hero_01 = getObject("hero_01");
+
+			if(hero_00 != NULL && hero_01 != NULL)
+			{
+				if(hero_00->getComponentOfType(C_COLLIDER) != NULL && hero_01->getComponentOfType(C_COLLIDER) != NULL)
+				{
+					/* If heroes proctors exist and they have collider on them, check collisions between players */
+					if (collisionIncrement % 2 == 0)
+					{
+						((BoxCollider*)hero_00->getComponentOfType(C_COLLIDER))->checkCollisionOBB((BoxCollider*)hero_01->getComponentOfType(C_COLLIDER));
+						((BoxCollider*)hero_01->getComponentOfType(C_COLLIDER))->checkCollisionOBB((BoxCollider*)hero_00->getComponentOfType(C_COLLIDER));
+					}
+					else
+					{
+						((BoxCollider*)hero_01->getComponentOfType(C_COLLIDER))->checkCollisionOBB((BoxCollider*)hero_00->getComponentOfType(C_COLLIDER));
+						((BoxCollider*)hero_00->getComponentOfType(C_COLLIDER))->checkCollisionOBB((BoxCollider*)hero_01->getComponentOfType(C_COLLIDER));
+					}
+				}
+			}
+			
+			/* Collision detection loop for anything else than player-player */
 			for (int i = 0; i < proctors.size(); ++i)
 			{
-
+				/* Check if proctor has collider */
+				if(proctors.at(i)->getComponentOfType(C_COLLIDER) != NULL)
+				{
+					/* If proctor has collider on it, check if proctors collider is not static */
+					if(!((BoxCollider*)proctors.at(i)->getComponentOfType(C_COLLIDER))->isStatic)
+					{
+						/* If proctors collider is not static, check collisions with other proctors */
+						for (int j = 0; j < proctors.size(); ++j)
+						{
+							/* Check if j == i to not check collider on itself and check if other proctor has collider */
+							if (j == i || proctors.at(j)->getComponentOfType(C_COLLIDER) == NULL)
+								continue;
+							
+							/* Don't check collisions on players here, because we have checked it already */
+							if ((proctors.at(i)->name == "hero_00" && proctors.at(j)->name == "hero_01")
+								|| (proctors.at(i)->name == "hero_01" && proctors.at(j)->name == "hero_00"))
+								continue;
+							
+							/* Check collisions between two proctors */
+							((BoxCollider*)proctors.at(i)->getComponentOfType(C_COLLIDER))->checkCollisionOBB((BoxCollider*)proctors.at(j)->getComponentOfType(C_COLLIDER));
+						}
+					}
+				}
 			}
-
+			
 			/* If hierarchy is active and _drawDebug is true, draw debug window */
 			if (active && _drawDebug)
 			{

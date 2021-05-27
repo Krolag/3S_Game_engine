@@ -150,6 +150,9 @@ namespace GameLogic
 
 		/* Update players transform */
 		proctor->setTransform(transform);
+		((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
+		((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
+		((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
 	}
 
 	void PlayerInput::usePlayerTwoInput()
@@ -256,5 +259,8 @@ namespace GameLogic
 
 		/* Update players transform */
 		proctor->setTransform(transform);
+		((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
+		((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
+		((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
 	}
 }

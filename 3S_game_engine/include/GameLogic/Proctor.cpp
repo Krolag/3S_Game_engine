@@ -1,4 +1,6 @@
 #include "Proctor.h"
+
+#include <functional>
 #include <iostream>
 #include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_glfw.h"
@@ -47,14 +49,13 @@ namespace GameLogic
 			else
 			{
 				a->update();
-				if (a->type == C_COLLIDER)
+				if(a->type == C_COLLIDER)
 				{
-					//((BoxCollider*)a)->update();
-					((BoxCollider*)a)->render();
+					//((BoxCollider*)a)->render();
 				}
 			}
 		}
-
+		
 		/* Next update children */
 		for (auto& a : children)
 		{			

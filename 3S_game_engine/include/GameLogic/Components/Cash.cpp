@@ -14,7 +14,7 @@ namespace GameLogic
 
 	Cash::~Cash()
 	{
-		delete points;
+		//delete points;
 	}
 
 	void Cash::followPlayer()

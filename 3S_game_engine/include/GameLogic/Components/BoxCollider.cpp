@@ -97,6 +97,10 @@ namespace GameLogic
 
 	bool BoxCollider::checkCollisionOBB(BoxCollider* otherCollider)
 	{
+		model->position = proctor->getPosition();
+		model->rotation = proctor->getRotation();
+		model->scale = proctor->getScale();
+
 		/* Get colliders vertices to check collisions on them */
 		std::vector<glm::vec3> thisVertices = this->getColliderVertices();
 		std::vector<glm::vec3> otherVertices = otherCollider->getColliderVertices();
@@ -205,13 +209,12 @@ namespace GameLogic
 			}
 		}
 		/* If there is overlap on every axis there is collision */
-
+		
 		glm::vec3 otherToThisVector = otherCollider->proctor->transform.position - this->proctor->transform.position;
 		if(glm::dot(separationVector, otherToThisVector) >= 0)
 		{
 			separationVector *= -1;
 		}
-
 		separationVector *= shortestOverlap;
 
 		this->proctor->transform.position += separationVector;
@@ -223,13 +226,6 @@ namespace GameLogic
 	float BoxCollider::lineOverlap(float minA, float maxA, float minB, float maxB)
 	{
 		return glm::max(0.0f, glm::min(maxA, maxB) - glm::max(minA, minB));
-	}
-
-	float BoxCollider::shortestOverlapBetweenOrdered(float val, float lowerBound, float upperBound)
-	{
-		float overlapLeft = glm::abs(lowerBound - val);
-		float overlapRight = glm::abs(val - upperBound);
-		return overlapLeft < overlapRight ? overlapLeft : overlapRight;
 	}
 	
 	void BoxCollider::update()
@@ -243,13 +239,9 @@ namespace GameLogic
 		
 		if (!isStatic || !isUpdated)
 		{
+			// TODO: @Kuba probably can delete orientation matrix and just use model matrix
 			orientationMatrix = model->getModelMatrix();
-			center = proctor->getPosition();
-			center.x = colliderVertices[3] - glm::abs(colliderVertices[0] - colliderVertices[3]) / 2.0f;
-			center.y = colliderVertices[3] - glm::abs(colliderVertices[0] - colliderVertices[3]) / 2.0f;
-			center.z = colliderVertices[3] - glm::abs(colliderVertices[0] - colliderVertices[3]) / 2.0f;
-			glm::vec4 vec = glm::vec4(radius.x, radius.y, radius.z, 1.0f);
-			vec = orientationMatrix * vec;
+			// TODO: @Kuba update center and radius with the new way
 		}
 		
 		if(!isUpdated)
@@ -354,51 +346,6 @@ namespace GameLogic
 		}
 		
 		return colliderVerts;
-	}
-
-	glm::mat4 BoxCollider::getTranslationMatrix()
-	{
-		glm::mat4 translationM = glm::mat4(1.0f);
-		translationM[3][0] = orientationMatrix[3][0];
-		translationM[3][1] = orientationMatrix[3][1];
-		translationM[3][2] = orientationMatrix[3][2];
-		return translationM;
-	}
-
-	glm::mat4 BoxCollider::getRotationMatrix()
-	{
-		glm::mat4 rotationM = orientationMatrix;
-		glm::vec3 scalingFactor = getScalingFactorFromMatrix();
-		for (int i = 0; i < 3; ++i)
-		{
-			rotationM[3][i] = 0.0f;
-			rotationM[i][3] = 0.0f;
-			rotationM[0][i] *= 1/scalingFactor.x;
-			rotationM[1][i] *= 1/scalingFactor.y;
-			rotationM[2][i] *= 1/scalingFactor.z;
-		}
-		return rotationM;
-	}
-
-	glm::vec3 BoxCollider::getScalingFactorFromMatrix()
-	{
-		glm::vec3 scalingFactor;
-		scalingFactor.x = glm::sqrt(glm::pow(orientationMatrix[0][0], 2) + glm::pow(orientationMatrix[0][1], 2) + glm::pow(orientationMatrix[0][2], 2));
-		scalingFactor.y = glm::sqrt(glm::pow(orientationMatrix[1][0], 2) + glm::pow(orientationMatrix[1][1], 2) + glm::pow(orientationMatrix[1][2], 2));
-		scalingFactor.z = glm::sqrt(glm::pow(orientationMatrix[2][0], 2) + glm::pow(orientationMatrix[2][1], 2) + glm::pow(orientationMatrix[2][2], 2));
-		return scalingFactor;
-	}
-
-	/* Returns appropriate model matrix based on the transform variables */
-	glm::mat4 BoxCollider::getModelMatrix() const
-	{
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, proctor->transform.position);
-		model = glm::rotate(model, proctor->transform.rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, proctor->transform.rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, proctor->transform.rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, proctor->transform.scale);
-		return model;
 	}
 
 	void BoxCollider::initVerticesData()
@@ -517,5 +464,4 @@ namespace GameLogic
 		colliderVertices[70] = center.y - radius.y;
 		colliderVertices[71] = center.z + radius.z;
 	}
-
 }

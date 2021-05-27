@@ -41,7 +41,7 @@ namespace GameLogic
 		/* Render methods */
 		void drawHierarchyWindow();
 
-		void update(bool _onlyRender = false, bool _drawDebug = false);
+		void update(bool _onlyRender = false, bool _drawDebug = false, int collisionIncrement = 0);
 		void cleanup();
 
 	private:
