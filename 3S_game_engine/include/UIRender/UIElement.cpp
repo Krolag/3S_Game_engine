@@ -62,6 +62,9 @@ namespace UIRender
 
         glBindVertexArray(uiVAO); // bind vertex array belonging to this object
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         uiTexture.bind(); // bind ui texture to use it
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // draw call
 

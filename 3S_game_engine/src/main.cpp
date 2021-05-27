@@ -110,14 +110,18 @@ int main()
 
     /* Animated mario */
     // TODO: @Ignacy zmien to na monete gdy bedzie gotowa
-    UIRender::UIElement marioWalking[4] = {
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_01.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_00.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/mario_walking", "mario_03.png", 0.01, 0.045, 0.97, 0.91),
+    UIRender::UIElement dukatSpinning[8] = {
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_00.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_01.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_02.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_03.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_04.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_05.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_06.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_07.png", 0.01, 0.045, 0.97, 0.91),
     };
 
-    int marioWalkingIndex = 0;
+    int dukatSpinIndex = 0;
     float timeBetweenFrames = 0.15f;
 #pragma endregion
 
@@ -346,16 +350,16 @@ int main()
         /* Render text */
         points.render(std::to_string(Points::getInstance()->getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
         
-        /* Render cute Mario as placeholder to coin */
-        marioWalking[marioWalkingIndex].render();
+        /* Render dukat */
+        dukatSpinning[dukatSpinIndex].render();
         timeBetweenFrames -= mainScene.deltaTime;
         if (timeBetweenFrames <= 0)
         {
-            marioWalkingIndex++;
+            dukatSpinIndex++;
             timeBetweenFrames = 0.15f;
         }
-        if (marioWalkingIndex >= 4)
-            marioWalkingIndex = 0;
+        if (dukatSpinIndex >= 8)
+            dukatSpinIndex = 0;
 
         monsterSystem.update();
         
