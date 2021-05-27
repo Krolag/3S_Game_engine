@@ -46,8 +46,6 @@ namespace GameLogic
 
 	private:
 		bool collidersLoaded;
-		/* TODO: @Ignacy - znajdz lepszy sposob na dostep do danych, bez tworzenia kolejnych vectorow */
-		// Szanujmy pamiec
 		std::vector<Proctor*> proctors;
 		std::vector<Proctor*> interactable;
 		std::vector<Proctor*> treasure;

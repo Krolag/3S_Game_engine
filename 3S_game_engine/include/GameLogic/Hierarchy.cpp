@@ -33,7 +33,6 @@ namespace GameLogic
 		{
 			interactable.push_back(_proctor);
 		}
-		// TODO: @Ignacy - tak samo tutaj jak w Hierarchy.h line 52
 		if (_proctor->getComponentOfType(C_TREASURE) != NULL)
 		{
 			treasure.push_back(_proctor);

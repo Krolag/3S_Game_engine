@@ -41,7 +41,6 @@ namespace Loader
 			std::string modelName = prepareModelName(proctorName);	// just proctor name without number
 			// Make a path with accurate extension
 			std::string modelPath = "assets/models/serializable/" + modelName + ".fbx";
-			// TODO: @Kuba - ask if xml file shouldn't include model extension type and process elements shouldn't take it into account
 			
 			// Add model to the model library if it is not already on the list
 			if (!isNameInImportedList(modelName))
@@ -49,11 +48,6 @@ namespace Loader
 				importedModelLibrary.addModel(modelPath, modelName, true, true);
 			}
 
-			// no need for this probably
-			// model id
-			//int modelID = atoi(firstNode->first_attribute("model_id")->value());
-			//std::cout << "MODEL ID VALUE CHECK: " << modelID << std::endl;
-			
 			// Position
 			xml_node<>* childElement = firstNode->first_node("Position");
 			glm::vec3 proctorPosition(
@@ -62,38 +56,19 @@ namespace Loader
 				-(float)strtod(childElement->first_node("z")->value(), NULL)
 			);
 
-			// TODO: @Kuba - imo powinny byc eulerAngles
 			// Rotation
 			childElement = firstNode->first_node("Rotation");
 			childElement = childElement->first_node("eulerAngles");
-			//glm::vec3 eulerAngles(
-			//	glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)),
-			//	glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)),
-			//	glm::radians((float)strtod(childElement->first_node("z")->value(), NULL))
-			//);
 			glm::quat proctorRotation(
 				1.0f,
-				0.0f,//glm::radians(90.0f),//glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)),
+				0.0f,
 				-glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
-				0.0f//glm::radians((float)strtod(childElement->first_node("z")->value(), NULL))
+				0.0f
 			);
-			//	1.0f/*(float)strtod(childElement->first_node("w")->value(), NULL)*/,
-			//	0.0f/*(float)strtod(childElement->first_node("x")->value(), NULL)*/,
-			//	(float)strtod(childElement->first_node("y")->value(), NULL),
-			//	(float)strtod(childElement->first_node("z")->value(), NULL)
-			//);
 
 			// Scale
 			childElement = firstNode->first_node("Scale");
-			glm::vec3 proctorScale(0.01f
-				//(float)strtod(childElement->first_node("x")->value(), NULL),
-				//(float)strtod(childElement->first_node("y")->value(), NULL),
-				//(float)strtod(childElement->first_node("z")->value(), NULL)
-			//);
-			//	(float)strtod(childElement->first_node("x")->value(), NULL) / _divider,
-			//	(float)strtod(childElement->first_node("y")->value(), NULL) / _divider,
-			//	(float)strtod(childElement->first_node("z")->value(), NULL) / _divider
-			);
+			glm::vec3 proctorScale(0.01f);
 
 			importedProctors.push_back(std::make_shared<GameLogic::Proctor>(proctorName.c_str(), proctorPosition, proctorRotation, proctorScale));
 		}

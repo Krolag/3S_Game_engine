@@ -23,7 +23,6 @@ namespace Loader
 {
 #define MAX_BONE_WEIGHTS 1
 
-	// TODO: @Dawid - sprawdz, czy model ma animacje
 	class Model
 	{
 	public:

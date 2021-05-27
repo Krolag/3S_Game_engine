@@ -48,8 +48,8 @@ void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanc
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
 // settings
-const unsigned int SCREEN_WIDTH = 1280;
-const unsigned int SCREEN_HEIGHT = 720;
+const unsigned int SCREEN_WIDTH = 1920;
+const unsigned int SCREEN_HEIGHT = 1080;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -109,7 +109,6 @@ int main()
     UIRender::TextRender points("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
 
     /* Animated mario */
-    // TODO: @Ignacy zmien to na monete gdy bedzie gotowa
     UIRender::UIElement dukatSpinning[8] = {
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_00.png", 0.01, 0.045, 0.97, 0.91),
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_01.png", 0.01, 0.045, 0.97, 0.91),
@@ -122,7 +121,7 @@ int main()
     };
 
     int dukatSpinIndex = 0;
-    float timeBetweenFrames = 0.15f;
+    float timeBetweenFrames = 0.10f;
 #pragma endregion
 
 #pragma region Proctors init
