@@ -132,8 +132,6 @@ namespace GameLogic
 					{
 						tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 						((Cash*) this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
-						// okay musze dodac te monety do skrzyn jeszcze (pod nie)
-						//(GameLogic::C_CASH)(proctor->getParentHierarchy()->getObjectsInRadiusOf(proctor, radius)->getComponentOfType(C_CASH)).
 					}
 				}
 			}
@@ -239,8 +237,6 @@ namespace GameLogic
 					//std::cout << tmp.at(i)->name << std::endl;
 					if (tmp.at(i)->getComponentOfType(C_TREASURE)->type == C_TREASURE)
 					{
-						//coinProctor->getParentHierarchy()->addObject(coinProctor);
-						//tmp_01.at(0)->setPosition(tmp.at(i)->getPosition());
 						tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 					}
 				}

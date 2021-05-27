@@ -15,6 +15,7 @@ namespace Loader
 		ModelLibrary() {}
 
 		void addModel(std::string _path, std::string _name, bool _noTex);
+		void addModel(std::string _path, std::string _name, bool _noTex, bool _noAnim);
 		Model* getModel(std::string _name);
 
 	private:

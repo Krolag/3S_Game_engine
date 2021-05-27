@@ -6,6 +6,12 @@ namespace Loader
 		: position(_position), rotation(_rotation), scale(_scale), path(_path), noTex(_noTex), name(_name)
 	{
 		loadModel(path);
+	}	
+	
+	Model::Model(std::string _path, std::string _name, bool _noTex, bool _noAnim, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
+		: position(_position), rotation(_rotation), scale(_scale), path(_path), noTex(_noTex), noAnim(_noAnim), name(_name)
+	{
+		loadModel(path);
 	}
 
 	Model::Model(bool _noTex, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
@@ -39,8 +45,17 @@ namespace Loader
 
 		/* Read file via Assimp */
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(_path,
-			aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_PreTransformVertices/*aiProcess_JoinIdenticalVertices*/);
+		const aiScene* scene;
+		if (!noAnim)
+		{
+			scene = importer.ReadFile(_path,
+				aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs); //| aiProcess_PreTransformVertices/*aiProcess_JoinIdenticalVertices*/);
+		}
+		else
+		{
+			scene = importer.ReadFile(_path,
+				aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_PreTransformVertices/*aiProcess_JoinIdenticalVertices*/);
+		}
 
 		this->scene = scene;
 

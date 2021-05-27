@@ -16,6 +16,21 @@ namespace Loader
 
 		loadedModels.push_back(Model(_path, _name, _noTex));
 	}
+	
+	void ModelLibrary::addModel(std::string _path, std::string _name, bool _noTex, bool _noAnim)
+	{
+		for (unsigned int i = 0; i < loadedModels.size(); i++)
+		{
+			if (loadedModels[i].path == _path)
+			{
+				loadedModels.push_back(loadedModels[i]);
+				loadedModels.back().name = _name;
+				return;
+			}
+		}
+
+		loadedModels.push_back(Model(_path, _name, _noTex, _noAnim));
+	}
 
 	Model* ModelLibrary::getModel(std::string _name)
 	{
