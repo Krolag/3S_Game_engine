@@ -20,10 +20,8 @@ uniform vec4 plane;
 
 void main()
 {
-    vec4 worldPosition = vec4(aPos, 1.0f);//model * vec4(aPos, 1.0f);
-    vec4 worldNormal = vec4(aNormal, 0.0f);//mat3(transpose(inverse(model))) * aNormal;
-    vec4 skinPos = {0.0f, 0.0f, 0.0f, 0.0f};
-    vec4 skinNorm = {0.0f, 0.0f, 0.0f, 0.0f};
+    vec4 worldPosition =  model * vec4(aPos, 1.0f);
+    vec3 worldNormal =  mat3(transpose(inverse(model))) * aNormal;
 
     /* Calculate total position */
     for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
@@ -36,22 +34,14 @@ void main()
             break;
         }
 
-        const mat4 bone = finalBonesMatrices[aBoneIDs[i]];
-        const float weight = aWeights[i];
-
-        skinPos += (bone * worldPosition) * weight;
-        skinNorm += (bone * worldNormal) * weight;
-
-//        vec4 localPosition = finalBonesMatrices[aBoneIDs[i]] * vec4(aPos, 1.0f);
-//        worldPosition += localPosition * aWeights[i];
-//        vec3 localNormal = mat3(finalBonesMatrices[aBoneIDs[i]]) * aNormal;
-//        worldNormal += localNormal * aWeights[i];
+        vec4 localPosition = finalBonesMatrices[aBoneIDs[i]] * vec4(aPos, 1.0f);
+        worldPosition += localPosition * aWeights[i];
+        vec3 localNormal = mat3(finalBonesMatrices[aBoneIDs[i]]) * aNormal;
+        worldNormal += localNormal * aWeights[i];
     }
 
-    skinPos.w = 1.0f;
-
-    FragPos = vec3(model * vec4(aPos, 1.0f));
-    Normal = skinNorm.xyz;
+    FragPos = vec3(model * vec4(worldPosition.xyz, 1.0f));
+    Normal = worldNormal.xyz;
     TexCoord = aTexCoords;
 
     gl_ClipDistance[0] = dot(worldPosition, plane);

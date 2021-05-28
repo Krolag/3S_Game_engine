@@ -34,6 +34,7 @@ namespace GameLogic
 		model->rotation = transform.rotation;
 		model->scale = transform.scale;
 
+
 		/* Render model with given shader */
 		/* Check if proctor is in camera view */
 		if (proctor->getComponentOfType(C_COLLIDER) != NULL)
@@ -47,6 +48,8 @@ namespace GameLogic
 			))
 			{
 				shader->use();
+				shader->setUniformBool("noAnim", model->getNoAnim());
+
 				model->render(*shader);
 			}
 		}

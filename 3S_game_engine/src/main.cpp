@@ -95,6 +95,7 @@ int main()
 
     /* Create shaders */
     Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
+    Shader model3D_anim("assets/shaders/model3D_anim.vert", "assets/shaders/model3D.frag");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
     Shader collisionBoxShader("assets/shaders/boxCollider2.vert", "assets/shaders/boxCollider2.frag");
 #pragma endregion
@@ -145,15 +146,15 @@ int main()
     /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_00", true, true); // If last value is set to true, there is no animation
     modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_01", true, true);
-    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true);
-    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_01", true);
-    modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);
-    modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true);
-    modelLibrary.addModel("assets/models/boat/boat_origin_fix.fbx", "boat", true);
+    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true, true);
+    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_01", true, true);
+    modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true, true);
+    modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true, true);
+    modelLibrary.addModel("assets/models/boat/boat_origin_fix.fbx", "boat", true, true);
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
-    // Players1
+    // Players
     GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.02f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
@@ -164,14 +165,13 @@ int main()
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
-
+    // Boat
     GameLogic::Proctor      boat("boat", glm::vec3(-5.0f, 2.5f, -5.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.06f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
-    
     // Chests and coins
-    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(10, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.9f));
+    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(10, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
     GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
     GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
@@ -233,16 +233,13 @@ int main()
     //tiles.push_back(&island_01);
     Monster monsterSystem(&hero_00, tiles);
 
-    //Loader::Model player_one("assets/models/vampire.dae", "red_run", true);
-    GameLogic::Proctor test_anim("test_anim", glm::vec3(0.0f), glm::quat(1.0f, glm::radians(-90.0f), 0.0f, 0.0f), glm::vec3(0.01f));
-    Loader::Model player_one("assets/models/uploads_files_600310_skeleton_animated.FBX", "red_run", true);
+    GameLogic::Proctor test_anim("test_anim", glm::vec3(50.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.01f));
+    Loader::Model player_one("assets/models/red_reseted_run_export_fixxx.fbx", "red_run", true, false);
+    GameLogic::MeshRenderer test_anim_mr(GameLogic::C_MESH, &test_anim, &player_one, &model3D);
     Animation movement(player_one.path.c_str(), &player_one);
     Animator animator(&movement);
     animator.playAnimation(&movement);
-    GameLogic::MeshRenderer test_anim_mr(GameLogic::C_MESH, &test_anim, &player_one, &model3D);
-    //Animation movement(test_anim_mr.model->path, test_anim_mr.model);
-    //animator.playAnimation(&movement);
-    //hierarchy.addObject(&test_anim);
+    hierarchy.addObject(&test_anim);
    
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -313,6 +310,11 @@ int main()
         //HERE STARTS DEFAULT RENDERING
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        model3D_anim.use();
+        model3D_anim.setUniform("projection", projection);
+        view = camera.GetViewMatrix();
+        model3D_anim.setUniform("view", view);
        
         model3D.use();
         model3D.setUniform("projection", projection);
@@ -320,21 +322,10 @@ int main()
         model3D.setUniform("view", view);
 
         auto transforms = animator.getFinalBoneMatrices();
-        model3D.use();
         for (int i = 0; i < transforms.size(); ++i)
         {
-            model3D.setUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+            model3D.setUniform("jointTransforms[" + std::to_string(i) + "]", transforms[i]);
         }
-
-        //for (int i = 0; i < transforms.size(); ++i)
-        //{
-        //    model3D.setUniform("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-        //    if (i <= 30)
-        //    {
-        //        std::cout << "BONE NR: '\s'  " << i << std::endl;
-        //        std::cout << glm::to_string(transforms[i]).c_str() << std::endl;
-        //    }
-        //}
 
         cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
@@ -372,8 +363,7 @@ int main()
         mouseInput->update();
     	
         /* DEBUG - Draw DearImGUI */
-        // THIS SHOULD BE THE LAST, DO NOT TOUCH IT
-        ImGui::Render();
+        ImGui::Render(); // THIS SHOULD BE THE LAST, DO NOT TOUCH IT
 
         /* Clear frame at the end of the loop */
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

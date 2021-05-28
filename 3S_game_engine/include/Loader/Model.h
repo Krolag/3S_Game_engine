@@ -50,6 +50,7 @@ namespace Loader
 		glm::mat4 getModelMatrix() const;
 		auto& getBoneInfoMap() { return boneInfoMap; }
 		int& getBoneCount() { return boneCount; }
+		bool getNoAnim() { return noAnim; }
 
 	protected:
 		/* Model data */
