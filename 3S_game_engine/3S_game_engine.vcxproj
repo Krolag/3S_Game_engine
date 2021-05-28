@@ -261,6 +261,7 @@
     <ClInclude Include="include\Monster\Monster.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\model3D_anim.vert" />
     <None Include="assets\shaders\model_loading.vert" />
     <None Include="include\RapidXml\manual.html" />
   </ItemGroup>

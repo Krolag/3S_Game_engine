@@ -15,7 +15,7 @@ namespace GameLogic
 		float maxSpeed = 0.5f;
 		float acceleration = 0.5f;
 		float maxGravity = 20.0f;
-		float gravityAcceleration = 0.0f;// 15.0f;
+		float gravityAcceleration = 0.0f; // 15.0f;
 		float cGravity = 0.0f;
 		float movementSpeed;
 		float maxInteractionDistance = 3.0f;

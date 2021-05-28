@@ -108,6 +108,7 @@
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
     <None Include="include\RapidXml\manual.html" />
+    <None Include="assets\shaders\model3D_anim.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\shaders\model_loading.frag" />
