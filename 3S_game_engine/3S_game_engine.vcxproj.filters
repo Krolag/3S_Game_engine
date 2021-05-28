@@ -43,6 +43,7 @@
     <ClCompile Include="include\AnimationSystem\System\Animation.cpp" />
     <ClCompile Include="include\AnimationSystem\System\Animator.cpp" />
     <ClCompile Include="include\Monster\Monster.cpp" />
+    <ClCompile Include="include\Boat\Boat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="include\Monster\Monster.h" />
     <ClInclude Include="include\AnimationSystem\AnimationSystem.h" />
     <ClInclude Include="include\AnimationSystem\System\BoneInfo.h" />
+    <ClInclude Include="include\Boat\Boat.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
