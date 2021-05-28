@@ -34,10 +34,6 @@ namespace GameLogic
 		glm::vec3 getRadius();
 		glm::vec3 getCenter();
 		std::vector<glm::vec3> getColliderVertices();
-		
-		glm::mat4 getTranslationMatrix();
-		glm::mat4 getRotationMatrix();
-		glm::vec3 getScalingFactorFromMatrix();
 
 		void render();
 	private:
@@ -45,7 +41,6 @@ namespace GameLogic
 		Loader::Model* model;
 		glm::vec3 center;
 		glm::vec3 radius;
-		glm::mat4 orientationMatrix;
 		
 		/* Render data */
 		Shader* colliderShader;
@@ -56,8 +51,6 @@ namespace GameLogic
 		void initVerticesData();
 		void extremePointsAlongDirection(glm::vec3 point, glm::vec3& min, glm::vec3& max);
 		float lineOverlap(float minA, float maxA, float minB, float maxB);
-		std::vector<glm::vec3> calcVertices();
-		glm::mat4 getModelMatrix() const;
 	};
 }
 

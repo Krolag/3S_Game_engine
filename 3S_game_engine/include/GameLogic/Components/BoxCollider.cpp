@@ -5,7 +5,7 @@ namespace GameLogic
 	BoxCollider::BoxCollider(ComponentType _type, Loader::Model* _model, Proctor* _proctor, Shader* _shader, bool _isStatic,
 		glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
 		: Component(_type, _proctor), model(_model), colliderShader(_shader), isStatic(_isStatic), isUpdated(false), isColliding(false),
-		center(glm::vec3(0.0f)), radius(glm::vec3(0.0f)), orientationMatrix(glm::mat4(1.0f)),
+		center(glm::vec3(0.0f)), radius(glm::vec3(0.0f)),
 		colliderVAO(0), colliderVBO(0), colliderVertices{0, 0, 0}
 	{
 		if (model != NULL)
@@ -20,8 +20,8 @@ namespace GameLogic
 	
 	void BoxCollider::init()
 	{
-		std::cout << "=============================\nINITIALIZING BOX COLLIDER FOR:\n" << proctor->name << std::endl;
-		glm::vec3 min(FLT_MAX), max(FLT_MIN);
+		//std::cout << "=============================\nINITIALIZING BOX COLLIDER FOR:\n" << proctor->name << std::endl;
+		glm::vec3 min(FLT_MAX), max(-FLT_MAX);
 		
 		/* Iterate through all model's vertices and find max values on each axis */
 		for (unsigned int i = 0; i < model->getMeshes().size(); i++)
@@ -67,26 +67,25 @@ namespace GameLogic
 		model->scale = proctor->transform.scale;
 
 		/* Transform the min and max vectors with the model transform */
-		orientationMatrix = model->getModelMatrix();
-		min = orientationMatrix * glm::vec4(min.x, min.y, min.z, 1.0f);
-		max = orientationMatrix * glm::vec4(max.x, max.y, max.z, 1.0f);
+		min = model->getModelMatrix() * glm::vec4(min.x, min.y, min.z, 1.0f);
+		max = model->getModelMatrix() * glm::vec4(max.x, max.y, max.z, 1.0f);
 		
-		std::cout << "--------------------------------\nmin and max after initialization\nmin: " << min.x << " " << min.y << " " << min.z <<
-			"\nmax: " << max.x << " " << max.y << " " << max.z << std::endl;
+		//std::cout << "--------------------------------\nmin and max after initialization\nmin: " << min.x << " " << min.y << " " << min.z <<
+			//"\nmax: " << max.x << " " << max.y << " " << max.z << std::endl;
 
 		/* Calculate center point of the Bounding Box */
 		center.x = (min.x + max.x) / 2.0f;
 		center.y = (min.y + max.y) / 2.0f;
 		center.z = (min.z + max.z) / 2.0f;
 
-		std::cout << "---------------------------------\ncenter point after initialization:\n" << center.x << " " << center.y << " " << center.z << std::endl;
+		//std::cout << "---------------------------------\ncenter point after initialization:\n" << center.x << " " << center.y << " " << center.z << std::endl;
 
 		/* Calculate radius of the Bounding Box */
 		radius.x = glm::abs(min.x - center.x);
 		radius.y = glm::abs(min.y - center.y);
 		radius.z = glm::abs(min.z - center.z);
 
-		std::cout << "---------------------------\nradius after initialization:\n" << radius.x << " " << radius.y << " " << radius.z << std::endl;
+		//std::cout << "---------------------------\nradius after initialization:\n" << radius.x << " " << radius.y << " " << radius.z << std::endl;
 	}
 
 	void BoxCollider::setModel(Loader::Model* _model)
@@ -236,12 +235,16 @@ namespace GameLogic
 		}
 		
 		/* Transform the bounding box to the same position as model */
-		
+		model->position = proctor->getPosition();
+		model->rotation = proctor->getRotation();
+		model->scale = proctor->getScale();
+
 		if (!isStatic || !isUpdated)
-		{
-			// TODO: @Kuba probably can delete orientation matrix and just use model matrix
-			orientationMatrix = model->getModelMatrix();
+		{			
 			// TODO: @Kuba update center and radius with the new way
+
+			center = proctor->getPosition();
+			/* Get collider vertices, get 3 normals like in collision checking and calc radius that way */
 		}
 		
 		if(!isUpdated)
@@ -253,7 +256,7 @@ namespace GameLogic
 	void BoxCollider::render()
 	{
 		colliderShader->use();
-		colliderShader->setUniform("model", orientationMatrix);
+		colliderShader->setUniform("model", model->getModelMatrix());
 		colliderShader->setUniformBool("collision", isColliding);
 
 		glBindVertexArray(colliderVAO);
@@ -283,25 +286,6 @@ namespace GameLogic
 		max.x = (point.x > max.x) ? point.x : max.x;
 		max.y = (point.y > max.y) ? point.y : max.y;
 		max.z = (point.z > max.z) ? point.z : max.z;
-	}
-
-	std::vector<glm::vec3> BoxCollider::calcVertices()
-	{
-		std::vector<glm::vec3> vertices;
-
-		/* Front face */
-		vertices.push_back(glm::vec3(center.x - radius.x, center.y + radius.y, center.z + radius.z));	// top left
-		vertices.push_back(glm::vec3(center.x + radius.x, center.y + radius.y, center.z + radius.z));	// top right
-		vertices.push_back(glm::vec3(center.x + radius.x, center.y - radius.y, center.z + radius.z));	// bottom right
-		vertices.push_back(glm::vec3(center.x - radius.x, center.y - radius.y, center.z + radius.z));	// bottom left
-
-		/* Back face */
-		vertices.push_back(glm::vec3(center.x - radius.x, center.y + radius.y, center.z - radius.z));	// top left
-		vertices.push_back(glm::vec3(center.x + radius.x, center.y + radius.y, center.z - radius.z));	// top right
-		vertices.push_back(glm::vec3(center.x + radius.x, center.y - radius.y, center.z - radius.z));	// bottom right
-		vertices.push_back(glm::vec3(center.x - radius.x, center.y - radius.y, center.z - radius.z));	// bottom left
-
-		return vertices;
 	}
 
 	glm::vec3 BoxCollider::getRadius()
