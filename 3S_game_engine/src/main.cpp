@@ -27,7 +27,8 @@
 #include "Loader/Importer.h"
 #include "Water/WaterMesh.h"
 #include "Framebuffer/Framebuffer.h"
-#include <Monster/Monster.h>
+#include "Monster/Monster.h"
+#include "Boat/Boat.h"
 
 #include "Loader/Exporter.h"
 
@@ -165,8 +166,9 @@ int main()
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
 
-    GameLogic::Proctor      boat("boat", glm::vec3(-5.0f, 2.5f, -5.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.06f));
+    GameLogic::Proctor      boat("boat", glm::vec3(-5.0f, 1.0f, -5.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.06f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
+    Boat boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
     
