@@ -42,7 +42,7 @@ namespace GameLogic
 				proctor->transform.position.x,
 				proctor->transform.position.y,
 				proctor->transform.position.z,
-				((BoxCollider*)proctor->getComponentOfType(C_COLLIDER))->getRadius().x,
+				((BoxCollider*)proctor->getComponentOfType(C_COLLIDER))->getRadius().x*5.0f, // MULTIPLIED TO REFLECTION ON WATER NOT DISAPPEAR
 				proctor->getParentHierarchy()->getCamera()
 			))
 			{

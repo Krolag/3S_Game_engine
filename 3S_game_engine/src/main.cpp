@@ -145,11 +145,11 @@ int main()
     /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_00", true, true); // If last value is set to true, there is no animation
     modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_01", true, true);
-    modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_00", true);
-    modelLibrary.addModel("assets/models/serializable/chestBody.fbx", "chestBody_01", true);
+    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true);
+    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_01", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true);
-    modelLibrary.addModel("assets/models/boat/boat_final.fbx", "boat", true);
+    modelLibrary.addModel("assets/models/boat/boat_origin_fix.fbx", "boat", true);
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
