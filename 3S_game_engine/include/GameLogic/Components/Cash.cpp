@@ -3,8 +3,8 @@
 
 namespace GameLogic
 {
-	Cash::Cash(ComponentType _type, Proctor* _proctor, Proctor* _playerOne, Proctor* _playerTwo)
-		: Component(_type, _proctor), playerOne(_playerOne), playerTwo(_playerTwo)
+	Cash::Cash(ComponentType _type, Proctor* _proctor)
+		: Component(_type, _proctor)
 	{
 		if (_proctor != NULL)
 		{
@@ -20,13 +20,13 @@ namespace GameLogic
 	void Cash::followPlayer()
 	{
 		// Distance between playerOne and a coin
-		float xDistanceOne = playerOne->getPosition()[0] - proctor->getPosition()[0];
-		float zDistanceOne = playerOne->getPosition()[2] - proctor->getPosition()[2];
+		float xDistanceOne = proctor->getParentHierarchy()->getObject("hero_00")->getPosition()[0] - proctor->getPosition()[0];
+		float zDistanceOne = proctor->getParentHierarchy()->getObject("hero_00")->getPosition()[2] - proctor->getPosition()[2];
 		float distanceOne = sqrt(xDistanceOne * xDistanceOne + zDistanceOne * zDistanceOne);
-		//std::cout << "PlayerOneDist: " << distanceOne << std::endl;
+
 		// Distance between playerTwo and a coin
-		float xDistanceTwo = playerTwo->getPosition()[0] - proctor->getPosition()[0];
-		float zDistanceTwo = playerTwo->getPosition()[2] - proctor->getPosition()[2];
+		float xDistanceTwo = proctor->getParentHierarchy()->getObject("hero_01")->getPosition()[0] - proctor->getPosition()[0];
+		float zDistanceTwo = proctor->getParentHierarchy()->getObject("hero_01")->getPosition()[2] - proctor->getPosition()[2];
 		float distanceTwo = sqrt(xDistanceTwo * xDistanceTwo + zDistanceTwo * zDistanceTwo);
 
 		// Chose which player should be followed 

@@ -14,9 +14,6 @@ namespace GameLogic
 		//Constructor
 		Points *points = Points::getInstance();
 
-		Proctor* playerOne;
-		Proctor* playerTwo;
-
 		float minDistance = 0.5f;
 		float xDistance = 0;
 		float zDistance = 0;
@@ -24,7 +21,7 @@ namespace GameLogic
 		float speed = 0.6f;
 		bool isFollowing = false;
 
-		Cash(ComponentType _type, Proctor* _proctor, Proctor* _playerOne, Proctor* _playerTwo);
+		Cash(ComponentType _type, Proctor* _proctor);
 		~Cash();
 		void followPlayer();
 		void setFollow(bool _isFollowing);

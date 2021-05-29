@@ -228,7 +228,6 @@ namespace GameLogic
 		{
 			/* Create tmp for easy acces */
 			std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
-			std::vector<Proctor*> tmp_01 = proctor->getParentHierarchy()->getCash();
 
 			/* Check if player is near the interactable proctor */
 			for (unsigned int i = 0; i < tmp.size(); i++)
@@ -240,10 +239,10 @@ namespace GameLogic
 
 				if (distance <= maxInteractionDistance)
 				{
-					//std::cout << tmp.at(i)->name << std::endl;
-					if (tmp.at(i)->getComponentOfType(C_TREASURE)->type == C_TREASURE)
+					if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
 					{
 						tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
+						((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
 					}
 				}
 			}

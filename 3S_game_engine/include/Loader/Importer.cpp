@@ -51,9 +51,9 @@ namespace Loader
 			// Position
 			xml_node<>* childElement = firstNode->first_node("Position");
 			glm::vec3 proctorPosition(
-				(float)strtod(childElement->first_node("x")->value(), NULL),
-				(float)strtod(childElement->first_node("y")->value(), NULL),
-				-(float)strtod(childElement->first_node("z")->value(), NULL)
+				(float)strtod(childElement->first_node("x")->value(), NULL) * 5,
+				(float)strtod(childElement->first_node("y")->value(), NULL) * 5,
+				-(float)strtod(childElement->first_node("z")->value(), NULL) * 5
 			);
 
 			// Rotation
@@ -68,9 +68,34 @@ namespace Loader
 
 			// Scale
 			childElement = firstNode->first_node("Scale");
-			glm::vec3 proctorScale(0.01f);
+			glm::vec3 proctorScale(0.05f);
 
 			importedProctors.push_back(std::make_shared<GameLogic::Proctor>(proctorName.c_str(), proctorPosition, proctorRotation, proctorScale));
+
+			// Components
+			childElement = firstNode->first_node("components");
+
+			std::string componentsFromXML[4]{
+				childElement->first_node("isColliderStatic")->value(),
+				childElement->first_node("isInteractable")->value(),
+				childElement->first_node("isTreasure")->value(),
+				childElement->first_node("isCash")->value()
+			};
+
+			//Setting correct bool values
+			std::vector<bool> compo;
+			//bool compo[4] = { 0 };
+
+			for (int i = 0; i < 4; i++)
+			{
+				if (componentsFromXML[i] == "true")
+					compo.push_back(true);
+				//compo[i] = true;
+				else
+					compo.push_back(false);
+				//compo[i] = false;
+			}
+			componetsBooleanValues.push_back(compo);
 		}
 	}
 
