@@ -14,9 +14,9 @@
 	class Animator
 	{
 	public:
-		Animator(Animation* _animation);
+		Animator(Animation* _animation = NULL);
 
-		void updateAniamtion(float _dt);
+		void updateAnimation(float _dt);
 		void playAnimation(Animation* _pAnimation);
 		void calculateBoneTransform(const AssimpNodeData* _node, glm::mat4 _parentTransform);
 		std::vector<glm::mat4> getFinalBoneMatrices();

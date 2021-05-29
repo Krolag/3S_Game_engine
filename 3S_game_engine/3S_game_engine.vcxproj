@@ -160,6 +160,7 @@
     <ClCompile Include="include\AnimationSystem\System\Animation.cpp" />
     <ClCompile Include="include\AnimationSystem\System\Animator.cpp" />
     <ClCompile Include="include\AnimationSystem\System\Bone.cpp" />
+    <ClCompile Include="include\GameLogic\Components\Anima.cpp" />
     <ClCompile Include="include\Loader\Importer.cpp" />
     <ClCompile Include="include\Framebuffer\Framebuffer.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="include\AnimationSystem\System\Bone.h" />
     <ClInclude Include="include\AnimationSystem\System\BoneInfo.h" />
     <ClInclude Include="include\assimp\AssimpGLMHelpers.h" />
+    <ClInclude Include="include\GameLogic\Components\Anima.h" />
     <ClInclude Include="include\Loader\Exporter.h" />
     <ClInclude Include="include\Loader\Importer.h" />
     <ClInclude Include="include\Framebuffer\Framebuffer.h" />
@@ -263,7 +265,6 @@
     <ClInclude Include="include\Monster\Monster.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\model3D_anim.vert" />
     <None Include="assets\shaders\model_loading.vert" />
     <None Include="include\RapidXml\manual.html" />
   </ItemGroup>

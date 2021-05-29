@@ -44,6 +44,7 @@
     <ClCompile Include="include\AnimationSystem\System\Animator.cpp" />
     <ClCompile Include="include\Monster\Monster.cpp" />
     <ClCompile Include="include\Boat\Boat.cpp" />
+    <ClCompile Include="include\GameLogic\Components\Anima.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -106,11 +107,11 @@
     <ClInclude Include="include\AnimationSystem\AnimationSystem.h" />
     <ClInclude Include="include\AnimationSystem\System\BoneInfo.h" />
     <ClInclude Include="include\Boat\Boat.h" />
+    <ClInclude Include="include\GameLogic\Components\Anima.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
     <None Include="include\RapidXml\manual.html" />
-    <None Include="assets\shaders\model3D_anim.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\shaders\model_loading.frag" />

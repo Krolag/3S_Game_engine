@@ -33,7 +33,6 @@ namespace Loader
 		glm::vec3 position;
 		glm::quat rotation;
 		glm::vec3 scale;
-		
 
 		/* Construtor / destructor */
 		Model(std::string _path, std::string _name, bool _noTex = false, glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));

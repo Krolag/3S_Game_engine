@@ -24,7 +24,7 @@
 	{
 	public:
 		Animation() = default;
-		Animation(const std::string& _animationPath, Loader::Model* _model);
+		Animation(const std::string& _animationPath, Loader::Model* _model, int _index);
 		~Animation();
 
 		Bone* findBone(const std::string& _name);

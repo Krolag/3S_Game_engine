@@ -11,7 +11,8 @@ namespace GameLogic
 		C_MOVEMENT = 3,
 		C_INTERACTABLE = 4,
 		C_TREASURE = 5,
-		C_CASH = 6
+		C_CASH = 6,
+		C_ANIMA = 7
 	};
 
 	class Proctor;

@@ -11,6 +11,7 @@
 #include "Components/Interactable.h"
 #include "Components/Treasure.h"
 #include "Components/Cash.h"
+#include "Components/Anima.h"
 
 namespace GameLogic {}
 

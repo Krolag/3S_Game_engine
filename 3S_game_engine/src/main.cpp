@@ -29,13 +29,7 @@
 #include "Framebuffer/Framebuffer.h"
 #include "Monster/Monster.h"
 #include "Boat/Boat.h"
-
 #include "Loader/Exporter.h"
-
-#include "AnimationSystem/System/Animation.h"
-#include "AnimationSystem/System/Animator.h"
-
-//#include "AnimationSystem/AnimationSystem.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -136,15 +130,15 @@ int main()
     /* Create importer with given *.xml file */
      Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
     
-     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
-   //for (int i = 0; i < importer.importedProctors.size(); ++i)
-   //{
-   //   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
-   //   hierarchy.addObject(importer.importedProctors.at(i).get());
-   //}
+    /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
+    //for (int i = 0; i < importer.importedProctors.size(); ++i)
+    //{
+    //   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
+    //   hierarchy.addObject(importer.importedProctors.at(i).get());
+    //}
 
     /* Load models that probably won't be serialized */
-    modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_00", true, true); // If last value is set to true, there is no animation
+    modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_00", true, true); // If last value is set to true, there is no animation
     modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_01", true, true);
     modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true, true);
     modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_01", true, true);
@@ -234,14 +228,6 @@ int main()
     //tiles.push_back(&island_01);
     Monster monsterSystem(&hero_00, tiles);
 
-    GameLogic::Proctor test_anim("test_anim", glm::vec3(50.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.01f));
-    Loader::Model player_one("assets/models/uploads_files_600310_skeleton_animated.FBX", "red_run", true, false);
-    GameLogic::MeshRenderer test_anim_mr(GameLogic::C_MESH, &test_anim, &player_one, &model3D);
-    Animation movement(player_one.path.c_str(), &player_one);
-    Animator animator(&movement);
-    animator.playAnimation(&movement);
-    hierarchy.addObject(&test_anim);
-   
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
@@ -317,12 +303,6 @@ int main()
         view = camera.GetViewMatrix();
         model3D.setUniform("view", view);
 
-        auto transforms = animator.getFinalBoneMatrices();
-        for (int i = 0; i < transforms.size(); ++i)
-        {
-            model3D.setUniform("jointTransforms[" + std::to_string(i) + "]", transforms[i]);
-        }
-
         cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
         dirLight.render(model3D);
@@ -332,9 +312,8 @@ int main()
         collisionBoxShader.setUniform("view", view);
         collisionBoxShader.setUniformBool("collision", true);
 
-        animator.updateAniamtion(mainScene.deltaTime);
         hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
-    	
+
         model = glm::translate(model, glm::vec3(-200, waterYpos, -200));
         water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 

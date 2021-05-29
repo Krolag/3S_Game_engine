@@ -2,13 +2,13 @@
 //
 //namespace AnimationSystem
 //{
-	Animation::Animation(const std::string& _animationPath, Loader::Model* _model)
+	Animation::Animation(const std::string& _animationPath, Loader::Model* _model, int _index)
 	{
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(_animationPath, aiProcess_Triangulate);
 		assert(scene && scene->mRootNode);
 
-		auto animation = scene->mAnimations[0];
+		auto animation = scene->mAnimations[_index];
 		duration = animation->mDuration;
 		ticksPerSecond = animation->mTicksPerSecond;
 		aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;

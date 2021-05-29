@@ -4,19 +4,21 @@
 //{
 	Animator::Animator(Animation* _animation)
 	{
-		this->currentAnimation = _animation;
-		this->currentTime = 0.0f;
 		finalBoneMatrices.reserve(100);
 
 		for (int i = 0; i < 100; i++)
 		{
 			finalBoneMatrices.push_back(glm::mat4(1.0f));
 		}
+		this->currentTime = 0.0f;
 
-		playAnimation(_animation);
+		if (_animation != NULL)
+		{
+			this->currentAnimation = _animation;
+		}
 	}
 
-	void Animator::updateAniamtion(float _dt)
+	void Animator::updateAnimation(float _dt)
 	{
 		this->deltaTime = _dt;
 
