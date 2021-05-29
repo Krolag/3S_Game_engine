@@ -24,35 +24,43 @@ uniform bool noAnim;
 
 void main()
 {
-    vec4 totalLocalPosition = vec4(0.0f);
-    vec4 totalNormal = vec4(0.0f);
 
     /* Check if model has animation */
     if (noAnim)
     {
-        totalLocalPosition = vec4(inPos, 1.0f);
-        totalNormal.xyz = mat3(transpose(inverse(model))) * inNormal;
+		vec4 worldPosition = model * vec4(inPos, 1.0f);
+		vec3 worldNormal = mat3(transpose(inverse(model))) * inNormal;
+	
+		FragPos = vec3(model * vec4(inPos, 1.0f));
+		Normal = worldNormal;
+		TexCoord = inTexCoords;
+	
+		gl_ClipDistance[0] = dot(worldPosition, plane);
+		gl_Position = projection * view * vec4(worldPosition.xyz, 1.0f);
     }
     else
     {
-        /* Calculate total position */
-        for (int i = 0; i < MAX_WEIGHTS; i++)
-        {
-            if (inJointIndices[i] != -1)
-            {        
-                vec4 localPosition = jointTransforms[inJointIndices[i]] * vec4(inPos, 1.0f);
-                totalLocalPosition += localPosition * inWeights[i];
-
-                vec4 worldNormal = jointTransforms[inJointIndices[i]] * vec4(inNormal, 1.0f);
-                totalNormal += worldNormal * inWeights[i];
-            }
-        }
+	    vec4 totalLocalPosition = vec4(0.0f);
+		vec4 totalNormal = vec4(0.0f);
+			/* Calculate total position */
+			for (int i = 0; i < MAX_WEIGHTS; i++)
+			{
+				if (inJointIndices[i] != -1)
+				{        
+					vec4 localPosition = jointTransforms[inJointIndices[i]] * vec4(inPos, 1.0f);
+					totalLocalPosition += localPosition * inWeights[i];
+	
+					vec4 worldNormal = jointTransforms[inJointIndices[i]] * vec4(inNormal, 1.0f);
+					totalNormal += worldNormal * inWeights[i];
+				}
+			}
+		FragPos = vec3(model * vec4(totalLocalPosition.xyz, 1.0f));
+		Normal = totalNormal.xyz;
+		TexCoord = inTexCoords;
+		
+		gl_ClipDistance[0] = dot(totalLocalPosition, plane);
+		gl_Position = projection * view * model * totalLocalPosition;
     }
 
-    gl_ClipDistance[0] = dot(totalLocalPosition, plane);
-    gl_Position = projection * view * model * totalLocalPosition;
 
-    FragPos = vec3(model * vec4(totalLocalPosition.xyz, 1.0f));
-    Normal = totalNormal.xyz;
-    TexCoord = inTexCoords;
 }
