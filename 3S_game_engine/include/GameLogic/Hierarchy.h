@@ -14,7 +14,7 @@ namespace GameLogic
 	public:
 		/* Constructors */
 		Hierarchy(bool _state = true);
-		Hierarchy(Application::Scene* _scene, Camera* _camera = NULL, bool _state = true);
+		Hierarchy(Application::Window* _scene, Camera* _camera = NULL, bool _state = true);
 
 		/* Objects method */
 		void addObject(Proctor* _proctor);
@@ -50,7 +50,7 @@ namespace GameLogic
 		std::vector<Proctor*> interactable;
 		std::vector<Proctor*> treasure;
 		std::vector<Proctor*> cash;
-		Application::Scene* scene;
+		Application::Window* scene;
 		Camera* camera;
 
 		/* Debug window variables */

@@ -1,8 +1,8 @@
-#include "Scene.h"
+#include "Window.h"
 
 namespace Application
 {
-	Scene::Scene(std::string _name, float _width, float _height, bool _isFullScreen)
+	Window::Window(std::string _name, float _width, float _height, bool _isFullScreen)
 		: name(_name), isFullScreen(_isFullScreen)
 	{
 		initialize();
@@ -26,7 +26,7 @@ namespace Application
 		}
 	}
 		
-	void Scene::initialize()
+	void Window::initialize()
 	{
 		/* Initialize and configure GLFW */
 		glfwInit();
@@ -35,7 +35,7 @@ namespace Application
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	}
 
-	void Scene::update()
+	void Window::update()
 	{
 		/* Per-frame time logic */
 		float currentFrame = glfwGetTime();

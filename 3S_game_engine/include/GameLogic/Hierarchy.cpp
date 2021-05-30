@@ -9,7 +9,7 @@ namespace GameLogic
 		: active(_state), collidersLoaded(false)
 	{ }
 
-	Hierarchy::Hierarchy(Application::Scene* _scene, Camera* _camera, bool _state)
+	Hierarchy::Hierarchy(Application::Window* _scene, Camera* _camera, bool _state)
 		: scene(_scene), active(_state), collidersLoaded(false), camera(_camera)
 	{ }
 

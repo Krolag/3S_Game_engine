@@ -1,6 +1,6 @@
 #pragma once
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef WINDOW_H
+#define WINDOW_H
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -8,14 +8,14 @@
 
 namespace Application
 {
-	class Scene
+	class Window
 	{
 	public:
 		GLFWwindow* window;
 		float deltaTime = 0.0f;
 
 		/* Constructors */
-		Scene(std::string _name, float _width = 1280, float _height = 720, bool _isFullScreen = false);
+		Window(std::string _name, float _width = 1280, float _height = 720, bool _isFullScreen = false);
 		
 		void update();
 
@@ -28,4 +28,4 @@ namespace Application
 	};
 }
 
-#endif // !SCENE_H
+#endif // !WINDOW_H

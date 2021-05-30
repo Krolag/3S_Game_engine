@@ -33,13 +33,13 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
-void cameraKeyboardInput(Application::Scene* _scene, InputSystem::KeyboardInput* _keyboard);
+void cameraKeyboardInput(Application::Window* _scene, InputSystem::KeyboardInput* _keyboard);
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
 
 //Switch camera position(debug)
 //maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
 void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, 
-    Application::Scene* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
+    Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
 
 // settings
@@ -58,7 +58,7 @@ int main()
 {
 #pragma region Scene init
     /* Load scene */
-    Application::Scene mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
+    Application::Window mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
     glfwMakeContextCurrent(mainScene.window);
     glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
     glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -128,72 +128,22 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
-
-    int size = importer.importedProctors.size();
+     Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
+    
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
-    for (int i = 0; i < size; ++i)
-    {
-        importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
-            GameLogic::C_MESH,
-            importer.importedProctors.at(i).get(),
-            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-            &model3D
-            ));
-
-        std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
-
-        /* Check which components needs to be added */
-
-        // BoxCollider
-        /*if (!tmpCompoBooleanValues[3])
-        {
-            importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
-                GameLogic::C_COLLIDER,
-                importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-                importer.importedProctors.at(i).get(),
-                &collisionBoxShader,
-                tmpCompoBooleanValues[0]
-                ));
-        }*/
-
-        // Interactables
-        if (tmpCompoBooleanValues[1])
-        {
-            importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
-                GameLogic::C_INTERACTABLE,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-
-        // Treasures
-        if (tmpCompoBooleanValues[2])
-        {
-            importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
-                GameLogic::C_TREASURE,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-
-        // Cash
-        if (tmpCompoBooleanValues[3])
-        {
-            importer.cash.push_back(std::make_shared<GameLogic::Cash>(
-                GameLogic::C_CASH,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-
-        hierarchy.addObject(importer.importedProctors.at(i).get());
-    }
+    //for (int i = 0; i < importer.importedProctors.size(); ++i)
+    //{
+    //   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
+    //   hierarchy.addObject(importer.importedProctors.at(i).get());
+    //}
 
     /* Load models that probably won't be serialized */
     modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_00", true, true); // If last value is set to true, there is no animation
     modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_01", true, true);
-   /* modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true, true);
+    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true, true);
     modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_01", true, true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true, true);
-    modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true, true);*/
+    modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true, true);
     modelLibrary.addModel("assets/models/boat/boat_origin_fix.fbx", "boat", true, true);
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
@@ -216,7 +166,7 @@ int main()
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
     // Chests and coins
-    /*GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(10, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(10, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
     GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
     GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
@@ -230,12 +180,12 @@ int main()
     hierarchy.addObject(&chestBody2);
     GameLogic::Proctor      coin_00("coin_00", glm::vec3(0.00f, 4.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
     GameLogic::MeshRenderer coin_00_mr(GameLogic::C_MESH, &coin_00, modelLibrary.getModel(coin_00.name), &model3D);
-    GameLogic::Cash         coin_00_csh(GameLogic::C_CASH, &coin_00, &hero_00, &hero_01);
+    //GameLogic::Cash         coin_00_csh(GameLogic::C_CASH, &coin_00, &hero_00, &hero_01);
     hierarchy.addObject(&coin_00);
     GameLogic::Proctor      coin_01("coin_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
     GameLogic::MeshRenderer coin_01_mr(GameLogic::C_MESH, &coin_01, modelLibrary.getModel(coin_00.name), &model3D);
-    GameLogic::Cash         coin_01_csh(GameLogic::C_CASH, &coin_01, &hero_00, &hero_01);
-    hierarchy.addObject(&coin_01);*/
+    //GameLogic::Cash         coin_01_csh(GameLogic::C_CASH, &coin_01, &hero_00, &hero_01);
+    hierarchy.addObject(&coin_01);
 	
   /* GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
@@ -364,11 +314,11 @@ int main()
 
         hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
-        model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
+        model = glm::translate(model, glm::vec3(-200, waterYpos, -200));
         water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
         /* Render text */
-        points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
+        points.render(std::to_string(Points::getInstance()->getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
         
         /* Render dukat */
         dukatSpinning[dukatSpinIndex].render();
@@ -432,7 +382,7 @@ void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse)
     camera.ProcessMouseScroll(mouse->getScrollValue());
 }
 
-void cameraKeyboardInput(Application::Scene* _scene, InputSystem::KeyboardInput* _keyboard)
+void cameraKeyboardInput(Application::Window* _scene, InputSystem::KeyboardInput* _keyboard)
 {
     if (_keyboard->isKeyDown(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(_scene->window, true);
@@ -462,7 +412,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Scene* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
+void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight)
 {
     if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
