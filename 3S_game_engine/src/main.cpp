@@ -137,56 +137,56 @@ int main()
      Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
     
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
-    //int size = importer.importedProctors.size();
-    //for (int i = 0; i < size; ++i)
-    //{
-    //    importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
-    //        GameLogic::C_MESH,
-    //        importer.importedProctors.at(i).get(),
-    //        importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-    //        &model3D
-    //        ));
+    int size = importer.importedProctors.size();
+    for (int i = 0; i < size; ++i)
+    {
+        importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
+            GameLogic::C_MESH,
+            importer.importedProctors.at(i).get(),
+            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+            &model3D
+            ));
 
-    //    std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
-    //     
-    //    /* Check which components needs to be added */
-    //    // BoxCollider
-    //    /*if (!tmpCompoBooleanValues[3])
-    //    {
-    //        importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
-    //            GameLogic::C_COLLIDER,
-    //            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-    //            importer.importedProctors.at(i).get(),
-    //            &collisionBoxShader,
-    //            tmpCompoBooleanValues[0]
-    //            ));
-    //    }*/
-    //    // Interactables
-    //    if (tmpCompoBooleanValues[1])
-    //    {
-    //        importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
-    //            GameLogic::C_INTERACTABLE,
-    //            importer.importedProctors.at(i).get()
-    //            ));
-    //    }
-    //    // Treasures
-    //    if (tmpCompoBooleanValues[2])
-    //    {
-    //        importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
-    //            GameLogic::C_TREASURE,
-    //            importer.importedProctors.at(i).get()
-    //            ));
-    //    }
-    //    // Cash
-    //    if (tmpCompoBooleanValues[3])
-    //    {
-    //        importer.cash.push_back(std::make_shared<GameLogic::Cash>(
-    //            GameLogic::C_CASH,
-    //            importer.importedProctors.at(i).get()
-    //            ));
-    //    }
-    //    hierarchy.addObject(importer.importedProctors.at(i).get());
-    //}
+        std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
+         
+        /* Check which components needs to be added */
+        // BoxCollider
+        if (!tmpCompoBooleanValues[3])
+        {
+            importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
+                GameLogic::C_COLLIDER,
+                importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+                importer.importedProctors.at(i).get(),
+                &collisionBoxShader,
+                tmpCompoBooleanValues[0]
+                ));
+        }
+        // Interactables
+        if (tmpCompoBooleanValues[1])
+        {
+            importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
+                GameLogic::C_INTERACTABLE,
+                importer.importedProctors.at(i).get()
+                ));
+        }
+        // Treasures
+        if (tmpCompoBooleanValues[2])
+        {
+            importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
+                GameLogic::C_TREASURE,
+                importer.importedProctors.at(i).get()
+                ));
+        }
+        // Cash
+        if (tmpCompoBooleanValues[3])
+        {
+            importer.cash.push_back(std::make_shared<GameLogic::Cash>(
+                GameLogic::C_CASH,
+                importer.importedProctors.at(i).get()
+                ));
+        }
+        hierarchy.addObject(importer.importedProctors.at(i).get());
+    }
 
     /* Load models that probably won't be serialized */
     //modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_00", true, false); // If last value is set to true, there is no animation
@@ -382,11 +382,11 @@ int main()
 
             hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
-            model = glm::translate(model, glm::vec3(-200, waterYpos, -200));
+            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
             water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
 
             /* Render text */
-            points.render(std::to_string(Points::getInstance()->getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
+            points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
             /* Render dukat */
             dukatSpinning[dukatSpinIndex].render();
