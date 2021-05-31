@@ -95,6 +95,11 @@ int main()
 #pragma endregion
 
 #pragma region UI init
+#pragma region MainMenu
+    // TODO: @Ignacy - change those TBLR values to set logo at the center
+    UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png", 0.05, 0.3, 0.97, 0.83);
+#pragma endregion
+#pragma region Game
     /* Text init */
     textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCREEN_WIDTH), 0.0f, static_cast<GLfloat>(SCREEN_WIDTH));
     textShader.use();
@@ -118,6 +123,7 @@ int main()
     int dukatSpinIndex = 0;
     float timeBetweenFrames = 0.10f;
 #pragma endregion
+#pragma endregion
 
 #pragma region Proctors init
     /* Create object hierarchy */
@@ -131,15 +137,60 @@ int main()
      Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
     
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
-    //for (int i = 0; i < importer.importedProctors.size(); ++i)
+    //int size = importer.importedProctors.size();
+    //for (int i = 0; i < size; ++i)
     //{
-    //   importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(GameLogic::C_MESH, importer.importedProctors.at(i).get(), importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)), &model3D));
-    //   hierarchy.addObject(importer.importedProctors.at(i).get());
+    //    importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
+    //        GameLogic::C_MESH,
+    //        importer.importedProctors.at(i).get(),
+    //        importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+    //        &model3D
+    //        ));
+
+    //    std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
+    //     
+    //    /* Check which components needs to be added */
+    //    // BoxCollider
+    //    /*if (!tmpCompoBooleanValues[3])
+    //    {
+    //        importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
+    //            GameLogic::C_COLLIDER,
+    //            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+    //            importer.importedProctors.at(i).get(),
+    //            &collisionBoxShader,
+    //            tmpCompoBooleanValues[0]
+    //            ));
+    //    }*/
+    //    // Interactables
+    //    if (tmpCompoBooleanValues[1])
+    //    {
+    //        importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
+    //            GameLogic::C_INTERACTABLE,
+    //            importer.importedProctors.at(i).get()
+    //            ));
+    //    }
+    //    // Treasures
+    //    if (tmpCompoBooleanValues[2])
+    //    {
+    //        importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
+    //            GameLogic::C_TREASURE,
+    //            importer.importedProctors.at(i).get()
+    //            ));
+    //    }
+    //    // Cash
+    //    if (tmpCompoBooleanValues[3])
+    //    {
+    //        importer.cash.push_back(std::make_shared<GameLogic::Cash>(
+    //            GameLogic::C_CASH,
+    //            importer.importedProctors.at(i).get()
+    //            ));
+    //    }
+    //    hierarchy.addObject(importer.importedProctors.at(i).get());
     //}
 
     /* Load models that probably won't be serialized */
-    modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_00", true, true); // If last value is set to true, there is no animation
-    modelLibrary.addModel("assets/models/red_run_2020.fbx", "hero_01", true, true);
+    //modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_00", true, false); // If last value is set to true, there is no animation
+    modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_01", true, true);
     modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true, true);
     modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_01", true, true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true, true);
@@ -149,12 +200,15 @@ int main()
 
     /* Configure proctors */
     // Players
-    GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.02f));
-    GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, modelLibrary.getModel("hero_00"), &model3D);
+    Loader::Model           hero_00_model("assets/models/players/player_one.fbx", "hero_00", true, false);
+    GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 20.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
+    GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
-    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel("hero_00"), &hero_00, &collisionBoxShader, false);
+    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader, false);
+    hero_00_an.playAnimation(0);
     hierarchy.addObject(&hero_00);
-    GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 2.5f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.02f));
+    GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 20.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
@@ -214,6 +268,7 @@ int main()
     Framebuffer refractFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 #pragma endregion
 
+#pragma region Input
     /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(mainScene.window);
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(mainScene.window);
@@ -222,11 +277,16 @@ int main()
     float xValueLeft = 0.2;
     float yValueUp = 0.2;
     float yValueDown = 0.2;
+#pragma endregion
 
+#pragma region TEST CODE
     std::vector<GameLogic::Proctor*> tiles;
     //tiles.push_back(&island_00);
     //tiles.push_back(&island_01);
     Monster monsterSystem(&hero_00, tiles);
+
+    Application::Scene sceneManager;
+#pragma endregion
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -236,102 +296,114 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        camera.setProjection(projection);
-        FrustumCulling::createViewFrustumFromMatrix(&camera);
-
-        //enable cliping
-        glEnable(GL_CLIP_DISTANCE0);
-
-        //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
-        reflectFramebuffer.bindFramebuffer();
-        glEnable(GL_DEPTH_TEST);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // set camera underwater - to get reflection
-        float distance = 2 * (camera.Position.y - waterYpos);
-        camera.Position.y -= distance;
-        camera.Pitch = -camera.Pitch;
-        camera.updateCameraVectors();
-    	
-        model3D.use();
-        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
-        model3D.setUniform("projection", projection);
-        view = camera.GetViewMatrix();
-        model3D.setUniform("view", view);
-        model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
-        model = glm::mat4(1.0f);
-
-        dirLight.render(model3D);
-        hierarchy.update(true, false);
-        skybox.render(); // render skybox only for reflectionbuffer
-
-        //set camera position to default
-        camera.Position.y += distance;
-        camera.Pitch = -camera.Pitch;
-        camera.updateCameraVectors();
-
-        //close reflectframebuffer
-        reflectFramebuffer.unbindFramebuffer();
-
-        //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
-        refractFramebuffer.bindFramebuffer();
-      
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        model3D.use();
-        model3D.setUniform("projection", projection);
-        view = camera.GetViewMatrix();
-        model3D.setUniform("view", view);
-        model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
-
-        dirLight.render(model3D);   	   	
-        hierarchy.update(true, false);
-    	
-        //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
-        refractFramebuffer.unbindFramebuffer();
-        glDisable(GL_CLIP_DISTANCE0); 
-
-        //---------------------------------------------------------------------------------------------------------
-        //HERE STARTS DEFAULT RENDERING
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-       
-        model3D.use();
-        model3D.setUniform("projection", projection);
-        view = camera.GetViewMatrix();
-        model3D.setUniform("view", view);
-
-        cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
-
-        dirLight.render(model3D);
-
-        collisionBoxShader.use();
-        collisionBoxShader.setUniform("projection", projection);
-        collisionBoxShader.setUniform("view", view);
-        collisionBoxShader.setUniformBool("collision", true);
-
-        hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
-
-        model = glm::translate(model, glm::vec3(-200, waterYpos, -200));
-        water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
-
-        /* Render text */
-        points.render(std::to_string(Points::getInstance()->getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
-        
-        /* Render dukat */
-        dukatSpinning[dukatSpinIndex].render();
-        timeBetweenFrames -= mainScene.deltaTime;
-        if (timeBetweenFrames <= 0)
+        /* SCENE LOADER TEST CODE */
+        if (sceneManager.cActiveScene["mainMenu"])
         {
-            dukatSpinIndex++;
-            timeBetweenFrames = 0.15f;
+            std::cout << "mainMenu" << std::endl;
+            logo.render();
         }
-        if (dukatSpinIndex >= 8)
-            dukatSpinIndex = 0;
+        else if (sceneManager.cActiveScene["game"])
+        {
+            //enable cliping
+            glEnable(GL_CLIP_DISTANCE0);
 
-        monsterSystem.update();
+            camera.setProjection(projection);
+            FrustumCulling::createViewFrustumFromMatrix(&camera);
+
+            //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
+            reflectFramebuffer.bindFramebuffer();
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            // set camera underwater - to get reflection
+            float distance = 2 * (camera.Position.y - waterYpos);
+            camera.Position.y -= distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            model3D.use();
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
+            model = glm::mat4(1.0f);
+
+            dirLight.render(model3D);
+            hierarchy.update(true, false);
+            skybox.render(); // render skybox only for reflectionbuffer
+
+            //set camera position to default
+            camera.Position.y += distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            //close reflectframebuffer
+            reflectFramebuffer.unbindFramebuffer();
+
+            //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
+            refractFramebuffer.bindFramebuffer();
+
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
+
+            dirLight.render(model3D);
+            hierarchy.update(true, false);
+
+            //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
+            refractFramebuffer.unbindFramebuffer();
+            glDisable(GL_CLIP_DISTANCE0);
+
+            //---------------------------------------------------------------------------------------------------------
+            //HERE STARTS DEFAULT RENDERING
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+
+            dirLight.render(model3D);
+
+            collisionBoxShader.use();
+            collisionBoxShader.setUniform("projection", projection);
+            collisionBoxShader.setUniform("view", view);
+            collisionBoxShader.setUniformBool("collision", true);
+
+            hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
+
+            model = glm::translate(model, glm::vec3(-200, waterYpos, -200));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
+
+            /* Render text */
+            points.render(std::to_string(Points::getInstance()->getScore()), 60, 660, 1, glm::vec3(1.0, 0.75, 0.0));
+
+            /* Render dukat */
+            dukatSpinning[dukatSpinIndex].render();
+            timeBetweenFrames -= mainScene.deltaTime;
+            if (timeBetweenFrames <= 0)
+            {
+                dukatSpinIndex++;
+                timeBetweenFrames = 0.15f;
+            }
+            if (dukatSpinIndex >= 8)
+                dukatSpinIndex = 0;
+
+            monsterSystem.update();
+        }
+
+        if (keyboardInput->isKeyPressed(GLFW_KEY_M))
+            sceneManager.changeCurrentScene("game");
         
         /* Update InputSystem */
         keyboardInput->update();

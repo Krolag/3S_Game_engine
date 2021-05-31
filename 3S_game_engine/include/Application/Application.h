@@ -3,6 +3,7 @@
 #define APPLICATION_H
 
 #include "Window.h"
+#include "Scene.h"
 #include "Randomizer.h"
 
 namespace Application {}

@@ -1,5 +1,5 @@
 #version 430 core
-const int MAX_JOINTS = 64;
+const int MAX_JOINTS = 100;
 const int MAX_WEIGHTS = 4;
 
 layout (location = 0) in vec3 inPos;
@@ -11,9 +11,6 @@ layout (location = 4) in vec3 inWeights;
 out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoord;
-
-const int MAX_BONES = 100;
-const int MAX_BONE_INFLUENCE = 4;
 
 uniform mat4 model;
 uniform mat4 view;

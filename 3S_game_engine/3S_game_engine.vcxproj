@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Application\Scene.cpp" />
     <ClCompile Include="include\Boat\Boat.cpp" />
     <ClCompile Include="include\AnimationSystem\System\Animation.cpp" />
     <ClCompile Include="include\AnimationSystem\System\Animator.cpp" />
@@ -202,6 +203,7 @@
     <ClCompile Include="include\Water\WaterMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Boat\Boat.h" />
     <ClInclude Include="include\AnimationSystem\System\Animation.h" />
     <ClInclude Include="include\AnimationSystem\AnimationSystem.h" />
