@@ -26,7 +26,7 @@ private:
 
 	int vertexCountSquared;
 
-	const float WATER_SPEED = 0.4;
+	const float WATER_SPEED = 0.2;
 	float waveSpeed = 0;
 };
 

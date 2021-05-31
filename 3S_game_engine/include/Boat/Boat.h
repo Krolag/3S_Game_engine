@@ -10,6 +10,8 @@ public:
 	Boat(GameLogic::ComponentType _type, GameLogic::Proctor* _proctor);
 
 	void update();
+	void attachPlayerOne(GameLogic::Proctor* player);
+	void attachPlayerTwo(GameLogic::Proctor* player);
 
 protected:
 
@@ -23,8 +25,10 @@ private:
 	float startSpeed = 5;
 	float turnSpeed = 0;
 	float startTurningSpeed = 0.5;
+	float time = 0;
 
 	void useBoatInput();
+	void changePosition();
 
 };
 

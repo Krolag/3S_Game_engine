@@ -59,7 +59,9 @@ namespace GameLogic
 		/* Next update children */
 		for (auto& a : children)
 		{			
-			a->transform.position = a->getParentProctor()->transform.position + a->beginTransform.position;
+			a->transform.position = a->beginTransform.position ;
+			a->transform.rotation = a->beginTransform.rotation + a->getParentProctor()->transform.rotation;
+			a->transform.parentPosition = a->getParentProctor()->transform.position;
 			a->update(_onlyRender);
 		}
 	}

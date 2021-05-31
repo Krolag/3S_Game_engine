@@ -218,7 +218,7 @@ int main()
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     // Boat
-    GameLogic::Proctor      boat("boat", glm::vec3(352.0f, 1.f, 400.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.06f));
+    GameLogic::Proctor      boat("boat", glm::vec3(352.0f, 1.f, 400.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
     Boat boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
@@ -266,7 +266,7 @@ int main()
     };
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 1000, 2000);
+    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 700, 2000);
     int waterYpos = 0;
     Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
     Framebuffer refractFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -395,7 +395,7 @@ int main()
 
 
             model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
 
 
 
@@ -507,7 +507,7 @@ int main()
             hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
             model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
 
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));

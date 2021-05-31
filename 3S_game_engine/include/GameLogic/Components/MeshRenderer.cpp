@@ -32,6 +32,7 @@ namespace GameLogic
 		/* Apply those values each frame */
 		model->position = transform.position;
 		model->rotation = transform.rotation;
+		model->parentPosition = transform.parentPosition;
 		model->scale = transform.scale;
 
 		/* Render model with given shader */
@@ -55,9 +56,17 @@ namespace GameLogic
 		/* temporary solution for proctors without colliders */
 		else
 		{
-			shader->use();
-			shader->setUniformBool("noAnim", model->getNoAnim());
-			model->render(*shader);
+			if (proctor->getParentProctor() != NULL) 
+			{
+				shader->use();
+				shader->setUniformBool("noAnim", model->getNoAnim());
+				model->renderChild(*shader);
+			}
+			else {
+				shader->use();
+				shader->setUniformBool("noAnim", model->getNoAnim());
+				model->render(*shader);
+			}
 		}
 	}
 

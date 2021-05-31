@@ -32,6 +32,7 @@ namespace Loader
 		/* Model transformation */
 		glm::vec3 position;
 		glm::quat rotation;
+		glm::vec3 parentPosition;
 		glm::vec3 scale;
 
 		/* Construtor / destructor */
@@ -41,6 +42,7 @@ namespace Loader
 
 		void init();
 		void render(Shader _shader);
+		void renderChild(Shader _shader);
 		void loadModel(std::string _path);
 		void cleanup();
 

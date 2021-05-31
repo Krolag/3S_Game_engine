@@ -13,22 +13,22 @@ Boat::Boat(GameLogic::ComponentType _type, GameLogic::Proctor* _proctor): Compon
 
 void Boat::update()
 {
-
 	useBoatInput();
-	transform.rotation.y += turnSpeed * proctor->getDeltaTime();
-	float distance = speed * proctor->getDeltaTime();
-	float dx = (float)(distance * cos((transform.rotation.y)));
-	float dz = (float)(distance * -sin((transform.rotation.y)));
-	//std::cout << speed << "\n";
-	transform.position.x += dx;
-	transform.position.z += dz;
+	changePosition();
+}
 
+void Boat::attachPlayerOne(GameLogic::Proctor* player)
+{
+	player->setPosition(glm::vec3(1.72f, 1.45f, 0.56f)); //position player on boat
+	player->setRotation(glm::quat(1.0f, 0.0f, 1.57f, 0.0f));
+	proctor->addChild(player);
+}
 
-	proctor->setTransform(transform);
-	((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->position = transform.position;
-	((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->rotation = transform.rotation;
-	((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->scale = transform.scale;
-
+void Boat::attachPlayerTwo(GameLogic::Proctor* player)
+{
+	player->setPosition(glm::vec3(-1.95f, 1.45f, 0.56f)); //position player on boat
+	player->setRotation(glm::quat(1.0f, 0.0f, 1.57f, 0.0f));
+	proctor->addChild(player);
 }
 
 void Boat::useBoatInput()
@@ -82,4 +82,23 @@ void Boat::useBoatInput()
 	{
 		turnSpeed += 1 * parent->getDeltaTime();
 	}
+}
+
+void Boat::changePosition()
+{
+	transform.rotation.y += turnSpeed * proctor->getDeltaTime();
+	float distance = speed * proctor->getDeltaTime();
+	float distance_x = (float)(distance * cos((transform.rotation.y)));
+	float distance_z = (float)(distance * -sin((transform.rotation.y)));
+	transform.position.x += distance_x;
+	transform.position.z += distance_z;
+
+	time += proctor->getDeltaTime();
+	double rotation = 0.001 * (sin(time * 4.1)); // simulate waves
+	transform.rotation.x += rotation;
+
+	proctor->setTransform(transform);
+	((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->position = transform.position;
+	((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->rotation = transform.rotation;
+	((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->scale = transform.scale;
 }

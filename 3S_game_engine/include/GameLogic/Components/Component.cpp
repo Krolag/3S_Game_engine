@@ -1,6 +1,7 @@
 #include "Component.h"
 #include "Application/Randomizer.h"
 
+
 namespace GameLogic
 {
 	Component::Component() { }
