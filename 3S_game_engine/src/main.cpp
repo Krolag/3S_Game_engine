@@ -96,8 +96,12 @@ int main()
 
 #pragma region UI init
 #pragma region MainMenu
-    // TODO: @Ignacy - change those TBLR values to set logo at the center
-    UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png", 0.05, 0.3, 0.97, 0.83);
+    UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png", 0.35, 0.65, 0.97, 0.76);
+    UIRender::UIElement startNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.72, 0.53);
+    UIRender::UIElement startPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.72, 0.53);
+    UIRender::UIElement exitNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.42, 0.23);
+    UIRender::UIElement exitPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.42, 0.23);
+
 #pragma endregion
 #pragma region Game
     /* Text init */
@@ -201,20 +205,20 @@ int main()
     /* Configure proctors */
     // Players
     Loader::Model           hero_00_model("assets/models/players/player_one.fbx", "hero_00", true, false);
-    GameLogic::Proctor      hero_00("hero_00", glm::vec3(2.0f, 20.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      hero_00("hero_00", glm::vec3(370.0f, 3.0f, 400.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader, false);
     hero_00_an.playAnimation(0);
     hierarchy.addObject(&hero_00);
-    GameLogic::Proctor      hero_01("hero_01", glm::vec3(-2.0f, 20.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      hero_01("hero_01", glm::vec3(366.0f, 3.0f, 403.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     // Boat
-    GameLogic::Proctor      boat("boat", glm::vec3(-5.0f, 2.5f, -5.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.06f));
+    GameLogic::Proctor      boat("boat", glm::vec3(352.0f, 1.f, 400.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.06f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
     Boat boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
@@ -299,11 +303,131 @@ int main()
         /* SCENE LOADER TEST CODE */
         if (sceneManager.cActiveScene["mainMenu"])
         {
-            std::cout << "mainMenu" << std::endl;
+            /*hierarchy.removeObject(&hero_00);
+            hierarchy.removeObject(&hero_01);
+            hierarchy.removeObject(&boat);*/
+
+            hero_00_pi.setActive(false);
+            hero_01_pi.setActive(false);
+            
+
+            //std::cout << "mainMenu" << std::endl;
+            //enable cliping
+            glEnable(GL_CLIP_DISTANCE0);
+
+            camera.setProjection(projection);
+            FrustumCulling::createViewFrustumFromMatrix(&camera);
+
+            //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
+            reflectFramebuffer.bindFramebuffer();
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            // set camera underwater - to get reflection
+            float distance = 2 * (camera.Position.y - waterYpos);
+            camera.Position.y -= distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            model3D.use();
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
+            model = glm::mat4(1.0f);
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(true, false);
+            //---------------------------------------------------------------------------
+
+            skybox.render(); // render skybox only for reflectionbuffer
+
+            //set camera position to default
+            camera.Position.y += distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            //close reflectframebuffer
+            reflectFramebuffer.unbindFramebuffer();
+
+            //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
+            refractFramebuffer.bindFramebuffer();
+
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(true, false);
+            //---------------------------------------------------------------------------
+
+            //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
+            refractFramebuffer.unbindFramebuffer();
+            glDisable(GL_CLIP_DISTANCE0);
+
+            //HERE STARTS DEFAULT RENDERING
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
+            //---------------------------------------------------------------------------
+
+
+            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x, camera.Position.y, camera.Position.z));
+
+
+
+            // Main menu UI
             logo.render();
+
+            startNotPressed.render();
+            exitNotPressed.render();
+
+            if ((mouseInput->getCursorPosition().x > 770 && mouseInput->getCursorPosition().x < 1150) && (mouseInput->getCursorPosition().y > 370 && mouseInput->getCursorPosition().y < 420))
+            {
+                startPressed.render();
+                if (mouseInput->isButtonReleased(0))
+                {
+                    sceneManager.changeCurrentScene("game");
+                }
+            }            
+            
+            if ((mouseInput->getCursorPosition().x > 770 && mouseInput->getCursorPosition().x < 1150) && (mouseInput->getCursorPosition().y > 690 && mouseInput->getCursorPosition().y < 740))
+            {
+                exitPressed.render();
+                if (mouseInput->isButtonReleased(0))
+                {
+                    glfwSetWindowShouldClose(mainScene.window, true);
+                }
+            }
+
         }
         else if (sceneManager.cActiveScene["game"])
         {
+            hero_00_pi.setActive(true);
+            hero_01_pi.setActive(true);
             //enable cliping
             glEnable(GL_CLIP_DISTANCE0);
 

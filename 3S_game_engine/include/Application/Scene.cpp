@@ -31,6 +31,6 @@ namespace Application
 		cActiveScene["game"] = false;
 		cActiveScene["exitStory"] = false;
 
-		changeCurrentScene("game"); // Change it later for "mainMenu"
+		changeCurrentScene("mainMenu"); // Change it later for "mainMenu"
 	}
 }
