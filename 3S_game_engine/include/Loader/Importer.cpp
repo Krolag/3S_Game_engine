@@ -1,13 +1,9 @@
 #include "Importer.h"
-#include <iostream>
-#include <fstream>
-
-#include "RapidXml/rapidxml_print.hpp"
-#include "RapidXml/rapidxml_utils.hpp"
 
 namespace Loader
 {	
-	Importer::Importer(const std::string xmlPath, Shader* _model3DShader, float _divider) : model3DShader(_model3DShader)
+	Importer::Importer(const std::string xmlPath, Shader* _model3DShader, float _divider)
+		: model3DShader(_model3DShader), scaleFactor(_divider)
 	{
 		// Get xml document to work with
 		auto xmlFileContext = file2char(xmlPath.c_str());
@@ -48,27 +44,40 @@ namespace Loader
 				importedModelLibrary.addModel(modelPath, modelName, true, true);
 			}
 
-			// Position
-			xml_node<>* childElement = firstNode->first_node("Position");
-			glm::vec3 proctorPosition(
-				(float)strtod(childElement->first_node("x")->value(), NULL) * 5,
-				(float)strtod(childElement->first_node("y")->value(), NULL) * 5,
-				-(float)strtod(childElement->first_node("z")->value(), NULL) * 5
-			);
+			xml_node<>* childElement;
 
 			// Rotation
 			childElement = firstNode->first_node("Rotation");
 			childElement = childElement->first_node("eulerAngles");
+
+			//double rotationX = (double)strtod(childElement->first_node("x")->value(), NULL);
+			//double rotationY = (double)strtod(childElement->first_node("y")->value(), NULL);
+			//double rotationZ = (double)strtod(childElement->first_node("z")->value(), NULL);
+			//double rotationW = (double)strtod(childElement->first_node("w")->value(), NULL);
+
 			glm::quat proctorRotation(
 				1.0f,
-				0.0f,
-				-glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
-				0.0f
+				glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)) + glm::radians(90.0f),
+				glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
+				glm::radians((float)strtod(childElement->first_node("z")->value(), NULL)) - glm::radians(90.0f)
 			);
 
 			// Scale
 			childElement = firstNode->first_node("Scale");
-			glm::vec3 proctorScale(0.05f);
+			//glm::vec3 proctorScale(1.0f);
+			glm::vec3 proctorScale(
+				(float)strtod(childElement->first_node("x")->value(), NULL) / scaleFactor, //0.05f,
+				(float)strtod(childElement->first_node("y")->value(), NULL) / scaleFactor, //0.05f,
+				(float)strtod(childElement->first_node("z")->value(), NULL) / scaleFactor //0.05f
+			);
+
+			// Position
+			childElement = firstNode->first_node("Position");
+			glm::vec3 proctorPosition(
+				 (float)strtod(childElement->first_node("x")->value(), NULL) * (proctorScale.x * 100.0f),
+				 (float)strtod(childElement->first_node("y")->value(), NULL) * (proctorScale.y * 100.0f),
+				-(float)strtod(childElement->first_node("z")->value(), NULL) * (proctorScale.z * 100.0f)
+			);
 
 			importedProctors.push_back(std::make_shared<GameLogic::Proctor>(proctorName.c_str(), proctorPosition, proctorRotation, proctorScale));
 
@@ -84,16 +93,13 @@ namespace Loader
 
 			//Setting correct bool values
 			std::vector<bool> compo;
-			//bool compo[4] = { 0 };
 
 			for (int i = 0; i < 4; i++)
 			{
 				if (componentsFromXML[i] == "true")
 					compo.push_back(true);
-				//compo[i] = true;
 				else
 					compo.push_back(false);
-				//compo[i] = false;
 			}
 			componetsBooleanValues.push_back(compo);
 		}

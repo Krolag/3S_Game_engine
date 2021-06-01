@@ -1,11 +1,18 @@
 #pragma once
+#include <iostream>
+#include <fstream>
+#include <cmath>
 #include "ModelLibrary.h"
 #include "GameLogic/Proctor.h"
 #include "RapidXml/rapidxml.hpp"
+#include "RapidXml/rapidxml_print.hpp"
+#include "RapidXml/rapidxml_utils.hpp"
 
 namespace Loader
 {
+#define M_PI 3.14159265359
 	using namespace rapidxml;
+
 	
 	class Importer
 	{
@@ -23,10 +30,11 @@ namespace Loader
 		/* Constructor */
 		Importer(const std::string xmlPath, Shader* _model3DShader, float _divider);
 
-		/* Public methods */
 		std::string prepareModelName(std::string name);
+
 	private:
-		Shader * model3DShader;
+		Shader* model3DShader;
+		float scaleFactor;
 		
 		/* Importer methods used for load */
 		void processElements(xml_node<>* firstNode, float _divider, bool ifProcessingChild = false);
