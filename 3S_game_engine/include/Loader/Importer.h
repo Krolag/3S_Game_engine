@@ -12,7 +12,6 @@ namespace Loader
 {
 #define M_PI 3.14159265359
 	using namespace rapidxml;
-
 	
 	class Importer
 	{

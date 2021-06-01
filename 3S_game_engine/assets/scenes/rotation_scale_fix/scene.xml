@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<GameModelsCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <GameModels>
+    <GameModel name="island_corner_02-1" model_id="0">
+      <Position>
+        <x>-0</x>
+        <y>0</y>
+        <z>0</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>1</x>
+        <y>1</y>
+        <z>1</z>
+      </Scale>
+      <components>
+        <isColliderStatic>true</isColliderStatic>
+        <isInteractable>false</isInteractable>
+        <isTreasure>false</isTreasure>
+        <isCash>false</isCash>
+      </components>
+      <ChildrenModels />
+    </GameModel>
+  </GameModels>
+</GameModelsCollection>
