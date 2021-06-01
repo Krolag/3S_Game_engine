@@ -84,7 +84,8 @@ namespace Loader
 			// Components
 			childElement = firstNode->first_node("components");
 
-			std::string componentsFromXML[4]{
+			std::string componentsFromXML[5]{
+				childElement->first_node("isColliderOn")->value(),
 				childElement->first_node("isColliderStatic")->value(),
 				childElement->first_node("isInteractable")->value(),
 				childElement->first_node("isTreasure")->value(),
@@ -94,7 +95,7 @@ namespace Loader
 			//Setting correct bool values
 			std::vector<bool> compo;
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				if (componentsFromXML[i] == "true")
 					compo.push_back(true);

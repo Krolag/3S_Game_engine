@@ -138,7 +138,7 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Create importer with given *.xml file */
-     Loader::Importer importer("assets/scenes/rotation_scale_fix/scene.xml", &model3D, 50.0f);
+     Loader::Importer importer("assets/scenes/scene.xml", &model3D, 50.0f);
      //Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
     
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
@@ -156,18 +156,18 @@ int main()
          
         /* Check which components needs to be added */
         // BoxCollider
-        if (!tmpCompoBooleanValues[3])
+        if (tmpCompoBooleanValues[0])
         {
             importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
                 GameLogic::C_COLLIDER,
                 importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
                 importer.importedProctors.at(i).get(),
                 &collisionBoxShader,
-                tmpCompoBooleanValues[0]
+                tmpCompoBooleanValues[1]
                 ));
         }
         // Interactables
-        if (tmpCompoBooleanValues[1])
+        if (tmpCompoBooleanValues[2])
         {
             importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
                 GameLogic::C_INTERACTABLE,
@@ -175,7 +175,7 @@ int main()
                 ));
         }
         // Treasures
-        if (tmpCompoBooleanValues[2])
+        if (tmpCompoBooleanValues[3])
         {
             importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
                 GameLogic::C_TREASURE,
@@ -183,7 +183,7 @@ int main()
                 ));
         }
         // Cash
-        if (tmpCompoBooleanValues[3])
+        if (tmpCompoBooleanValues[4])
         {
             importer.cash.push_back(std::make_shared<GameLogic::Cash>(
                 GameLogic::C_CASH,
