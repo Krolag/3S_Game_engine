@@ -513,8 +513,9 @@ int main()
             startNotPressed.render();
             exitNotPressed.render();
 
-            if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
-                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.34 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.39)) || (tmpMainMenuIndex == 0))
+            /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
+                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.34 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.39)) || (tmpMainMenuIndex == 0))*/
+            if (tmpMainMenuIndex == 0)
             {
                 startPressed.render();
                 if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_ENTER))
@@ -524,8 +525,9 @@ int main()
                 }
             }
 
-            if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
-                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.64 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.69)) || (tmpMainMenuIndex == 1))
+            /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
+                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.64 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.69)) || (tmpMainMenuIndex == 1))*/
+            if (tmpMainMenuIndex == 1)
             {
                 exitPressed.render();
                 if (mouseInput->isButtonReleased(0) || keyboardInput->isKeyReleased(GLFW_KEY_ENTER))
