@@ -207,7 +207,7 @@ int main()
     // Players
     Loader::Model           hero_00_model("assets/models/players/player_one.fbx", "hero_00", true, false);
     //GameLogic::Proctor      hero_00("hero_00", glm::vec3(-5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::Proctor      hero_00("hero_00", glm::vec3(370.0f, 3.0f, 400.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      hero_00("hero_00", glm::vec3(770.0f, 3.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
@@ -215,7 +215,7 @@ int main()
     hero_00_an.playAnimation(0);
     hierarchy.addObject(&hero_00);
     //GameLogic::Proctor      hero_01("hero_01", glm::vec3(5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::Proctor      hero_01("hero_01", glm::vec3(366.0f, 3.0f, 403.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      hero_01("hero_01", glm::vec3(770.0f, 3.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
@@ -249,7 +249,7 @@ int main()
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 700, 2000);
-    int waterYpos = 0;
+    float waterYpos = 1.5f;
     Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
     Framebuffer refractFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 #pragma endregion
@@ -274,6 +274,12 @@ int main()
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("mainMenu");
     int tmpMainMenuIndex = 0;
+
+    Loader::Model test_model("assets/models/test.fbx", "test", true, true);
+    GameLogic::Proctor test("test", glm::vec3(800.0f, 100.0f, 800.0f));
+    GameLogic::MeshRenderer test_mr(GameLogic::C_MESH, &test, &test_model, &model3D);
+    GameLogic::BoxCollider test_bc(GameLogic::C_COLLIDER, &test_model, &test, &collisionBoxShader, true);
+    hierarchy.addObject(&test);
 
 #pragma endregion
 
@@ -498,11 +504,8 @@ int main()
             hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
             //---------------------------------------------------------------------------
 
-
             model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
             water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
-
-
 
             // Main menu UI
             logo.render();
@@ -530,7 +533,6 @@ int main()
                     glfwSetWindowShouldClose(mainScene.window, true);
                 }
             }
-
         }
         
         /* Update InputSystem */
@@ -603,8 +605,6 @@ void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputS
     }
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     // make sure the viewport matches the new window dimensions; note that width and 
