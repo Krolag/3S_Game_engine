@@ -51,19 +51,19 @@ namespace Loader
 			childElement = childElement->first_node("eulerAngles");
 			glm::quat proctorRotation(
 				1.0f,
-				0.0f,//glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)) + glm::radians(90.0f),
-				glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
-				0.0f//glm::radians((float)strtod(childElement->first_node("z")->value(), NULL)) - glm::radians(90.0f)
+				0.0f,
+				-glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
+				0.0f
 			);
 
 			// Scale
 			childElement = firstNode->first_node("Scale");
-			glm::vec3 proctorScale(0.05f);
-			//glm::vec3 proctorScale(
-			//	(float)strtod(childElement->first_node("x")->value(), NULL) / scaleFactor, //0.05f,
-			//	(float)strtod(childElement->first_node("y")->value(), NULL) / scaleFactor, //0.05f,
-			//	(float)strtod(childElement->first_node("z")->value(), NULL) / scaleFactor //0.05f
-			//);
+			//glm::vec3 proctorScale(10.0f);
+			glm::vec3 proctorScale(
+				(float)strtod(childElement->first_node("x")->value(), NULL) / scaleFactor, //0.05f,
+				(float)strtod(childElement->first_node("y")->value(), NULL) / scaleFactor, //0.05f,
+				(float)strtod(childElement->first_node("z")->value(), NULL) / scaleFactor //0.05f
+			);
 
 			// Position
 			childElement = firstNode->first_node("Position");

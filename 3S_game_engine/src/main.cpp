@@ -138,8 +138,8 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Create importer with given *.xml file */
-     Loader::Importer importer("assets/scenes/scene.xml", &model3D, 50.0f);
-     //Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
+     //Loader::Importer importer("assets/scenes/rotation_scale_fix/scene.xml", &model3D, 100.0f);
+     Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
     
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
     int size = importer.importedProctors.size();
@@ -206,16 +206,16 @@ int main()
     /* Configure proctors */
     // Players
     Loader::Model           hero_00_model("assets/models/players/player_one.fbx", "hero_00", true, false);
-    GameLogic::Proctor      hero_00("hero_00", glm::vec3(-5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    //GameLogic::Proctor      hero_00("hero_00", glm::vec3(370.0f, 3.0f, 400.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    //GameLogic::Proctor      hero_00("hero_00", glm::vec3(-5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      hero_00("hero_00", glm::vec3(370.0f, 3.0f, 400.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader, false);
     hero_00_an.playAnimation(0);
     hierarchy.addObject(&hero_00);
-    GameLogic::Proctor      hero_01("hero_01", glm::vec3(5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    //GameLogic::Proctor      hero_01("hero_01", glm::vec3(366.0f, 3.0f, 403.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    //GameLogic::Proctor      hero_01("hero_01", glm::vec3(5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      hero_01("hero_01", glm::vec3(366.0f, 3.0f, 403.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
@@ -226,27 +226,6 @@ int main()
     Boat boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
-    // Chests and coins
-    GameLogic::Proctor      chestBody_00("chestBody_00", glm::vec3(10, 2.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::MeshRenderer chestBody_00_mr(GameLogic::C_MESH, &chestBody_00, modelLibrary.getModel(chestBody_00.name), &model3D);
-    GameLogic::Interactable chestBody_00_ible(GameLogic::C_INTERACTABLE, &chestBody_00);
-    GameLogic::Treasure     chestBody_00_tre(GameLogic::C_TREASURE, &chestBody_00);
-    GameLogic::BoxCollider  chestBody_00_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody_00.name), &chestBody_00, &collisionBoxShader, true);
-    hierarchy.addObject(&chestBody_00);
-    GameLogic::Proctor      chestBody2("chestBody_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::MeshRenderer chestBody2_mr(GameLogic::C_MESH, &chestBody2, modelLibrary.getModel(chestBody2.name), &model3D);
-    GameLogic::Interactable chestBody2_ible(GameLogic::C_INTERACTABLE, &chestBody2);
-    GameLogic::Treasure     chestBody2_tre(GameLogic::C_TREASURE, &chestBody2);
-    GameLogic::BoxCollider  chestBody2_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(chestBody2.name), &chestBody2, &collisionBoxShader, true);
-    hierarchy.addObject(&chestBody2);
-    GameLogic::Proctor      coin_00("coin_00", glm::vec3(0.00f, 4.97f, -05.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
-    GameLogic::MeshRenderer coin_00_mr(GameLogic::C_MESH, &coin_00, modelLibrary.getModel(coin_00.name), &model3D);
-    //GameLogic::Cash         coin_00_csh(GameLogic::C_CASH, &coin_00, &hero_00, &hero_01);
-    hierarchy.addObject(&coin_00);
-    GameLogic::Proctor      coin_01("coin_01", glm::vec3(0.00f, 2.97f, 010.00f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(.003f));
-    GameLogic::MeshRenderer coin_01_mr(GameLogic::C_MESH, &coin_01, modelLibrary.getModel(coin_00.name), &model3D);
-    //GameLogic::Cash         coin_01_csh(GameLogic::C_CASH, &coin_01, &hero_00, &hero_01);
-    hierarchy.addObject(&coin_01);
 	
   /* GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
