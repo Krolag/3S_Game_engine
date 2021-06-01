@@ -56,7 +56,6 @@ bool isDebugModeOn = false;
 bool isPaused = false;
 int main()
 {
-    int tmpMainMenuIndex = 0;
 #pragma region Scene init
     /* Load scene */
     Application::Window mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
@@ -274,6 +273,8 @@ int main()
 
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("mainMenu");
+    int tmpMainMenuIndex = 0;
+
 #pragma endregion
 
     /* Render loop */
@@ -290,7 +291,6 @@ int main()
             {
                 isPaused = true;
                 sceneManager.changeCurrentScene("mainMenu");
-
             }
 
             hero_00_pi.setActive(true);
