@@ -49,27 +49,21 @@ namespace Loader
 			// Rotation
 			childElement = firstNode->first_node("Rotation");
 			childElement = childElement->first_node("eulerAngles");
-
-			//double rotationX = (double)strtod(childElement->first_node("x")->value(), NULL);
-			//double rotationY = (double)strtod(childElement->first_node("y")->value(), NULL);
-			//double rotationZ = (double)strtod(childElement->first_node("z")->value(), NULL);
-			//double rotationW = (double)strtod(childElement->first_node("w")->value(), NULL);
-
 			glm::quat proctorRotation(
 				1.0f,
-				glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)) + glm::radians(90.0f),
+				0.0f,//glm::radians((float)strtod(childElement->first_node("x")->value(), NULL)) + glm::radians(90.0f),
 				glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
-				glm::radians((float)strtod(childElement->first_node("z")->value(), NULL)) - glm::radians(90.0f)
+				0.0f//glm::radians((float)strtod(childElement->first_node("z")->value(), NULL)) - glm::radians(90.0f)
 			);
 
 			// Scale
 			childElement = firstNode->first_node("Scale");
-			//glm::vec3 proctorScale(1.0f);
-			glm::vec3 proctorScale(
-				(float)strtod(childElement->first_node("x")->value(), NULL) / scaleFactor, //0.05f,
-				(float)strtod(childElement->first_node("y")->value(), NULL) / scaleFactor, //0.05f,
-				(float)strtod(childElement->first_node("z")->value(), NULL) / scaleFactor //0.05f
-			);
+			glm::vec3 proctorScale(0.05f);
+			//glm::vec3 proctorScale(
+			//	(float)strtod(childElement->first_node("x")->value(), NULL) / scaleFactor, //0.05f,
+			//	(float)strtod(childElement->first_node("y")->value(), NULL) / scaleFactor, //0.05f,
+			//	(float)strtod(childElement->first_node("z")->value(), NULL) / scaleFactor //0.05f
+			//);
 
 			// Position
 			childElement = firstNode->first_node("Position");
