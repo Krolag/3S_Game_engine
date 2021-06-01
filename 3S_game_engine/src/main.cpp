@@ -53,9 +53,10 @@ float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 bool isDebugModeOn = false;
-
+bool isPaused = false;
 int main()
 {
+    int tmpMainMenuIndex = 0;
 #pragma region Scene init
     /* Load scene */
     Application::Window mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
@@ -272,7 +273,7 @@ int main()
     Monster monsterSystem(&hero_00, tiles);
 
     Application::Scene sceneManager;
-    sceneManager.changeCurrentScene("game");
+    sceneManager.changeCurrentScene("mainMenu");
 #pragma endregion
 
     /* Render loop */
@@ -283,132 +284,15 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        /* SCENE LOADER TEST CODE */
-        if (sceneManager.cActiveScene["mainMenu"])
+        if (sceneManager.cActiveScene["game"])
         {
-            /*hierarchy.removeObject(&hero_00);
-            hierarchy.removeObject(&hero_01);
-            hierarchy.removeObject(&boat);*/
-
-            hero_00_pi.setActive(false);
-            hero_01_pi.setActive(false);
-            
-
-            //std::cout << "mainMenu" << std::endl;
-            //enable cliping
-            glEnable(GL_CLIP_DISTANCE0);
-
-            camera.setProjection(projection);
-            FrustumCulling::createViewFrustumFromMatrix(&camera);
-
-            //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
-            reflectFramebuffer.bindFramebuffer();
-            glEnable(GL_DEPTH_TEST);
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            // set camera underwater - to get reflection
-            float distance = 2 * (camera.Position.y - waterYpos);
-            camera.Position.y -= distance;
-            camera.Pitch = -camera.Pitch;
-            camera.updateCameraVectors();
-
-            model3D.use();
-            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
-            model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
-            model = glm::mat4(1.0f);
-
-            dirLight.render(model3D);
-
-            //---------------------------------------------------------------------------
-            hierarchy.update(true, false);
-            //---------------------------------------------------------------------------
-
-            skybox.render(); // render skybox only for reflectionbuffer
-
-            //set camera position to default
-            camera.Position.y += distance;
-            camera.Pitch = -camera.Pitch;
-            camera.updateCameraVectors();
-
-            //close reflectframebuffer
-            reflectFramebuffer.unbindFramebuffer();
-
-            //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
-            refractFramebuffer.bindFramebuffer();
-
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            model3D.use();
-            model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-            model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
-
-            dirLight.render(model3D);
-
-            //---------------------------------------------------------------------------
-            hierarchy.update(true, false);
-            //---------------------------------------------------------------------------
-
-            //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
-            refractFramebuffer.unbindFramebuffer();
-            glDisable(GL_CLIP_DISTANCE0);
-
-            //HERE STARTS DEFAULT RENDERING
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            model3D.use();
-            model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-
-            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
-
-            dirLight.render(model3D);
-
-            //---------------------------------------------------------------------------
-            hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
-            //---------------------------------------------------------------------------
-
-
-            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
-
-
-
-            // Main menu UI
-            logo.render();
-
-            startNotPressed.render();
-            exitNotPressed.render();
-
-            if ((mouseInput->getCursorPosition().x > 770 && mouseInput->getCursorPosition().x < 1150) && (mouseInput->getCursorPosition().y > 370 && mouseInput->getCursorPosition().y < 420))
+            if (keyboardInput->isKeyPressed(GLFW_KEY_ESCAPE))
             {
-                startPressed.render();
-                if (mouseInput->isButtonReleased(0))
-                {
-                    sceneManager.changeCurrentScene("game");
-                }
-            }            
-            
-            if ((mouseInput->getCursorPosition().x > 770 && mouseInput->getCursorPosition().x < 1150) && (mouseInput->getCursorPosition().y > 690 && mouseInput->getCursorPosition().y < 740))
-            {
-                exitPressed.render();
-                if (mouseInput->isButtonReleased(0))
-                {
-                    glfwSetWindowShouldClose(mainScene.window, true);
-                }
+                isPaused = true;
+                sceneManager.changeCurrentScene("mainMenu");
+
             }
 
-        }
-        else if (sceneManager.cActiveScene["game"])
-        {
             hero_00_pi.setActive(true);
             hero_01_pi.setActive(true);
             //enable cliping
@@ -507,10 +391,147 @@ int main()
                 dukatSpinIndex = 0;
 
             monsterSystem.update();
+            /*if (isPaused == true)
+            {
+                isPaused = false;
+                Sleep(2500);
+            }*/
         }
 
-        if (keyboardInput->isKeyPressed(GLFW_KEY_M))
-            sceneManager.changeCurrentScene("game");
+        /* SCENE LOADER TEST CODE */
+        else if (sceneManager.cActiveScene["mainMenu"])
+        {
+            if (keyboardInput->isKeyDown(GLFW_KEY_DOWN))
+            {
+                tmpMainMenuIndex++;
+                if (tmpMainMenuIndex > 1)
+                    tmpMainMenuIndex = 1;
+            }            
+            
+            else if (keyboardInput->isKeyDown(GLFW_KEY_UP))
+            {
+                tmpMainMenuIndex--;
+                if (tmpMainMenuIndex < 0)
+                    tmpMainMenuIndex = 0;
+            }
+            hero_00_pi.setActive(false);
+            hero_01_pi.setActive(false);
+
+            //enable cliping
+            glEnable(GL_CLIP_DISTANCE0);
+
+            camera.setProjection(projection);
+            FrustumCulling::createViewFrustumFromMatrix(&camera);
+
+            //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
+            reflectFramebuffer.bindFramebuffer();
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            // set camera underwater - to get reflection
+            float distance = 2 * (camera.Position.y - waterYpos);
+            camera.Position.y -= distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            model3D.use();
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
+            model = glm::mat4(1.0f);
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(true, false);
+            //---------------------------------------------------------------------------
+
+            skybox.render(); // render skybox only for reflectionbuffer
+
+            //set camera position to default
+            camera.Position.y += distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            //close reflectframebuffer
+            reflectFramebuffer.unbindFramebuffer();
+
+            //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
+            refractFramebuffer.bindFramebuffer();
+
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(true, false);
+            //---------------------------------------------------------------------------
+
+            //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
+            refractFramebuffer.unbindFramebuffer();
+            glDisable(GL_CLIP_DISTANCE0);
+
+            //HERE STARTS DEFAULT RENDERING
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
+            //---------------------------------------------------------------------------
+
+
+            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
+
+
+
+            // Main menu UI
+            logo.render();
+
+            startNotPressed.render();
+            exitNotPressed.render();
+
+            if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
+                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.34 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.39)) || (tmpMainMenuIndex == 0))
+            {
+                startPressed.render();
+                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_ENTER))
+                {
+                    isPaused = true;
+                    sceneManager.changeCurrentScene("game");
+                }
+            }
+
+            if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
+                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.64 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.69)) || (tmpMainMenuIndex == 1))
+            {
+                exitPressed.render();
+                if (mouseInput->isButtonReleased(0) || keyboardInput->isKeyReleased(GLFW_KEY_ENTER))
+                {
+                    glfwSetWindowShouldClose(mainScene.window, true);
+                }
+            }
+
+        }
         
         /* Update InputSystem */
         keyboardInput->update();
@@ -563,8 +584,8 @@ void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse)
 
 void cameraKeyboardInput(Application::Window* _scene, InputSystem::KeyboardInput* _keyboard)
 {
-    if (_keyboard->isKeyDown(GLFW_KEY_ESCAPE))
-        glfwSetWindowShouldClose(_scene->window, true);
+    //if (_keyboard->isKeyDown(GLFW_KEY_ESCAPE))
+        //glfwSetWindowShouldClose(_scene->window, true);
     if (_keyboard->isKeyDown(GLFW_KEY_UP))
         camera.ProcessKeyboard(FORWARD, _scene->deltaTime);
     if (_keyboard->isKeyDown(GLFW_KEY_DOWN))
