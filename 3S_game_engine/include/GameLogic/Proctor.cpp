@@ -105,6 +105,7 @@ namespace GameLogic
 			if (children[i] == _proctor)
 			{
 				children.erase(children.begin() + i);
+				_proctor->parentProctor = NULL;
 				return;
 			}
 		}
@@ -282,6 +283,11 @@ namespace GameLogic
 		transform.position = _position;
 	}
 
+	void Proctor::setParentPosition(glm::vec3 _position)
+	{
+		transform.position = _position;
+	}
+
 	void Proctor::setRotation(glm::quat _rotation)
 	{
 		transform.rotation = _rotation;
@@ -300,6 +306,18 @@ namespace GameLogic
 	glm::vec3 Proctor::getPosition()
 	{
 		return transform.position;
+	}
+
+	glm::vec3 Proctor::getWorldPosition()
+	{
+		if (parentProctor) 
+		{
+			return transform.parentPosition;
+		}
+		else 
+		{
+			return transform.position;
+		}
 	}
 
 	glm::quat Proctor::getRotation()

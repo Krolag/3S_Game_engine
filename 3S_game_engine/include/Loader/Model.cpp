@@ -41,6 +41,7 @@ namespace Loader
 
 	void Model::renderChild(Shader _shader)
 	{
+		
 		glm::mat4 model = glm::mat4(1.0f);
 
 		model = glm::translate(model, this->parentPosition);

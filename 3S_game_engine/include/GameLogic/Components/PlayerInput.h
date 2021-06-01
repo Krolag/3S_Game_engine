@@ -7,8 +7,11 @@
 #include "InputSystem/KeyboardInput.h"
 #include "Points/Points.h"
 
+
 namespace GameLogic
-{
+{	
+	class Boat;
+
 	class PlayerInput : public Component
 	{
 	public:
@@ -24,7 +27,7 @@ namespace GameLogic
 
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);
-		PlayerInput(ComponentType _type, Proctor* _proctor, bool _isPlayerOne);
+		PlayerInput(ComponentType _type, Proctor* _proctor, bool _isPlayerOne, Boat* _boat);
 
 		/* Movement methods */
 		void setScheme(bool _isPlayerOne);
@@ -37,7 +40,10 @@ namespace GameLogic
 
 	private:
 		Proctor* parent = nullptr;
+		Boat* boat;
 		bool isPlayerOne;
+		bool isPlayerOneInBoat = false;
+		bool isPlayerTwoInBoat = false;
 
 		void usePlayerOneInput();
 		void usePlayerTwoInput();

@@ -136,7 +136,7 @@ int main()
 
     /* Create models library */
     Loader::ModelLibrary modelLibrary;
-
+    Loader::Model           hero_00_model("assets/models/players/player_one.fbx", "hero_00", true, false);
     /* Create importer with given *.xml file */
      //Loader::Importer importer("assets/scenes/rotation_scale_fix/scene.xml", &model3D, 100.0f);
      Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
@@ -204,27 +204,28 @@ int main()
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
+    /* Boat */
+    GameLogic::Proctor      boat("boat", glm::vec3(0.0f, 1.f, 0.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.03f));
+    GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
+    GameLogic::Boat boat_b(GameLogic::C_MOVEMENT, &boat);
+    GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
+    GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
+
     // Players
-    Loader::Model           hero_00_model("assets/models/players/player_one.fbx", "hero_00", true, false);
     //GameLogic::Proctor      hero_00("hero_00", glm::vec3(-5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::Proctor      hero_00("hero_00", glm::vec3(770.0f, 3.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
-    GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true);
+    GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader, false);
     hero_00_an.playAnimation(0);
     hierarchy.addObject(&hero_00);
     //GameLogic::Proctor      hero_01("hero_01", glm::vec3(5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::Proctor      hero_01("hero_01", glm::vec3(770.0f, 3.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
-    GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false);
+    GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
-    // Boat
-    GameLogic::Proctor      boat("boat", glm::vec3(352.0f, 1.f, 400.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.03f));
-    GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
-    Boat boat_b(GameLogic::C_MOVEMENT, &boat);
-    GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
 	
   /* GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
@@ -640,8 +641,8 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
     }
     if (!isDebugModeOn)
     {       
-        float xDistance = player_1->getPosition()[0] - player_2->getPosition()[0];
-        float yDistance = player_1->getPosition()[2] - player_2->getPosition()[2];
+        float xDistance = player_1->getWorldPosition()[0] - player_2->getWorldPosition()[0];
+        float yDistance = player_1->getWorldPosition()[2] - player_2->getWorldPosition()[2];
         float distance = sqrt(xDistance * xDistance + yDistance * yDistance);
         
         if (xDistance < -maxDistanceX) xValueRight = 0;
@@ -659,7 +660,7 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
         float camPos = minZoom + distance/maxDistanceX*(maxZoom-minZoom); //clamp
         camera.Yaw = -90; // set yaw to default value
         camera.ProcessMouseMovement(0, -89); // set pitch to default value
-        camera.Position = glm::vec3((player_1->getPosition()[0] + player_2->getPosition()[0]) / 2.f, camPos, (player_1->getPosition()[2] + player_2->getPosition()[2]) / 2.f);
+        camera.Position = glm::vec3((player_1->getWorldPosition()[0] + player_2->getWorldPosition()[0]) / 2.f, camPos, (player_1->getWorldPosition()[2] + player_2->getWorldPosition()[2]) / 2.f);
 
         mouseInput->cursorEnable();
     }

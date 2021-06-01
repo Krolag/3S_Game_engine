@@ -57,11 +57,13 @@ namespace GameLogic
 		void setTransform(glm::vec3 _position = glm::vec3(1.0f), glm::quat _rotation = glm::quat(glm::vec3(1.0f)), glm::vec3 _scale = glm::vec3(1.0f));
 		void setTransform(Transform _transform);
 		void setParentTransform(Transform _transform);
+		void setParentPosition(glm::vec3 _position);
 		void setPosition(glm::vec3 _position);
 		void setRotation(glm::quat _rotation);
 		void setScale(glm::vec3 _scale);
 		Transform getTransform();
 		glm::vec3 getPosition();
+		glm::vec3 getWorldPosition();
 		glm::quat getRotation();
 		glm::vec3 getScale();
 

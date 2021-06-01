@@ -23,7 +23,7 @@ namespace GameLogic
 		void playAnimation(int _index);
 
 	protected:
-		int cIndex;
+		int cIndex = -1;
 
 	private:
 		Loader::Model* model;

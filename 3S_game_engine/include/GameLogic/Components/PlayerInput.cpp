@@ -1,7 +1,7 @@
 #include "PlayerInput.h"
-#include "GameLogic/Proctor.h"
 #include "GameLogic/Hierarchy.h"
 #include "GameLogic/Components/Cash.h"
+#include "Boat/Boat.h"
 
 namespace GameLogic
 {
@@ -14,8 +14,8 @@ namespace GameLogic
 		}
 	}
 
-	PlayerInput::PlayerInput(ComponentType _type, Proctor* _proctor, bool _isPlayerOne)
-		: Component(_type, _proctor), parent(_proctor), isPlayerOne(_isPlayerOne)
+	PlayerInput::PlayerInput(ComponentType _type, Proctor* _proctor, bool _isPlayerOne, Boat* _boat)
+		: Component(_type, _proctor), parent(_proctor), isPlayerOne(_isPlayerOne), boat(_boat)
 	{ 
 		if (_proctor != NULL)
 		{
@@ -35,6 +35,8 @@ namespace GameLogic
 
 	void PlayerInput::update()
 	{
+		isPlayerOneInBoat = boat->isPlayerOneInBoat();
+		isPlayerTwoInBoat = boat->isPlayerTwoInBoat();
 		/* Apply gravity */
 		cGravity += gravityAcceleration * proctor->getDeltaTime();
 		if (cGravity >= maxGravity)
@@ -49,14 +51,14 @@ namespace GameLogic
 
 	void PlayerInput::usePlayerOneInput()
 	{
-		if (isActive())
+		/* Get deltaTime from proctor */
+		float deltaTime = proctor->getDeltaTime();
+
+		/* Get proctors parent transform */
+		Transform transform = proctor->getTransform();
+
+		if (!isPlayerOneInBoat)
 		{
-			/* Get deltaTime from proctor */
-			float deltaTime = proctor->getDeltaTime();
-
-			/* Get proctors parent transform */
-			Transform transform = proctor->getTransform();
-
 			/* Calculate speed */
 			movementSpeed += acceleration * deltaTime;
 			if (movementSpeed >= maxSpeed)
@@ -113,7 +115,7 @@ namespace GameLogic
 					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f);
 				}
 			}
-
+		}
 			/* Collect players primary and secondary button info */
 			if (keyboard->isKeyReleased(GLFW_KEY_V))
 			{
@@ -128,6 +130,15 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
+					if (tmp.at(i)->name == "boat") 
+					{
+						if (!isPlayerOneInBoat) 
+						{
+							boat->attachPlayerOne(proctor);
+							boat->setIsPlayerOneInBoat(true);
+						}
+					}
+
 					if (distance <= maxInteractionDistance)
 					{
 						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
@@ -138,9 +149,11 @@ namespace GameLogic
 					}
 				}
 			}
-			if (keyboard->isKeyPressed(GLFW_KEY_B))
+			if (keyboard->isKeyPressed(GLFW_KEY_B) && isPlayerOneInBoat)
 			{
-				std::cout << "secondary button" << std::endl;
+				boat->setIsPlayerOneInBoat(false);
+				boat->deatachPlayerOne(proctor);
+				transform.position = proctor->transform.position;
 			}
 
 			/* Check if player is holding any movement button */
@@ -158,19 +171,18 @@ namespace GameLogic
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
-		}
 	}
 
 	void PlayerInput::usePlayerTwoInput()
 	{
-		if (isActive())
+		/* Get deltaTime from proctor */
+		float deltaTime = proctor->getDeltaTime();
+
+		/* Get proctors parent transform */
+		Transform transform = proctor->getTransform();
+
+		if (!isPlayerTwoInBoat)
 		{
-			/* Get deltaTime from proctor */
-			float deltaTime = proctor->getDeltaTime();
-
-			/* Get proctors parent transform */
-			Transform transform = proctor->getTransform();
-
 			/* Calculate speed */
 			movementSpeed += acceleration * deltaTime;
 			if (movementSpeed >= maxSpeed)
@@ -227,7 +239,7 @@ namespace GameLogic
 					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f);
 				}
 			}
-
+		}
 			/* Collect players update */
 			if (keyboard->isKeyReleased(GLFW_KEY_PERIOD))
 			{
@@ -242,6 +254,15 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
+					if (tmp.at(i)->name == "boat")
+					{
+						if (!isPlayerTwoInBoat)
+						{
+							boat->attachPlayerTwo(proctor);
+							boat->setIsPlayerTwoInBoat(true);
+						}
+					}
+
 					if (distance <= maxInteractionDistance)
 					{
 						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
@@ -252,9 +273,12 @@ namespace GameLogic
 					}
 				}
 			}
-			if (keyboard->isKeyPressed(GLFW_KEY_SLASH))
+
+			if (keyboard->isKeyPressed(GLFW_KEY_SLASH) && isPlayerTwoInBoat)
 			{
-				std::cout << "secondary button" << std::endl;
+				boat->setIsPlayerTwoInBoat(false);
+				boat->deatachPlayerTwo(proctor);
+				transform.position = proctor->transform.position;
 			}
 
 			/* Check if player is holding any movement button */
@@ -272,6 +296,6 @@ namespace GameLogic
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
-		}
+		
 	}
 }

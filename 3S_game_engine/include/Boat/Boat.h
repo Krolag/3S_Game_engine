@@ -1,34 +1,47 @@
 #pragma once
+#ifndef BOAT_H
+#define BOAT_H
 
-#include "GameLogic/Proctor.h"
 #include "GameLogic/Components/Component.h"
-#include "InputSystem/KeyboardInput.h"
+#include "GameLogic/Proctor.h"
 
-class Boat: GameLogic::Component
+namespace GameLogic
 {
-public:
-	Boat(GameLogic::ComponentType _type, GameLogic::Proctor* _proctor);
+	class Boat : public Component
+	{
+	public:
+		Boat(GameLogic::ComponentType _type, GameLogic::Proctor* _proctor);
 
-	void update();
-	void attachPlayerOne(GameLogic::Proctor* player);
-	void attachPlayerTwo(GameLogic::Proctor* player);
+		void update();
+		void attachPlayerOne(GameLogic::Proctor* player);
+		void deatachPlayerOne(GameLogic::Proctor* player);
+		void attachPlayerTwo(GameLogic::Proctor* player);
+		void deatachPlayerTwo(GameLogic::Proctor* player);
+		bool isPlayerOneInBoat();
+		bool isPlayerTwoInBoat();
+		void setIsPlayerOneInBoat(bool isFirstInBoat);
+		void setIsPlayerTwoInBoat(bool isSecondInBoat);
 
-protected:
+	protected:
 
-	InputSystem::KeyboardInput* keyboard;
-private:
+		InputSystem::KeyboardInput* keyboard;
+	private:
 
-	GameLogic::Proctor* parent = nullptr;
-	GameLogic::Transform transform;
+		GameLogic::Proctor* parent = nullptr;
+		GameLogic::Transform transform;
 
-	float speed = 0;
-	float startSpeed = 5;
-	float turnSpeed = 0;
-	float startTurningSpeed = 0.5;
-	float time = 0;
+		bool isFirstInBoat = false;
+		bool isSecondInBoat = false;
 
-	void useBoatInput();
-	void changePosition();
+		float speed = 0;
+		float startSpeed = 5;
+		float turnSpeed = 0;
+		float startTurningSpeed = 0.5;
+		float time = 0;
 
-};
+		void useBoatInput();
+		void changePosition();
+	};
+}
 
+#endif // !BOAT_H

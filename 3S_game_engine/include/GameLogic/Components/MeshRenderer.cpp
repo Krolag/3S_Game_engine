@@ -47,17 +47,25 @@ namespace GameLogic
 				proctor->getParentHierarchy()->getCamera()
 			))
 			{
-				shader->use();
-				shader->setUniformBool("noAnim", model->getNoAnim());
-
-				model->render(*shader);
+				if (proctor->getParentProctor() != NULL)
+				{
+					shader->use();
+					shader->setUniformBool("noAnim", model->getNoAnim());
+					model->renderChild(*shader);
+				}
+				else
+				{
+					shader->use();
+					shader->setUniformBool("noAnim", model->getNoAnim());
+					model->render(*shader);
+				}
 			}
 		}
 		/* temporary solution for proctors without colliders */
 		else
 		{
 			if (proctor->getParentProctor() != NULL) 
-			{
+			{				
 				shader->use();
 				shader->setUniformBool("noAnim", model->getNoAnim());
 				model->renderChild(*shader);

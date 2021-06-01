@@ -34,6 +34,11 @@ namespace GameLogic
 			cIndex = _index;
 			animator.playAnimation(&loadedAnimations[_index]);
 		}
+		if (_index == -1)
+		{
+			cIndex = -1;
+			animator.playAnimation(NULL);
+		}
 	}
 
 	void Anima::getModelFromProctor()
@@ -61,10 +66,10 @@ namespace GameLogic
 				));
 		}
 
-		if (size != 0)
-		{
-			cIndex = 0;
-			animator.playAnimation(&loadedAnimations[0]);
-		}
+		//if (size != 0)
+		//{
+		//	cIndex = 0;
+		//	animator.playAnimation(&loadedAnimations[0]);
+		//}
 	}
 }
