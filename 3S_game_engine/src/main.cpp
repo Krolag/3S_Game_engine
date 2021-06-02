@@ -36,7 +36,7 @@ using namespace irrklang;
 
 ISoundEngine* music = createIrrKlangDevice();
 ISoundEngine* soundEffects = createIrrKlangDevice();
-ISoundEngine* coinSound = createIrrKlangDevice();
+ISoundEngine* menuSounds = createIrrKlangDevice();
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -78,6 +78,7 @@ int main()
     }
 
     int collisionIncrement = 1;
+    int frameCounter = 0;
 #pragma endregion
 
 #pragma region ImGUI init
@@ -292,27 +293,169 @@ int main()
 #pragma endregion
 
     // music
-    music->play2D("assets/audio/music/16Bit_Shanty.mp3", GL_TRUE); //second value defines if the file is looped
+    music->play2D("assets/audio/music/shanty.ogg", GL_TRUE); //second value defines if the file is looped
     music->setSoundVolume(0.1);
 
     // waves
-    soundEffects->play2D("assets/audio/sounds/waves_Seagulls.mp3", GL_TRUE);
+    soundEffects->play2D("assets/audio/sounds/background.ogg", GL_TRUE);
     soundEffects->setSoundVolume(1);
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
+        frameCounter++;
         /* Dear ImGUI new frame setup */
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        if (sceneManager.cActiveScene["game"])
+        /* SCENE LOADER TEST CODE */
+        if (sceneManager.cActiveScene["mainMenu"])
+        {
+            if (keyboardInput->isKeyReleased(GLFW_KEY_DOWN))
+            {
+                tmpMainMenuIndex++;
+                if (tmpMainMenuIndex > 1)
+                    tmpMainMenuIndex = 1;
+
+                menuSounds->play2D("assets/audio/sounds/bottle.ogg", false);
+
+            }            
+            
+            else if (keyboardInput->isKeyReleased(GLFW_KEY_UP))
+            {
+                tmpMainMenuIndex--;
+                if (tmpMainMenuIndex < 0)
+                    tmpMainMenuIndex = 0;
+
+                menuSounds->play2D("assets/audio/sounds/bottle.ogg", false);
+            }
+            hero_00_pi.setActive(false);
+            hero_01_pi.setActive(false);
+            boat_b.setActive(false);
+
+            //enable cliping
+            glEnable(GL_CLIP_DISTANCE0);
+
+            camera.setProjection(projection);
+            FrustumCulling::createViewFrustumFromMatrix(&camera);
+
+            //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
+            reflectFramebuffer.bindFramebuffer();
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            // set camera underwater - to get reflection
+            float distance = 2 * (camera.Position.y - waterYpos);
+            camera.Position.y -= distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            model3D.use();
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
+            model = glm::mat4(1.0f);
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(true, false);
+            //---------------------------------------------------------------------------
+
+            skybox.render(); // render skybox only for reflectionbuffer
+
+            //set camera position to default
+            camera.Position.y += distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            //close reflectframebuffer
+            reflectFramebuffer.unbindFramebuffer();
+
+            //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
+            refractFramebuffer.bindFramebuffer();
+
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(true, false);
+            //---------------------------------------------------------------------------
+
+            //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
+            refractFramebuffer.unbindFramebuffer();
+            glDisable(GL_CLIP_DISTANCE0);
+
+            //HERE STARTS DEFAULT RENDERING
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            view = camera.GetViewMatrix();
+            model3D.setUniform("view", view);
+
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+
+            dirLight.render(model3D);
+
+            //---------------------------------------------------------------------------
+            hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
+            //---------------------------------------------------------------------------
+
+            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
+
+            // Main menu UI
+            logo.render();
+
+            startNotPressed.render();
+            exitNotPressed.render();
+
+            /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
+                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.34 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.39)) || (tmpMainMenuIndex == 0))*/
+            if (tmpMainMenuIndex == 0)
+            {
+                startPressed.render();
+                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_ENTER))
+                {
+                    isPaused = true;
+                    soundEffects->play2D("assets/audio/sounds/bottle.ogg", false);
+                    sceneManager.changeCurrentScene("game");
+                }
+            }
+
+            /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
+                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.64 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.69)) || (tmpMainMenuIndex == 1))*/
+            if (tmpMainMenuIndex == 1)
+            {
+                exitPressed.render();
+                if (mouseInput->isButtonReleased(0) || keyboardInput->isKeyReleased(GLFW_KEY_ENTER))
+                {
+                    glfwSetWindowShouldClose(mainScene.window, true);
+                }
+            }
+        }
+
+        else if (sceneManager.cActiveScene["game"])
         {
             if (keyboardInput->isKeyPressed(GLFW_KEY_ESCAPE))
             {
                 isPaused = true;
                 sceneManager.changeCurrentScene("mainMenu");
+                soundEffects->play2D("assets/audio/sounds/mainMenu.ogg", false);
             }
 
             hero_00_pi.setActive(true);
@@ -419,139 +562,6 @@ int main()
                 Sleep(2500);
             }*/
         }
-
-        /* SCENE LOADER TEST CODE */
-        else if (sceneManager.cActiveScene["mainMenu"])
-        {
-            if (keyboardInput->isKeyDown(GLFW_KEY_DOWN))
-            {
-                tmpMainMenuIndex++;
-                if (tmpMainMenuIndex > 1)
-                    tmpMainMenuIndex = 1;
-            }            
-            
-            else if (keyboardInput->isKeyDown(GLFW_KEY_UP))
-            {
-                tmpMainMenuIndex--;
-                if (tmpMainMenuIndex < 0)
-                    tmpMainMenuIndex = 0;
-            }
-            hero_00_pi.setActive(false);
-            hero_01_pi.setActive(false);
-
-            //enable cliping
-            glEnable(GL_CLIP_DISTANCE0);
-
-            camera.setProjection(projection);
-            FrustumCulling::createViewFrustumFromMatrix(&camera);
-
-            //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
-            reflectFramebuffer.bindFramebuffer();
-            glEnable(GL_DEPTH_TEST);
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            // set camera underwater - to get reflection
-            float distance = 2 * (camera.Position.y - waterYpos);
-            camera.Position.y -= distance;
-            camera.Pitch = -camera.Pitch;
-            camera.updateCameraVectors();
-
-            model3D.use();
-            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
-            model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
-            model = glm::mat4(1.0f);
-
-            dirLight.render(model3D);
-
-            //---------------------------------------------------------------------------
-            hierarchy.update(true, false);
-            //---------------------------------------------------------------------------
-
-            skybox.render(); // render skybox only for reflectionbuffer
-
-            //set camera position to default
-            camera.Position.y += distance;
-            camera.Pitch = -camera.Pitch;
-            camera.updateCameraVectors();
-
-            //close reflectframebuffer
-            reflectFramebuffer.unbindFramebuffer();
-
-            //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
-            refractFramebuffer.bindFramebuffer();
-
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            model3D.use();
-            model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-            model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
-
-            dirLight.render(model3D);
-
-            //---------------------------------------------------------------------------
-            hierarchy.update(true, false);
-            //---------------------------------------------------------------------------
-
-            //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
-            refractFramebuffer.unbindFramebuffer();
-            glDisable(GL_CLIP_DISTANCE0);
-
-            //HERE STARTS DEFAULT RENDERING
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            model3D.use();
-            model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-
-            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
-
-            dirLight.render(model3D);
-
-            //---------------------------------------------------------------------------
-            hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
-            //---------------------------------------------------------------------------
-
-            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
-
-            // Main menu UI
-            logo.render();
-
-            startNotPressed.render();
-            exitNotPressed.render();
-
-            /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
-                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.34 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.39)) || (tmpMainMenuIndex == 0))*/
-            if (tmpMainMenuIndex == 0)
-            {
-                startPressed.render();
-                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_ENTER))
-                {
-                    isPaused = true;
-                    sceneManager.changeCurrentScene("game");
-                }
-            }
-
-            /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
-                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.64 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.69)) || (tmpMainMenuIndex == 1))*/
-            if (tmpMainMenuIndex == 1)
-            {
-                exitPressed.render();
-                if (mouseInput->isButtonReleased(0) || keyboardInput->isKeyReleased(GLFW_KEY_ENTER))
-                {
-                    glfwSetWindowShouldClose(mainScene.window, true);
-                }
-            }
-        }
         
         /* Update InputSystem */
         keyboardInput->update();
@@ -580,6 +590,10 @@ int main()
     hierarchy.cleanup();
 
     glfwTerminate();
+    soundEffects->drop();
+    music->drop();
+    menuSounds->drop();
+
     return 0;
 }
 

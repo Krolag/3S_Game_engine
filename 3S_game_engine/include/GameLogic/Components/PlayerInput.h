@@ -6,6 +6,7 @@
 #include "GameLogic/Proctor.h"
 #include "InputSystem/KeyboardInput.h"
 #include "Points/Points.h"
+#include "../../IrrKlang/irrKlang.h"
 
 
 namespace GameLogic
@@ -20,10 +21,12 @@ namespace GameLogic
 		float maxGravity = 20.0f;
 		float gravityAcceleration = 0.0f; // 15.0f;
 		float cGravity = 0.0f;
-		float movementSpeed;
+		float movementSpeed = 0;
 		float maxInteractionDistance = 3.0f;
 		float radius = 3.0f;
+		int frameCounter = 0;
 		Proctor* coinProctor;
+		irrklang::ISoundEngine* playerSounds = irrklang::createIrrKlangDevice();
 
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);

@@ -35,6 +35,7 @@ namespace GameLogic
 
 	void PlayerInput::update()
 	{
+		frameCounter++;
 		isPlayerOneInBoat = boat->isPlayerOneInBoat();
 		isPlayerTwoInBoat = boat->isPlayerTwoInBoat();
 		/* Apply gravity */
@@ -65,6 +66,9 @@ namespace GameLogic
 			{
 				movementSpeed = maxSpeed;
 			}
+
+			if ((keyboard->isKeyDown(GLFW_KEY_W) || keyboard->isKeyDown(GLFW_KEY_S) || keyboard->isKeyDown(GLFW_KEY_A) || keyboard->isKeyDown(GLFW_KEY_D)) && frameCounter % 10 == 0)
+				playerSounds->play2D("assets/audio/sounds/footstep.ogg", false);
 
 			/* Horizontal movement */
 			if (keyboard->isKeyDown(GLFW_KEY_A))
@@ -189,6 +193,9 @@ namespace GameLogic
 			{
 				movementSpeed = maxSpeed;
 			}
+
+			if ((keyboard->isKeyDown(GLFW_KEY_I) || keyboard->isKeyDown(GLFW_KEY_K) || keyboard->isKeyDown(GLFW_KEY_J) || keyboard->isKeyDown(GLFW_KEY_L)) && frameCounter % 10 == 0)
+				playerSounds->play2D("assets/audio/sounds/footstep.ogg", false);
 
 			/* Horizontal movement */
 			if (keyboard->isKeyDown(GLFW_KEY_J))
