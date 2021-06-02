@@ -24,17 +24,20 @@ namespace GameLogic
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->shader->setUniform("jointTransforms[" + std::to_string(i) + "]", transforms[i]);
 
 		/* Update animator */
-		animator.updateAnimation(proctor->getDeltaTime());
+		animator.updateAnimation(proctor->getParentHierarchy()->getDeltaTime());
 	}
 
 	void Anima::playAnimation(int _index)
 	{
 		if (_index != cIndex)
 		{
-			cIndex = _index;
-			animator.playAnimation(&loadedAnimations[_index]);
+			if (loadedAnimations.size() - 1 <= _index)
+			{
+				cIndex = _index;
+				animator.playAnimation(&loadedAnimations[_index]);
+			}
 		}
-		if (_index == -1)
+		else if (_index == -1)
 		{
 			cIndex = -1;
 			animator.playAnimation(NULL);

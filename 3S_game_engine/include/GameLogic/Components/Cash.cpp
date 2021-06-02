@@ -20,8 +20,8 @@ namespace GameLogic
 	void Cash::followPlayer()
 	{
 		// Distance between playerOne and a coin
-		float xDistanceOne = proctor->getParentHierarchy()->getObject("hero_00")->getPosition()[0] - proctor->getPosition()[0];
-		float zDistanceOne = proctor->getParentHierarchy()->getObject("hero_00")->getPosition()[2] - proctor->getPosition()[2];
+		float xDistanceOne = proctor->getParentHierarchy()->getObject("playerOne")->getPosition()[0] - proctor->getPosition()[0];
+		float zDistanceOne = proctor->getParentHierarchy()->getObject("playerOne")->getPosition()[2] - proctor->getPosition()[2];
 		float distanceOne = sqrt(xDistanceOne * xDistanceOne + zDistanceOne * zDistanceOne);
 
 		// Distance between playerTwo and a coin

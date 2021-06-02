@@ -144,7 +144,6 @@ int main()
 
     /* Create models library */
     Loader::ModelLibrary modelLibrary;
-    Loader::Model           hero_00_model("assets/models/players/player_one.fbx", "hero_00", true, false);
     /* Create importer with given *.xml file */
      //Loader::Importer importer("assets/scenes/rotation_scale_fix/scene.xml", &model3D, 100.0f);
      Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
@@ -221,7 +220,8 @@ int main()
 
     // Players
     //GameLogic::Proctor      hero_00("hero_00", glm::vec3(-5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::Proctor      hero_00("hero_00", glm::vec3(770.0f, 3.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    Loader::Model           hero_00_model("assets/models/player_2021_05_30_23_21.fbx", "playerOne", true, false);
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
@@ -229,7 +229,7 @@ int main()
     hero_00_an.playAnimation(0);
     hierarchy.addObject(&hero_00);
     //GameLogic::Proctor      hero_01("hero_01", glm::vec3(5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::Proctor      hero_01("hero_01", glm::vec3(770.0f, 3.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      hero_01("hero_01", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
@@ -319,7 +319,6 @@ int main()
                     tmpMainMenuIndex = 1;
 
                 menuSounds->play2D("assets/audio/sounds/bottle.ogg", false);
-
             }            
             
             else if (keyboardInput->isKeyReleased(GLFW_KEY_UP))
@@ -333,6 +332,7 @@ int main()
             hero_00_pi.setActive(false);
             hero_01_pi.setActive(false);
             boat_b.setActive(false);
+            hero_00_an.playAnimation(0);
 
             //enable cliping
             glEnable(GL_CLIP_DISTANCE0);
@@ -460,6 +460,8 @@ int main()
 
             hero_00_pi.setActive(true);
             hero_01_pi.setActive(true);
+            hero_00_an.playAnimation(0);
+
             //enable cliping
             glEnable(GL_CLIP_DISTANCE0);
 
