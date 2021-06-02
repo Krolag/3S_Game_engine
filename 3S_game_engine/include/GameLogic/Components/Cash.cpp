@@ -67,7 +67,9 @@ namespace GameLogic
 		if (distance <= minDistance + 0.1)
 		{
 			points->addPoints(100);
+			coinSound->play2D("assets/audio/sounds/coin.mp3", false);
 			proctor->getParentHierarchy()->removeObject(proctor);
+			
 		}
 	}
 

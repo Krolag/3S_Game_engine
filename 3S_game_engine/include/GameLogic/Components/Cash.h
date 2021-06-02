@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "GameLogic/Hierarchy.h"
 #include "Points/Points.h"
+#include "../../IrrKlang/irrKlang.h"
 
 namespace GameLogic
 {
@@ -20,6 +21,7 @@ namespace GameLogic
 		float distance = 0;
 		float speed = 0.6f;
 		bool isFollowing = false;
+		irrklang::ISoundEngine* coinSound = irrklang::createIrrKlangDevice();
 
 		Cash(ComponentType _type, Proctor* _proctor);
 		~Cash();

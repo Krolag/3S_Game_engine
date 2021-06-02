@@ -34,7 +34,9 @@
 
 using namespace irrklang;
 
-ISoundEngine* SoundEngine = createIrrKlangDevice();
+ISoundEngine* music = createIrrKlangDevice();
+ISoundEngine* soundEffects = createIrrKlangDevice();
+ISoundEngine* coinSound = createIrrKlangDevice();
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -290,7 +292,12 @@ int main()
 #pragma endregion
 
     // music
-    SoundEngine->play2D("assets/audio/music/16Bit_Shanty.mp3", GL_TRUE); //second value defines if the file is looped
+    music->play2D("assets/audio/music/16Bit_Shanty.mp3", GL_TRUE); //second value defines if the file is looped
+    music->setSoundVolume(0.1);
+
+    // waves
+    soundEffects->play2D("assets/audio/sounds/waves_Seagulls.mp3", GL_TRUE);
+    soundEffects->setSoundVolume(1);
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
