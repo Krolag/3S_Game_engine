@@ -52,74 +52,76 @@ namespace GameLogic
 
 	void PlayerInput::usePlayerOneInput()
 	{
-		/* Get deltaTime from proctor */
-		float deltaTime = proctor->getDeltaTime();
-
-		/* Get proctors parent transform */
-		Transform transform = proctor->getTransform();
-
-		if (!isPlayerOneInBoat)
+		if (isActive())
 		{
-			/* Calculate speed */
-			movementSpeed += acceleration * deltaTime;
-			if (movementSpeed >= maxSpeed)
-			{
-				movementSpeed = maxSpeed;
-			}
+			/* Get deltaTime from proctor */
+			float deltaTime = proctor->getDeltaTime();
 
-			if ((keyboard->isKeyDown(GLFW_KEY_W) || keyboard->isKeyDown(GLFW_KEY_S) || keyboard->isKeyDown(GLFW_KEY_A) || keyboard->isKeyDown(GLFW_KEY_D)) && frameCounter % 10 == 0)
-				playerSounds->play2D("assets/audio/sounds/footstep.ogg", false);
+			/* Get proctors parent transform */
+			Transform transform = proctor->getTransform();
 
-			/* Horizontal movement */
-			if (keyboard->isKeyDown(GLFW_KEY_A))
+			if (!isPlayerOneInBoat)
 			{
-				transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(270.0f), 0.0f);
-			}
-			else if (keyboard->isKeyDown(GLFW_KEY_D))
-			{
-				transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f);
-			}
+				/* Calculate speed */
+				movementSpeed += acceleration * deltaTime;
+				if (movementSpeed >= maxSpeed)
+				{
+					movementSpeed = maxSpeed;
+				}
 
-			/* Vertical movement */
-			if (keyboard->isKeyDown(GLFW_KEY_W))
-			{
-				transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed) * deltaTime * 20.0f;
+				if ((keyboard->isKeyDown(GLFW_KEY_W) || keyboard->isKeyDown(GLFW_KEY_S) || keyboard->isKeyDown(GLFW_KEY_A) || keyboard->isKeyDown(GLFW_KEY_D)) && frameCounter % 10 == 0)
+					playerSounds->play2D("assets/audio/sounds/footstep.ogg", false);
 
-				/* Check for diagonal movement */
+				/* Horizontal movement */
 				if (keyboard->isKeyDown(GLFW_KEY_A))
 				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(225.0f), 0.0f);
+					transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(270.0f), 0.0f);
 				}
 				else if (keyboard->isKeyDown(GLFW_KEY_D))
 				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f);
+					transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f);
 				}
-				else
-				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f);
-				}
-			}
-			else if (keyboard->isKeyDown(GLFW_KEY_S))
-			{
-				transform.position += glm::vec3(0.0f, 0.0f, movementSpeed) * deltaTime * 20.0f;
 
-				/* Check for diagonal movement */
-				if (keyboard->isKeyDown(GLFW_KEY_A))
+				/* Vertical movement */
+				if (keyboard->isKeyDown(GLFW_KEY_W))
 				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f);
+					transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed) * deltaTime * 20.0f;
+
+					/* Check for diagonal movement */
+					if (keyboard->isKeyDown(GLFW_KEY_A))
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(225.0f), 0.0f);
+					}
+					else if (keyboard->isKeyDown(GLFW_KEY_D))
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f);
+					}
+					else
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f);
+					}
 				}
-				else if (keyboard->isKeyDown(GLFW_KEY_D))
+				else if (keyboard->isKeyDown(GLFW_KEY_S))
 				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f);
-				}
-				else
-				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f);
+					transform.position += glm::vec3(0.0f, 0.0f, movementSpeed) * deltaTime * 20.0f;
+
+					/* Check for diagonal movement */
+					if (keyboard->isKeyDown(GLFW_KEY_A))
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f);
+					}
+					else if (keyboard->isKeyDown(GLFW_KEY_D))
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f);
+					}
+					else
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f);
+					}
 				}
 			}
-		}
 			/* Collect players primary and secondary button info */
 			if (keyboard->isKeyReleased(GLFW_KEY_V))
 			{
@@ -134,9 +136,9 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
-					if (tmp.at(i)->name == "boat") 
+					if (tmp.at(i)->name == "boat")
 					{
-						if (!isPlayerOneInBoat) 
+						if (!isPlayerOneInBoat)
 						{
 							//boat->attachPlayerOne(proctor);
 							//boat->setIsPlayerOneInBoat(true);
@@ -175,78 +177,81 @@ namespace GameLogic
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
+		}
 	}
 
 	void PlayerInput::usePlayerTwoInput()
 	{
-		/* Get deltaTime from proctor */
-		float deltaTime = proctor->getDeltaTime();
-
-		/* Get proctors parent transform */
-		Transform transform = proctor->getTransform();
-
-		if (!isPlayerTwoInBoat)
+		if (isActive())
 		{
-			/* Calculate speed */
-			movementSpeed += acceleration * deltaTime;
-			if (movementSpeed >= maxSpeed)
-			{
-				movementSpeed = maxSpeed;
-			}
+			/* Get deltaTime from proctor */
+			float deltaTime = proctor->getDeltaTime();
 
-			if ((keyboard->isKeyDown(GLFW_KEY_I) || keyboard->isKeyDown(GLFW_KEY_K) || keyboard->isKeyDown(GLFW_KEY_J) || keyboard->isKeyDown(GLFW_KEY_L)) && frameCounter % 10 == 0)
-				playerSounds->play2D("assets/audio/sounds/footstep.ogg", false);
+			/* Get proctors parent transform */
+			Transform transform = proctor->getTransform();
 
-			/* Horizontal movement */
-			if (keyboard->isKeyDown(GLFW_KEY_J))
+			if (!isPlayerTwoInBoat)
 			{
-				transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(270.0f), 0.0f);
-			}
-			else if (keyboard->isKeyDown(GLFW_KEY_L))
-			{
-				transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-				transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f);
-			}
+				/* Calculate speed */
+				movementSpeed += acceleration * deltaTime;
+				if (movementSpeed >= maxSpeed)
+				{
+					movementSpeed = maxSpeed;
+				}
 
-			/* Vertical movement */
-			if (keyboard->isKeyDown(GLFW_KEY_I))
-			{
-				transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed) * deltaTime * 20.0f;
+				if ((keyboard->isKeyDown(GLFW_KEY_I) || keyboard->isKeyDown(GLFW_KEY_K) || keyboard->isKeyDown(GLFW_KEY_J) || keyboard->isKeyDown(GLFW_KEY_L)) && frameCounter % 10 == 0)
+					playerSounds->play2D("assets/audio/sounds/footstep.ogg", false);
 
-				/* Check for diagonal movement */
+				/* Horizontal movement */
 				if (keyboard->isKeyDown(GLFW_KEY_J))
 				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(225.0f), 0.0f);
+					transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(270.0f), 0.0f);
 				}
 				else if (keyboard->isKeyDown(GLFW_KEY_L))
 				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f);
+					transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(90.0f), 0.0f);
 				}
-				else
-				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f);
-				}
-			}
-			else if (keyboard->isKeyDown(GLFW_KEY_K))
-			{
-				transform.position += glm::vec3(0.0f, 0.0f, movementSpeed) * deltaTime * 20.0f;
 
-				/* Check for diagonal movement */
-				if (keyboard->isKeyDown(GLFW_KEY_J))
+				/* Vertical movement */
+				if (keyboard->isKeyDown(GLFW_KEY_I))
 				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f);
+					transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed) * deltaTime * 20.0f;
+
+					/* Check for diagonal movement */
+					if (keyboard->isKeyDown(GLFW_KEY_J))
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(225.0f), 0.0f);
+					}
+					else if (keyboard->isKeyDown(GLFW_KEY_L))
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(135.0f), 0.0f);
+					}
+					else
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f);
+					}
 				}
-				else if (keyboard->isKeyDown(GLFW_KEY_L))
+				else if (keyboard->isKeyDown(GLFW_KEY_K))
 				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f);
-				}
-				else
-				{
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f);
+					transform.position += glm::vec3(0.0f, 0.0f, movementSpeed) * deltaTime * 20.0f;
+
+					/* Check for diagonal movement */
+					if (keyboard->isKeyDown(GLFW_KEY_J))
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-45.0f), 0.0f);
+					}
+					else if (keyboard->isKeyDown(GLFW_KEY_L))
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(45.0f), 0.0f);
+					}
+					else
+					{
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.0f), 0.0f);
+					}
 				}
 			}
-		}
 			/* Collect players update */
 			if (keyboard->isKeyReleased(GLFW_KEY_PERIOD))
 			{
@@ -303,6 +308,6 @@ namespace GameLogic
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
-		
+		}
 	}
 }
