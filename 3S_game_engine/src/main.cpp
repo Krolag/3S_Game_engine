@@ -10,6 +10,7 @@
 #include FT_FREETYPE_H 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include <IrrKlang/irrKlang.h>
 
 /* Load 3SE packages */
 #include "Application/Application.h"
@@ -30,6 +31,10 @@
 #include "Monster/Monster.h"
 #include "Boat/Boat.h"
 #include "Loader/Exporter.h"
+
+using namespace irrklang;
+
+ISoundEngine* SoundEngine = createIrrKlangDevice();
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -283,6 +288,9 @@ int main()
     hierarchy.addObject(&test);
 
 #pragma endregion
+
+    // music
+    SoundEngine->play2D("assets/audio/music/16Bit_Shanty.mp3", GL_TRUE); //second value defines if the file is looped
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))

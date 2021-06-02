@@ -45,7 +45,6 @@
     <ClCompile Include="include\Monster\Monster.cpp" />
     <ClCompile Include="include\GameLogic\Components\Anima.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
-    <ClCompile Include="include\GameLogic\Components\Boat.cpp" />
     <ClCompile Include="include\Boat\Boat.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +109,6 @@
     <ClInclude Include="include\AnimationSystem\System\BoneInfo.h" />
     <ClInclude Include="include\GameLogic\Components\Anima.h" />
     <ClInclude Include="include\Application\Scene.h" />
-    <ClInclude Include="include\GameLogic\Components\Boat.h" />
     <ClInclude Include="include\Boat\Boat.h" />
   </ItemGroup>
   <ItemGroup>
