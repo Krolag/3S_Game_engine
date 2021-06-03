@@ -284,11 +284,23 @@ int main()
     sceneManager.changeCurrentScene("mainMenu");
     int tmpMainMenuIndex = 0;
 
-    Loader::Model test_model("assets/models/test.fbx", "test", true, true);
-    GameLogic::Proctor test("test", glm::vec3(800.0f, 100.0f, 800.0f));
-    GameLogic::MeshRenderer test_mr(GameLogic::C_MESH, &test, &test_model, &model3D);
-    GameLogic::BoxCollider test_bc(GameLogic::C_COLLIDER, &test_model, &test, &collisionBoxShader, true);
-    hierarchy.addObject(&test);
+    /* SHADOW MAPPING */
+    unsigned int depthMapFBO;
+    glGenFramebuffers(1, &depthMapFBO);
+    unsigned int depthMap;
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 #pragma endregion
 
@@ -451,6 +463,7 @@ int main()
 
         else if (sceneManager.cActiveScene["game"])
         {
+            /* Check if player entered pause menu */
             if (keyboardInput->isKeyPressed(GLFW_KEY_ESCAPE))
             {
                 isPaused = true;
@@ -458,90 +471,106 @@ int main()
                 soundEffects->play2D("assets/audio/sounds/mainMenu.ogg", false);
             }
 
+            /* Set players variables */
             hero_00_pi.setActive(true);
             hero_01_pi.setActive(true);
             hero_00_an.playAnimation(0);
 
-            //enable cliping
-            glEnable(GL_CLIP_DISTANCE0);
-
+            /* Set camera variables */
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
 
-            //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
+            /* Enable cliiping */
+            glEnable(GL_CLIP_DISTANCE0);
+
+#pragma region WATER - ReflectionBuffer
+            /* Start rendering meshes beneath water to ReflectionBuffer */
             reflectFramebuffer.bindFramebuffer();
             glEnable(GL_DEPTH_TEST);
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // set camera underwater - to get reflection
+            /* Set camera underwater to get reflection */
             float distance = 2 * (camera.Position.y - waterYpos);
             camera.Position.y -= distance;
             camera.Pitch = -camera.Pitch;
             camera.updateCameraVectors();
 
+            /* Set shader variables - projection, view, plane */
             model3D.use();
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
-            model3D.setUniform("projection", projection);
             view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
             model = glm::mat4(1.0f);
+            model3D.setUniform("projection", projection);
+            model3D.setUniform("view", view);
+            // Clipping everything under water plane
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos));
 
+            /* Render objects for ReflectionBuffer */
             dirLight.render(model3D);
             hierarchy.update(true, false);
-            skybox.render(); // render skybox only for reflectionbuffer
+            skybox.render();
 
-            //set camera position to default
+            /* Set camera position to default */
             camera.Position.y += distance;
             camera.Pitch = -camera.Pitch;
             camera.updateCameraVectors();
 
-            //close reflectframebuffer
+            /* Close ReflectionBuffer */
             reflectFramebuffer.unbindFramebuffer();
+#pragma endregion
 
-            //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
+#pragma region WATER - RefractionBuffer
+            /* Staet rendering meshes under the water surface to RefractionBuffer */
             refractFramebuffer.bindFramebuffer();
-
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            /* Set shader variables - projection, view, plane */
             model3D.use();
-            model3D.setUniform("projection", projection);
             view = camera.GetViewMatrix();
+            model3D.setUniform("projection", projection);
             model3D.setUniform("view", view);
             model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
 
+            /* Render objects for ReflectionBuffer */
             dirLight.render(model3D);
             hierarchy.update(true, false);
 
-            //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
+            /* Close RefractionBuffer */
             refractFramebuffer.unbindFramebuffer();
+#pragma endregion
+
+            /* Disable cliiping */
             glDisable(GL_CLIP_DISTANCE0);
 
-            //---------------------------------------------------------------------------------------------------------
-            //HERE STARTS DEFAULT RENDERING
+#pragma region Default rendering
+            /* Clear everything */
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+            
+            /* Set model shader variables - projection, view */
+            view = camera.GetViewMatrix();
             model3D.use();
             model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
             model3D.setUniform("view", view);
 
+            /* TODO: @Dawid - DEBUG between game camera and debug camera */
             cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
+            /* Render light and update hierarchy */
             dirLight.render(model3D);
+            hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
+            /* Render water */
+            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
+
+            /* TODO: @Dawid - DEBUG Set camera shader variables - projection, view, collision */
             collisionBoxShader.use();
             collisionBoxShader.setUniform("projection", projection);
             collisionBoxShader.setUniform("view", view);
             collisionBoxShader.setUniformBool("collision", true);
-
-            hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
-
-            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
 
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
@@ -557,12 +586,15 @@ int main()
             if (dukatSpinIndex >= 8)
                 dukatSpinIndex = 0;
 
+            /* Update monster system */
             monsterSystem.update();
+            // TODO: @Ignacy - potrzebne to?
             /*if (isPaused == true)
             {
                 isPaused = false;
                 Sleep(2500);
             }*/
+#pragma endregion
         }
         
         /* Update InputSystem */
