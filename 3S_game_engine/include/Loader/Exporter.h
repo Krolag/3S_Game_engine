@@ -1,5 +1,6 @@
 #pragma once
-#include "GameLogic/Proctor.h"
+#include "GameLogic/GameLogic.h"
+#include "Importer.h"
 #include "RapidXml/rapidxml.hpp"
 #include "RapidXml/rapidxml_print.hpp"
 #include "RapidXml/rapidxml_utils.hpp"
@@ -76,6 +77,54 @@ namespace Loader
 				z->value(sceneDocument.allocate_string(std::to_string(_proctors.at(i)->getScale().z).c_str()));
 				scale->append_node(z);
 				gameModel->append_node(scale);
+
+				/* Components */
+				xml_node<>* components = sceneDocument.allocate_node(node_element, "components");
+				/* isColliderOn */
+				xml_node<>* isColliderOn = sceneDocument.allocate_node(node_element, "isColliderOn");
+				isColliderOn = sceneDocument.clone_node(isColliderOn);
+				if (_proctors.at(i)->getComponentOfType(GameLogic::C_COLLIDER) != NULL)
+					isColliderOn->value(sceneDocument.allocate_string("true"));
+				else
+					isColliderOn->value(sceneDocument.allocate_string("false"));
+				components->append_node(isColliderOn);
+				/* isColliderStatic */
+				xml_node<>* isColliderStatic = sceneDocument.allocate_node(node_element, "isColliderStatic");
+				isColliderStatic = sceneDocument.clone_node(isColliderStatic);
+				if (_proctors.at(i)->getComponentOfType(GameLogic::C_COLLIDER) != NULL)
+					isColliderStatic->value(sceneDocument.allocate_string("true"));
+				else
+					isColliderStatic->value(sceneDocument.allocate_string("false"));
+				components->append_node(isColliderStatic);
+				/* isInteractable */
+				xml_node<>* isInteractable = sceneDocument.allocate_node(node_element, "isInteractable");
+				isInteractable = sceneDocument.clone_node(isInteractable);
+				if (_proctors.at(i)->getComponentOfType(GameLogic::C_INTERACTABLE) != NULL)
+					isInteractable->value(sceneDocument.allocate_string("true"));
+				else
+					isInteractable->value(sceneDocument.allocate_string("false"));
+				components->append_node(isInteractable);
+				/* isTreasure */
+				xml_node<>* isTreasure = sceneDocument.allocate_node(node_element, "isTreasure");
+				isTreasure = sceneDocument.clone_node(isTreasure);
+				if (_proctors.at(i)->getComponentOfType(GameLogic::C_TREASURE) != NULL)
+					isTreasure->value(sceneDocument.allocate_string("true"));
+				else
+					isTreasure->value(sceneDocument.allocate_string("false"));
+				components->append_node(isTreasure);
+				/* isCash */
+				xml_node<>* isCash = sceneDocument.allocate_node(node_element, "isCash");
+				isCash = sceneDocument.clone_node(isCash);
+				if (_proctors.at(i)->getComponentOfType(GameLogic::C_CASH) != NULL)
+					isCash->value(sceneDocument.allocate_string("true"));
+				else
+					isCash->value(sceneDocument.allocate_string("false"));
+				components->append_node(isCash);
+
+				gameModel->append_node(components);
+
+				
+				
 
 				/* Children */
 				xml_node<>* childrenModels = sceneDocument.allocate_node(node_element, "ChildrenModels");

@@ -579,11 +579,11 @@ int main()
     }
 
 	/* Export scene to xml file */
-    //std::cout << "Save scene? [y/n]" << std::endl;
-    //std::string check;
-    //std::cin >> check;
-    //if (check == "y")
-    //    Loader::Exporter::exportScene(hierarchy.getProctors());
+    std::cout << "Save scene? [y/n]" << std::endl;
+    std::string check;
+    std::cin >> check;
+    if (check == "y")
+        Loader::Exporter::exportScene(hierarchy.getProctors(), "assets/scenes/exported_scene.xml");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
