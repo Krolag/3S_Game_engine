@@ -45,10 +45,13 @@ namespace Loader
 		glm::mat4 model = glm::mat4(1.0f);
 
 		model = glm::translate(model, this->parentPosition);
+		model = glm::rotate(model, this->parentRotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, this->parentRotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, this->parentRotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::translate(model, this->position);
 		model = glm::rotate(model, this->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, this->rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, this->rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::translate(model, this->position);
 		model = glm::scale(model, this->scale);
 		_shader.setUniform("model", model);
 		_shader.setUniformFloat("material.shininess", 0.5f);

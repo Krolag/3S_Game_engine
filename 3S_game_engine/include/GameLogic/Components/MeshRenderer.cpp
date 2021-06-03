@@ -33,6 +33,7 @@ namespace GameLogic
 		model->position = transform.position;
 		model->rotation = transform.rotation;
 		model->parentPosition = transform.parentPosition;
+		model->parentRotation = transform.parentRotation;
 		model->scale = transform.scale;
 
 		/* Render model with given shader */

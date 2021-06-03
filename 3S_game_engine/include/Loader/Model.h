@@ -32,6 +32,7 @@ namespace Loader
 		/* Model transformation */
 		glm::vec3 position;
 		glm::quat rotation;
+		glm::quat parentRotation;
 		glm::vec3 parentPosition;
 		glm::vec3 scale;
 

@@ -25,6 +25,7 @@ namespace GameLogic
 		glm::quat rotation;
 		glm::vec3 scale;
 		glm::vec3 parentPosition;
+		glm::quat parentRotation;
 	};
 
 	class Proctor

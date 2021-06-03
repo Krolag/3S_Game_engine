@@ -202,17 +202,17 @@ int main()
 
     /* Load models that probably won't be serialized */
     //modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_00", true, false); // If last value is set to true, there is no animation
-    modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_01", true, true);
+    modelLibrary.addModel("assets/models/player_2021_05_30_23_21.fbx", "hero_01", true, true);
     modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true, true);
     modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_01", true, true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true, true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true, true);
-    modelLibrary.addModel("assets/models/boat/boat_origin_fix.fbx", "boat", true, true);
+    modelLibrary.addModel("assets/models/boat/bbot.fbx", "boat", true, true);
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
     /* Boat */
-    GameLogic::Proctor      boat("boat", glm::vec3(0.0f, 1.f, 0.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.03f));
+    GameLogic::Proctor      boat("boat", glm::vec3(720.0f, 1.8f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
     GameLogic::Boat boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
@@ -579,11 +579,11 @@ int main()
     }
 
 	/* Export scene to xml file */
-    std::cout << "Save scene? [y/n]" << std::endl;
-    std::string check;
-    std::cin >> check;
-    if (check == "y")
-        Loader::Exporter::exportScene(hierarchy.getProctors(), "assets/scenes/exported_scene.xml");
+  // std::cout << "Save scene? [y/n]" << std::endl;
+  // std::string check;
+  // std::cin >> check;
+  // if (check == "y")
+  //     Loader::Exporter::exportScene(hierarchy.getProctors(), "assets/scenes/exported_scene.xml");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

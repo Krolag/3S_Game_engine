@@ -22,8 +22,8 @@ namespace GameLogic
 		float gravityAcceleration = 0.0f; // 15.0f;
 		float cGravity = 0.0f;
 		float movementSpeed = 0;
-		float maxInteractionDistance = 3.0f;
-		float radius = 3.0f;
+		float maxInteractionDistance = 6.0f;
+		float radius = maxInteractionDistance;
 		int frameCounter = 0;
 		Proctor* coinProctor;
 		irrklang::ISoundEngine* playerSounds = irrklang::createIrrKlangDevice();

@@ -138,17 +138,17 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
-					if (tmp.at(i)->name == "boat")
-					{
-						if (!isPlayerOneInBoat)
-						{
-							//boat->attachPlayerOne(proctor);
-							//boat->setIsPlayerOneInBoat(true);
-						}
-					}
-
 					if (distance <= maxInteractionDistance)
 					{
+						if (tmp.at(i)->name == "boat")
+						{
+							if (!isPlayerOneInBoat)
+							{
+								boat->attachPlayerOne(proctor);
+								boat->setIsPlayerOneInBoat(true);
+							}
+						}
+
 						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
 						{
 							tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
@@ -162,6 +162,7 @@ namespace GameLogic
 				boat->setIsPlayerOneInBoat(false);
 				boat->deatachPlayerOne(proctor);
 				transform.position = proctor->transform.position;
+				transform.rotation = proctor->transform.rotation;
 			}
 
 			/* Check if player is holding any movement button */
@@ -261,17 +262,17 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
-					if (tmp.at(i)->name == "boat")
-					{
-						if (!isPlayerTwoInBoat)
-						{
-							//boat->attachPlayerTwo(proctor);
-							//boat->setIsPlayerTwoInBoat(true);
-						}
-					}
-
 					if (distance <= maxInteractionDistance)
 					{
+						if (tmp.at(i)->name == "boat")
+						{
+							if (!isPlayerTwoInBoat)
+							{
+								boat->attachPlayerTwo(proctor);
+								boat->setIsPlayerTwoInBoat(true);
+							}
+						}
+
 						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
 						{
 							tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
@@ -283,9 +284,10 @@ namespace GameLogic
 
 			if (keyboard->isKeyPressed(GLFW_KEY_SLASH) && isPlayerTwoInBoat)
 			{
-				/*boat->setIsPlayerTwoInBoat(false);
-				boat->deatachPlayerTwo(proctor);*/
+				boat->setIsPlayerTwoInBoat(false);
+				boat->deatachPlayerTwo(proctor);
 				transform.position = proctor->transform.position;
+				transform.rotation = proctor->transform.rotation;
 			}
 
 			/* Check if player is holding any movement button */
