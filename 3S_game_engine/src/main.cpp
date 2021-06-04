@@ -226,7 +226,7 @@ int main()
 
     /* Configure proctors */
     /* Boat */
-    GameLogic::Proctor      boat("boat", glm::vec3(720.0f, 1.8f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
+    GameLogic::Proctor      boat("boat", glm::vec3(720.0f, 2.0f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
     GameLogic::Boat boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
@@ -242,6 +242,7 @@ int main()
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader, false);
     hero_00_an.playAnimation(0);
     hierarchy.addObject(&hero_00);
+
     //GameLogic::Proctor      hero_01("hero_01", glm::vec3(5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::Proctor      hero_01("hero_01", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);

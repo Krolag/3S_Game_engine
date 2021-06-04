@@ -115,11 +115,11 @@ namespace GameLogic
 		}
 		if (turnSpeed > 0)
 		{
-			turnSpeed -= 1 * parent->getDeltaTime();
+			turnSpeed -= 1.2 * parent->getDeltaTime();
 		}
 		if (turnSpeed < 0)
 		{
-			turnSpeed += 1 * parent->getDeltaTime();
+			turnSpeed += 1.2 * parent->getDeltaTime();
 		}
 	}
 

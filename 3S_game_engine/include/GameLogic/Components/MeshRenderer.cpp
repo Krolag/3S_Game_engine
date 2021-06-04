@@ -38,7 +38,8 @@ namespace GameLogic
 
 		/* Render model with given shader */
 		/* Check if proctor is in camera view */
-		if (proctor->getComponentOfType(C_COLLIDER) != NULL)
+		/* Dont use frustumCulling if object has parent */
+		if (proctor->getComponentOfType(C_COLLIDER) != NULL && proctor->getParentProctor() == NULL)
 		{
 			if (FrustumCulling::boxAABBInFrustum(
 				proctor->transform.position.x,
@@ -48,18 +49,9 @@ namespace GameLogic
 				proctor->getParentHierarchy()->getCamera()
 			))
 			{
-				if (proctor->getParentProctor() != NULL)
-				{
-					shader->use();
-					shader->setUniformBool("noAnim", model->getNoAnim());
-					model->renderChild(*shader);
-				}
-				else
-				{
-					shader->use();
-					shader->setUniformBool("noAnim", model->getNoAnim());
-					model->render(*shader);
-				}
+				shader->use();
+				shader->setUniformBool("noAnim", model->getNoAnim());
+				model->render(*shader);				
 			}
 		}
 		/* temporary solution for proctors without colliders */

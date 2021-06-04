@@ -34,9 +34,9 @@ namespace GameLogic
 		bool isSecondInBoat = false;
 
 		float speed = 0;
-		float startSpeed = 5;
+		float startSpeed = 8;
 		float turnSpeed = 0;
-		float startTurningSpeed = 0.5;
+		float startTurningSpeed = 0.9;
 		float time = 0;
 
 		void useBoatInput();
