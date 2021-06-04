@@ -4,6 +4,10 @@
 #include "Boat/Boat.h"
 #include "Anima.h"
 
+#include <stdio.h>      /* printf, scanf, puts, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
 namespace GameLogic
 {
 	PlayerInput::PlayerInput(ComponentType _type, Proctor* _proctor)
@@ -11,6 +15,7 @@ namespace GameLogic
 	{ 
 		if (_proctor != NULL)
 		{
+			srand(time(NULL));
 			proctor->addComponent(this);
 		}
 	}
@@ -20,6 +25,7 @@ namespace GameLogic
 	{ 
 		if (_proctor != NULL)
 		{
+			srand(time(NULL));
 			proctor->addComponent(this);
 		}
 	}
@@ -44,6 +50,8 @@ namespace GameLogic
 		if (cGravity >= maxGravity)
 			cGravity = maxGravity;
 
+		randomNumber = rand() % 4;
+
 		/* Check which player should get update */
 		if (isPlayerOne) 
 			usePlayerOneInput();
@@ -57,7 +65,6 @@ namespace GameLogic
 		{
 			/* Get deltaTime from proctor */
 			float deltaTime = proctor->getDeltaTime();
-
 			/* Get proctors parent transform */
 			Transform transform = proctor->getTransform();
 
@@ -77,7 +84,15 @@ namespace GameLogic
 					keyboard->isKeyDown(GLFW_KEY_D)) && 
 					frameCounter % 10 == 0)
 				{
-					playerSounds->play2D("assets/audio/sounds/footstep.ogg", false);
+					if (randomNumber == 0)
+						playerSounds->play2D("assets/audio/sounds/footstep_00.ogg", false);
+					else if (randomNumber == 1)
+						playerSounds->play2D("assets/audio/sounds/footstep_01.ogg", false);
+					else if (randomNumber == 2)
+						playerSounds->play2D("assets/audio/sounds/footstep_02.ogg", false);
+					else if (randomNumber == 3)
+						playerSounds->play2D("assets/audio/sounds/footstep_03.ogg", false);
+
 					((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
 				}
 
@@ -193,6 +208,8 @@ namespace GameLogic
 			/* Get proctors parent transform */
 			Transform transform = proctor->getTransform();
 
+			//randomNumber = ran
+
 			if (!isPlayerTwoInBoat)
 			{
 				/* Calculate speed */
@@ -202,8 +219,19 @@ namespace GameLogic
 					movementSpeed = maxSpeed;
 				}
 
-				if ((keyboard->isKeyDown(GLFW_KEY_I) || keyboard->isKeyDown(GLFW_KEY_K) || keyboard->isKeyDown(GLFW_KEY_J) || keyboard->isKeyDown(GLFW_KEY_L)) && frameCounter % 10 == 0)
-					playerSounds->play2D("assets/audio/sounds/footstep.ogg", false);
+				if ((keyboard->isKeyDown(GLFW_KEY_I) || 
+					keyboard->isKeyDown(GLFW_KEY_K) || 
+					keyboard->isKeyDown(GLFW_KEY_J) || 
+					keyboard->isKeyDown(GLFW_KEY_L)) 
+					&& frameCounter % 10 == 0)
+					if (randomNumber == 0)
+						playerSounds->play2D("assets/audio/sounds/footstep_00.ogg", false);
+					else if (randomNumber == 1)
+						playerSounds->play2D("assets/audio/sounds/footstep_01.ogg", false);
+					else if (randomNumber == 2)
+						playerSounds->play2D("assets/audio/sounds/footstep_02.ogg", false);
+					else if (randomNumber == 3)
+						playerSounds->play2D("assets/audio/sounds/footstep_03.ogg", false);
 
 				/* Horizontal movement */
 				if (keyboard->isKeyDown(GLFW_KEY_J))

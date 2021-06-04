@@ -33,10 +33,17 @@
 #include "Loader/Exporter.h"
 
 using namespace irrklang;
-
-ISoundEngine* music = createIrrKlangDevice();
-ISoundEngine* soundEffects = createIrrKlangDevice();
-ISoundEngine* menuSounds = createIrrKlangDevice();
+#pragma region Audio
+//SoundEngine
+ISoundEngine* engine = createIrrKlangDevice();
+// music
+ISoundSource* musicSource = engine->addSoundSourceFromFile("assets/audio/music/shanty.ogg");
+// waves
+ISoundSource* waveSource = engine->addSoundSourceFromFile("assets/audio/sounds/background.ogg");
+// menu
+ISoundSource* bottleSource = engine->addSoundSourceFromFile("assets/audio/sounds/bottle.ogg");
+ISoundSource* mainMenuSource = engine->addSoundSourceFromFile("assets/audio/sounds/mainMenu.ogg");
+#pragma endregion
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -305,12 +312,13 @@ int main()
 #pragma endregion
 
     // music
-    music->play2D("assets/audio/music/shanty.ogg", GL_TRUE); //second value defines if the file is looped
-    music->setSoundVolume(0.1);
+    musicSource->setDefaultVolume(0.15);
+    engine->play2D(musicSource, true);
 
     // waves
-    soundEffects->play2D("assets/audio/sounds/background.ogg", GL_TRUE);
-    soundEffects->setSoundVolume(1);
+    waveSource->setDefaultVolume(1);
+    engine->play2D(waveSource, true);
+
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -330,7 +338,8 @@ int main()
                 if (tmpMainMenuIndex > 1)
                     tmpMainMenuIndex = 1;
 
-                menuSounds->play2D("assets/audio/sounds/bottle.ogg", false);
+                bottleSource->setDefaultVolume(1);
+                engine->play2D(bottleSource, false);
             }            
             
             else if (keyboardInput->isKeyReleased(GLFW_KEY_UP))
@@ -339,7 +348,8 @@ int main()
                 if (tmpMainMenuIndex < 0)
                     tmpMainMenuIndex = 0;
 
-                menuSounds->play2D("assets/audio/sounds/bottle.ogg", false);
+                bottleSource->setDefaultVolume(1);
+                engine->play2D(bottleSource, false);
             }
             hero_00_pi.setActive(false);
             hero_01_pi.setActive(false);
@@ -444,7 +454,8 @@ int main()
                 if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_ENTER))
                 {
                     isPaused = true;
-                    soundEffects->play2D("assets/audio/sounds/bottle.ogg", false);
+                   
+                    engine->play2D(bottleSource, false);
                     sceneManager.changeCurrentScene("game");
                 }
             }
@@ -454,7 +465,7 @@ int main()
             if (tmpMainMenuIndex == 1)
             {
                 exitPressed.render();
-                if (mouseInput->isButtonReleased(0) || keyboardInput->isKeyReleased(GLFW_KEY_ENTER))
+                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_ENTER))
                 {
                     glfwSetWindowShouldClose(mainScene.window, true);
                 }
@@ -468,7 +479,7 @@ int main()
             {
                 isPaused = true;
                 sceneManager.changeCurrentScene("mainMenu");
-                soundEffects->play2D("assets/audio/sounds/mainMenu.ogg", false);
+                engine->play2D(mainMenuSource, false);
             }
 
             /* Set players variables */
@@ -624,9 +635,7 @@ int main()
     hierarchy.cleanup();
 
     glfwTerminate();
-    soundEffects->drop();
-    music->drop();
-    menuSounds->drop();
+    engine->drop();
 
     return 0;
 }
