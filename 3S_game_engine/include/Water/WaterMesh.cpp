@@ -36,16 +36,11 @@ WaterMesh::WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPat
 	glGenTextures(1, &reflectionTexture);
 	glBindTexture(GL_TEXTURE_2D, reflectionTexture);
 
-	glGenTextures(1, &refractionTexture);
-	glBindTexture(GL_TEXTURE_2D, refractionTexture);
-
 	waterShader.use();
 	waterShader.setUniformInt("reflectionTexture", 0);
-	waterShader.setUniformInt("refractionTexture", 1);
-
 }
 
-void WaterMesh::render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, int reflectionTex, int refractionTex, float time,glm::vec3 cameraPos)
+void WaterMesh::render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, int reflectionTex, float time,glm::vec3 cameraPos)
 {
 	waveSpeed += WATER_SPEED * time;
 	waterShader.use();
@@ -59,9 +54,6 @@ void WaterMesh::render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, in
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, reflectionTex);
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, refractionTex);
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

@@ -21,18 +21,18 @@ uniform bool noAnim;
 
 void main()
 {
-
-    /* Check if model has animation */
+	vec4 worldPosition = model * vec4(inPos, 1.0f);
+    gl_ClipDistance[0] = dot(worldPosition, plane);
+	
+	/* Check if model has animation */
     if (noAnim)
     {
-		vec4 worldPosition = model * vec4(inPos, 1.0f);
 		vec3 worldNormal = mat3(transpose(inverse(model))) * inNormal;
 	
 		FragPos = vec3(model * vec4(inPos, 1.0f));
 		Normal = worldNormal;
 		TexCoord = inTexCoords;
 	
-		gl_ClipDistance[0] = dot(worldPosition, plane);
 		gl_Position = projection * view * vec4(worldPosition.xyz, 1.0f);
     }
     else
@@ -54,8 +54,7 @@ void main()
 		FragPos = vec3(model * vec4(totalLocalPosition.xyz, 1.0f));
 		Normal = totalNormal.xyz;
 		TexCoord = inTexCoords;
-		
-		gl_ClipDistance[0] = dot(totalLocalPosition, plane);
+				
 		gl_Position = projection * view * model * totalLocalPosition;
     }
 

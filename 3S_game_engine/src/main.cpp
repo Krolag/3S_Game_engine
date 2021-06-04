@@ -275,7 +275,6 @@ int main()
     WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 700, 2000);
     float waterYpos = 1.5f;
     Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
-    Framebuffer refractFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 #pragma endregion
 
 #pragma region Input
@@ -406,26 +405,6 @@ int main()
             //close reflectframebuffer
             reflectFramebuffer.unbindFramebuffer();
 
-            //HERE STARTS RENDERING MODELS UNDER THE WATER SURFACE (REFRACTION)
-            refractFramebuffer.bindFramebuffer();
-
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            model3D.use();
-            model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-            model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
-
-            dirLight.render(model3D);
-
-            //---------------------------------------------------------------------------
-            hierarchy.update(true, false);
-            //---------------------------------------------------------------------------
-
-            //UNBIND REFRACT FRAMEBUFFER AND TURN OFF CLIPING
-            refractFramebuffer.unbindFramebuffer();
             glDisable(GL_CLIP_DISTANCE0);
 
             //HERE STARTS DEFAULT RENDERING
@@ -446,7 +425,7 @@ int main()
             //---------------------------------------------------------------------------
 
             model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
 
             // Main menu UI
             logo.render();
@@ -590,27 +569,6 @@ int main()
             reflectFramebuffer.unbindFramebuffer();
 #pragma endregion
 
-#pragma region WATER - RefractionBuffer
-            /* Staet rendering meshes under the water surface to RefractionBuffer */
-            refractFramebuffer.bindFramebuffer();
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            /* Set shader variables - projection, view, plane */
-            model3D.use();
-            view = camera.GetViewMatrix();
-            model3D.setUniform("projection", projection);
-            model3D.setUniform("view", view);
-            model3D.setUniform("plane", glm::vec4(0, -1, 0, waterYpos));
-
-            /* Render objects for ReflectionBuffer */
-            dirLight.render(model3D);
-            hierarchy.update(true, false);
-
-            /* Close RefractionBuffer */
-            refractFramebuffer.unbindFramebuffer();
-#pragma endregion
-
             /* Disable cliiping */
             glDisable(GL_CLIP_DISTANCE0);
 
@@ -634,7 +592,7 @@ int main()
 
             /* Render water */
             model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), refractFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
 
             /* TODO: @Dawid - DEBUG Set camera shader variables - projection, view, collision */
             collisionBoxShader.use();
