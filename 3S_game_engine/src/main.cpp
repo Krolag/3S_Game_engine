@@ -494,6 +494,8 @@ int main()
         }
         else if (sceneManager.cActiveScene["enterStory_00"])
         {
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             story_00.render();
             points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
@@ -502,6 +504,8 @@ int main()
         }
         else if (sceneManager.cActiveScene["enterStory_01"])
         {
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             story_01.render();
             points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
@@ -510,7 +514,10 @@ int main()
         }
         else if (sceneManager.cActiveScene["options"])
         {
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             points.render("Options", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Press escape, to go back to menu", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             if (keyboardInput->isKeyReleased(GLFW_KEY_ESCAPE))
                 sceneManager.changeCurrentScene("mainMenu");
 
@@ -661,7 +668,19 @@ int main()
         
         else if (sceneManager.cActiveScene["exitStory_00"])
         {
-            points.render("You loose", SCREEN_WIDTH * 0.3, SCREEN_HEIGHT * 0.4, 3, glm::vec3(1.0, 0.0, 0.0));
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            points.render("You loose", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+                sceneManager.changeCurrentScene("mainMenu");
+        }
+        else if (sceneManager.cActiveScene["exitStory_01"])
+        {
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            points.render("You win, ARRRRRR", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
                 sceneManager.changeCurrentScene("mainMenu");
         }
