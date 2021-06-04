@@ -114,10 +114,17 @@ int main()
     UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png", 0.35, 0.65, 0.97, 0.76);
     UIRender::UIElement startNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.72, 0.53);
     UIRender::UIElement startPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.72, 0.53);
-    UIRender::UIElement exitNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.42, 0.23);
-    UIRender::UIElement exitPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.42, 0.23);
-
+    UIRender::UIElement optionsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.52, 0.33);
+    UIRender::UIElement optionsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.52, 0.33);
+    UIRender::UIElement exitNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.32, 0.13);
+    UIRender::UIElement exitPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.32, 0.13);
 #pragma endregion
+
+#pragma region StoryScene
+    UIRender::UIElement story_00("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_00.png", 0, 1, 1, 0);
+    UIRender::UIElement story_01("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_01.png", 0, 1, 1, 0);
+#pragma endregion
+
 #pragma region Game
     /* Text init */
     textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCREEN_WIDTH), 0.0f, static_cast<GLfloat>(SCREEN_WIDTH));
@@ -332,17 +339,17 @@ int main()
         /* SCENE LOADER TEST CODE */
         if (sceneManager.cActiveScene["mainMenu"])
         {
-            if (keyboardInput->isKeyReleased(GLFW_KEY_DOWN))
+            if (keyboardInput->isKeyReleased(GLFW_KEY_S))
             {
                 tmpMainMenuIndex++;
-                if (tmpMainMenuIndex > 1)
-                    tmpMainMenuIndex = 1;
+                if (tmpMainMenuIndex > 2)
+                    tmpMainMenuIndex = 2;
 
                 bottleSource->setDefaultVolume(1);
                 engine->play2D(bottleSource, false);
             }            
             
-            else if (keyboardInput->isKeyReleased(GLFW_KEY_UP))
+            else if (keyboardInput->isKeyReleased(GLFW_KEY_W))
             {
                 tmpMainMenuIndex--;
                 if (tmpMainMenuIndex < 0)
@@ -444,19 +451,25 @@ int main()
             logo.render();
 
             startNotPressed.render();
+            optionsNotPressed.render();
             exitNotPressed.render();
+
 
             /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
                 && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.34 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.39)) || (tmpMainMenuIndex == 0))*/
             if (tmpMainMenuIndex == 0)
             {
                 startPressed.render();
-                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_ENTER))
+                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_SPACE) || keyboardInput->isKeyPressed(GLFW_KEY_V))
                 {
-                    isPaused = true;
-                   
+                 
                     engine->play2D(bottleSource, false);
-                    sceneManager.changeCurrentScene("game");
+                    if (isPaused == true)
+                    {
+                        sceneManager.changeCurrentScene("game");
+                    }
+                    else
+                        sceneManager.changeCurrentScene("enterStory_00");
                 }
             }
 
@@ -464,14 +477,44 @@ int main()
                 && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.64 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.69)) || (tmpMainMenuIndex == 1))*/
             if (tmpMainMenuIndex == 1)
             {
+                optionsPressed.render();
+                if (mouseInput->isButtonReleased(0) || keyboardInput->isKeyReleased(GLFW_KEY_SPACE) || keyboardInput->isKeyReleased(GLFW_KEY_V))
+                {
+                    sceneManager.changeCurrentScene("options");
+                }
+            }
+            if (tmpMainMenuIndex == 2)
+            {
                 exitPressed.render();
-                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_ENTER))
+                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_SPACE) || keyboardInput->isKeyPressed(GLFW_KEY_V))
                 {
                     glfwSetWindowShouldClose(mainScene.window, true);
                 }
             }
         }
+        else if (sceneManager.cActiveScene["enterStory_00"])
+        {
+            story_00.render();
+            points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+                sceneManager.changeCurrentScene("enterStory_01");
+            
+        }
+        else if (sceneManager.cActiveScene["enterStory_01"])
+        {
+            story_01.render();
+            points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+                sceneManager.changeCurrentScene("game");
+            
+        }
+        else if (sceneManager.cActiveScene["options"])
+        {
+            points.render("Options", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
+            if (keyboardInput->isKeyReleased(GLFW_KEY_ESCAPE))
+                sceneManager.changeCurrentScene("mainMenu");
 
+        }
         else if (sceneManager.cActiveScene["game"])
         {
             /* Check if player entered pause menu */
@@ -480,6 +523,14 @@ int main()
                 isPaused = true;
                 sceneManager.changeCurrentScene("mainMenu");
                 engine->play2D(mainMenuSource, false);
+            }
+            else if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
+            {
+                sceneManager.changeCurrentScene("exitStory_00");
+            }            
+            else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
+            {
+                sceneManager.changeCurrentScene("exitStory_01");
             }
 
             /* Set players variables */
@@ -608,6 +659,12 @@ int main()
 #pragma endregion
         }
         
+        else if (sceneManager.cActiveScene["exitStory_00"])
+        {
+            points.render("You loose", SCREEN_WIDTH * 0.3, SCREEN_HEIGHT * 0.4, 3, glm::vec3(1.0, 0.0, 0.0));
+            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+                sceneManager.changeCurrentScene("mainMenu");
+        }
         /* Update InputSystem */
         keyboardInput->update();
         mouseInput->update();

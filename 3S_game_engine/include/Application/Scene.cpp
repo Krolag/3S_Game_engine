@@ -26,11 +26,14 @@ namespace Application
 	void Scene::initializeSceneMap()
 	{
 		cActiveScene["mainMenu"] = false;
-		cActiveScene["enterStory"] = false;
+		cActiveScene["enterStory_00"] = false;
+		cActiveScene["enterStory_01"] = false;
 		cActiveScene["tutorial"] = false;
+		cActiveScene["options"] = false;
 		cActiveScene["game"] = false;
-		cActiveScene["exitStory"] = false;
+		cActiveScene["exitStory_00"] = false;
+		cActiveScene["exitStory_01"] = false;
 
-		changeCurrentScene("mainMenu"); // Change it later for "mainMenu"
+		changeCurrentScene("mainMenu");
 	}
 }
