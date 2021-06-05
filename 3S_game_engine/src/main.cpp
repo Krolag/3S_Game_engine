@@ -368,7 +368,7 @@ int main()
 
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
-
+#pragma region WATER - ReflectionBuffer
             //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
             reflectFramebuffer.bindFramebuffer();
             glEnable(GL_DEPTH_TEST);
@@ -404,9 +404,10 @@ int main()
 
             //close reflectframebuffer
             reflectFramebuffer.unbindFramebuffer();
-
+#pragma endregion
             glDisable(GL_CLIP_DISTANCE0);
 
+#pragma region Default rendering
             //HERE STARTS DEFAULT RENDERING
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -434,7 +435,7 @@ int main()
             optionsNotPressed.render();
             exitNotPressed.render();
 
-
+#pragma endregion
             /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
                 && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.34 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.39)) || (tmpMainMenuIndex == 0))*/
             if (tmpMainMenuIndex == 0)
