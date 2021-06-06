@@ -24,11 +24,13 @@ namespace GameLogic
 		player->setPosition(glm::vec3(0.56f, 2.45f, 1.72f)); //position player on boat
 		player->setRotation(glm::quat(1.0f, 1.57f, 0.0f, -1.57f));
 		proctor->addChild(player);
+		proctor->getParentHierarchy()->removeObject(player);
 	}
 
 	void Boat::deatachPlayerOne(GameLogic::Proctor* player)
 	{
 		proctor->removeChild(player);
+		proctor->getParentHierarchy()->addObject(player);
 		player->setPosition(transform.position + glm::vec3(1.72f, 2.45f, 0.0f));
 		player->setRotation(glm::quat(1.0f, 1.57f, 0.0f, 3.14f));
 	}
@@ -38,11 +40,13 @@ namespace GameLogic
 		player->setPosition(glm::vec3(0.56f, 2.45f, -1.96f)); //position player on boat
 		player->setRotation(glm::quat(1.0f, 1.57f, 0.0f, -1.57f));
 		proctor->addChild(player);
+		proctor->getParentHierarchy()->removeObject(player);
 	}
 
 	void Boat::deatachPlayerTwo(GameLogic::Proctor* player)
 	{
 		proctor->removeChild(player);
+		proctor->getParentHierarchy()->addObject(player);
 		player->setPosition(transform.position + glm::vec3(-1.96f, 2.45f, 0.0f));
 		player->setRotation(glm::quat(1.0f, 1.57f, 0.0f, 3.14f));
 	}

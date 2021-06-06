@@ -778,7 +778,6 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
         camera.Yaw = -90; // set yaw to default value
         camera.ProcessMouseMovement(0, -89); // set pitch to default value
         camera.Position = glm::vec3((player_1->getWorldPosition()[0] + player_2->getWorldPosition()[0]) / 2.f, camPos, (player_1->getWorldPosition()[2] + player_2->getWorldPosition()[2]) / 2.f);
-
         mouseInput->cursorEnable();
     }
 }
