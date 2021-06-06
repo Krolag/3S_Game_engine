@@ -46,6 +46,7 @@
     <ClCompile Include="include\GameLogic\Components\Anima.cpp" />
     <ClCompile Include="include\Application\Scene.cpp" />
     <ClCompile Include="include\Boat\Boat.cpp" />
+    <ClCompile Include="include\GameLogic\Components\Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -110,6 +111,7 @@
     <ClInclude Include="include\GameLogic\Components\Anima.h" />
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Boat\Boat.h" />
+    <ClInclude Include="include\GameLogic\Components\Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

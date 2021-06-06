@@ -12,7 +12,8 @@ namespace GameLogic
 		C_INTERACTABLE = 4,
 		C_TREASURE = 5,
 		C_CASH = 6,
-		C_ANIMA = 7
+		C_ANIMA = 7,
+		C_ENEMY = 8
 	};
 
 	class Proctor;

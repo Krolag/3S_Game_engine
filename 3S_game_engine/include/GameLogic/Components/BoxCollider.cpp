@@ -21,7 +21,8 @@ namespace GameLogic
 	void BoxCollider::init()
 	{
 		//std::cout << "=============================\nINITIALIZING BOX COLLIDER FOR:\n" << proctor->name << std::endl;
-		glm::vec3 min(FLT_MAX), max(-FLT_MAX);
+		glm::vec3 min = model->getMeshes().at(0).vertices.at(0).position;
+		glm::vec3 max = min;
 		
 		/* Iterate through all model's vertices and find max values on each axis */
 		for (unsigned int i = 0; i < model->getMeshes().size(); i++)
@@ -244,7 +245,6 @@ namespace GameLogic
 			// TODO: @Kuba update center and radius with the new way
 
 			center = proctor->getPosition();
-			/* Get collider vertices, get 3 normals like in collision checking and calc radius that way */
 		}
 		
 		if(!isUpdated)

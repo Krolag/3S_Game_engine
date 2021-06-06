@@ -237,7 +237,10 @@ namespace GameLogic
 							if ((proctors.at(i)->name == "hero_00" && proctors.at(j)->name == "hero_01")
 								|| (proctors.at(i)->name == "hero_01" && proctors.at(j)->name == "hero_00"))
 								continue;
-							
+
+							/* Don't check proctors with the scale of 0,0,0 */
+							if (proctors.at(j)->getScale() == glm::vec3(0.0f, 0.0f, 0.0f))
+								continue;
 							/* Check collisions between two proctors */
 							((BoxCollider*)proctors.at(i)->getComponentOfType(C_COLLIDER))->checkCollisionOBB((BoxCollider*)proctors.at(j)->getComponentOfType(C_COLLIDER));
 						}

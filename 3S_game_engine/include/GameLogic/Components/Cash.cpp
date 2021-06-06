@@ -64,6 +64,8 @@ namespace GameLogic
 			proctor->setPosition(proctor->getPosition() -= glm::vec3(0.0, 0.0, speed));
 		}
 
+		// TODO: @Ignacy Czy ogólny dystans od monety do gracza nie powinien byæ liczony w tym miejscu? Tzn po ewentualnej zmianie pozycji?
+		
 		if (distance <= minDistance + 0.1)
 		{
 			points->addPoints(100);

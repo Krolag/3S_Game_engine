@@ -12,6 +12,7 @@
 #include "Components/Treasure.h"
 #include "Components/Cash.h"
 #include "Components/Anima.h"
+#include "Components/Enemy.h"
 
 namespace GameLogic {}
 

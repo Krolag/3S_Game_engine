@@ -240,7 +240,6 @@ int main()
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader, false);
-    hero_00_an.playAnimation(0);
     hierarchy.addObject(&hero_00);
 
     //GameLogic::Proctor      hero_01("hero_01", glm::vec3(5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
