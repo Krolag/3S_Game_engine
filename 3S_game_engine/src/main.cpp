@@ -222,6 +222,7 @@ int main()
     modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true, true);
     modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true, true);
     modelLibrary.addModel("assets/models/boat/bbot.fbx", "boat", true, true);
+    modelLibrary.addModel("assets/models/x.fbx", "x", true, true);
     //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
 
     /* Configure proctors */
@@ -249,6 +250,12 @@ int main()
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     hierarchy.addObject(&boat);
+
+    //Here You can dig sign
+    GameLogic::Proctor xSign("x", glm::vec3(770, 5.3, 820), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
+    GameLogic::MeshRenderer xSign_mr(GameLogic::C_MESH, &xSign, modelLibrary.getModel(xSign.name), &model3D);
+    GameLogic::Interactable xSign_in(GameLogic::C_INTERACTABLE, &xSign);
+    hierarchy.addObject(&xSign);
 	
   /* GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
@@ -602,6 +609,9 @@ int main()
 
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
+
+            if(hero_00_pi.isCluePickedUp)
+                points.render(hero_00_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
 
             /* Render dukat */
             dukatSpinning[dukatSpinIndex].render();

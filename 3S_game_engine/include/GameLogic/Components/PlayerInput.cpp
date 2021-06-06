@@ -144,6 +144,7 @@ namespace GameLogic
 			{
 				/* Create tmp for easy acces */
 				std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
+				isCluePickedUp = false;
 
 				/* Check if player is near the interactable proctor */
 				for (unsigned int i = 0; i < tmp.size(); i++)
@@ -169,6 +170,18 @@ namespace GameLogic
 							tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 							((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
 						}
+						if (tmp.at(i)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(i)->getComponentOfType(C_INTERACTABLE)->isActive() == true)
+						{
+							if (tmp.at(i)->name == "x")
+							{
+								tmp.at(i)->getComponentOfType(C_INTERACTABLE)->setActive(false);
+								tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
+								clueText = "The winds blow NORTH";
+
+								isCluePickedUp = true;
+							}
+						}
+
 					}
 				}
 			}

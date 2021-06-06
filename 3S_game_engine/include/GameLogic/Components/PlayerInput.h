@@ -6,6 +6,8 @@
 #include "GameLogic/Proctor.h"
 #include "InputSystem/KeyboardInput.h"
 #include "Points/Points.h"
+#include "../../UIRender/UIRender.h"
+#include <string.h>
 #include "../../IrrKlang/irrKlang.h"
 
 
@@ -27,6 +29,9 @@ namespace GameLogic
 		int frameCounter = 0;
 		Proctor* coinProctor;
 		irrklang::ISoundEngine* playerSounds = irrklang::createIrrKlangDevice();
+		std::string clueText;
+		bool isCluePickedUp = false;
+		int clues[5]{ 0, 1, 2, 3, 4 };
 
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);
