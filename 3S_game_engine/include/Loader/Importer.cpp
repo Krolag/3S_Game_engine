@@ -2,8 +2,8 @@
 
 namespace Loader
 {	
-	Importer::Importer(const std::string xmlPath, Shader* _model3DShader, float _divider)
-		: model3DShader(_model3DShader), scaleFactor(_divider)
+	Importer::Importer(const std::string xmlPath, Shader* _model3DShader, bool _isFrom3SE, float _divider)
+		: model3DShader(_model3DShader), scaleFactor(_divider), isFrom3SE(_isFrom3SE)
 	{
 		// Get xml document to work with
 		auto xmlFileContext = file2char(xmlPath.c_str());
@@ -47,14 +47,27 @@ namespace Loader
 			xml_node<>* childElement;
 
 			// Rotation
+			glm::quat proctorRotation;
 			childElement = firstNode->first_node("Rotation");
-			childElement = childElement->first_node("eulerAngles");
-			glm::quat proctorRotation(
-				1.0f,
-				0.0f,
-				-glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
-				0.0f
-			);
+			if (isFrom3SE)
+			{
+				proctorRotation = glm::quat(
+					(float)strtod(childElement->first_node("w")->value(), NULL),
+					(float)strtod(childElement->first_node("x")->value(), NULL),
+					(float)strtod(childElement->first_node("y")->value(), NULL),
+					(float)strtod(childElement->first_node("z")->value(), NULL)
+				);
+			}
+			else
+			{
+				childElement = childElement->first_node("eulerAngles");
+				proctorRotation = glm::quat(
+					1.0f,
+					0.0f,
+					-glm::radians((float)strtod(childElement->first_node("y")->value(), NULL)) - glm::radians(180.0f),
+					0.0f
+				);
+			}
 
 			// Scale
 			childElement = firstNode->first_node("Scale");

@@ -27,13 +27,14 @@ namespace Loader
 		std::vector<std::shared_ptr<GameLogic::Cash>> cash;
 		
 		/* Constructor */
-		Importer(const std::string xmlPath, Shader* _model3DShader, float _divider);
+		Importer(const std::string xmlPath, Shader* _model3DShader, bool _isFrom3SE, float _divider);
 
 		std::string prepareModelName(std::string name);
 
 	private:
 		Shader* model3DShader;
 		float scaleFactor;
+		bool isFrom3SE;
 		
 		/* Importer methods used for load */
 		void processElements(xml_node<>* firstNode, float _divider, bool ifProcessingChild = false);

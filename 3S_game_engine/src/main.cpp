@@ -194,7 +194,7 @@ int main()
 
     /* Create importer with given *.xml file */
      //Loader::Importer importer("assets/scenes/rotation_scale_fix/scene.xml", &model3D, 100.0f);
-     Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
+     Loader::Importer importer("assets/scenes/exported_scene.xml", &model3D, true, 10.0f);
     
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
     int size = importer.importedProctors.size();
@@ -659,11 +659,11 @@ int main()
     }
 
 	/* Export scene to xml file */
-  // std::cout << "Save scene? [y/n]" << std::endl;
-  // std::string check;
-  // std::cin >> check;
-  // if (check == "y")
-  //     Loader::Exporter::exportScene(hierarchy.getProctors(), "assets/scenes/exported_scene.xml");
+    std::cout << "Save scene? [y/n]" << std::endl;
+    std::string check;
+    std::cin >> check;
+    if (check == "y")
+        Loader::Exporter::exportScene(hierarchy.getProctors(), "assets/scenes/exported_scene.xml");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
