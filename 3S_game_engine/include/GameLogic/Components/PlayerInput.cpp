@@ -45,6 +45,7 @@ namespace GameLogic
 		frameCounter++;
 		isPlayerOneInBoat = boat->isPlayerOneInBoat();
 		isPlayerTwoInBoat = boat->isPlayerTwoInBoat();
+
 		/* Apply gravity */
 		cGravity += gravityAcceleration * proctor->getDeltaTime();
 		if (cGravity >= maxGravity)
@@ -93,7 +94,7 @@ namespace GameLogic
 					else if (randomNumber == 3)
 						playerSounds->play2D("assets/audio/sounds/footstep_03.ogg", false);
 
-					((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
+					//((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
 				}
 
 				/* Horizontal movement */
@@ -232,11 +233,12 @@ namespace GameLogic
 					movementSpeed = maxSpeed;
 				}
 
-				if ((keyboard->isKeyDown(GLFW_KEY_I) || 
-					keyboard->isKeyDown(GLFW_KEY_K) || 
-					keyboard->isKeyDown(GLFW_KEY_J) || 
-					keyboard->isKeyDown(GLFW_KEY_L)) 
+				if ((keyboard->isKeyDown(GLFW_KEY_I) ||
+					keyboard->isKeyDown(GLFW_KEY_K) ||
+					keyboard->isKeyDown(GLFW_KEY_J) ||
+					keyboard->isKeyDown(GLFW_KEY_L))
 					&& frameCounter % 10 == 0)
+				{
 					if (randomNumber == 0)
 						playerSounds->play2D("assets/audio/sounds/footstep_00.ogg", false);
 					else if (randomNumber == 1)
@@ -245,6 +247,9 @@ namespace GameLogic
 						playerSounds->play2D("assets/audio/sounds/footstep_02.ogg", false);
 					else if (randomNumber == 3)
 						playerSounds->play2D("assets/audio/sounds/footstep_03.ogg", false);
+
+					//((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
+				}
 
 				/* Horizontal movement */
 				if (keyboard->isKeyDown(GLFW_KEY_J))

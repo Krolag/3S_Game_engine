@@ -58,21 +58,9 @@ namespace GameLogic
 
 	void Anima::initializeAnimations()
 	{
-		int size = this->model->scene->mNumAnimations;
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < 3; ++i)
 		{
-			this->loadedAnimations.push_back(
-				Animation(
-					this->model->path.c_str(), 
-					this->model, 
-					i
-				));
+			this->loadedAnimations.push_back(Animation(model->path, model, i));
 		}
-
-		//if (size != 0)
-		//{
-		//	cIndex = 0;
-		//	animator.playAnimation(&loadedAnimations[0]);
-		//}
 	}
 }

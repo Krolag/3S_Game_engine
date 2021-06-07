@@ -25,8 +25,8 @@ namespace GameLogic
 		float distanceOne = sqrt(xDistanceOne * xDistanceOne + zDistanceOne * zDistanceOne);
 
 		// Distance between playerTwo and a coin
-		float xDistanceTwo = proctor->getParentHierarchy()->getObject("hero_01")->getPosition()[0] - proctor->getPosition()[0];
-		float zDistanceTwo = proctor->getParentHierarchy()->getObject("hero_01")->getPosition()[2] - proctor->getPosition()[2];
+		float xDistanceTwo = proctor->getParentHierarchy()->getObject("playerTwo")->getPosition()[0] - proctor->getPosition()[0];
+		float zDistanceTwo = proctor->getParentHierarchy()->getObject("playerTwo")->getPosition()[2] - proctor->getPosition()[2];
 		float distanceTwo = sqrt(xDistanceTwo * xDistanceTwo + zDistanceTwo * zDistanceTwo);
 
 		// Chose which player should be followed 

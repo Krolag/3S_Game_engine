@@ -158,6 +158,40 @@ int main()
 
     /* Create models library */
     Loader::ModelLibrary modelLibrary;
+
+    /* Load models for not-serializable proctors */
+    //modelLibrary.addModel("assets/models/players/player_one.fbx", "playerOne", true, false);
+    modelLibrary.addModel("assets/models/players/player_red_no_anim.fbx", "playerTwo", true, true);
+    modelLibrary.addModel("assets/models/boat/bbot.fbx", "boat", true, true);
+    modelLibrary.addModel("assets/models/x.fbx", "x", true, true);
+    /* Boat */
+    GameLogic::Proctor      boat("boat", glm::vec3(720.0f, 2.0f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
+    GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
+    GameLogic::Boat         boat_b(GameLogic::C_MOVEMENT, &boat);
+    GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
+    GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
+    hierarchy.addObject(&boat);
+    /* Player One */
+    Loader::Model           hero_00_m("assets/models/players/player_red_no_anim.fbx", "playerOne", true, true);
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.01f));
+    GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &model3D);
+    //GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
+    GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
+    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &hero_00, &collisionBoxShader, false);
+    hierarchy.addObject(&hero_00);
+    /* Player Two */
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.01f));
+    GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
+    //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
+    GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
+    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
+    hierarchy.addObject(&hero_01);
+    /* X - cross*/
+    GameLogic::Proctor xSign("x", glm::vec3(770, 5.3, 820), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
+    GameLogic::MeshRenderer xSign_mr(GameLogic::C_MESH, &xSign, modelLibrary.getModel(xSign.name), &model3D);
+    GameLogic::Interactable xSign_in(GameLogic::C_INTERACTABLE, &xSign);
+    hierarchy.addObject(&xSign);
+
     /* Create importer with given *.xml file */
      //Loader::Importer importer("assets/scenes/rotation_scale_fix/scene.xml", &model3D, 100.0f);
      Loader::Importer importer("assets/scenes/scene.xml", &model3D, 10.0f);
@@ -213,49 +247,6 @@ int main()
         }
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
-
-    /* Load models that probably won't be serialized */
-    //modelLibrary.addModel("assets/models/players/player_one.fbx", "hero_00", true, false); // If last value is set to true, there is no animation
-    modelLibrary.addModel("assets/models/player_2021_05_30_23_21.fbx", "hero_01", true, true);
-    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_00", true, true);
-    modelLibrary.addModel("assets/models/serializable/chestBody_debug.fbx", "chestBody_01", true, true);
-    modelLibrary.addModel("assets/models/coin.fbx", "coin_00", true, true);
-    modelLibrary.addModel("assets/models/coin.fbx", "coin_01", true, true);
-    modelLibrary.addModel("assets/models/boat/bbot.fbx", "boat", true, true);
-    modelLibrary.addModel("assets/models/x.fbx", "x", true, true);
-    //modelLibrary.addModel("assets/models/serializable/island_corner_00.fbx", "island_00", true);
-
-    /* Configure proctors */
-    /* Boat */
-    GameLogic::Proctor      boat("boat", glm::vec3(720.0f, 2.0f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
-    GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
-    GameLogic::Boat boat_b(GameLogic::C_MOVEMENT, &boat);
-    GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
-    GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
-
-    // Players
-    //GameLogic::Proctor      hero_00("hero_00", glm::vec3(-5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    Loader::Model           hero_00_model("assets/models/player_2021_05_30_23_21.fbx", "playerOne", true, false);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_model, &model3D);
-    GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
-    GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
-    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_model, &hero_00, &collisionBoxShader, false);
-    hierarchy.addObject(&hero_00);
-
-    //GameLogic::Proctor      hero_01("hero_01", glm::vec3(5.0f, 500.0f, 0.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::Proctor      hero_01("hero_01", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.03f));
-    GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
-    GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
-    GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
-    hierarchy.addObject(&hero_01);
-    hierarchy.addObject(&boat);
-
-    //Here You can dig sign
-    GameLogic::Proctor xSign("x", glm::vec3(770, 5.3, 820), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
-    GameLogic::MeshRenderer xSign_mr(GameLogic::C_MESH, &xSign, modelLibrary.getModel(xSign.name), &model3D);
-    GameLogic::Interactable xSign_in(GameLogic::C_INTERACTABLE, &xSign);
-    hierarchy.addObject(&xSign);
 	
   /* GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
@@ -301,7 +292,7 @@ int main()
     Monster monsterSystem(&hero_00, tiles);
 
     Application::Scene sceneManager;
-    sceneManager.changeCurrentScene("mainMenu");
+    sceneManager.changeCurrentScene("game");
     int tmpMainMenuIndex = 0;
 
     /* SHADOW MAPPING */
@@ -364,10 +355,12 @@ int main()
                 bottleSource->setDefaultVolume(1);
                 engine->play2D(bottleSource, false);
             }
+
+            //hero_00_an.playAnimation(0);
+            //hero_01_an.playAnimation(0);
             hero_00_pi.setActive(false);
             hero_01_pi.setActive(false);
             boat_b.setActive(false);
-            hero_00_an.playAnimation(0);
 
             //enable cliping
             glEnable(GL_CLIP_DISTANCE0);
@@ -530,7 +523,6 @@ int main()
             /* Set players variables */
             hero_00_pi.setActive(true);
             hero_01_pi.setActive(true);
-            hero_00_an.playAnimation(0);
 
             /* Set camera variables */
             camera.setProjection(projection);
