@@ -50,7 +50,7 @@ void WaterMesh::render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, in
 	waterShader.setUniformFloat("waveSpeed", waveSpeed);
 	waterShader.setUniform("camPos", cameraPos);
 	waterShader.setUniform("lightPos", cameraPos.x, 10000, cameraPos.z);
-	waterShader.setUniform("lightColor", 0.8f, 0.8f, 0.8f);
+	waterShader.setUniform("lightColor", 0.6f, 0.6f, 0.6f);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, reflectionTex);

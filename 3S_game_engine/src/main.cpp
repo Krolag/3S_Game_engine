@@ -43,6 +43,7 @@ ISoundSource* waveSource = engine->addSoundSourceFromFile("assets/audio/sounds/b
 // menu
 ISoundSource* bottleSource = engine->addSoundSourceFromFile("assets/audio/sounds/bottle.ogg");
 ISoundSource* mainMenuSource = engine->addSoundSourceFromFile("assets/audio/sounds/mainMenu.ogg");
+ISoundSource* heartBeatSource = engine->addSoundSourceFromFile("assets/audio/sounds/beat.ogg");
 #pragma endregion
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -187,6 +188,9 @@ int main()
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
 
+    GameLogic::Proctor      monster("monster", glm::vec3(0.0f, -1000.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
+    GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, modelLibrary.getModel(hero_01.name), &model3D);
+    hierarchy.addObject(&monster);
 
     /* Create importer with given *.xml file */
     Loader::Importer importer("assets/scenes/exported_scene.xml", &model3D, true, 10.0f);
@@ -243,12 +247,12 @@ int main()
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
 	
-  /* GameLogic::Proctor      island_00("island_00", glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
-    GameLogic::MeshRenderer island_00_mr(GameLogic::C_MESH, &island_00, modelLibrary.getModel("island_00"), &model3D);
-    hierarchy.addObject(&island_00);
-    GameLogic::Proctor      island_01("island_01", glm::vec3(20.0f, 0.0f, 0.0f), glm::quat(1.0f, 0.0f, -1.57f, 0.0f), glm::vec3(0.05f));
-    GameLogic::MeshRenderer island_01_mr(GameLogic::C_MESH, &island_01, modelLibrary.getModel("island_00"), &model3D);
-    hierarchy.addObject(&island_01);*/
+
+    GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(766.0f, 0.0f, 810.0f));
+    GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(-350.0f, 0.0f, 350.0f));
+    GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(-400.0f, 0.0f, -350.0f));
+    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(700.0f, 0.0f, 0.0f));
+    GameLogic::Proctor safe_zone_5("safe_zone_5", glm::vec3(334.0f, 0.0f, -810.0f));
 #pragma endregion
 
 #pragma region Environment
@@ -264,7 +268,7 @@ int main()
     };
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 700, 2000);
+    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 900, 3000);
     float waterYpos = 1.5f;
     Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 #pragma endregion
@@ -281,10 +285,13 @@ int main()
 #pragma endregion
 
 #pragma region TEST CODE
-    std::vector<GameLogic::Proctor*> tiles;
-    //tiles.push_back(&island_00);
-    //tiles.push_back(&island_01);
-    Monster monsterSystem(&hero_00, tiles);
+    std::vector<GameLogic::Proctor*> zones;
+    zones.push_back(&safe_zone_1);
+    zones.push_back(&safe_zone_2);
+    zones.push_back(&safe_zone_3);
+    zones.push_back(&safe_zone_4);
+    zones.push_back(&safe_zone_5);
+    Monster monsterSystem(&boat, zones);
 
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("game");
@@ -622,7 +629,10 @@ int main()
                 dukatSpinIndex = 0;
 
             /* Update monster system */
-            monsterSystem.update();
+            monsterSystem.update(engine,heartBeatSource,bottleSource,&monster);
+            if (monsterSystem.isGameOver) {
+                sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
+            }
             // TODO: @Ignacy - potrzebne to?
             /*if (isPaused == true)
             {
