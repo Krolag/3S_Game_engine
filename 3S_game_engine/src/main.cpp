@@ -428,8 +428,8 @@ int main()
             hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
             //---------------------------------------------------------------------------
 
-            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
+            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
             // Main menu UI
             logo.render();
@@ -602,8 +602,8 @@ int main()
             hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
             /* Render water */
-            model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 700, camera.Position.y, camera.Position.z + 700));
+            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
+            water.render(model, projection, view, reflectFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
             /* TODO: @Dawid - DEBUG Set camera shader variables - projection, view, collision */
             collisionBoxShader.use();
