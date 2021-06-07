@@ -163,7 +163,7 @@ int main()
     //modelLibrary.addModel("assets/models/players/player_one.fbx", "playerOne", true, false);
     modelLibrary.addModel("assets/models/players/player_red_no_anim.fbx", "playerTwo", true, true);
     modelLibrary.addModel("assets/models/boat/bbot.fbx", "boat", true, true);
-    modelLibrary.addModel("assets/models/x.fbx", "x", true, true);
+ 
     /* Boat */
     GameLogic::Proctor      boat("boat", glm::vec3(720.0f, 2.0f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, modelLibrary.getModel(boat.name), &model3D);
@@ -186,15 +186,11 @@ int main()
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
-    /* X - cross*/
-    GameLogic::Proctor xSign("x", glm::vec3(770, 5.3, 820), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
-    GameLogic::MeshRenderer xSign_mr(GameLogic::C_MESH, &xSign, modelLibrary.getModel(xSign.name), &model3D);
-    GameLogic::Interactable xSign_in(GameLogic::C_INTERACTABLE, &xSign);
-    hierarchy.addObject(&xSign);
+
 
     /* Create importer with given *.xml file */
      //Loader::Importer importer("assets/scenes/rotation_scale_fix/scene.xml", &model3D, 100.0f);
-     Loader::Importer importer("assets/scenes/exported_scene.xml", &model3D, true, 10.0f);
+     Loader::Importer importer("assets/scenes/scene.xml", &model3D, false, 10.0f);
     
     /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
     int size = importer.importedProctors.size();

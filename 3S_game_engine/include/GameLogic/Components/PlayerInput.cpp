@@ -173,11 +173,20 @@ namespace GameLogic
 						}
 						if (tmp.at(i)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(i)->getComponentOfType(C_INTERACTABLE)->isActive() == true)
 						{
-							if (tmp.at(i)->name == "x")
+							if (tmp.at(i)->name == "x-1" || tmp.at(i)->name == "x-2" || tmp.at(i)->name == "x-3" || tmp.at(i)->name == "x-4" || tmp.at(i)->name == "x-5")
 							{
 								tmp.at(i)->getComponentOfType(C_INTERACTABLE)->setActive(false);
 								tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
-								clueText = "The winds blow NORTH";
+								if (tmp.at(i)->name == "x-1")
+									clueText = "The winds blow NORTH";
+								if (tmp.at(i)->name == "x-2")
+									clueText = "The winds blow NORTH-WEST";
+								if (tmp.at(i)->name == "x-3")
+									clueText = "The winds blow SOUTH-WEST";
+								if (tmp.at(i)->name == "x-4")
+									clueText = "The winds blow SOUTH";
+								if (tmp.at(i)->name == "x-5")
+									clueText = "Familiar odor...?";
 
 								isCluePickedUp = true;
 							}

@@ -24,11 +24,13 @@ namespace Loader
 		// Get the first node of the scene
 		rootNode = rootNode->first_node()->first_node();
 
+		if (_isFrom3SE == true)
+			_divider = 1.0f;
 		// Process scene nodes and init proctors
-		processElements(rootNode, _divider);
+		processElements(rootNode, _divider, _isFrom3SE);
 	}
 	
-	void Importer::processElements(xml_node<>* firstNode, float _divider, bool ifProcessingChild)
+	void Importer::processElements(xml_node<>* firstNode, float _divider, bool _isFrom3SE, bool ifProcessingChild)
 	{
 		// Iterate over the elements
 		for(firstNode;firstNode;firstNode=firstNode->next_sibling())
@@ -73,18 +75,30 @@ namespace Loader
 			childElement = firstNode->first_node("Scale");
 			//glm::vec3 proctorScale(10.0f);
 			glm::vec3 proctorScale(
-				(float)strtod(childElement->first_node("x")->value(), NULL) / scaleFactor, //0.05f,
-				(float)strtod(childElement->first_node("y")->value(), NULL) / scaleFactor, //0.05f,
-				(float)strtod(childElement->first_node("z")->value(), NULL) / scaleFactor //0.05f
+				(float)strtod(childElement->first_node("x")->value(), NULL) / _divider, //0.05f,
+				(float)strtod(childElement->first_node("y")->value(), NULL) / _divider, //0.05f,
+				(float)strtod(childElement->first_node("z")->value(), NULL) / _divider //0.05f
 			);
 
 			// Position
 			childElement = firstNode->first_node("Position");
-			glm::vec3 proctorPosition(
-				 (float)strtod(childElement->first_node("x")->value(), NULL) * (proctorScale.x * 100.0f),
-				 (float)strtod(childElement->first_node("y")->value(), NULL) * (proctorScale.y * 100.0f),
-				-(float)strtod(childElement->first_node("z")->value(), NULL) * (proctorScale.z * 100.0f)
-			);
+			glm::vec3 proctorPosition;
+			if (_isFrom3SE == false)
+			{
+				proctorPosition = glm::vec3(
+					(float)strtod(childElement->first_node("x")->value(), NULL) * (proctorScale.x * 100.0f),
+					(float)strtod(childElement->first_node("y")->value(), NULL) * (proctorScale.y * 100.0f),
+					-(float)strtod(childElement->first_node("z")->value(), NULL) * (proctorScale.z * 100.0f)
+				);
+			}
+			else if (_isFrom3SE == true)
+			{
+				proctorPosition = glm::vec3(
+					(float)strtod(childElement->first_node("x")->value(), NULL) * (proctorScale.x * 10),
+					(float)strtod(childElement->first_node("y")->value(), NULL) * (proctorScale.y * 10),
+					(float)strtod(childElement->first_node("z")->value(), NULL) * (proctorScale.z * 10)
+				);
+			}
 
 			importedProctors.push_back(std::make_shared<GameLogic::Proctor>(proctorName.c_str(), proctorPosition, proctorRotation, proctorScale));
 

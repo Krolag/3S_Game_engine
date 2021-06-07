@@ -37,7 +37,7 @@ namespace Loader
 		bool isFrom3SE;
 		
 		/* Importer methods used for load */
-		void processElements(xml_node<>* firstNode, float _divider, bool ifProcessingChild = false);
+		void processElements(xml_node<>* firstNode, float _divider, bool _isFrom3SE, bool ifProcessingChild = false);
 		std::unique_ptr<char[]> file2char(const char* fileName);
 		bool isNameInImportedList(std::string name);
 	};
