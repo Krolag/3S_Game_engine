@@ -31,11 +31,9 @@ namespace GameLogic
 	{
 		if (_index != cIndex)
 		{
-			if (loadedAnimations.size() - 1 <= _index)
-			{
-				cIndex = _index;
-				animator.playAnimation(&loadedAnimations[_index]);
-			}
+			std::cout << _index << std::endl;
+			cIndex = _index;
+			animator.playAnimation(&loadedAnimations[_index]);
 		}
 		else if (_index == -1)
 		{
@@ -58,9 +56,17 @@ namespace GameLogic
 
 	void Anima::initializeAnimations()
 	{
+		std::cout << model->scene->mNumAnimations << std::endl;
+		for (int i = 0; i < model->scene->mNumAnimations; i++)
+		{
+			float size = model->scene->mAnimations[i]->mDuration;
+			if (size != NULL)
+				std::cout << size << std::endl;
+		}
+
 		for (int i = 0; i < 3; ++i)
 		{
-			this->loadedAnimations.push_back(Animation(model->path, model, i));
+			this->loadedAnimations.push_back(Animation(model->path, model, 0));
 		}
 	}
 }
