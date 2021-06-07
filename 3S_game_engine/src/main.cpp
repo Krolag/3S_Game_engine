@@ -172,10 +172,10 @@ int main()
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
     /* Player One */
-    Loader::Model           hero_00_m("assets/models/players/player_red_no_anim.fbx", "playerOne", true, true);
+    Loader::Model           hero_00_m("assets/models/players/blue_every_frame.fbx", "playerOne", true, false);
     GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.01f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &model3D);
-    //GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
+    GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
@@ -189,10 +189,9 @@ int main()
 
 
     /* Create importer with given *.xml file */
-     //Loader::Importer importer("assets/scenes/rotation_scale_fix/scene.xml", &model3D, 100.0f);
-     Loader::Importer importer("assets/scenes/scene.xml", &model3D, false, 10.0f);
+    Loader::Importer importer("assets/scenes/exported_scene.xml", &model3D, true, 10.0f);
     
-    /* Load models to hierarchy */ // UNCOMMENT TO ADD IMPORTED OBJECTS TO HIERARCHY
+    /* Load models to hierarchy */
     int size = importer.importedProctors.size();
     for (int i = 0; i < size; ++i)
     {
@@ -308,6 +307,8 @@ int main()
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    int animID = -1;
 
 #pragma endregion
 
@@ -519,6 +520,14 @@ int main()
             /* Set players variables */
             hero_00_pi.setActive(true);
             hero_01_pi.setActive(true);
+
+            /* DEBUG */
+            
+            if (keyboardInput->isKeyPressed(GLFW_KEY_M))
+                animID++;
+            else if (keyboardInput->isKeyPressed(GLFW_KEY_N))
+                animID--;
+            hero_00_an.playAnimation(animID);
 
             /* Set camera variables */
             camera.setProjection(projection);
