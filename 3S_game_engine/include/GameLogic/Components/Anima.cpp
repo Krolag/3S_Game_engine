@@ -57,9 +57,13 @@ namespace GameLogic
 	void Anima::initializeAnimations()
 	{
 		int size = model->scene->mNumAnimations;
+		
+		std::cout << size << std::endl;
+
 		for (int i = 0; i < size; ++i)
 		{
-			this->loadedAnimations.push_back(Animation(model->path, model, 0));
+			loadedAnimations.push_back(Animation(model->path, model, 0));
+			std::cout << loadedAnimations.back().getDuration() << std::endl;
 		}
 	}
 }

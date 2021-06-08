@@ -109,7 +109,6 @@ int main()
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
     Shader collisionBoxShader("assets/shaders/boxCollider2.vert", "assets/shaders/boxCollider2.frag");
     Shader depthShader("assets/shaders/depthShader.vert", "assets/shaders/depthShader.frag");
-    Shader shadowDebugShader("assets/shaders/debug/shadowDebugShader.vert", "assets/shaders/debug/shadowDebugShader.frag");
 
 #pragma endregion
 
@@ -178,7 +177,6 @@ int main()
     GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
-    hero_00_an.playAnimation(0);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
@@ -299,7 +297,7 @@ int main()
     sceneManager.changeCurrentScene("game");
     int tmpMainMenuIndex = 0;
 
-    int animID = -1;
+    int animID = 0;
 
     /* SHADOW MAPPING */
     // Configure depth map fbo
@@ -324,8 +322,6 @@ int main()
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    shadowDebugShader.use();
-    shadowDebugShader.setUniformInt("depthMap", 0);
     glm::vec3 lightPos(-2.0f, 50.0f, -1.0f);
 
 #pragma endregion
@@ -540,8 +536,8 @@ int main()
             hero_01_pi.setActive(true);
             
             if (keyboardInput->isKeyPressed(GLFW_KEY_M))
-                hero_00_an.playAnimation(0);
-
+                animID++;
+            hero_00_an.playAnimation(animID);
             /* Set camera variables */
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
@@ -590,23 +586,23 @@ int main()
             glDisable(GL_CLIP_DISTANCE0);
 
 #pragma region SHADOWS - ShadowsBuffer
-            /* Render depth of scene to texture from light's perspective */
-            glm::mat4 lightProjection, lightView;
-            glm::mat4 lightSpaceMatrix;
-            float nearPlane = 1.0f, farPlane = 7.5f;
-            lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-            lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-            lightSpaceMatrix = lightProjection * lightView;
-            depthShader.use();
-            depthShader.setUniform("lightSpaceMatrix", lightSpaceMatrix);
+            ///* Render depth of scene to texture from light's perspective */
+            //glm::mat4 lightProjection, lightView;
+            //glm::mat4 lightSpaceMatrix;
+            //float nearPlane = 1.0f, farPlane = 7.5f;
+            //lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+            //lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            //lightSpaceMatrix = lightProjection * lightView;
+            //depthShader.use();
+            //depthShader.setUniform("lightSpaceMatrix", lightSpaceMatrix);
 
-            glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-            glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-            glClear(GL_DEPTH_BUFFER_BIT);
-            hierarchy.renderWithShader(&depthShader);
+            //glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+            //glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+            //glClear(GL_DEPTH_BUFFER_BIT);
+            //hierarchy.renderWithShader(&depthShader);
 
-            /* Close framebuffer */
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            ///* Close framebuffer */
+            //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #pragma endregion
 
 
@@ -623,10 +619,10 @@ int main()
             model3D.setUniform("view", view);
             model3D.setUniform("lightPos", lightPos);
             model3D.setUniform("viewPos", camera.Position);
-            model3D.setUniform("lightSpaceMatrix", lightSpaceMatrix);
+            //model3D.setUniform("lightSpaceMatrix", lightSpaceMatrix);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, depthMap);
-
+                
             /* TODO: @Dawid - DEBUG between game camera and debug camera */
             cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 

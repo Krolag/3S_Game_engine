@@ -44,28 +44,44 @@ float shadowCalc(float _dotLightNormal)
 }
 
 void main()
-{    
-    vec3 color = material.diffuse.xyz;//texture(diffuse0, TexCoord).rgb;
+{
+    /* Dir-light calculations */
     vec3 normal = normalize(Normal);
-    vec3 lightColor = vec3(0.3);
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec4 diffMap, specMap;
+
+    /* Check if model has textures */
+    if (noTex == 1)
+    {
+        diffMap = material.diffuse;
+        specMap = material.specular;
+    }
+    else
+    {
+        diffMap = texture(diffuse0, TexCoord);
+        specMap = texture(specular0, TexCoord);
+    }
 
     /* Ambient */
-    vec3 ambient = dirLight.ambient.xyz * material.diffuse.xyz * color;
+    vec4 ambient = dirLight.ambient * material.diffuse;
     /* Diffuse */
-    float diff = max(dot(normal, normalize(-dirLight.direction)), 0.0f);
-    vec3 diffuse = dirLight.diffuse.xyz * (diff * material.diffuse.xyz) * lightColor;
+    vec3 lightDir = normalize(-dirLight.direction);
+    float diff = max(dot(normal, lightDir), 0.0f);
+    vec4 diffuse = dirLight.diffuse * (diff * material.diffuse);
     /* Specular */
-    vec3 reflectDir = reflect(-normalize(-dirLight.direction), normal);
-    float spec = pow(max(dot(normalize(viewPos - FragPos), reflectDir), 0.0f), material.shininess * 128.0f);
-    vec3 specular = dirLight.specular.xyz * (spec * material.specular.xyz) * lightColor;
-//    vec3 viewDir = normalize(viewPos - FragPos);
-//    vec3 halfwayDir = normalize(lightDir + viewDir);
-//    float spec = pow(max(dot(normal, halfwayDir), 0.0f), 64.0);
-//    vec3 specular = spec * lightColor;
+    vec4 specular = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    /* If diff <= 0, the object is "behind" light source */
+    if (diff > 0)
+    {
+        float dotProd = 0.0f;
 
-    /* Calculate shadows */
-    float shadow = shadowCalc(dot(dirLight.direction, normal));
-    vec3 lighting = (shadow * (diffuse + specular) + ambient) * color;
+        /* Calculate using Blinn-Phong model */
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        dotProd = dot(normal, halfwayDir);
 
-    FragColor = vec4(lighting, 1.0f);
+        float spec = pow(max(dotProd, 0.0f), material.shininess * 128);
+        specular = dirLight.specular * (spec * material.specular);
+    }
+
+    FragColor = vec4(ambient + diffuse + specular);
 }
