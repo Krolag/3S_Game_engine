@@ -1,4 +1,6 @@
 #version 430
+layout(binding = 0) uniform sampler2D diffuse0;
+layout(binding = 1) uniform sampler2D specular0;
 
 struct Material
 {
@@ -6,18 +8,6 @@ struct Material
     vec4 diffuse;
     vec4 specular;
     float shininess;
-};
-
-#define MAX_POINT_LIGHTS 20
-struct PointLight
-{
-    vec3 position;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
-    float k0;
-    float k1;
-    float k2;
 };
 
 struct DirLight
@@ -28,158 +18,54 @@ struct DirLight
     vec4 specular;
 };
 
-#define MAX_SPOT_LIGHTS 5
-struct SpotLight
-{
-    vec3 position;
-    vec3 direction;
-    float cutOff;
-    float outerCutOff;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
-    float k0;
-    float k1;
-    float k2;
-};
-
-uniform Material material;
-uniform int noTex;
-layout(binding = 0) uniform sampler2D diffuse0;
-layout(binding = 1) uniform sampler2D specular0;
-uniform PointLight pointLights[MAX_POINT_LIGHTS];
-uniform int noPointLights;
-uniform DirLight dirLight;
-uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
-uniform int noSpotLights;
-
-out vec4 FragColor;
-
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoord;
+in vec4 FragPosLightSpace;
 
-uniform vec3 viewPosition;
+out vec4 FragColor;
 
-vec4 calcPointLight (int _idx,   vec3 _norm,    vec3 _viewDir, vec4 _diffMap, vec4 _specMap);
-vec4 calcDirLight               (vec3 _norm, vec3 _viewDir, vec4 _diffMap, vec4 _specMap);
-vec4 calcSpotLight  (int _idx,   vec3 _norm,    vec3 _viewDir, vec4 _diffMap, vec4 _specMap);
+uniform DirLight dirLight;
+uniform Material material;
+uniform int noTex;
+uniform sampler2D shadowMap;
+uniform vec3 lightPos;
+uniform vec3 viewPos;
+
+float shadowCalc(float _dotLightNormal)
+{
+    /* Transform from [-1, 1] range to [0, 1] range */
+    vec3 pos = FragPosLightSpace.xyz * 0.5f + 0.5f;
+    if (pos.z > 1.0f)
+        pos.z = 1.0f;
+    float depth = texture(shadowMap, pos.xy).r;
+    float bias = max(0.05f * (1.0f - _dotLightNormal), 0.005f);
+    return (depth + bias) < pos.z ? 0.0f : 1.0f;
+}
 
 void main()
 {    
-    vec3 norm = normalize(Normal);
-    vec3 viewDir = normalize(viewPosition - FragPos);
-    vec4 diffMap;
-    vec4 specMap;
-
-    /* Check if model is using textures */
-    if (noTex == 1)
-    {
-        diffMap = material.diffuse;
-        specMap = material.specular;
-    }
-    else
-    {
-        diffMap = texture(diffuse0, TexCoord);
-        specMap = texture(specular0, TexCoord);
-    }
-
-    vec4 result;
-
-    /* Directional */
-    result = calcDirLight(norm, viewDir, diffMap, specMap);
-    /* Points */
-    for (int i = 0; i < noPointLights; i++)
-    {
-        result += calcPointLight(i, norm, viewDir, diffMap, specMap);
-    }
-    /* Spots */
-    for (int i = 0; i < noPointLights; i++)
-    {
-        result += calcSpotLight(i, norm, viewDir, diffMap, specMap);
-    }
-
-    /* Set value correctly */
-    FragColor = result; //uncomment this line of code, to see model with textures
-//    FragColor = vec4(TexCoord, 0.0f, 1.0f); // uncomment this line of code, to see model's texture coord
-}
-
-vec4 calcPointLight(int _idx, vec3 _norm, vec3 _viewDir, vec4 _diffMap, vec4 _specMap)
-{
-    vec3 lightDirection = normalize(pointLights[_idx].position - FragPos);
+    vec3 color = material.diffuse.xyz;//texture(diffuse0, TexCoord).rgb;
+    vec3 normal = normalize(Normal);
+    vec3 lightColor = vec3(0.3);
 
     /* Ambient */
-    vec4 ambient = pointLights[_idx].ambient * _diffMap;
+    vec3 ambient = dirLight.ambient.xyz * material.diffuse.xyz * color;
     /* Diffuse */
-    float diff = max(dot(_norm, lightDirection), 0.0f);
-    vec4 diffuse = pointLights[_idx].diffuse * (diff * _diffMap);
+    float diff = max(dot(normal, normalize(-dirLight.direction)), 0.0f);
+    vec3 diffuse = dirLight.diffuse.xyz * (diff * material.diffuse.xyz) * lightColor;
     /* Specular */
-    vec3 reflectDir = reflect(-lightDirection, _norm);
-    float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), material.shininess * 128);
-    vec4 specular = pointLights[_idx].specular * (spec * _specMap);
+    vec3 reflectDir = reflect(-normalize(-dirLight.direction), normal);
+    float spec = pow(max(dot(normalize(viewPos - FragPos), reflectDir), 0.0f), material.shininess * 128.0f);
+    vec3 specular = dirLight.specular.xyz * (spec * material.specular.xyz) * lightColor;
+//    vec3 viewDir = normalize(viewPos - FragPos);
+//    vec3 halfwayDir = normalize(lightDir + viewDir);
+//    float spec = pow(max(dot(normal, halfwayDir), 0.0f), 64.0);
+//    vec3 specular = spec * lightColor;
 
-    /* Attenuation */ 
-    float dist = length(pointLights[_idx].position - FragPos);
-    float attenuation = 1.0f / (pointLights[_idx].k0 + pointLights[_idx].k1 * dist + pointLights[_idx].k2 * (dist * dist));
+    /* Calculate shadows */
+    float shadow = shadowCalc(dot(dirLight.direction, normal));
+    vec3 lighting = (shadow * (diffuse + specular) + ambient) * color;
 
-    /* Set value correctly */
-    return vec4(ambient + diffuse + specular) * attenuation;
-}
-
-vec4 calcDirLight(vec3 _norm, vec3 _viewDir, vec4 _diffMap, vec4 _specMap)
-{
-    vec3 lightDirection = normalize(-dirLight.direction);
-
-    /* Ambient */
-    vec4 ambient = dirLight.ambient * _diffMap;
-    /* Diffuse */
-    float diff = max(dot(_norm, lightDirection), 0.0f);
-    vec4 diffuse = dirLight.diffuse * (diff * _diffMap);
-    /* Specular */
-    vec3 reflectDir = reflect(-lightDirection, _norm);
-    float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), material.shininess * 128);
-    vec4 specular = dirLight.specular * (spec * _specMap);
-
-    /* Set value correctly */
-    return vec4(ambient + diffuse + specular);
-}
-
-vec4 calcSpotLight(int _idx, vec3 _norm, vec3 _viewDir, vec4 _diffMap, vec4 _specMap)
-{
-    vec3 lightDirection = normalize(spotLights[_idx].position - FragPos);
-    float theta = dot(lightDirection, normalize(-spotLights[_idx].direction));
-
-    /* Ambient */
-    vec4 ambient = spotLights[_idx].ambient * _diffMap;
-
-    /* If in cutoff, render light */    
-    if (theta > spotLights[_idx].outerCutOff) // < because using cosines and not degrees
-    {
-        /* Diffuse */
-        float diff = max(dot(_norm, lightDirection), 0.0f);
-        vec4 diffuse = spotLights[_idx].diffuse * (diff * _diffMap);
-
-        /* Specular */
-        vec3 reflectDir = reflect(-lightDirection, _norm);
-        float spec = pow(max(dot(_viewDir, reflectDir), 0.0f), material.shininess * 128);
-        vec4 specular = spotLights[_idx].specular * (spec * _specMap);
-
-        /* Intensity */
-        float intensity = (theta - spotLights[_idx].outerCutOff) / (spotLights[_idx].cutOff - spotLights[_idx].outerCutOff);
-        intensity = clamp(intensity, 0.0f, 1.0f);
-        diffuse *= intensity;
-        specular *= intensity;
-
-        /* Attenuation */ 
-        float dist = length(spotLights[_idx].position - FragPos);
-        float attenuation = 1.0f / (spotLights[_idx].k0 + spotLights[_idx].k1 * dist + spotLights[_idx].k2 * (dist * dist));
-
-        /* Set value correctly */
-        return vec4(ambient + diffuse + specular) * attenuation;
-    }
-    else
-    {
-        /* Render just ambient */
-        return ambient;
-    }
+    FragColor = vec4(lighting, 1.0f);
 }

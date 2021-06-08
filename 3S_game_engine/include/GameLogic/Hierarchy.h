@@ -39,6 +39,7 @@ namespace GameLogic
 		bool getState();
 
 		/* Render methods */
+		void renderWithShader(Shader* _shader);
 		void drawHierarchyWindow();
 
 		void update(bool _onlyRender = false, bool _drawDebug = false, int collisionIncrement = 0);

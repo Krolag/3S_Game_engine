@@ -144,6 +144,41 @@ namespace GameLogic
 		return active;
 	}
 
+	void Hierarchy::renderWithShader(Shader* _shader)
+	{
+		std::vector<Shader*> currentlyUsedShaders;
+
+		/* Iterate through each proctor */
+		int size = proctors.size();
+		for (int i = 0; i < size; i++)
+		{
+			/* Get mesh component from proctor and check its existance */
+			MeshRenderer* mesh = (MeshRenderer*)proctors[i]->getComponentOfType(C_MESH);
+			if (mesh != NULL)
+			{
+				/* Save shaders */
+				currentlyUsedShaders.push_back(mesh->shader);
+
+				/* Set new shader */
+				mesh->setShader(_shader);
+			}
+		}
+
+		/* Call update only for render purpose with new shader */
+		update(true, false);
+
+		/* Iterate through each proctor and set old shader */
+		for (int i = 0; i < size; i++)
+		{
+			/* Get mesh component from proctor and check its existance */
+			MeshRenderer* mesh = (MeshRenderer*)proctors[i]->getComponentOfType(C_MESH);
+			if (mesh != NULL)
+			{
+				mesh->setShader(currentlyUsedShaders[i]);
+			}
+		}
+	}
+
 	void Hierarchy::drawHierarchyWindow()
 	{
 		/* Draw hierarchy as buttons */

@@ -9,6 +9,7 @@ layout (location = 3) in ivec3 inJointIndices;
 layout (location = 4) in vec3 inWeights;
 
 out vec3 FragPos;
+out vec4 FragPosLightSpace;
 out vec3 Normal;
 out vec2 TexCoord;
 
@@ -18,6 +19,7 @@ uniform mat4 projection;
 uniform vec4 plane;
 uniform mat4 jointTransforms[MAX_JOINTS];
 uniform bool noAnim;
+uniform mat4 lightSpaceMatrix;
 
 void main()
 {
@@ -27,13 +29,12 @@ void main()
 	/* Check if model has animation */
 	if (noAnim)
 	{
-		vec3 worldNormal = mat3(transpose(inverse(model))) * inNormal;
-
 		FragPos = vec3(model * vec4(inPos, 1.0f));
-		Normal = worldNormal;
+		Normal = mat3(transpose(inverse(model))) * inNormal;
 		TexCoord = inTexCoords;
+		FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0f);
 
-		gl_Position = projection * view * vec4(worldPosition.xyz, 1.0f);
+		gl_Position = projection * view * vec4(FragPos, 1.0f);
 	}
 	else
 	{

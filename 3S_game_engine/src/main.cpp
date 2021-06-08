@@ -107,6 +107,9 @@ int main()
     Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
     Shader collisionBoxShader("assets/shaders/boxCollider2.vert", "assets/shaders/boxCollider2.frag");
+    Shader depthShader("assets/shaders/depthShader.vert", "assets/shaders/depthShader.frag");
+    Shader shadowDebugShader("assets/shaders/debug/shadowDebugShader.vert", "assets/shaders/debug/shadowDebugShader.frag");
+
 #pragma endregion
 
 #pragma region UI init
@@ -160,7 +163,6 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Load models for not-serializable proctors */
-    //modelLibrary.addModel("assets/models/players/player_one.fbx", "playerOne", true, false);
     modelLibrary.addModel("assets/models/players/player_red_no_anim.fbx", "playerTwo", true, true);
     modelLibrary.addModel("assets/models/boat/bbot.fbx", "boat", true, true);
  
@@ -258,9 +260,9 @@ int main()
     /* Lights */
     DirLight dirLight = {
         glm::vec3(-0.2f, -1.0f, -0.3f),
-        glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
-        glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
-        glm::vec4(0.75f, 0.75f, 0.75f, 1.0f)
+        glm::vec4(0.9f, 0.9f, 0.9f, 1.0f),
+        glm::vec4(0.9f, 0.9f, 0.9f, 1.0f),
+        glm::vec4(0.1f, 0.1f, 0.1f, 1.0f)
     };
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -290,25 +292,34 @@ int main()
     sceneManager.changeCurrentScene("game");
     int tmpMainMenuIndex = 0;
 
+    int animID = -1;
+
     /* SHADOW MAPPING */
+    // Configure depth map fbo
+    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
     unsigned int depthMapFBO;
     glGenFramebuffers(1, &depthMapFBO);
+    // Create depth texture
     unsigned int depthMap;
     glGenTextures(1, &depthMap);
     glBindTexture(GL_TEXTURE_2D, depthMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    // Atach depth texture as fbo's depth buffer
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    int animID = -1;
+    shadowDebugShader.use();
+    shadowDebugShader.setUniformInt("depthMap", 0);
+    glm::vec3 lightPos(-2.0f, 50.0f, -1.0f);
 
 #pragma endregion
 
@@ -561,7 +572,7 @@ int main()
 
             /* Render objects for ReflectionBuffer */
             dirLight.render(model3D);
-            hierarchy.update(true, false);
+            hierarchy.renderWithShader(&model3D);
             skybox.render();
 
             /* Set camera position to default */
@@ -576,9 +587,31 @@ int main()
             /* Disable cliiping */
             glDisable(GL_CLIP_DISTANCE0);
 
+#pragma region SHADOWS - ShadowsBuffer
+            /* Render depth of scene to texture from light's perspective */
+            glm::mat4 lightProjection, lightView;
+            glm::mat4 lightSpaceMatrix;
+            float nearPlane = 1.0f, farPlane = 7.5f;
+            lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+            lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            lightSpaceMatrix = lightProjection * lightView;
+            depthShader.use();
+            depthShader.setUniform("lightSpaceMatrix", lightSpaceMatrix);
+
+            glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+            glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            hierarchy.renderWithShader(&depthShader);
+
+            /* Close framebuffer */
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#pragma endregion
+
+
 #pragma region Default rendering
             /* Clear everything */
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
             /* Set model shader variables - projection, view */
@@ -586,6 +619,11 @@ int main()
             model3D.use();
             model3D.setUniform("projection", projection);
             model3D.setUniform("view", view);
+            model3D.setUniform("lightPos", lightPos);
+            model3D.setUniform("viewPos", camera.Position);
+            model3D.setUniform("lightSpaceMatrix", lightSpaceMatrix);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, depthMap);
 
             /* TODO: @Dawid - DEBUG between game camera and debug camera */
             cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
@@ -593,6 +631,9 @@ int main()
             /* Render light and update hierarchy */
             dirLight.render(model3D);
             hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 0);
 
             /* Render water */
             model = glm::translate(model, glm::vec3(-700, waterYpos, -700));
@@ -664,11 +705,7 @@ int main()
     }
 
 	/* Export scene to xml file */
-    std::cout << "Save scene? [y/n]" << std::endl;
-    std::string check;
-    std::cin >> check;
-    if (check == "y")
-        Loader::Exporter::exportScene(hierarchy.getProctors(), "assets/scenes/exported_scene.xml");
+    //Loader::Exporter::exportScene(hierarchy.getProctors(), "assets/scenes/exported_scene.xml");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
