@@ -164,7 +164,6 @@ int main()
     Loader::ModelLibrary modelLibrary;
 
     /* Load models for not-serializable proctors */
-    modelLibrary.addModel("assets/models/players/player_red_no_anim.fbx", "playerTwo", true, true);
     modelLibrary.addModel("assets/models/boat/bbot.fbx", "boat", true, true);
  
     /* Boat */
@@ -175,14 +174,16 @@ int main()
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(boat.name), &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
     /* Player One */
-    Loader::Model           hero_00_m("assets/models/players/blue_every_frame.fbx", "playerOne", true, false);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.01f));
+    Loader::Model           hero_00_m("assets/models/players/blue_every_frame_14.dae", "playerOne", true, false);
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
+    hero_00_an.playAnimation(0);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     /* Player Two */
+    modelLibrary.addModel("assets/models/players/player_red_no_anim.fbx", "playerTwo", true, true);
     GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.01f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
@@ -249,7 +250,6 @@ int main()
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
 	
-
     GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(766.0f, 0.0f, 810.0f));
     GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(-350.0f, 0.0f, 350.0f));
     GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(-400.0f, 0.0f, -350.0f));
@@ -538,14 +538,9 @@ int main()
             /* Set players variables */
             hero_00_pi.setActive(true);
             hero_01_pi.setActive(true);
-
-            /* DEBUG */
             
             if (keyboardInput->isKeyPressed(GLFW_KEY_M))
-                animID++;
-            else if (keyboardInput->isKeyPressed(GLFW_KEY_N))
-                animID--;
-            hero_00_an.playAnimation(animID);
+                hero_00_an.playAnimation(0);
 
             /* Set camera variables */
             camera.setProjection(projection);
@@ -670,7 +665,7 @@ int main()
                 dukatSpinIndex = 0;
 
             /* Update monster system */
-            monsterSystem.update(engine,heartBeatSource,bottleSource,&monster);
+            monsterSystem.update(engine, heartBeatSource,bottleSource,&monster);
             if (monsterSystem.isGameOver) {
                 sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
             }
