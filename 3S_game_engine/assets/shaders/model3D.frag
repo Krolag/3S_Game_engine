@@ -82,6 +82,15 @@ void main()
         float spec = pow(max(dotProd, 0.0f), material.shininess * 128);
         specular = dirLight.specular * (spec * material.specular);
     }
+    
+    vec4 result = vec4(ambient + diffuse + specular);
 
-    FragColor = vec4(ambient + diffuse + specular);
+    /* Use gamma */
+    if (true)
+    {
+        float gamma = 2.2f;
+        result.rgb = pow(result.rgb, vec3(1.0f / gamma));
+    }
+
+    FragColor = result;
 }
