@@ -269,8 +269,6 @@
     <ClInclude Include="include\Monster\Monster.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\debug\shadowDebugShader.frag" />
-    <None Include="assets\shaders\debug\shadowDebugShader.vert" />
     <None Include="assets\shaders\depthShader.frag" />
     <None Include="assets\shaders\depthShader.vert" />
     <None Include="assets\shaders\model_loading.vert" />

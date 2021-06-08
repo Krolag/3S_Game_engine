@@ -118,8 +118,6 @@
     <None Include="include\RapidXml\manual.html" />
     <None Include="assets\shaders\depthShader.vert" />
     <None Include="assets\shaders\depthShader.frag" />
-    <None Include="assets\shaders\debug\shadowDebugShader.vert" />
-    <None Include="assets\shaders\debug\shadowDebugShader.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="assets\shaders\model_loading.frag" />
