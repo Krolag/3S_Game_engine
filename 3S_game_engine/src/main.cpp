@@ -262,9 +262,9 @@ int main()
     /* Lights */
     DirLight dirLight = {
         glm::vec3(-0.2f, -1.0f, -0.3f),
-        glm::vec4(0.9f, 0.9f, 0.9f, 1.0f),
-        glm::vec4(0.9f, 0.9f, 0.9f, 1.0f),
-        glm::vec4(0.1f, 0.1f, 0.1f, 1.0f)
+        glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
+        glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
+        glm::vec4(0.75f, 0.75f, 0.75f, 1.0f)
     };
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
