@@ -1,26 +1,31 @@
 #pragma once
 #include <GameLogic/Proctor.h>
 
+using namespace irrklang;
 class Monster
 {
 public:
+	bool isGameOver = false;
+
 	Monster(GameLogic::Proctor* boat, std::vector<GameLogic::Proctor*> islandTiles);
 	bool isInSafeZone();
 	float countDistance(glm::vec3 object_1, glm::vec3 object_2);
-	bool isPositionChanged();
-	void attack();
-	void update();
+	void isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, GameLogic::Proctor* monster);
+	void update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, GameLogic::Proctor* monster);
 
 private:
-	const int SAFE_DISTANCE = 12; // radius of safe zone around island
+	const int SAFE_DISTANCE = 100; // radius of safe zone around island
 	const int TIME_BETWEEN_POSITIONS_UPDATE = 3;
-	const int MIN_DISTANCE = 5; // minimum distance beetwen current and last boat position 
+	const int MIN_DISTANCE = 18; // minimum distance beetwen current and last boat position 
 
-	std::vector<GameLogic::Proctor*> tiles;
-	GameLogic::Proctor* boat;
-
+	float time = 0;
+	float timeElapsed = 0;
 	glm::vec3 currentPosition;
 	glm::vec3 oldPosition;
-	float timeElapsed = 0;
+	int heartBeats = 0;
+
+	std::vector<GameLogic::Proctor*> zone;
+	GameLogic::Proctor* boat;
+
 };
 
