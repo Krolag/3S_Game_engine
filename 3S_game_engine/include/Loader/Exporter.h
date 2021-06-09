@@ -23,7 +23,7 @@ namespace Loader
 			gameModelsCollection->append_attribute(sceneDocument.allocate_attribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema"));
 			gameModelsCollection->append_attribute(sceneDocument.allocate_attribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance"));
 			xml_node<>* gameModels = sceneDocument.allocate_node(node_element, "GameModels");
-			for (int i = 3; i < _proctors.size(); ++i)
+			for (int i = 5; i < _proctors.size(); ++i)
 			{
 				if (_proctors.at(i)->name.c_str() == "boat" || _proctors.at(i)->name.c_str() == "playerOne" || _proctors.at(i)->name.c_str() == "playerTwo")
 					continue;

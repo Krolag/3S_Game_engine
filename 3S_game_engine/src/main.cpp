@@ -203,7 +203,7 @@ int main()
     hierarchy.addObject(&monster);
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("assets/scenes/scene.xml", &model3D, false, 10.0f);
+    Loader::Importer importer("assets/scenes/exported_scene.xml", &model3D, true, 10.0f);
     
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
