@@ -32,7 +32,7 @@ namespace GameLogic
 		proctor->removeChild(player);
 		proctor->getParentHierarchy()->addObject(player);
 		player->setPosition(transform.position + glm::vec3(1.72f, 2.45f, 0.0f));
-		player->setRotation(glm::quat(1.0f, 1.57f, 0.0f, 3.14f));
+		player->setRotation(glm::quat(1.0f, 3.14f, 0.0f, 3.14f));
 	}
 
 	void Boat::attachPlayerTwo(GameLogic::Proctor* player)
@@ -48,7 +48,7 @@ namespace GameLogic
 		proctor->removeChild(player);
 		proctor->getParentHierarchy()->addObject(player);
 		player->setPosition(transform.position + glm::vec3(-1.96f, 2.45f, 0.0f));
-		player->setRotation(glm::quat(1.0f, 1.57f, 0.0f, 3.14f));
+		player->setRotation(glm::quat(1.0f, 3.14f, 0.0f, 3.14f));
 	}
 
 	bool Boat::isPlayerOneInBoat()
