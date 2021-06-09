@@ -94,20 +94,22 @@ namespace GameLogic
 					else if (randomNumber == 3)
 						playerSounds->play2D("assets/audio/sounds/footstep_03.ogg", false);
 
-					/*if (proctor->getComponentOfType(C_ANIMA) != NULL)
-						((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);*/
+					if (proctor->getComponentOfType(C_ANIMA) != NULL)
+						((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(-1);
 				}
 
 				/* Horizontal movement */
 				if (keyboard->isKeyDown(GLFW_KEY_A))
 				{
 					transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-					transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(89.5));
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(269.5f), 0.0f);
+					//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(89.5));
 				}
 				else if (keyboard->isKeyDown(GLFW_KEY_D))
 				{
 					transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-					transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-89.5f));
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(89.5f), 0.0f);
+					//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-89.5f));
 				}
 
 				/* Vertical movement */
@@ -117,13 +119,16 @@ namespace GameLogic
 
 					/* Check for diagonal movement */
 					if (keyboard->isKeyDown(GLFW_KEY_A))
-						transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(134.5f));
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-134.5f), 0.0f);
+						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(134.5f));
 
 					else if (keyboard->isKeyDown(GLFW_KEY_D))
-						transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(224.5f));
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(134.5f), 0.0f);
+						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(224.5f));
 
 					else
-						transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(179.5f));
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(179.5f), 0.0f);
+						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(179.5f));
 				}
 				else if (keyboard->isKeyDown(GLFW_KEY_S))
 				{
@@ -131,13 +136,16 @@ namespace GameLogic
 
 					/* Check for diagonal movement */
 					if (keyboard->isKeyDown(GLFW_KEY_A))
-						transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(44.5f));
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-44.5f), 0.0f);
+						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(44.5f));
 
 					else if (keyboard->isKeyDown(GLFW_KEY_D))
-						transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-44.5f));
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(44.5f), 0.0f);
+						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-44.5f));
 
 					else
-						transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.5f), 0.0f);
+						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, 0.0f);
 				}
 			}
 

@@ -29,16 +29,16 @@ namespace GameLogic
 
 	void Anima::playAnimation(int _index)
 	{
-		if (_index != cIndex)
+		if (_index == -1)
+		{
+			cIndex = -1;
+			animator.playAnimation(NULL);
+		}
+		else if (_index != cIndex)
 		{
 			std::cout << _index << std::endl;
 			cIndex = _index;
 			animator.playAnimation(&loadedAnimations[_index]);
-		}
-		else if (_index == -1)
-		{
-			cIndex = -1;
-			animator.playAnimation(NULL);
 		}
 	}
 
