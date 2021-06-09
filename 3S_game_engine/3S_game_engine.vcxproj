@@ -229,7 +229,6 @@
     <ClInclude Include="include\GameLogic\GameLogic.h" />
     <ClInclude Include="include\GameLogic\Hierarchy.h" />
     <ClInclude Include="include\Application\Randomizer.h" />
-    <ClInclude Include="include\Loader\Mesh_rework.h" />
     <ClInclude Include="include\Loader\ModelLibrary.h" />
     <ClInclude Include="include\Primitives\Box\Box.h" />
     <ClInclude Include="include\RapidXml\rapidxml.hpp" />

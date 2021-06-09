@@ -112,7 +112,6 @@
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Boat\Boat.h" />
     <ClInclude Include="include\GameLogic\Components\Enemy.h" />
-    <ClInclude Include="include\Loader\Mesh_rework.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />
