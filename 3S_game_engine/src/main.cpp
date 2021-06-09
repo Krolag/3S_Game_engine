@@ -189,7 +189,6 @@ int main()
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
-
     /* Enemies */
     Loader::Model           enemy_00_m("assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
     GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 840.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
@@ -279,7 +278,18 @@ int main()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 900, 3000);
     float waterYpos = 1.5f;
-    Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
+    Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT, GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    reflectFramebuffer.generate();
+    reflectFramebuffer.bind();
+    Texture reflectBufferTex("reflectBufferTex");
+    reflectBufferTex.bind();
+    reflectBufferTex.allocate(GL_RGBA, SCREEN_WIDTH, SCREEN_HEIGHT, GL_UNSIGNED_BYTE);
+    reflectBufferTex.setParams(true, GL_LINEAR, GL_LINEAR);
+    reflectFramebuffer.attachTexture(GL_COLOR_ATTACHMENT0, reflectBufferTex);
+    //reflectFramebuffer.allocateAndAttachTexture(GL_COLOR_ATTACHMENT0, GL_RGB, GL_UNSIGNED_BYTE, true, GL_LINEAR, GL_LINEAR);
+    reflectFramebuffer.allocateAndAttachRBO(GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8);
+    
+    //Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 #pragma endregion
 
 #pragma region Input
@@ -389,10 +399,9 @@ int main()
             FrustumCulling::createViewFrustumFromMatrix(&camera);
 #pragma region WATER - ReflectionBuffer
             //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
-            reflectFramebuffer.bindFramebuffer();
+            reflectFramebuffer.activate();
             glEnable(GL_DEPTH_TEST);
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // set camera underwater - to get reflection
             float distance = 2 * (camera.Position.y - waterYpos);
@@ -422,7 +431,7 @@ int main()
             camera.updateCameraVectors();
 
             //close reflectframebuffer
-            reflectFramebuffer.unbindFramebuffer();
+            reflectFramebuffer.unbind();
 #pragma endregion
             glDisable(GL_CLIP_DISTANCE0);
 
@@ -445,7 +454,7 @@ int main()
             //---------------------------------------------------------------------------
 
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
+            water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
             // Main menu UI
             logo.render();
@@ -544,8 +553,6 @@ int main()
             hero_00_pi.setActive(true);
             hero_01_pi.setActive(true);
             
-
-            
             /* Set camera variables */
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
@@ -555,10 +562,9 @@ int main()
 
 #pragma region WATER - ReflectionBuffer
             /* Start rendering meshes beneath water to ReflectionBuffer */
-            reflectFramebuffer.bindFramebuffer();
+            reflectFramebuffer.activate();
             glEnable(GL_DEPTH_TEST);
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             /* Set camera underwater to get reflection */
             float distance = 2 * (camera.Position.y - waterYpos);
@@ -587,7 +593,7 @@ int main()
             camera.updateCameraVectors();
 
             /* Close ReflectionBuffer */
-            reflectFramebuffer.unbindFramebuffer();
+            reflectFramebuffer.unbind();
 #pragma endregion
 
             /* Disable cliiping */
@@ -612,7 +618,6 @@ int main()
             ///* Close framebuffer */
             //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #pragma endregion
-
 
 #pragma region Default rendering
             /* Clear everything */
@@ -643,7 +648,7 @@ int main()
 
             /* Render water */
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
-            water.render(model, projection, view, reflectFramebuffer.getTexture(), mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
+            water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
             /* TODO: @Dawid - DEBUG Set camera shader variables - projection, view, collision */
             collisionBoxShader.use();

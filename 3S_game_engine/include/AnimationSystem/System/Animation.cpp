@@ -5,6 +5,7 @@
 	Animation::Animation(const std::string& _animationPath, Loader::Model* _model, int _index)
 	{
 		Assimp::Importer importer;
+		importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 		const aiScene* scene = importer.ReadFile(_animationPath, aiProcess_Triangulate);
 		assert(scene && scene->mRootNode);
 
