@@ -64,6 +64,7 @@ namespace Loader
 
 	void Model::loadModel(std::string _path)
 	{
+		cleanup();
 		path = _path;
 
 		/* Read file via Assimp */

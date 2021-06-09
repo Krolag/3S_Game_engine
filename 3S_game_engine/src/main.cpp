@@ -183,7 +183,7 @@ int main()
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     /* Player Two */
-    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 5.0f, 850.0f), glm::quat(1.0f, glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.01f));
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.024f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
