@@ -168,6 +168,7 @@ int main()
     /* Boat */
     Loader::Model           boat_m("assets/models/boat/bbot.fbx", "boat", true, true);
     GameLogic::Proctor      boat("boat", glm::vec3(720.0f, 2.0f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
+    boat.setInitialTransform();
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, &boat_m, &model3D);
     GameLogic::Boat         boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
@@ -176,6 +177,7 @@ int main()
     /* Player One */
     Loader::Model           hero_00_m("assets/models/players/blue_every_frame_14.dae", "playerOne", true, false);
     GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
+    hero_00.setInitialTransform();
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
@@ -184,6 +186,7 @@ int main()
     hierarchy.addObject(&hero_00);
     /* Player Two */
     GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.024f));
+    hero_01.setInitialTransform();
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
@@ -192,12 +195,14 @@ int main()
     /* Enemies */
     Loader::Model           enemy_00_m("assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
     GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 840.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+    enemy_00.setInitialTransform();
     GameLogic::MeshRenderer enemy_00_mr(GameLogic::C_MESH, &enemy_00, &enemy_00_m, &model3D);
     GameLogic::Enemy        enemy_00_e(&enemy_00, &hero_00, &hero_01);
     GameLogic::BoxCollider  enemy_00_bc(GameLogic::C_COLLIDER, &enemy_00_m, &enemy_00, &collisionBoxShader, false);
     hierarchy.addObject(&enemy_00);
 	
     GameLogic::Proctor      monster("monster", glm::vec3(0.0f, -1000.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
+    monster.setInitialTransform();
     GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, modelLibrary.getModel(hero_01.name), &model3D);
     hierarchy.addObject(&monster);
 
@@ -253,6 +258,7 @@ int main()
                 importer.importedProctors.at(i).get()
                 ));
         }
+        importer.importedProctors.at(i).get()->setInitialTransform();
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
 	
@@ -352,6 +358,8 @@ int main()
     // waves
     waveSource->setDefaultVolume(1);
     engine->play2D(waveSource, true);
+
+    bool restartFlag = false;
 
 
     /* Render loop */
@@ -659,8 +667,10 @@ int main()
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
-            if(hero_00_pi.isCluePickedUp)
+            if (hero_00_pi.isCluePickedUp)
                 points.render(hero_00_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
+            else if (hero_01_pi.isCluePickedUp)
+                points.render(hero_01_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
 
             /* Render dukat */
             dukatSpinning[dukatSpinIndex].render();
@@ -693,8 +703,11 @@ int main()
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             points.render("You loose", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
             points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+            if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE))
+            { 
+                restartFlag = true;
                 sceneManager.changeCurrentScene("mainMenu");
+            }
         }
         else if (sceneManager.cActiveScene["exitStory_01"])
         {
@@ -703,7 +716,24 @@ int main()
             points.render("You win, ARRRRRR", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
             points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+            {
+                restartFlag = true;
                 sceneManager.changeCurrentScene("mainMenu");
+            }
+        }
+
+        if (restartFlag)
+        {
+            restartFlag = false;
+            unsigned int size = hierarchy.getProctors().size();
+            for (int i = 0; i < size; i++)
+            {
+                hierarchy.getProctors()[i]->activate();
+            }
+            boat.activate();
+            hero_00.activate();
+            hero_01.activate();
+            monster.activate();
         }
         /* Update InputSystem */
         keyboardInput->update();

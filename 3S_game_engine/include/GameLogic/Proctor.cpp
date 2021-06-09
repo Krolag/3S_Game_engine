@@ -37,33 +37,36 @@ namespace GameLogic
 	void Proctor::update(bool _onlyRender)
 	{
 		/* First update components for current hierarchy level */
-		for (auto& a : components)
+		if (activeFlag)
 		{
-			if (_onlyRender)
+			for (auto& a : components)
 			{
-				if (a->type == C_MESH)
+				if (_onlyRender)
+				{
+					if (a->type == C_MESH)
+					{
+						a->update();
+					}
+				}
+				else
 				{
 					a->update();
+					if (a->type == C_COLLIDER)
+					{
+						((BoxCollider*)a)->render();
+					}
 				}
 			}
-			else
+
+			/* Next update children */
+			for (auto& a : children)
 			{
-				a->update();
-				if(a->type == C_COLLIDER)
-				{
-					((BoxCollider*)a)->render();
-				}
+				a->transform.position = a->beginTransform.position;
+				a->transform.rotation = a->beginTransform.rotation;
+				a->transform.parentPosition = a->getParentProctor()->transform.position;
+				a->transform.parentRotation = a->getParentProctor()->transform.rotation;
+				a->update(_onlyRender);
 			}
-		}
-		
-		/* Next update children */
-		for (auto& a : children)
-		{			
-			a->transform.position = a->beginTransform.position;
-			a->transform.rotation = a->beginTransform.rotation;
-			a->transform.parentPosition = a->getParentProctor()->transform.position;
-			a->transform.parentRotation = a->getParentProctor()->transform.rotation;
-			a->update(_onlyRender);
 		}
 	}
 
@@ -152,6 +155,7 @@ namespace GameLogic
 	void Proctor::setParent(Hierarchy* _hierarchy)
 	{
 		parentHierarchy = _hierarchy;
+		initialTransform = transform;
 	}
 
 	unsigned int Proctor::childCount()
@@ -194,6 +198,26 @@ namespace GameLogic
 	float Proctor::getDeltaTime()
 	{
 		return deltaTime;
+	}
+
+	void Proctor::deactivate()
+	{
+		activeFlag = false;
+		transform.position = glm::vec3(10000, 10000, 10000);
+		transform.scale = glm::vec3(0, 0, 0);
+	}
+
+	void Proctor::activate()
+	{
+		activeFlag = true;
+		transform.position = initialTransform.position;
+		//transform.rotation = initialTransform.rotation; // to jest imo zbedne
+		transform.scale = initialTransform.scale;
+	}
+
+	void Proctor::setInitialTransform()
+	{
+		initialTransform = transform;
 	}
 
 	void Proctor::drawDebugWindow()

@@ -36,6 +36,7 @@ namespace GameLogic
 		Transform transform;
 		Transform parentTransform;
 		Transform beginTransform;
+		bool activeFlag = true;
 
 		/* Constructors / Destructors */
 		Proctor();
@@ -76,6 +77,11 @@ namespace GameLogic
 		void setDeltaTime(float _value);
 		float getDeltaTime();
 
+		void deactivate();
+		void activate();
+
+		void setInitialTransform();
+
 		/* Debug window methods */
 		void drawDebugWindow();
 
@@ -89,10 +95,12 @@ namespace GameLogic
 		std::vector<Proctor*> children;
 
 		/* Proctor data */
+		// TODO: @Ignacy - zmiana na faktyczna wartosc active
 		bool active = true;
 		bool isStatic = false;
 		float deltaTime;
 		std::vector<Component*> components;
+		Transform initialTransform;
 	};
 }
 
