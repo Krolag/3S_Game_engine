@@ -50,6 +50,8 @@ namespace GameLogic
 		void removeChildren();
 		Proctor* getParentProctor() const;
 		Hierarchy* getParentHierarchy() const;
+		Proctor* getChild(int _index);
+		std::vector<Proctor*> getChildren();
 		void setParent(Proctor* _proctor);
 		void setParent(Hierarchy* _hierarchy);
 		unsigned int childCount();

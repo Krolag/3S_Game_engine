@@ -128,6 +128,22 @@ namespace GameLogic
 		return parentHierarchy;
 	}
 
+	Proctor* Proctor::getChild(int _index)
+	{
+		unsigned int size = children.size();
+
+		for (unsigned int i = 0; i < size; i++)
+		{
+			if (i == _index)
+				return children.at(i);
+		}
+	}
+
+	std::vector<Proctor*> Proctor::getChildren()
+	{
+		return children;
+	}
+
 	void Proctor::setParent(Proctor* _proctor)
 	{
 		parentProctor = _proctor;
@@ -183,7 +199,8 @@ namespace GameLogic
 	void Proctor::drawDebugWindow()
 	{
 		ImGui::Text("|--------| NAME |-------------|");
-		ImGui::Text(name.c_str());
+		if (name.c_str() != NULL)
+			ImGui::Text(name.c_str());
 		ImGui::Text("|--------| TRANSFORM |--------|");
 		float variables[3];
 		/* Position */

@@ -82,7 +82,16 @@ namespace GameLogic
 			{
 				return proctors[i];
 			}
+			/* Check if proctor has a child with given name*/
+			for (unsigned int j = 0; j < proctors.at(i)->getChildren().size(); j++)
+			{
+				if (proctors.at(i)->getChild(j)->name == _name)
+				{
+					return proctors.at(i)->getChild(j);
+				}
+			}
 		}
+
 		return NULL;
 	}
 
@@ -188,6 +197,13 @@ namespace GameLogic
 			if (ImGui::Button(a->name.c_str(), { 150.0f, 25.0f }))
 			{
 				activeProctorName = a->name;
+			}
+			for (unsigned int i = 0; i < a->childCount(); i++)
+			{
+				if (ImGui::Button(a->getChild(i)->name.c_str(), { 150.0f, 25.0f }))
+				{
+					activeProctorName = a->getChild(i)->name;
+				}
 			}
 		}
 		ImGui::End();
