@@ -101,6 +101,10 @@ namespace GameLogic
 		model->rotation = proctor->getRotation();
 		model->scale = proctor->getScale();
 
+		otherCollider->model->position = otherCollider->proctor->getPosition();
+		otherCollider->model->rotation = otherCollider->proctor->getRotation();
+		otherCollider->model->scale = otherCollider->proctor->getScale();
+
 		/* Get colliders vertices to check collisions on them */
 		std::vector<glm::vec3> thisVertices = this->getColliderVertices();
 		std::vector<glm::vec3> otherVertices = otherCollider->getColliderVertices();
@@ -148,8 +152,10 @@ namespace GameLogic
 			for (int j = 3; j < 6; ++j)
 			{
 				axis = glm::cross(axes.at(i), axes.at(j));
-				if (glm::abs(glm::dot(axis, glm::vec3(1.0f))) > 0.0001)
-					axes.push_back(axis);
+				float epsilon = 0.01;
+				if (glm::abs(axis.x) < epsilon && glm::abs(axis.y) < epsilon && glm::abs(axis.z) < epsilon)
+					continue;
+				axes.push_back(axis);
 			}
 		}
 
@@ -215,10 +221,11 @@ namespace GameLogic
 		{
 			separationVector *= -1;
 		}
+		
 		separationVector *= shortestOverlap;
 
 		this->proctor->transform.position += separationVector;
-		
+
 		isColliding = true;
 		return true;
 	}

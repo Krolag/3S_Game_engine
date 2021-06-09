@@ -148,7 +148,7 @@ namespace GameLogic
 		glm::vec3 playerPosition = currentlyChasedPlayer->getPosition();
 		glm::vec3 enemyPosition = proctor->getPosition();
 		glm::vec3 direction = glm::normalize(enemyPosition - playerPosition);
-		glm::vec3 enemyNormalDown = glm::vec3(0.0f, 0.0f, 1.0f);
+		glm::vec3 enemyNormalDown = glm::vec3(0.0f, 0.0f, -1.0f);
 		
 		/* Chase player */
 		proctor->setPosition(enemyPosition -= glm::vec3(direction.x * currentVelocity, 0.0f, direction.z * currentVelocity));

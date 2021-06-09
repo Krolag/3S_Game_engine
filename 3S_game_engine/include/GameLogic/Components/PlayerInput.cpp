@@ -94,7 +94,8 @@ namespace GameLogic
 					else if (randomNumber == 3)
 						playerSounds->play2D("assets/audio/sounds/footstep_03.ogg", false);
 
-					//((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
+					/*if (proctor->getComponentOfType(C_ANIMA) != NULL)
+						((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);*/
 				}
 
 				/* Horizontal movement */
