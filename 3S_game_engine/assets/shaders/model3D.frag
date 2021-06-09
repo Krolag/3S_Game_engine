@@ -85,12 +85,20 @@ void main()
     
     vec4 result = vec4(ambient + diffuse + specular);
 
-    /* Use gamma */
+    /* Gamma correction */
     if (true)
     {
         float gamma = 2.2f;
         result.rgb = pow(result.rgb, vec3(1.0f / gamma));
     }
+
+    /* Depth testing */
+    float near = 0.1f;
+    float far = 1000.0f;
+    float z = gl_FragCoord.z * 2.0 - 1.0f; // Transform to NDC [0, 1] => [-1, 1]
+    float linearDepth = (2.0f * near * far) / (z * (far - near) - (far + near)); // Take inverse of the projection matrix (perspective)
+    float factor = (near + linearDepth) / (near - far); // Convert back to [0, 1]
+    result.rgb *= (1 - factor);
 
     FragColor = result;
 }   
