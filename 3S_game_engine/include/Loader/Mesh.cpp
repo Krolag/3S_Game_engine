@@ -103,7 +103,6 @@ namespace Loader
 		glGenBuffers(1, &EBO);
 
 		glBindVertexArray(VAO);
-
 		
 		/* Load data */
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -131,5 +130,6 @@ namespace Loader
 		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, weights));
 
 		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 }
