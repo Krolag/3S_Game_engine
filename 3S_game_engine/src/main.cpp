@@ -650,7 +650,8 @@ int main()
 
             /* Update monster system */
             monsterSystem.update(engine, heartBeatSource,bottleSource,&monster);
-            if (monsterSystem.isGameOver) {
+            if (monsterSystem.isGameOver) 
+            {
                 monsterSystem.isGameOver = false;
                 sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
             }
