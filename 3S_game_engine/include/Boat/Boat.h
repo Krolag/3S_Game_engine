@@ -14,9 +14,9 @@ namespace GameLogic
 
 		void update();
 		void attachPlayerOne(GameLogic::Proctor* player);
-		void deatachPlayerOne(GameLogic::Proctor* player);
+		void detachPlayerOne(GameLogic::Proctor* player);
 		void attachPlayerTwo(GameLogic::Proctor* player);
-		void deatachPlayerTwo(GameLogic::Proctor* player);
+		void detachPlayerTwo(GameLogic::Proctor* player);
 		bool isPlayerOneInBoat();
 		bool isPlayerTwoInBoat();
 		void setIsPlayerOneInBoat(bool isFirstInBoat);

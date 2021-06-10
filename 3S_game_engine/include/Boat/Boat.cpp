@@ -28,7 +28,7 @@ namespace GameLogic
 		setIsPlayerOneInBoat(true);
 	}
 
-	void Boat::deatachPlayerOne(GameLogic::Proctor* player)
+	void Boat::detachPlayerOne(GameLogic::Proctor* player)
 	{
 		proctor->removeChild(player);
 		proctor->getParentHierarchy()->addObject(player);
@@ -46,7 +46,7 @@ namespace GameLogic
 		setIsPlayerTwoInBoat(true);
 	}
 
-	void Boat::deatachPlayerTwo(GameLogic::Proctor* player)
+	void Boat::detachPlayerTwo(GameLogic::Proctor* player)
 	{
 		proctor->removeChild(player);
 		proctor->getParentHierarchy()->addObject(player);

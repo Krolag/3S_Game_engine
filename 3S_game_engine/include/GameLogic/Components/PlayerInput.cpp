@@ -207,7 +207,7 @@ namespace GameLogic
 			}
 			if (keyboard->isKeyPressed(GLFW_KEY_B) && isPlayerOneInBoat)
 			{
-				boat->deatachPlayerOne(proctor);
+				boat->detachPlayerOne(proctor);
 				transform.position = proctor->transform.position;
 				transform.rotation = proctor->transform.rotation;
 			}
@@ -378,7 +378,7 @@ namespace GameLogic
 
 			if (keyboard->isKeyPressed(GLFW_KEY_SLASH) && isPlayerTwoInBoat)
 			{
-				boat->deatachPlayerTwo(proctor);
+				boat->detachPlayerTwo(proctor);
 				transform.position = proctor->transform.position;
 				transform.rotation = proctor->transform.rotation;
 			}
