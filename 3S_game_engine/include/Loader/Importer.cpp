@@ -94,9 +94,9 @@ namespace Loader
 			else if (_isFrom3SE == true)
 			{
 				proctorPosition = glm::vec3(
-					(float)strtod(childElement->first_node("x")->value(), NULL) * (proctorScale.x * 10),
-					(float)strtod(childElement->first_node("y")->value(), NULL) * (proctorScale.y * 10),
-					(float)strtod(childElement->first_node("z")->value(), NULL) * (proctorScale.z * 10)
+					(float)strtod(childElement->first_node("x")->value(), NULL), //* (proctorScale.x * 10),
+					(float)strtod(childElement->first_node("y")->value(), NULL),// * (proctorScale.y * 10),
+					(float)strtod(childElement->first_node("z")->value(), NULL)// * (proctorScale.z * 10)
 				);
 			}
 

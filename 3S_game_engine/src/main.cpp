@@ -326,6 +326,7 @@ int main()
     waveSource->setDefaultVolume(1);
     engine->play2D(waveSource, true);
 
+    bool restartFlag = false;
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -335,7 +336,6 @@ int main()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
 
         /* SCENE LOADER TEST CODE */
         if (sceneManager.cActiveScene["mainMenu"])
@@ -629,8 +629,10 @@ int main()
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
-            if(hero_00_pi.isCluePickedUp)
+            if (hero_00_pi.isCluePickedUp)
                 points.render(hero_00_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
+            else if (hero_01_pi.isCluePickedUp)
+                points.render(hero_01_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
 
             /* Render dukat */
             dukatSpinning[dukatSpinIndex].render();
@@ -663,8 +665,11 @@ int main()
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             points.render("You loose", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
             points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+            if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE))
+            { 
+                restartFlag = true;
                 sceneManager.changeCurrentScene("mainMenu");
+            }
         }
         else if (sceneManager.cActiveScene["exitStory_01"])
         {
@@ -673,7 +678,24 @@ int main()
             points.render("You win, ARRRRRR", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
             points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+            {
+                restartFlag = true;
                 sceneManager.changeCurrentScene("mainMenu");
+            }
+        }
+
+        if (restartFlag)
+        {
+            restartFlag = false;
+            unsigned int size = hierarchy.getProctors().size();
+            for (int i = 0; i < size; i++)
+            {
+                hierarchy.getProctors()[i]->activate();
+            }
+            boat.activate();
+            hero_00.activate();
+            hero_01.activate();
+            monster.activate();
         }
         /* Update InputSystem */
         keyboardInput->update();
