@@ -173,22 +173,25 @@ int main()
     GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, &boat_m, &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
+	
     /* Player One */
     Loader::Model           hero_00_m("assets/models/players/blue_every_frame_14.dae", "playerOne", true, false);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
-    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &hero_00, &collisionBoxShader, false);
+    GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
+	
     /* Player Two */
-    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.024f));
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.024f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
+	
     /* Enemies */
     Loader::Model           enemy_00_m("assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
     GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 810.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));

@@ -63,9 +63,9 @@ namespace GameLogic
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
-		model->position = proctor->transform.position;
-		model->rotation = proctor->transform.rotation;
-		model->scale = proctor->transform.scale;
+		model->position = proctor->getPosition();
+		model->rotation = proctor->getRotation();
+		model->scale = proctor->getScale();
 
 		/* Transform the min and max vectors with the model transform */
 		min = model->getModelMatrix() * glm::vec4(min.x, min.y, min.z, 1.0f);
@@ -215,6 +215,11 @@ namespace GameLogic
 			}
 		}
 		/* If there is overlap on every axis there is collision */
+
+		if(this->proctor->getComponentOfType(C_MOVEMENT) != NULL)
+		{
+			((PlayerInput*)proctor->getComponentOfType(C_MOVEMENT))->cGravity = 0.0f;
+		}
 		
 		glm::vec3 otherToThisVector = otherCollider->proctor->transform.position - this->proctor->transform.position;
 		if(glm::dot(separationVector, otherToThisVector) >= 0)
