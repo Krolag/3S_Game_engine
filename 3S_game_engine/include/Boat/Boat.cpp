@@ -79,31 +79,31 @@ namespace GameLogic
 
 			if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyDown(GLFW_KEY_I))
 			{
-				speed = startSpeed;
+				if (speed < 20 * startSpeed) speed += startSpeed;
 			}
 			else if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyDown(GLFW_KEY_K))
 			{
-				speed = -startSpeed;
+				if (speed < 20 * startSpeed) speed += -startSpeed;
 			}
 			else {
 				if (keyboard->isKeyPressed(GLFW_KEY_W))
-				{
-					speed = startSpeed;
+				{					
+					if(speed<20*startSpeed) speed += startSpeed;					
 					turnSpeed = -startTurningSpeed;
 				}
 				else if (keyboard->isKeyPressed(GLFW_KEY_S))
 				{
-					speed = -startSpeed;
+					if (speed < 20 * startSpeed) speed += -startSpeed;
 					turnSpeed = startTurningSpeed;
 				}
 				if (keyboard->isKeyPressed(GLFW_KEY_I))
 				{
-					speed = startSpeed;
+					if (speed < 20 * startSpeed) speed += startSpeed;
 					turnSpeed = startTurningSpeed;
 				}
 				else if (keyboard->isKeyPressed(GLFW_KEY_K))
 				{
-					speed = -startSpeed;
+					if (speed < 20 * startSpeed) speed += -startSpeed;
 					turnSpeed = -startTurningSpeed;
 				}
 			}
