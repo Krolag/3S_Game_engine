@@ -276,7 +276,7 @@ int main()
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.75f, 0.75f, 0.75f, 1.0f),
-        BoundingRegion(glm::vec3(-20.0f, -20.0f, 0.5f), glm::vec3(20.0f, 20.0f, 50.0f))
+        BoundingRegion(glm::vec3(-20.0f, -20.0f, 0.1f), glm::vec3(20.0f, 20.0f, 50.0f))
     );
 
     /* Water and water's frame buffer */
@@ -539,6 +539,24 @@ int main()
             /* Enable cliiping */
             glEnable(GL_CLIP_DISTANCE0);
 
+#pragma region SHADOWS - ShadowsBuffer
+            /* Activate directional light's FBO */
+            dirLight.shadowFBO.activate();
+
+            depthShader.use();
+            view = camera.GetViewMatrix();
+            depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
+            depthShader.setUniform("projection", projection);
+            depthShader.setUniform("view", view);
+            depthShader.setUniform("viewPos", camera.Position);
+
+            dirLight.render(depthShader, textureIdx);
+
+            hierarchy.renderWithShader(&depthShader);
+
+            dirLight.shadowFBO.unbind();
+#pragma endregion
+
 #pragma region WATER - ReflectionBuffer
             /* Start rendering meshes beneath water to ReflectionBuffer */
             reflectFramebuffer.activate();
@@ -577,24 +595,6 @@ int main()
 
             /* Disable cliiping */
             glDisable(GL_CLIP_DISTANCE0);
-
-#pragma region SHADOWS - ShadowsBuffer
-            /* Activate directional light's FBO */
-            dirLight.shadowFBO.activate();
-
-            depthShader.use();
-            view = camera.GetViewMatrix();
-            depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
-            depthShader.setUniform("projection", projection);
-            depthShader.setUniform("view", view);
-            depthShader.setUniform("viewPos", camera.Position);
-
-            dirLight.render(depthShader, textureIdx);
-
-            hierarchy.renderWithShader(&depthShader);
-
-            dirLight.shadowFBO.unbind();
-#pragma endregion
 
 #pragma region Default rendering
             /* Clear everything */

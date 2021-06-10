@@ -72,6 +72,9 @@ void Framebuffer::allocateAndAttachTexture(GLenum _attachType, GLenum _format, G
 	tex.allocate(_format, width, height, _type);
 	Texture::setParams(_texFilterSet, _texMinFilter, _texMagFilter, _wrapSet, _wrapS, _wrapT);
 
+	//float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
 	/* Attach */
 	bind();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, _attachType, GL_TEXTURE_2D, tex.id, 0);

@@ -15,13 +15,13 @@ void PointLight::render(Shader _shader, int _idx)
 }
 
 DirLight::DirLight(glm::vec3 _direction, glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular, BoundingRegion _br)
-	: direction(_direction), ambient(_ambient), diffuse(_diffuse), specular(_specular), shadowFBO(1080, 1920, GL_DEPTH_BUFFER_BIT), br(_br)
+	: direction(_direction), ambient(_ambient), diffuse(_diffuse), specular(_specular), shadowFBO(1080, 1080, GL_DEPTH_BUFFER_BIT), br(_br)
 {
 	/* Setup FBO */
 	shadowFBO.generate();
 	shadowFBO.bind();
 	shadowFBO.disableColorBuffer();
-	shadowFBO.allocateAndAttachTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_FLOAT);
+	shadowFBO.allocateAndAttachTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_FLOAT, true, GL_NEAREST, GL_NEAREST, true, GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER);
 	updateMatrices();
 }
 

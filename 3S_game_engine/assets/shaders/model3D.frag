@@ -32,27 +32,41 @@ uniform DirLight dirLight;
 uniform Material material;
 uniform int noTex;
 uniform sampler2D shadowMap;
-uniform vec3 lightPos;
 uniform vec3 viewPos;
 
-float shadowCalc()
+float shadowCalc(vec3 norm, vec3 lighrDir)
 {
     vec4 fragPosLightSpace = dirLight.lightSpaceMatrix * vec4(FragPos, 1.0f);
 
     /* Persepctive divide (transforming coordinatess NDC) */
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-
     /* NDC to depth range */
     projCoords = projCoords * 0.5 + 0.5; // [-1, 1] -> [0, 1]
-
+    /* If too far from light, do not return any shadow */
+    if (projCoords.z > 1.0f)
+        return 0.0f;
     /* Get closest depth in depth buffer */
     float closestDepth = texture(dirLight.depthBuffer, projCoords.xy).r;
-
     /* Get depth of fragment */
     float currentDepth = projCoords.z;
-
-    /* If depth is greater (further away), return 1 */
-    return currentDepth > closestDepth ? 1.0f : 0.0f;
+    /* Calculate bias */
+    float maxBias = 0.05f;
+    float minBias = 0.005f;
+    float bias = max(maxBias * (1.0f - dot(norm, lighrDir)), minBias);
+    /* PCF - percentage closer filtering */
+    float shadowSum = 0.0f;
+    vec2 texelSize = 1.0f / textureSize(dirLight.depthBuffer, 0);
+    for (int y = -1; y <= 1; y++)
+    {
+        for (int x = -1; x <= 1; x++)
+        {
+            float pcfDepth = texture(dirLight.depthBuffer, projCoords.xy + vec2(x, y) * texelSize).r;
+            /* If depth is greater (further away), add 1 */
+            shadowSum += currentDepth - bias > closestDepth ? 1.0f : 0.0f;
+        }
+    }
+    /* Return average */
+    return shadowSum / 9.0f;
 }
 
 void main()
@@ -95,7 +109,7 @@ void main()
         specular = dirLight.specular * (spec * material.specular);
     }
 
-    float shadow = shadowCalc();
+    float shadow = shadowCalc(normal, lightDir);
     
     vec4 result = vec4(ambient + (1.0f - shadow) * (diffuse + specular));
 
