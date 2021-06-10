@@ -688,6 +688,7 @@ int main()
         if (restartFlag)
         {
             restartFlag = false;
+            Points::getInstance()->setScore(0);
             unsigned int size = hierarchy.getProctors().size();
             for (int i = 0; i < size; i++)
             {
