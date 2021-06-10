@@ -11,6 +11,12 @@ void Framebuffer::generate()
 	glGenFramebuffers(1, &val);
 }
 
+void Framebuffer::disableColorBuffer()
+{
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+}
+
 void Framebuffer::bind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, val);

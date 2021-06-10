@@ -155,21 +155,21 @@ namespace GameLogic
 
 	void Hierarchy::renderWithShader(Shader* _shader)
 	{
-		std::vector<Shader*> currentlyUsedShaders;
+
+		/* Get mesh component from proctor and check its existance */
+		MeshRenderer* mesh = (MeshRenderer*)proctors[0]->getComponentOfType(C_MESH);
+		Shader* currentlyUsedShader = mesh->shader;
 
 		/* Iterate through each proctor */
 		int size = proctors.size();
 		for (int i = 0; i < size; i++)
 		{
-			/* Get mesh component from proctor and check its existance */
-			MeshRenderer* mesh = (MeshRenderer*)proctors[i]->getComponentOfType(C_MESH);
-			if (mesh != NULL)
-			{
-				/* Save shaders */
-				currentlyUsedShaders.push_back(mesh->shader);
+			MeshRenderer* meshTMP = (MeshRenderer*)proctors[i]->getComponentOfType(C_MESH);
 
+			if (meshTMP != NULL)
+			{
 				/* Set new shader */
-				mesh->setShader(_shader);
+				meshTMP->setShader(_shader);
 			}
 		}
 
@@ -180,10 +180,10 @@ namespace GameLogic
 		for (int i = 0; i < size; i++)
 		{
 			/* Get mesh component from proctor and check its existance */
-			MeshRenderer* mesh = (MeshRenderer*)proctors[i]->getComponentOfType(C_MESH);
-			if (mesh != NULL)
+			MeshRenderer* meshTMP = (MeshRenderer*)proctors[i]->getComponentOfType(C_MESH);
+			if (meshTMP != NULL)
 			{
-				mesh->setShader(currentlyUsedShaders[i]);
+				meshTMP->setShader(currentlyUsedShader);
 			}
 		}
 	}

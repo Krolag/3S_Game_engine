@@ -7,6 +7,8 @@ layout (location = 1) in vec3 inNormal;
 layout (location = 2) in vec2 inTexCoords;
 layout (location = 3) in ivec3 inJointIndices;
 layout (location = 4) in vec3 inWeights;
+layout (location = 5) in vec3 aOffset;
+layout (location = 6) in vec3 aSize;
 
 out vec3 FragPos;
 out vec4 FragPosLightSpace;

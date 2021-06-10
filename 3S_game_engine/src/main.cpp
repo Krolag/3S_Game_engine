@@ -191,7 +191,7 @@ int main()
     hierarchy.addObject(&hero_01);
     /* Enemies */
     Loader::Model           enemy_00_m("assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
-    GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 840.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+    GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 810.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer enemy_00_mr(GameLogic::C_MESH, &enemy_00, &enemy_00_m, &model3D);
     GameLogic::Enemy        enemy_00_e(&enemy_00, &hero_00, &hero_01);
     GameLogic::BoxCollider  enemy_00_bc(GameLogic::C_COLLIDER, &enemy_00_m, &enemy_00, &collisionBoxShader, false);
@@ -268,14 +268,15 @@ int main()
     Skybox skybox(&view, &projection, &camera);
 
     /* Lights */
-    DirLight dirLight = {
-        glm::vec3(-0.2f, -1.0f, -0.3f),
+    DirLight dirLight(
+        glm::vec3(-0.2f, -0.9f, -0.2f),
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
-        glm::vec4(0.75f, 0.75f, 0.75f, 1.0f)
-    };
+        glm::vec4(0.75f, 0.75f, 0.75f, 1.0f),
+        BoundingRegion(glm::vec3(-20.0f, -20.0f, 0.5f), glm::vec3(20.0f, 20.0f, 50.0f))
+    );
 
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    /* Water and water's frame buffer */
     WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 900, 3000);
     float waterYpos = 1.5f;
     Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT, GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -286,10 +287,8 @@ int main()
     reflectBufferTex.allocate(GL_RGBA, SCREEN_WIDTH, SCREEN_HEIGHT, GL_UNSIGNED_BYTE);
     reflectBufferTex.setParams(true, GL_LINEAR, GL_LINEAR);
     reflectFramebuffer.attachTexture(GL_COLOR_ATTACHMENT0, reflectBufferTex);
-    //reflectFramebuffer.allocateAndAttachTexture(GL_COLOR_ATTACHMENT0, GL_RGB, GL_UNSIGNED_BYTE, true, GL_LINEAR, GL_LINEAR);
     reflectFramebuffer.allocateAndAttachRBO(GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8);
     
-    //Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 #pragma endregion
 
 #pragma region Input
@@ -317,32 +316,6 @@ int main()
     int tmpMainMenuIndex = 0;
 
     int animID = 0;
-
-    /* SHADOW MAPPING */
-    // Configure depth map fbo
-    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-    unsigned int depthMapFBO;
-    glGenFramebuffers(1, &depthMapFBO);
-    // Create depth texture
-    unsigned int depthMap;
-    glGenTextures(1, &depthMap);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-    // Atach depth texture as fbo's depth buffer
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-    glDrawBuffer(GL_NONE);
-    glReadBuffer(GL_NONE);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    glm::vec3 lightPos(-2.0f, 50.0f, -1.0f);
-
 #pragma endregion
 
     // music
@@ -362,6 +335,7 @@ int main()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
 
         /* SCENE LOADER TEST CODE */
         if (sceneManager.cActiveScene["mainMenu"])
@@ -417,7 +391,7 @@ int main()
             model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
             model = glm::mat4(1.0f);
 
-            dirLight.render(model3D);
+            //dirLight.render(model3D, textureIdx--);
 
             //---------------------------------------------------------------------------
             hierarchy.update(true, false);
@@ -447,7 +421,7 @@ int main()
 
             cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
-            dirLight.render(model3D);
+            //dirLight.render(model3D, textureIdx--);
 
             //---------------------------------------------------------------------------
             hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
@@ -533,6 +507,8 @@ int main()
         }
         else if (sceneManager.cActiveScene["game"])
         {
+            unsigned int textureIdx = 31;
+
             /* Check if player entered pause menu */
             if (keyboardInput->isKeyPressed(GLFW_KEY_ESCAPE))
             {
@@ -583,7 +559,7 @@ int main()
             model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos));
 
             /* Render objects for ReflectionBuffer */
-            dirLight.render(model3D);
+            dirLight.render(model3D, textureIdx);
             hierarchy.renderWithShader(&model3D);
             skybox.render();
 
@@ -600,23 +576,21 @@ int main()
             glDisable(GL_CLIP_DISTANCE0);
 
 #pragma region SHADOWS - ShadowsBuffer
-            ///* Render depth of scene to texture from light's perspective */
-            //glm::mat4 lightProjection, lightView;
-            //glm::mat4 lightSpaceMatrix;
-            //float nearPlane = 1.0f, farPlane = 7.5f;
-            //lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-            //lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-            //lightSpaceMatrix = lightProjection * lightView;
-            //depthShader.use();
-            //depthShader.setUniform("lightSpaceMatrix", lightSpaceMatrix);
+            /* Activate directional light's FBO */
+            dirLight.shadowFBO.activate();
 
-            //glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-            //glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-            //glClear(GL_DEPTH_BUFFER_BIT);
-            //hierarchy.renderWithShader(&depthShader);
+            depthShader.use();
+            view = camera.GetViewMatrix();
+            depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
+            depthShader.setUniform("projection", projection);
+            depthShader.setUniform("view", view);
+            depthShader.setUniform("viewPos", camera.Position);
 
-            ///* Close framebuffer */
-            //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            dirLight.render(depthShader, textureIdx);
+
+            hierarchy.renderWithShader(&depthShader);
+
+            dirLight.shadowFBO.unbind();
 #pragma endregion
 
 #pragma region Default rendering
@@ -630,17 +604,13 @@ int main()
             model3D.use();
             model3D.setUniform("projection", projection);
             model3D.setUniform("view", view);
-            model3D.setUniform("lightPos", lightPos);
             model3D.setUniform("viewPos", camera.Position);
-            //model3D.setUniform("lightSpaceMatrix", lightSpaceMatrix);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, depthMap);
                 
             /* TODO: @Dawid - DEBUG between game camera and debug camera */
             cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
             /* Render light and update hierarchy */
-            dirLight.render(model3D);
+            dirLight.render(model3D, textureIdx);
             hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
             glActiveTexture(GL_TEXTURE0);
@@ -754,8 +724,6 @@ void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse)
 
 void cameraKeyboardInput(Application::Window* _scene, InputSystem::KeyboardInput* _keyboard)
 {
-    //if (_keyboard->isKeyDown(GLFW_KEY_ESCAPE))
-        //glfwSetWindowShouldClose(_scene->window, true);
     if (_keyboard->isKeyDown(GLFW_KEY_UP))
         camera.ProcessKeyboard(FORWARD, _scene->deltaTime);
     if (_keyboard->isKeyDown(GLFW_KEY_DOWN))
@@ -775,8 +743,6 @@ void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputS
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 

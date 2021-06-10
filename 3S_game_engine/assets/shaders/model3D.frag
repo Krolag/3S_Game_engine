@@ -16,6 +16,9 @@ struct DirLight
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+
+    sampler2D depthBuffer;
+    mat4 lightSpaceMatrix;
 };
 
 in vec3 FragPos;
@@ -32,15 +35,24 @@ uniform sampler2D shadowMap;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 
-float shadowCalc(float _dotLightNormal)
+float shadowCalc()
 {
-    /* Transform from [-1, 1] range to [0, 1] range */
-    vec3 pos = FragPosLightSpace.xyz * 0.5f + 0.5f;
-    if (pos.z > 1.0f)
-        pos.z = 1.0f;
-    float depth = texture(shadowMap, pos.xy).r;
-    float bias = max(0.05f * (1.0f - _dotLightNormal), 0.005f);
-    return (depth + bias) < pos.z ? 0.0f : 1.0f;
+    vec4 fragPosLightSpace = dirLight.lightSpaceMatrix * vec4(FragPos, 1.0f);
+
+    /* Persepctive divide (transforming coordinatess NDC) */
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+    /* NDC to depth range */
+    projCoords = projCoords * 0.5 + 0.5; // [-1, 1] -> [0, 1]
+
+    /* Get closest depth in depth buffer */
+    float closestDepth = texture(dirLight.depthBuffer, projCoords.xy).r;
+
+    /* Get depth of fragment */
+    float currentDepth = projCoords.z;
+
+    /* If depth is greater (further away), return 1 */
+    return currentDepth > closestDepth ? 1.0f : 0.0f;
 }
 
 void main()
@@ -82,8 +94,10 @@ void main()
         float spec = pow(max(dotProd, 0.0f), material.shininess * 128);
         specular = dirLight.specular * (spec * material.specular);
     }
+
+    float shadow = shadowCalc();
     
-    vec4 result = vec4(ambient + diffuse + specular);
+    vec4 result = vec4(ambient + (1.0f - shadow) * (diffuse + specular));
 
     /* Gamma correction */
     if (true)

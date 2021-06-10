@@ -47,6 +47,7 @@
     <ClCompile Include="include\Application\Scene.cpp" />
     <ClCompile Include="include\Boat\Boat.cpp" />
     <ClCompile Include="include\GameLogic\Components\Enemy.cpp" />
+    <ClCompile Include="include\BoundingRegion\BoundingRegion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Boat\Boat.h" />
     <ClInclude Include="include\GameLogic\Components\Enemy.h" />
+    <ClInclude Include="include\BoundingRegion\BoundingRegion.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

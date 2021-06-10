@@ -22,6 +22,7 @@ public:
 	Framebuffer(GLuint _width, GLuint _height, GLbitfield _bitCombo);
 
 	void generate();
+	void disableColorBuffer();
 	void bind();
 	void unbind();
 	void setViewPort();

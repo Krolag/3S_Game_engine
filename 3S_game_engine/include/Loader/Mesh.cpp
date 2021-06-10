@@ -80,6 +80,8 @@ namespace Loader
 				shader.setUniformInt(name, i);
 				textures[i].bind();
 			}
+
+			shader.setUniformInt("noTex", 0);
 		}
 
 		glBindVertexArray(VAO);
