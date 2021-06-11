@@ -22,11 +22,13 @@ namespace GameLogic
 		float speed = 0.6f;
 		bool isFollowing = false;
 		irrklang::ISoundEngine* coinSound = irrklang::createIrrKlangDevice();
+		irrklang::ISoundSource* coinSource = coinSound->addSoundSourceFromFile("assets/audio/sounds/coin.ogg");
 
 		Cash(ComponentType _type, Proctor* _proctor);
 		~Cash();
 		void followPlayer();
 		void setFollow(bool _isFollowing);
+		irrklang::ISoundSource* getCoinSource();
 		void update();
 	};
 }

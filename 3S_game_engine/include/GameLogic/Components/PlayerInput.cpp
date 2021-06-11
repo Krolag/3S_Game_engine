@@ -8,6 +8,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
+//using namespace irrklang;
+
 namespace GameLogic
 {
 	PlayerInput::PlayerInput(ComponentType _type, Proctor* _proctor)
@@ -29,6 +31,24 @@ namespace GameLogic
 			proctor->addComponent(this);
 		}
 	}
+
+	std::vector<irrklang::ISoundSource*> PlayerInput::getPlayerSounds()
+	{
+		return footsteps;
+	}
+
+	/*void PlayerInput::setFootstepSound(std::vector<ISoundSource*> _footsteps)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			footsteps.at(i) = _footsteps.at(i);
+		}
+	}*/
+
+	/*ISoundSource** PlayerInput::getFootstepSound()
+	{
+		return footsteps;
+	}*/
 
 	void PlayerInput::setScheme(bool _isPlayerOne)
 	{
@@ -85,14 +105,7 @@ namespace GameLogic
 					keyboard->isKeyDown(GLFW_KEY_D)) && 
 					frameCounter % 10 == 0)
 				{
-					if (randomNumber == 0)
-						playerSounds->play2D("assets/audio/sounds/footstep_00.ogg", false);
-					else if (randomNumber == 1)
-						playerSounds->play2D("assets/audio/sounds/footstep_01.ogg", false);
-					else if (randomNumber == 2)
-						playerSounds->play2D("assets/audio/sounds/footstep_02.ogg", false);
-					else if (randomNumber == 3)
-						playerSounds->play2D("assets/audio/sounds/footstep_03.ogg", false);
+					playerSounds->play2D(footsteps.at(randomNumber));
 
 					//if (proctor->getComponentOfType(C_ANIMA) != NULL)
 					//	((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(-1);
@@ -257,14 +270,7 @@ namespace GameLogic
 					keyboard->isKeyDown(GLFW_KEY_L))
 					&& frameCounter % 10 == 0)
 				{
-					if (randomNumber == 0)
-						playerSounds->play2D("assets/audio/sounds/footstep_00.ogg", false);
-					else if (randomNumber == 1)
-						playerSounds->play2D("assets/audio/sounds/footstep_01.ogg", false);
-					else if (randomNumber == 2)
-						playerSounds->play2D("assets/audio/sounds/footstep_02.ogg", false);
-					else if (randomNumber == 3)
-						playerSounds->play2D("assets/audio/sounds/footstep_03.ogg", false);
+					playerSounds->play2D(footsteps.at(randomNumber));
 
 					//((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
 				}

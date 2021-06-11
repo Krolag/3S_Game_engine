@@ -43,6 +43,7 @@ ISoundSource* waveSource = engine->addSoundSourceFromFile("assets/audio/sounds/b
 // menu
 ISoundSource* bottleSource = engine->addSoundSourceFromFile("assets/audio/sounds/bottle.ogg");
 ISoundSource* mainMenuSource = engine->addSoundSourceFromFile("assets/audio/sounds/mainMenu.ogg");
+// monster
 ISoundSource* heartBeatSource = engine->addSoundSourceFromFile("assets/audio/sounds/beat.ogg");
 #pragma endregion
 
@@ -124,6 +125,12 @@ int main()
     UIRender::UIElement exitNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.32, 0.13);
     UIRender::UIElement exitPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.32, 0.13);
 #pragma endregion
+#pragma region Options
+    UIRender::UIElement creditsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.72, 0.53);
+    UIRender::UIElement creditsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.72, 0.53);
+    UIRender::UIElement onButton("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "On.png", 0.4, 0.6, 0.52, 0.33);
+    UIRender::UIElement offButton("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "Off.png", 0.4, 0.6, 0.52, 0.33);
+#pragma endregion
 
 #pragma region StoryScene
     UIRender::UIElement story_00("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_00.png", 0, 1, 1, 0);
@@ -183,6 +190,7 @@ int main()
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
+    //hero_00_pi.setFootstepSound(footstepSource);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     /* Player Two */
@@ -190,6 +198,7 @@ int main()
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
+    //hero_01_pi.setFootstepSound(footstepSource);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     ///* Enemies */
@@ -318,6 +327,8 @@ int main()
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("mainMenu");
     int tmpMainMenuIndex = 0;
+    int tmpOptionsMenuIndex = 0;
+    bool isSoundsPaused = false;
 
     int animID = 0;
 
@@ -334,7 +345,14 @@ int main()
     waveSource->setDefaultVolume(1);
     engine->play2D(waveSource, true);
 
+    // bottleSource
+    bottleSource->setDefaultVolume(1);
+
+    // 
+    mainMenuSource->setDefaultVolume(1);
+
     bool restartFlag = false;
+    int cashSize = importer.cash.size();
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -358,7 +376,6 @@ int main()
                 if (tmpMainMenuIndex > 2)
                     tmpMainMenuIndex = 2;
 
-                bottleSource->setDefaultVolume(1);
                 engine->play2D(bottleSource, false);
             }            
             
@@ -368,7 +385,6 @@ int main()
                 if (tmpMainMenuIndex < 0)
                     tmpMainMenuIndex = 0;
 
-                bottleSource->setDefaultVolume(1);
                 engine->play2D(bottleSource, false);
             }
 
@@ -538,11 +554,106 @@ int main()
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            points.render("Options", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
+            
             points.render("Press escape, to go back to menu", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             if (keyboardInput->isKeyReleased(GLFW_KEY_ESCAPE))
+            {
                 sceneManager.changeCurrentScene("mainMenu");
+                engine->play2D(mainMenuSource, false);
+            }
+                
 
+            if (keyboardInput->isKeyReleased(GLFW_KEY_S))
+            {
+                tmpOptionsMenuIndex++;
+                if (tmpOptionsMenuIndex > 1)
+                    tmpOptionsMenuIndex = 1;
+
+                engine->play2D(bottleSource, false);
+            }
+
+            else if (keyboardInput->isKeyReleased(GLFW_KEY_W))
+            {
+                tmpOptionsMenuIndex--;
+                if (tmpOptionsMenuIndex < 0)
+                    tmpOptionsMenuIndex = 0;
+
+                engine->play2D(bottleSource, false);
+            }
+
+            if (isSoundsPaused == false)
+                onButton.render();
+            else
+                offButton.render();
+
+            creditsNotPressed.render();
+
+            if (tmpOptionsMenuIndex == 1)
+            {
+                if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE) && isSoundsPaused == false)
+                {
+                    engine->play2D(bottleSource, false);
+                    bottleSource->setDefaultVolume(0.0);
+                    mainMenuSource->setDefaultVolume(0);
+                    heartBeatSource->setDefaultVolume(0);
+                    for (int i = 0; i < cashSize; i++)
+                    {
+                        importer.cash.at(i).get()->getCoinSource()->setDefaultVolume(0);
+                    }
+                    for (int i = 0; i < 4; i++)
+                    {
+                        hero_00_pi.getPlayerSounds().at(i)->setDefaultVolume(0);
+                        hero_01_pi.getPlayerSounds().at(i)->setDefaultVolume(0);
+                    }
+                    engine->setAllSoundsPaused(true);
+                    isSoundsPaused = true;
+                }
+                else if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE) && isSoundsPaused == true)
+                {
+                    bottleSource->setDefaultVolume(1.0);
+                    mainMenuSource->setDefaultVolume(1);
+                    heartBeatSource->setDefaultVolume(1);
+                    for (int i = 0; i < cashSize; i++)
+                    {
+                        importer.cash.at(i).get()->getCoinSource()->setDefaultVolume(1);
+                    }
+                    for (int i = 0; i < 4; i++)
+                    {
+                        hero_00_pi.getPlayerSounds().at(i)->setDefaultVolume(1);
+                        hero_01_pi.getPlayerSounds().at(i)->setDefaultVolume(1);
+                    }
+                    engine->setAllSoundsPaused(false);
+                    engine->play2D(bottleSource, false);
+                    isSoundsPaused = false;
+                }
+            }
+
+            if (tmpOptionsMenuIndex == 0)
+            {
+                creditsPressed.render();
+                if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE))
+                {
+                    sceneManager.changeCurrentScene("credits");
+                    engine->play2D(bottleSource, false);
+                }
+            }
+
+
+        }
+
+        else if (sceneManager.cActiveScene["credits"])
+        {
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            points.render("Credits", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Press escape, to go back to options menu", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            if (keyboardInput->isKeyReleased(GLFW_KEY_ESCAPE))
+            {
+                sceneManager.changeCurrentScene("options");
+                engine->play2D(mainMenuSource, false);
+            }
+                
         }
         else if (sceneManager.cActiveScene["game"])
         {

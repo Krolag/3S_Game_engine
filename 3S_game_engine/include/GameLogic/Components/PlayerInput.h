@@ -10,6 +10,7 @@
 #include <string.h>
 #include "../../IrrKlang/irrKlang.h"
 
+//using namespace irrklang;
 
 namespace GameLogic
 {	
@@ -29,6 +30,11 @@ namespace GameLogic
 		int frameCounter = 0;
 		Proctor* coinProctor;
 		irrklang::ISoundEngine* playerSounds = irrklang::createIrrKlangDevice();
+		std::vector<irrklang::ISoundSource*> footsteps = { playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_00.ogg"),
+								   playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_01.ogg"),
+								   playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_02.ogg"),
+								   playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_03.ogg")
+		};
 		std::string clueText;
 		bool isCluePickedUp = false;
 		int clues[5]{ 0, 1, 2, 3, 4 };
@@ -36,6 +42,8 @@ namespace GameLogic
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);
 		PlayerInput(ComponentType _type, Proctor* _proctor, bool _isPlayerOne, Boat* _boat);
+
+		std::vector<irrklang::ISoundSource*> getPlayerSounds();
 
 		/* Movement methods */
 		void setScheme(bool _isPlayerOne);

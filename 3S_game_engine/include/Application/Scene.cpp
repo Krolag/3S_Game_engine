@@ -33,6 +33,7 @@ namespace Application
 		cActiveScene["game"] = false;
 		cActiveScene["exitStory_00"] = false;
 		cActiveScene["exitStory_01"] = false;
+		cActiveScene["credits"] = false;
 
 		changeCurrentScene("mainMenu");
 	}

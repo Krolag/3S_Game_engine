@@ -80,6 +80,11 @@ namespace GameLogic
 		isFollowing = _isFollowing;
 	}
 
+	irrklang::ISoundSource* Cash::getCoinSource()
+	{
+		return coinSource;
+	}
+
 	void Cash::update()
 	{
 		if(isFollowing)
