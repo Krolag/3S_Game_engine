@@ -28,7 +28,7 @@ struct DirLight
 	Framebuffer shadowFBO;
 
 	/* Constructor */
-	DirLight(glm::vec3 _direction, glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular, BoundingRegion _br);
+	DirLight(glm::vec3 _direction, glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular, BoundingRegion _br, unsigned int _shadowRes);
 
 	/* Update light space matrix */
 	void updateMatrices();

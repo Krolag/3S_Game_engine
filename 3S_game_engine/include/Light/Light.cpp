@@ -1,8 +1,8 @@
 #include "Light.h"
 
 
-DirLight::DirLight(glm::vec3 _direction, glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular, BoundingRegion _br)
-	: direction(_direction), ambient(_ambient), diffuse(_diffuse), specular(_specular), shadowFBO(2000, 2000, GL_DEPTH_BUFFER_BIT), br(_br)
+DirLight::DirLight(glm::vec3 _direction, glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular, BoundingRegion _br, unsigned int _shadowRes)
+	: direction(_direction), ambient(_ambient), diffuse(_diffuse), specular(_specular), shadowFBO(_shadowRes, _shadowRes, GL_DEPTH_BUFFER_BIT), br(_br)
 {
 	/* Setup FBO */
 	shadowFBO.generate();

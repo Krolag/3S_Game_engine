@@ -276,7 +276,8 @@ int main()
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.75f, 0.75f, 0.75f, 1.0f),
-        BoundingRegion(glm::vec3(-100.0f, -100.0f, 0.5f), glm::vec3(100.0f, 100.0f, 80.0f))
+        BoundingRegion(glm::vec3(-100.0f, -100.0f, 0.5f), glm::vec3(100.0f, 100.0f, 80.0f)),
+        4000
     );
 
     /* Water and water's frame buffer */
@@ -315,7 +316,7 @@ int main()
     Monster monsterSystem(&boat, zones);
 
     Application::Scene sceneManager;
-    sceneManager.changeCurrentScene("game");
+    sceneManager.changeCurrentScene("mainMenu");
     int tmpMainMenuIndex = 0;
 
     int animID = 0;
@@ -371,77 +372,104 @@ int main()
                 engine->play2D(bottleSource, false);
             }
 
-            //hero_00_an.playAnimation(0);
-            //hero_01_an.playAnimation(0);
             hero_00_pi.setActive(false);
             hero_01_pi.setActive(false);
             boat_b.setActive(false);
 
-            //enable cliping
-            glEnable(GL_CLIP_DISTANCE0);
-
+            /* Set camera variables */
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
+
+#pragma region SHADOWS - ShadowsBuffer
+            /* Activate directional light's FBO */
+            dirLight.shadowFBO.activate();
+
+            // TODO: @Dawid - cleanup
+            depthShader.use();
+            view = camera.GetViewMatrix();
+            glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::mat4 proj = glm::ortho(
+                dirLight.br.min.x + camera.Position.x,
+                dirLight.br.max.x + camera.Position.x,
+                dirLight.br.min.y - camera.Position.z,
+                dirLight.br.max.y - camera.Position.z,
+                dirLight.br.min.z,
+                dirLight.br.max.z);
+            dirLight.lightSpaceMatrix = proj * lightView;
+            depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
+            dirLight.render(depthShader, 31);
+            hierarchy.renderWithShader(&depthShader);
+            shadowMapUI.setTexture(dirLight.shadowFBO.textures[0]);
+            dirLight.shadowFBO.unbind();
+#pragma endregion
+
+            /* Enable cliiping */
+            glEnable(GL_CLIP_DISTANCE0);
+
 #pragma region WATER - ReflectionBuffer
-            //HERE STARTS RENDERING MODELS BENEATH WATER TO BUFFER (REFLECTFRAMEBUFER)
+            /* Start rendering meshes beneath water to ReflectionBuffer */
             reflectFramebuffer.activate();
             glEnable(GL_DEPTH_TEST);
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            // set camera underwater - to get reflection
+            /* Set camera underwater to get reflection */
             float distance = 2 * (camera.Position.y - waterYpos);
             camera.Position.y -= distance;
             camera.Pitch = -camera.Pitch;
             camera.updateCameraVectors();
 
+            /* Set shader variables - projection, view, plane */
             model3D.use();
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
-            model3D.setUniform("projection", projection);
             view = camera.GetViewMatrix();
-            model3D.setUniform("view", view);
-            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // cliping everything under water plane
             model = glm::mat4(1.0f);
+            model3D.setUniform("projection", projection);
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // Clipping everything under water plane
 
-            //dirLight.render(model3D, textureIdx--);
+            /* Render objects for ReflectionBuffer */
+            dirLight.render(model3D, 31);
+            hierarchy.renderWithShader(&model3D);
+            skybox.render();
 
-            //---------------------------------------------------------------------------
-            hierarchy.update(true, false);
-            //---------------------------------------------------------------------------
-
-            skybox.render(); // render skybox only for reflectionbuffer
-
-            //set camera position to default
+            /* Set camera position to default */
             camera.Position.y += distance;
             camera.Pitch = -camera.Pitch;
             camera.updateCameraVectors();
 
-            //close reflectframebuffer
+            /* Close ReflectionBuffer */
             reflectFramebuffer.unbind();
 #pragma endregion
+
+            /* Disable cliiping */
             glDisable(GL_CLIP_DISTANCE0);
 
 #pragma region Default rendering
-            //HERE STARTS DEFAULT RENDERING
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            /* Clear everything */
+            glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_CULL_FACE);
 
+            /* Set model shader variables - projection, view */
+            view = camera.GetViewMatrix();
             model3D.use();
             model3D.setUniform("projection", projection);
-            view = camera.GetViewMatrix();
             model3D.setUniform("view", view);
+            model3D.setUniform("viewPos", camera.Position);
 
+            /* TODO: @Dawid - DEBUG between game camera and debug camera */
             cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
-            //dirLight.render(model3D, textureIdx--);
+            /* Render light and update hierarchy */
+            dirLight.render(model3D, 31);
+            hierarchy.update(false, isDebugModeOn, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
-            //---------------------------------------------------------------------------
-            hierarchy.update(false, false); // need to be set this way, otherwise debug window won't appear
-            //---------------------------------------------------------------------------
-
+            /* Render water */
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
-            // Main menu UI
+            /* Render title */
             logo.render();
 
             startNotPressed.render();
@@ -537,7 +565,6 @@ int main()
 
 #pragma region SHADOWS - ShadowsBuffer
             /* Activate directional light's FBO */
-            unsigned int textureIdx = 31;
             dirLight.shadowFBO.activate();
 
             // TODO: @Dawid - cleanup
@@ -553,7 +580,7 @@ int main()
                 dirLight.br.max.z);
             dirLight.lightSpaceMatrix = proj * lightView;
             depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
-            dirLight.render(depthShader, textureIdx);
+            dirLight.render(depthShader, 31);
             hierarchy.renderWithShader(&depthShader);
             shadowMapUI.setTexture(dirLight.shadowFBO.textures[0]);
             dirLight.shadowFBO.unbind();
@@ -584,7 +611,7 @@ int main()
             model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // Clipping everything under water plane
 
             /* Render objects for ReflectionBuffer */
-            dirLight.render(model3D, textureIdx);
+            dirLight.render(model3D, 31);
             hierarchy.renderWithShader(&model3D);
             skybox.render();
 
@@ -618,7 +645,7 @@ int main()
             cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
 
             /* Render light and update hierarchy */
-            dirLight.render(model3D, textureIdx);
+            dirLight.render(model3D, 31);
             hierarchy.update(false, isDebugModeOn, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
             /* Render water */
