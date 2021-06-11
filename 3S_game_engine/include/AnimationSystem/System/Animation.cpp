@@ -70,9 +70,14 @@
 				boneInfoMap[boneName].id = boneCount;
 				boneCount++;
 			}
+					
+			std::cout << boneName << std::endl;
 
 			bones.push_back(Bone(channel->mNodeName.data, boneInfoMap[channel->mNodeName.data].id, channel));
 		}
+
+		std::cout << boneInfoMap.size() << std::endl;
+		std::cout << boneCount << std::endl;
 
 		this->boneInfoMap = boneInfoMap;
 	}

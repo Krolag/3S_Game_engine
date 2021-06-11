@@ -8,22 +8,6 @@
 #include "Framebuffer/Framebuffer.h"
 #include "BoundingRegion/BoundingRegion.h"
 
-struct PointLight
-{
-	/* Light data */
-	glm::vec3 position;
-	glm::vec4 ambient;
-	glm::vec4 diffuse;
-	glm::vec4 specular;
-
-	/* Attenuation constants */
-	float k0;
-	float k1;
-	float k2;
-
-	void render(Shader _shader, int _idx);
-};
-
 struct DirLight
 {
 	/* Direction constant for all parallel rays */
@@ -50,25 +34,6 @@ struct DirLight
 	void updateMatrices();
 
 	void render(Shader _shader, unsigned int _textureIdx);
-};
-
-struct SpotLight
-{
-	/* Light data */
-	glm::vec3 position;
-	glm::vec3 direction;
-	float cutOff;
-	float outerCutOff;
-	glm::vec4 ambient;
-	glm::vec4 diffuse;
-	glm::vec4 specular;
-
-	/* Attenuation constants */
-	float k0;
-	float k1;
-	float k2;
-
-	void render(Shader _shader, int _idx);
 };
 
 #endif // !LIGHT_H

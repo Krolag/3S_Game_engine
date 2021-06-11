@@ -48,7 +48,7 @@ namespace GameLogic
 
 		if (renderer != NULL)
 		{
-			this->model = renderer->model;
+			model = renderer->model;
 		}
 		else
 			std::cerr << "CAN'T FIND ANY MODEL FOR THIS PROCTOR: " << proctor->name << std::endl;

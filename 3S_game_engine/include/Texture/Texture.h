@@ -8,6 +8,7 @@ class Texture
 {
 public:
 	/* Constructors */
+	Texture();
 	Texture(std::string _directory, std::string _path, aiTextureType _type);
 	Texture(std::string _directory, std::string _path);
 	Texture(std::string _name);

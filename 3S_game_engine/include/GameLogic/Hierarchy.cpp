@@ -155,10 +155,17 @@ namespace GameLogic
 
 	void Hierarchy::renderWithShader(Shader* _shader)
 	{
-
 		/* Get mesh component from proctor and check its existance */
 		MeshRenderer* mesh = (MeshRenderer*)proctors[0]->getComponentOfType(C_MESH);
 		Shader* currentlyUsedShader = mesh->shader;
+
+		/* Check if shader is the same as the old one */
+		if (currentlyUsedShader == _shader)
+		{
+			/* Call update only for render purpose with old shader */
+			update(true, false);
+			return;
+		}
 
 		/* Iterate through each proctor */
 		int size = proctors.size();

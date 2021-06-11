@@ -12,6 +12,7 @@ namespace Application
 		{
 			this->window = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, glfwGetVideoMode(glfwGetPrimaryMonitor())->height, 
 				_name.c_str(), glfwGetPrimaryMonitor(), NULL);
+			glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_TRUE);
 		}
 		else
 		{

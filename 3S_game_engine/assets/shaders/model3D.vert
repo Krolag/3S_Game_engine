@@ -7,8 +7,6 @@ layout (location = 1) in vec3 inNormal;
 layout (location = 2) in vec2 inTexCoords;
 layout (location = 3) in ivec3 inJointIndices;
 layout (location = 4) in vec3 inWeights;
-layout (location = 5) in vec3 aOffset;
-layout (location = 6) in vec3 aSize;
 
 out vec3 FragPos;
 out vec4 FragPosLightSpace;
@@ -46,19 +44,17 @@ void main()
 		/* Calculate total position */
 		for (int i = 0; i < MAX_WEIGHTS; i++)
 		{
-			if (inJointIndices[i] != -1)
-			{
 				vec4 localPosition = jointTransforms[inJointIndices[i]] * vec4(inPos, 1.0f);
 				totalLocalPosition += localPosition * inWeights[i];
 
 				vec4 worldNormal = jointTransforms[inJointIndices[i]] * vec4(inNormal, 1.0f);
 				totalNormal += worldNormal * inWeights[i];
-			}
 		}
 
-		FragPos = vec3(model * vec4(totalLocalPosition.xyz, 1.0f));
-		Normal = totalNormal.xyz;
+		FragPos = vec3(model * totalLocalPosition);
+		Normal = mat3(transpose(inverse(model))) * totalNormal.xyz;
 		TexCoord = inTexCoords;
+		FragPosLightSpace = lightSpaceMatrix * model * totalLocalPosition;
 		
 		gl_Position = projection * view * model * totalLocalPosition;
 	}

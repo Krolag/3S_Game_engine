@@ -67,13 +67,14 @@ float lastX = SCREEN_WIDTH / 2.0f;
 float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-bool isDebugModeOn = false;
+static bool isDebugModeOn = false;
+bool isDebugCameraOn = false;
 bool isPaused = false;
 int main()
 {
 #pragma region Scene init
     /* Load scene */
-    Application::Window mainScene("3S GameEngine", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
+    Application::Window mainScene("TREASURE HEIST FINAL BUILD", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
     glfwMakeContextCurrent(mainScene.window);
     glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
     glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -109,6 +110,7 @@ int main()
     Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
     Shader collisionBoxShader("assets/shaders/boxCollider2.vert", "assets/shaders/boxCollider2.frag");
     Shader depthShader("assets/shaders/depthShader.vert", "assets/shaders/depthShader.frag");
+    Shader debugShader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 
 #pragma endregion
 
@@ -175,15 +177,14 @@ int main()
     hierarchy.addObject(&boat);
 	
     /* Player One */
-    Loader::Model           hero_00_m("assets/models/players/blue_every_frame_14.dae", "playerOne", true, false);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
+    Loader::Model           hero_00_m("assets/models/players/c_r.fbx", "playerOne", true, false);
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.1f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m/*modelLibrary.getModel(hero_00.name)*/, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
-	
     /* Player Two */
     GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.024f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, modelLibrary.getModel(hero_01.name), &model3D);
@@ -191,15 +192,13 @@ int main()
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, modelLibrary.getModel(hero_01.name), &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
-	
-    /* Enemies */
-    Loader::Model           enemy_00_m("assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
-    GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 810.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
-    GameLogic::MeshRenderer enemy_00_mr(GameLogic::C_MESH, &enemy_00, &enemy_00_m, &model3D);
-    GameLogic::Enemy        enemy_00_e(&enemy_00, &hero_00, &hero_01);
-    GameLogic::BoxCollider  enemy_00_bc(GameLogic::C_COLLIDER, &enemy_00_m, &enemy_00, &collisionBoxShader, false);
-    hierarchy.addObject(&enemy_00);
-	
+    ///* Enemies */
+    //Loader::Model           enemy_00_m("assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
+    //GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 810.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
+    //GameLogic::MeshRenderer enemy_00_mr(GameLogic::C_MESH, &enemy_00, &enemy_00_m, &model3D);
+    //GameLogic::Enemy        enemy_00_e(&enemy_00, &hero_00, &hero_01);
+    //GameLogic::BoxCollider  enemy_00_bc(GameLogic::C_COLLIDER, &enemy_00_m, &enemy_00, &collisionBoxShader, false);
+    //hierarchy.addObject(&enemy_00);
     GameLogic::Proctor      monster("monster", glm::vec3(0.0f, -1000.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
     GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, modelLibrary.getModel(hero_01.name), &model3D);
     hierarchy.addObject(&monster);
@@ -216,7 +215,7 @@ int main()
             importer.importedProctors.at(i).get(),
             importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
             &model3D
-            ));
+        ));
 
         std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
          
@@ -272,11 +271,12 @@ int main()
 
     /* Lights */
     DirLight dirLight(
-        glm::vec3(-0.2f, -0.9f, -0.2f),
+        // 170.8f  /  -134.9f  /  212.0f 
+        glm::vec3(0.0f, -26.0f, -0.2f),
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.75f, 0.75f, 0.75f, 1.0f),
-        BoundingRegion(glm::vec3(-20.0f, -20.0f, 0.1f), glm::vec3(20.0f, 20.0f, 50.0f))
+        BoundingRegion(glm::vec3(-100.0f, -100.0f, 0.5f), glm::vec3(100.0f, 100.0f, 80.0f))
     );
 
     /* Water and water's frame buffer */
@@ -319,6 +319,10 @@ int main()
     int tmpMainMenuIndex = 0;
 
     int animID = 0;
+
+    Texture debug;
+    bool isShadowMapVisible = false;
+    UIRender::UIElement shadowMapUI("assets/shaders/ui.vert", "assets/shaders/ui.frag", debug, 0.05, 0.05 + (400.0f / SCREEN_WIDTH), 0.95 - (400.0f / SCREEN_HEIGHT), 0.95);
 #pragma endregion
 
     // music
@@ -339,6 +343,10 @@ int main()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        /* Enable/disable debug mode */
+        if (keyboardInput->isKeyPressed(GLFW_KEY_TAB))
+            isDebugModeOn = !isDebugModeOn;
 
         /* SCENE LOADER TEST CODE */
         if (sceneManager.cActiveScene["mainMenu"])
@@ -510,8 +518,7 @@ int main()
         }
         else if (sceneManager.cActiveScene["game"])
         {
-            unsigned int textureIdx = 31;
-
+            
             /* Check if player entered pause menu */
             if (keyboardInput->isKeyPressed(GLFW_KEY_ESCAPE))
             {
@@ -519,43 +526,41 @@ int main()
                 sceneManager.changeCurrentScene("mainMenu");
                 engine->play2D(mainMenuSource, false);
             }
-            else if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
-            {
-                sceneManager.changeCurrentScene("exitStory_00");
-            }            
-            else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
-            {
-                sceneManager.changeCurrentScene("exitStory_01");
-            }
 
             /* Set players variables */
             hero_00_pi.setActive(true);
             hero_01_pi.setActive(true);
-            
+
             /* Set camera variables */
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
 
-            /* Enable cliiping */
-            glEnable(GL_CLIP_DISTANCE0);
-
 #pragma region SHADOWS - ShadowsBuffer
             /* Activate directional light's FBO */
+            unsigned int textureIdx = 31;
             dirLight.shadowFBO.activate();
 
+            // TODO: @Dawid - cleanup
             depthShader.use();
             view = camera.GetViewMatrix();
+            glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::mat4 proj = glm::ortho(
+                dirLight.br.min.x + camera.Position.x,
+                dirLight.br.max.x + camera.Position.x,
+                dirLight.br.min.y - camera.Position.z,
+                dirLight.br.max.y - camera.Position.z,
+                dirLight.br.min.z, 
+                dirLight.br.max.z);
+            dirLight.lightSpaceMatrix = proj * lightView;
             depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
-            depthShader.setUniform("projection", projection);
-            depthShader.setUniform("view", view);
-            depthShader.setUniform("viewPos", camera.Position);
-
             dirLight.render(depthShader, textureIdx);
-
             hierarchy.renderWithShader(&depthShader);
-
+            shadowMapUI.setTexture(dirLight.shadowFBO.textures[0]);
             dirLight.shadowFBO.unbind();
 #pragma endregion
+
+            /* Enable cliiping */
+            glEnable(GL_CLIP_DISTANCE0);
 
 #pragma region WATER - ReflectionBuffer
             /* Start rendering meshes beneath water to ReflectionBuffer */
@@ -576,8 +581,7 @@ int main()
             model = glm::mat4(1.0f);
             model3D.setUniform("projection", projection);
             model3D.setUniform("view", view);
-            // Clipping everything under water plane
-            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos));
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // Clipping everything under water plane
 
             /* Render objects for ReflectionBuffer */
             dirLight.render(model3D, textureIdx);
@@ -601,6 +605,7 @@ int main()
             glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_CULL_FACE);
             
             /* Set model shader variables - projection, view */
             view = camera.GetViewMatrix();
@@ -614,24 +619,16 @@ int main()
 
             /* Render light and update hierarchy */
             dirLight.render(model3D, textureIdx);
-            hierarchy.update(false, true, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
-
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 0);
+            hierarchy.update(false, isDebugModeOn, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
 
             /* Render water */
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
-            /* TODO: @Dawid - DEBUG Set camera shader variables - projection, view, collision */
-            collisionBoxShader.use();
-            collisionBoxShader.setUniform("projection", projection);
-            collisionBoxShader.setUniform("view", view);
-            collisionBoxShader.setUniformBool("collision", true);
-
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
+            /* Check if player picked up clue */
             if (hero_00_pi.isCluePickedUp)
                 points.render(hero_00_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
             else if (hero_01_pi.isCluePickedUp)
@@ -654,12 +651,61 @@ int main()
                 monsterSystem.isGameOver = false;
                 sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
             }
-            // TODO: @Ignacy - potrzebne to?
-            /*if (isPaused == true)
+
+            if (isDebugModeOn)
             {
-                isPaused = false;
-                Sleep(2500);
-            }*/
+                ImGui::Begin("Camera and dir light");
+                {
+                    float variables[4];
+                    /* CAMERA */
+                    ImGui::Text("---- CAMERA ----");
+                    variables[0] = camera.Position.x; variables[1] = camera.Position.y; variables[2] = camera.Position.z;
+                    ImGui::DragFloat3("campos", variables);
+                    camera.Position.x = variables[0]; camera.Position.y = variables[1]; camera.Position.z = variables[2];
+                    ImGui::Text("---- LIGHT -----");
+                    // Shadow map
+                    ImGui::Checkbox("show shadow map", &isShadowMapVisible);
+                    /* Dir light */
+                    // Direction
+                    variables[0] = dirLight.direction.x; variables[1] = dirLight.direction.y; variables[2] = dirLight.direction.z;
+                    ImGui::DragFloat3("direction", variables);
+                    dirLight.direction.x = variables[0]; dirLight.direction.y = variables[1]; dirLight.direction.z = variables[2];
+                    // Ambient
+                    variables[0] = dirLight.ambient.x; variables[1] = dirLight.ambient.y; variables[2] = dirLight.ambient.z; variables[3] = dirLight.ambient.w;
+                    ImGui::DragFloat4("ambient", variables);
+                    dirLight.ambient.x = variables[0]; dirLight.ambient.y = variables[1]; dirLight.ambient.z = variables[2]; dirLight.ambient.w = variables[3];
+                    // Diffuse
+                    variables[0] = dirLight.diffuse.x; variables[1] = dirLight.diffuse.y; variables[2] = dirLight.diffuse.z; variables[3] = dirLight.diffuse.w;
+                    ImGui::DragFloat4("diffuse", variables);
+                    dirLight.diffuse.x = variables[0]; dirLight.diffuse.y = variables[1]; dirLight.diffuse.z = variables[2]; dirLight.diffuse.w = variables[3];
+                    // Specular
+                    variables[0] = dirLight.specular.x; variables[1] = dirLight.specular.y; variables[2] = dirLight.specular.z; variables[3] = dirLight.specular.w;
+                    ImGui::DragFloat4("specular", variables);
+                    dirLight.specular.x = variables[0]; dirLight.specular.y = variables[1]; dirLight.specular.z = variables[2]; dirLight.specular.w = variables[3];
+                    // Bounding region min
+                    variables[0] = dirLight.br.min.x; variables[1] = dirLight.br.min.y; variables[2] = dirLight.br.min.z;
+                    ImGui::DragFloat3("br.min", variables);
+                    dirLight.br.min.x = variables[0]; dirLight.br.min.y = variables[1]; dirLight.br.min.z = variables[2];
+                    // Bounding region max
+                    variables[0] = dirLight.br.max.x; variables[1] = dirLight.br.max.y; variables[2] = dirLight.br.max.z;
+                    ImGui::DragFloat3("br.max", variables);
+                    dirLight.br.max.x = variables[0]; dirLight.br.max.y = variables[1]; dirLight.br.max.z = variables[2];
+                }
+                ImGui::End();
+
+                if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
+                    sceneManager.changeCurrentScene("exitStory_00");
+                else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
+                    sceneManager.changeCurrentScene("exitStory_01");
+
+                collisionBoxShader.use();
+                collisionBoxShader.setUniform("projection", projection);
+                collisionBoxShader.setUniform("view", view);
+                collisionBoxShader.setUniformBool("collision", true);
+
+                if (isShadowMapVisible)
+                    shadowMapUI.render();
+            }
 #pragma endregion
         }
         
@@ -777,10 +823,10 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
     float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight)
 {
     if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
-        isDebugModeOn = !isDebugModeOn;
+        isDebugCameraOn = !isDebugCameraOn;
     }
 
-    if (isDebugModeOn)
+    if (isDebugCameraOn)
     {
         cameraKeyboardInput(_scene, keyboardInput);
         mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
@@ -797,7 +843,7 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
         }
 
     }
-    if (!isDebugModeOn)
+    if (!isDebugCameraOn)
     {       
         float xDistance = player_1->getWorldPosition()[0] - player_2->getWorldPosition()[0];
         float yDistance = player_1->getWorldPosition()[2] - player_2->getWorldPosition()[2];

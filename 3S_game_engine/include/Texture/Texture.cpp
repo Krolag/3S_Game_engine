@@ -2,7 +2,12 @@
 #include <iostream>
 #include <stb_image.h>
 
-Texture::Texture(std::string _directory, std::string _path, aiTextureType _type) 
+Texture::Texture()
+{
+	generate();
+}
+
+Texture::Texture(std::string _directory, std::string _path, aiTextureType _type)
 	: directory(_directory), path(_path), type(_type) 
 {
 	generate();

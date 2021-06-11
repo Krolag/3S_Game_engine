@@ -10,8 +10,12 @@ namespace UIRender
 	public:
 		// Constructor with paths and border parameters
 		UIElement() = default;
-		UIElement(std::string vertexShaderPath, std::string fragmentShaderPath, std::string textureDirectory, std::string texturePath, float leftPos, float rightPos, float bottomPos, float topPos);
-		~UIElement();
+		UIElement(std::string vertexShaderPath, std::string fragmentShaderPath, std::string textureDirectory, std::string texturePath, float leftPos, float rightPos, float topPos, float bottomPos);
+		UIElement(std::string vertexShaderPath, std::string fragmentShaderPath, Texture _texture, float leftPos, float rightPos, float topPos, float bottomPos);
+;		~UIElement();
+		
+		void setTexture(Texture _texture);
+
 		// Render method draws the UI Element
 		void render();
 

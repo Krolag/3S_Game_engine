@@ -1,21 +1,8 @@
 #include "Light.h"
 
-void PointLight::render(Shader _shader, int _idx)
-{
-	std::string name = "pointLights[" + std::to_string(_idx) + "]";
-
-	_shader.setUniform(name + ".position", this->position);
-	_shader.setUniform(name + ".ambient", this->ambient);
-	_shader.setUniform(name + ".diffuse", this->diffuse);
-	_shader.setUniform(name + ".specular", this->specular);
-
-	_shader.setUniformFloat(name + ".k0", this->k0);
-	_shader.setUniformFloat(name + ".k1", this->k1);
-	_shader.setUniformFloat(name + ".k2", this->k2);
-}
 
 DirLight::DirLight(glm::vec3 _direction, glm::vec4 _ambient, glm::vec4 _diffuse, glm::vec4 _specular, BoundingRegion _br)
-	: direction(_direction), ambient(_ambient), diffuse(_diffuse), specular(_specular), shadowFBO(1080, 1080, GL_DEPTH_BUFFER_BIT), br(_br)
+	: direction(_direction), ambient(_ambient), diffuse(_diffuse), specular(_specular), shadowFBO(2000, 2000, GL_DEPTH_BUFFER_BIT), br(_br)
 {
 	/* Setup FBO */
 	shadowFBO.generate();
@@ -35,6 +22,8 @@ void DirLight::updateMatrices()
 
 void DirLight::render(Shader _shader, unsigned int _textureIdx)
 {
+	//updateMatrices();
+
 	std::string name = "dirLight";
 
 	_shader.setUniform(name + ".direction", this->direction);
@@ -49,21 +38,4 @@ void DirLight::render(Shader _shader, unsigned int _textureIdx)
 
 	/* Set light space matrix */
 	_shader.setUniform("dirLight.lightSpaceMatrix", lightSpaceMatrix);
-}
-
-void SpotLight::render(Shader _shader, int _idx)
-{
-	std::string name = "spotLights[" + std::to_string(_idx) + "]";
-
-	_shader.setUniform(name + ".position", this->position);
-	_shader.setUniform(name + ".direction", this->direction);
-	_shader.setUniformFloat(name + ".cutOff", this->cutOff);
-	_shader.setUniformFloat(name + ".outerCutOff", this->cutOff);
-	_shader.setUniform(name + ".ambient", this->ambient);
-	_shader.setUniform(name + ".diffuse", this->diffuse);
-	_shader.setUniform(name + ".specular", this->specular);
-
-	_shader.setUniformFloat(name + ".k0", this->k0);
-	_shader.setUniformFloat(name + ".k1", this->k1);
-	_shader.setUniformFloat(name + ".k2", this->k2);
 }
