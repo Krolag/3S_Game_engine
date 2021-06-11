@@ -176,7 +176,7 @@ int main()
  
     /* Boat */
     Loader::Model           boat_m("assets/models/boat/bbot.fbx", "boat", true, true);
-    GameLogic::Proctor      boat("boat", glm::vec3(720.0f, 2.0f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
+    GameLogic::Proctor      boat("boat", glm::vec3(704.0f, 2.0f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, &boat_m, &model3D);
     GameLogic::Boat         boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);

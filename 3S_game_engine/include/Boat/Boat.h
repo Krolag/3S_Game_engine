@@ -33,11 +33,16 @@ namespace GameLogic
 		bool isFirstInBoat = false;
 		bool isSecondInBoat = false;
 
+		float waveRotation = 0.001;
 		float speed = 0;
-		float startSpeed = 1;
 		float turnSpeed = 0;
-		float startTurningSpeed = 0.6;
+		float startSpeed = 2;
+		float maxTurningSpeed = 0.4;
 		float time = 0;
+		float deltaTime;
+
+		bool rightTurn = false;
+		bool leftTurn = false;
 
 		void useBoatInput();
 		void changePosition();
