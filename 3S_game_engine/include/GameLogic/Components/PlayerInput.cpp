@@ -171,7 +171,6 @@ namespace GameLogic
 							if (!isPlayerOneInBoat)
 							{
 								boat->attachPlayerOne(proctor);
-								boat->setIsPlayerOneInBoat(true);
 							}
 						}
 
@@ -208,8 +207,7 @@ namespace GameLogic
 			}
 			if (keyboard->isKeyPressed(GLFW_KEY_B) && isPlayerOneInBoat)
 			{
-				boat->setIsPlayerOneInBoat(false);
-				boat->deatachPlayerOne(proctor);
+				boat->detachPlayerOne(proctor);
 				transform.position = proctor->transform.position;
 				transform.rotation = proctor->transform.rotation;
 			}
@@ -344,7 +342,6 @@ namespace GameLogic
 							if (!isPlayerTwoInBoat)
 							{
 								boat->attachPlayerTwo(proctor);
-								boat->setIsPlayerTwoInBoat(true);
 							}
 						}
 
@@ -381,8 +378,7 @@ namespace GameLogic
 
 			if (keyboard->isKeyPressed(GLFW_KEY_SLASH) && isPlayerTwoInBoat)
 			{
-				boat->setIsPlayerTwoInBoat(false);
-				boat->deatachPlayerTwo(proctor);
+				boat->detachPlayerTwo(proctor);
 				transform.position = proctor->transform.position;
 				transform.rotation = proctor->transform.rotation;
 			}
