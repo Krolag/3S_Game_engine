@@ -22,8 +22,6 @@ void DirLight::updateMatrices()
 
 void DirLight::render(Shader _shader, unsigned int _textureIdx)
 {
-	//updateMatrices();
-
 	std::string name = "dirLight";
 
 	_shader.setUniform(name + ".direction", this->direction);

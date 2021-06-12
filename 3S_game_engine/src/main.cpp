@@ -303,8 +303,8 @@ int main()
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
         glm::vec4(0.75f, 0.75f, 0.75f, 1.0f),
-        BoundingRegion(glm::vec3(-100.0f, -100.0f, 0.5f), glm::vec3(100.0f, 100.0f, 80.0f)),
-        4000
+        BoundingRegion(glm::vec3(-50.0f, -50.0f, 0.5f), glm::vec3(50.0f, 50.0f, 80.0f)),
+        8000
     );
 
     /* Water and water's frame buffer */
@@ -410,10 +410,10 @@ int main()
             boat_b.setActive(false);
 
             /* Set camera variables */
-            // UNCOMMENT THOSE LINES TO VIEW NEW CAMERA IN MAIN MENU
-            //camera.Position = { 608.0f, 37.0f, 719.0f };
-            //camera.Pitch = -17.5f;
-            //camera.Yaw = 53.4f;
+            camera.Position = { 680.0f, 37.0f, 719.0f };
+            camera.Pitch = -17.5f;
+            camera.Yaw = 53.4f;
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
 
@@ -421,17 +421,11 @@ int main()
             /* Activate directional light's FBO */
             dirLight.shadowFBO.activate();
 
-            // TODO: @Dawid - cleanup
             depthShader.use();
             view = camera.GetViewMatrix();
             glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-            glm::mat4 proj = glm::ortho(
-                dirLight.br.min.x + camera.Position.x,
-                dirLight.br.max.x + camera.Position.x,
-                dirLight.br.min.y - camera.Position.z,
-                dirLight.br.max.y - camera.Position.z,
-                dirLight.br.min.z,
-                dirLight.br.max.z);
+            /* Note that those values are constant */
+            glm::mat4 proj = glm::ortho(680.0f, 860.0f, -899.0f, -719.0f, dirLight.br.min.z, dirLight.br.max.z);
             dirLight.lightSpaceMatrix = proj * lightView;
             depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
             dirLight.render(depthShader, 31);
@@ -457,7 +451,6 @@ int main()
 
             /* Set shader variables - projection, view, plane */
             model3D.use();
-            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
             view = camera.GetViewMatrix();
             model = glm::mat4(1.0f);
             model3D.setUniform("projection", projection);
@@ -505,15 +498,12 @@ int main()
             /* Render water */
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
-
-            /* Render title */
-            logo.render();
-
-
-
 #pragma endregion
 
 #pragma region UI Elements
+            /* Render title */
+            logo.render();
+
             /* Start button */
             if (tmpMainMenuIndex == 0)
             {
@@ -556,6 +546,7 @@ int main()
             {
                 ImGui::Begin("Camera and dir light");
                 {
+                    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
                     float variables[4];
                     /* CAMERA */
                     ImGui::Text("---- CAMERA ----");
@@ -756,6 +747,7 @@ int main()
             hero_01_pi.setActive(true);
 
             /* Set camera variables */
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
 
@@ -763,7 +755,6 @@ int main()
             /* Activate directional light's FBO */
             dirLight.shadowFBO.activate();
 
-            // TODO: @Dawid - cleanup
             depthShader.use();
             view = camera.GetViewMatrix();
             glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -799,7 +790,6 @@ int main()
 
             /* Set shader variables - projection, view, plane */
             model3D.use();
-            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
             view = camera.GetViewMatrix();
             model = glm::mat4(1.0f);
             model3D.setUniform("projection", projection);
@@ -882,6 +872,7 @@ int main()
             {
                 ImGui::Begin("Camera and dir light");
                 {
+                    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
                     float variables[4];
                     /* CAMERA */
                     ImGui::Text("---- CAMERA ----");
