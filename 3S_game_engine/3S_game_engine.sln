@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3S_game_engine", "3S_game_engine.vcxproj", "{3F5C8BDC-4988-428C-967C-05ABC899A347}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TreasureHeistSetup", "..\TreasureHeistSetup\TreasureHeistSetup.vdproj", "{C04F43E1-EAB4-4DB5-AAAD-AB81903256AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,10 @@ Global
 		{3F5C8BDC-4988-428C-967C-05ABC899A347}.Release|x64.Build.0 = Release|x64
 		{3F5C8BDC-4988-428C-967C-05ABC899A347}.Release|x86.ActiveCfg = Release|Win32
 		{3F5C8BDC-4988-428C-967C-05ABC899A347}.Release|x86.Build.0 = Release|Win32
+		{C04F43E1-EAB4-4DB5-AAAD-AB81903256AA}.Debug|x64.ActiveCfg = Debug
+		{C04F43E1-EAB4-4DB5-AAAD-AB81903256AA}.Debug|x86.ActiveCfg = Debug
+		{C04F43E1-EAB4-4DB5-AAAD-AB81903256AA}.Release|x64.ActiveCfg = Release
+		{C04F43E1-EAB4-4DB5-AAAD-AB81903256AA}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
