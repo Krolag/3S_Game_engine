@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/fwd.hpp>
-
+#include <glm/vec3.hpp>
 #include "GameLogic/Components/Component.h"
 
 namespace GameLogic
@@ -45,7 +45,7 @@ namespace GameLogic
 		float maxGravity;
 		float currentGravity;
 		float gravityAcceleration;
-
+		
 		EnemyState currentState;
 		
 		/* References to our players */
@@ -53,6 +53,9 @@ namespace GameLogic
 		Proctor* playerTwoRef;
 		Proctor* currentlyChasedPlayer;
 
+		glm::vec3 wanderDirection;
+		float newWanderDirectionTimer;
+		
 		/* Private methods */
 		void stoicBehaviour();
 		void chasingBehaviour();

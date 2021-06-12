@@ -1,6 +1,6 @@
 #include "Enemy.h"
 #include "GameLogic/Proctor.h"
-
+#include "Application/Randomizer.h"
 #include <iostream>
 
 namespace GameLogic
@@ -21,13 +21,9 @@ namespace GameLogic
 		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), currentlyChasedPlayer(nullptr),
 		maxHealth(MAX_HEALTH_DEFAULT), currentHealth(MAX_HEALTH_DEFAULT), damage(DAMAGE_DEFAULT), sightRadius(SIGHT_RADIUS_DEFAULT), attackRadius(ATTACK_RADIUS_DEFAULT),
 		maxVelocity(MAX_VELOCITY_DEFAULT), currentVelocity(0.0f), acceleration(ACCELERATION_DEFAULT),
-		maxGravity(MAX_GRAVITY_DEFAULT), currentGravity(0.0f), gravityAcceleration(GRAVITY_ACCELERATION_DEFAULT), currentState(STOIC_STATE)
+		maxGravity(MAX_GRAVITY_DEFAULT), currentGravity(0.0f), gravityAcceleration(GRAVITY_ACCELERATION_DEFAULT), currentState(STOIC_STATE),
+		wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
 	{
-		std::cout << "\n\nINITIALIZED ENEMY WITH VALUES:"
-			<< "\ncurrent state: " << currentState
-			<< "\nmax health: " << maxHealth
-			<< "\ncurrent health: " << currentHealth
-			<< "\nsight radius: " << sightRadius << "\n";
 		if (_proctor != NULL)
 		{
 			proctor->addComponent(this);
@@ -42,13 +38,9 @@ namespace GameLogic
 		maxHealth(_maxHealth), currentHealth(_maxHealth), damage(_damage), sightRadius(_sightRadius), attackRadius(_attackRadius),
 		maxVelocity(_maxVelocity), currentVelocity(0.0f), acceleration(_acceleration),
 		maxGravity(_maxGravity), currentGravity(0.0f), gravityAcceleration(_gravityAcceleration),
-		currentState(STOIC_STATE)
+		currentState(STOIC_STATE),
+		wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
 	{
-		std::cout << "\n\nINITIALIZED ENEMY WITH VALUES:"
-			<< "\ncurrent state: " << currentState
-			<< "\nmax health: " << maxHealth
-			<< "\ncurrent health: " << currentHealth
-			<< "\nsight radius: " << sightRadius << "\n";
 		if (_proctor != NULL)
 		{
 			proctor->addComponent(this);
@@ -77,8 +69,6 @@ namespace GameLogic
 			case DYING_STATE:
 				dyingBehaviour();
 				break;
-			default:
-				std::cout << "SOME ENEMY STATE PROBLEM HERE\n";
 			}
 		}
 	}
@@ -99,12 +89,64 @@ namespace GameLogic
 
 	void Enemy::stoicBehaviour()
 	{
-		std::cout << "STOIC\n";
+		/* Enemy wandering */
+		/* If appropriate amount of time passed, then calculate new random wander direction */
+		newWanderDirectionTimer += proctor->getParentHierarchy()->getDeltaTime();
+		if (newWanderDirectionTimer > 4)
+		{
+			Application::Randomizer randomizer;
+			
+			wanderDirection.x = randomizer.randomInt() % 2;
+			wanderDirection.y = 0.0f;
+			wanderDirection.z = randomizer.randomInt() % 2;
 
+			if (randomizer.randomInt() % 2 != 0)
+				wanderDirection.x *= -1;
+			if (randomizer.randomInt() % 2 != 0)
+				wanderDirection.z *= -1;
+			
+			newWanderDirectionTimer = 0.0f;
+			currentVelocity = 0.0f;
+		}
+
+		/* If enemy is staying in place, then rotate him left and right, else move and rotate enemy in wander direction */
+		if (wanderDirection.x == 0.0f && wanderDirection.z == 0.0f)
+		{
+			if (newWanderDirectionTimer > 1.33)
+			{
+				/* Apply rotation */
+				glm::quat enemyRotation = proctor->getRotation();
+				enemyRotation.y += glm::radians(1.0f);
+				proctor->setRotation(enemyRotation);
+			}
+			else
+			{
+				glm::quat enemyRotation = proctor->getRotation();
+				enemyRotation.y -= glm::radians(1.0f);
+				proctor->setRotation(enemyRotation);
+			}
+		}
+		else
+		{
+			currentVelocity += acceleration;
+			glm::vec3 enemyNormalDown = glm::vec3(0.0f, 0.0f, -1.0f);
+
+			/* Chase player */
+			proctor->setPosition(proctor->getPosition() -= glm::vec3(wanderDirection.x * currentVelocity, 0.0f, wanderDirection.z * currentVelocity));
+
+			/* Calc rotation to look at the chased player */
+			float dot = enemyNormalDown.x * wanderDirection.x + enemyNormalDown.z * wanderDirection.z;	// dot product between enemy starting rotation and direction to player
+			float det = enemyNormalDown.x * wanderDirection.z - wanderDirection.x * enemyNormalDown.z;	// determinant
+			float angle = atan2(det, dot);											// angle between enemy starting position and direction to player in radians
+
+			/* Apply rotation */
+			glm::quat enemyStartRotation = glm::quat(1.0f, 0.0f, -angle, 0.0f);
+			proctor->setRotation(enemyStartRotation);
+		}
+		
 		/* If first player is in sight radius then chase him */
 		if(distanceToPlayer(playerOneRef) <= sightRadius)
 		{
-			std::cout << "P1 <= SIGHT RADIUS\n";
 			currentlyChasedPlayer = playerOneRef;
 			currentState = CHASING_STATE;
 			return;
@@ -113,23 +155,17 @@ namespace GameLogic
 		/* If second player is in sight radius then chase him */
 		if (distanceToPlayer(playerTwoRef) <= sightRadius)
 		{
-			std::cout << "P2 <= SIGHT RADIUS\n";
 			currentlyChasedPlayer = playerTwoRef;
 			currentState = CHASING_STATE;
 			return;
 		}
 
-		std::cout << "NOTHING\n";
 		/* If all conditions are false then be stoic still */
 		currentState = STOIC_STATE;
 	}
 
 	void Enemy::chasingBehaviour()
-	{
-		std::cout << "CHASING PLAYER: " << currentlyChasedPlayer->name << "\n";
-		std::cout << "distance between: " << distanceToPlayer(currentlyChasedPlayer)
-			<< "\nsight radius: " << sightRadius << "\n";
-		
+	{		
 		/* If currently chased player will escape from sight radius then end chase */
 		if (distanceToPlayer(currentlyChasedPlayer) > sightRadius)
 		{
