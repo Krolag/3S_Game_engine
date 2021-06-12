@@ -15,8 +15,26 @@ namespace GameLogic
 
 	void Boat::update()
 	{
+		deltaTime = parent->getParentHierarchy()->getDeltaTime();
 		useBoatInput();
 		changePosition();
+
+		if (speed > 0)
+		{
+			speed -= 0.6f * speed * deltaTime;
+		}
+		if (speed < 0)
+		{
+			speed += 0.6f * speed * -deltaTime;
+		}
+		if (turnSpeed > 0)
+		{
+			turnSpeed -= turnSpeed * deltaTime;
+		}
+		if (turnSpeed < 0)
+		{
+			turnSpeed += turnSpeed * -deltaTime;
+		}
 	}
 
 	void Boat::attachPlayerOne(GameLogic::Proctor* player)
@@ -81,72 +99,70 @@ namespace GameLogic
 
 		if (isFirstInBoat && isSecondInBoat) {
 
-			if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyDown(GLFW_KEY_I))
+			if (keyboard->isKeyDown(GLFW_KEY_W) && keyboard->isKeyPressed(GLFW_KEY_V))
+			{					
+				if (speed < 15 * startSpeed) speed += startSpeed;
+				rightTurn = false;
+				leftTurn = true;				
+			}
+			else if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyPressed(GLFW_KEY_V))
 			{
-				if (speed < 20 * startSpeed) speed += startSpeed;
+				if (speed < 15 * startSpeed) speed += -startSpeed;
+				leftTurn = false;
+				rightTurn = true;
 			}
-			else if (keyboard->isKeyDown(GLFW_KEY_S) && keyboard->isKeyDown(GLFW_KEY_K))
+			if (keyboard->isKeyDown(GLFW_KEY_I) && keyboard->isKeyPressed(GLFW_KEY_PERIOD))
 			{
-				if (speed < 20 * startSpeed) speed += -startSpeed;
+				if (speed < 15 * startSpeed) speed += startSpeed;
+				leftTurn = false;
+				rightTurn = true;
 			}
-			else {
-				if (keyboard->isKeyPressed(GLFW_KEY_W))
-				{					
-					if(speed<20*startSpeed) speed += startSpeed;					
-					turnSpeed = -startTurningSpeed;
+			else if (keyboard->isKeyDown(GLFW_KEY_K) && keyboard->isKeyPressed(GLFW_KEY_PERIOD))
+			{
+				if (speed < 15 * startSpeed) speed += -startSpeed;
+				rightTurn = false;
+				leftTurn = true;
+			}
+
+
+			if (rightTurn) 
+			{
+				if (turnSpeed > -maxTurningSpeed) {
+					turnSpeed += 2 * -deltaTime;
 				}
-				else if (keyboard->isKeyPressed(GLFW_KEY_S))
-				{
-					if (speed < 20 * startSpeed) speed += -startSpeed;
-					turnSpeed = startTurningSpeed;
+				else {
+					rightTurn = false;
+				}				
+			}
+			if (leftTurn)
+			{
+				if (turnSpeed < maxTurningSpeed) {
+					turnSpeed += 2 * deltaTime;
 				}
-				if (keyboard->isKeyPressed(GLFW_KEY_I))
-				{
-					if (speed < 20 * startSpeed) speed += startSpeed;
-					turnSpeed = startTurningSpeed;
-				}
-				else if (keyboard->isKeyPressed(GLFW_KEY_K))
-				{
-					if (speed < 20 * startSpeed) speed += -startSpeed;
-					turnSpeed = -startTurningSpeed;
+				else {
+					leftTurn = false;
 				}
 			}
+
 		}
 
-		if (speed > 0)
-		{
-			speed -= 1.5 * parent->getDeltaTime();
-		}
-		if (speed < 0)
-		{
-			speed += 1.5 * parent->getDeltaTime();
-		}
-		if (turnSpeed > 0)
-		{
-			turnSpeed -= 1.2 * parent->getDeltaTime();
-		}
-		if (turnSpeed < 0)
-		{
-			turnSpeed += 1.2 * parent->getDeltaTime();
-		}
 	}
 
 	void Boat::changePosition()
 	{
-		transform.rotation.y += turnSpeed * proctor->getDeltaTime();
+
+		transform.rotation.y += turnSpeed * deltaTime;
 		float distance = speed * proctor->getDeltaTime();
 		float distance_x = (float)(distance * cos((transform.rotation.y)));
 		float distance_z = (float)(distance * -sin((transform.rotation.y)));
 		transform.position.x += distance_x;
 		transform.position.z += distance_z;
 
-		time += proctor->getDeltaTime();
-		double rotation = 0.001 * (sin(time * 4.1)); // simulate waves
+		time += deltaTime;
+		double rotation = waveRotation * (sin(time * 3.1)); // simulate waves
 		transform.rotation.x += rotation;
 
 		proctor->setTransform(transform);
-		((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->position = transform.position;
-		((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->rotation = transform.rotation;
-		((GameLogic::MeshRenderer*)proctor->getComponentOfType(GameLogic::C_MESH))->model->scale = transform.scale;
+
 	}
 }
