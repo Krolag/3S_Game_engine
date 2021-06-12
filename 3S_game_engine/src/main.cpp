@@ -117,13 +117,33 @@ int main()
 
 #pragma region UI init
 #pragma region MainMenu
-    UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png", 0.35, 0.65, 0.97, 0.76);
-    UIRender::UIElement startNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.72, 0.53);
-    UIRender::UIElement startPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.72, 0.53);
-    UIRender::UIElement optionsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.52, 0.33);
-    UIRender::UIElement optionsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.52, 0.33);
-    UIRender::UIElement exitNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.32, 0.13);
-    UIRender::UIElement exitPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.32, 0.13);
+    /* Buttons can be scaled with buttonScaleFactor */
+    float buttonScaleFactor = 0.9f;
+    /* Map that will contain name of each ui element and vector of top, bottom, left and right !calculated! positions
+     * Each texture coord is calculated using this equation on width (same for height): ((texture_width / screen_width) * scale) 
+     * I'm using map for optimization purpose, so each elemnt's texcoords can be calculated only once
+     */
+    std::map<std::string, glm::vec2> uiPositions;
+    uiPositions["npressed"] = { ((586 * 0.5f) / SCREEN_WIDTH) * buttonScaleFactor, ((147 * 0.5f) / SCREEN_HEIGHT) * buttonScaleFactor };
+    uiPositions["pressed"]  = { ((601 * 0.5f) / SCREEN_WIDTH) * buttonScaleFactor, ((149 * 0.5f) / SCREEN_HEIGHT) * buttonScaleFactor };
+    uiPositions["logo"]     = { ((512 * 0.5f) / SCREEN_WIDTH) * 1.5f, ((251 * 0.5f) / SCREEN_HEIGHT) * 1.5f };
+    float buttonsPos[3] = { 0.45f, 0.45f - 0.14f, 0.45f - (2 * 0.14f)};
+
+    /* Load all main menu's ui elements with coorect positions */
+    UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png", 
+        0.5f - uiPositions["logo"].x, 0.5f + uiPositions["logo"].x, 0.75f + uiPositions["logo"].y, 0.75f - uiPositions["logo"].y);
+    UIRender::UIElement startButtonNPrs     ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "start_button_nprsd.png",
+        0.5f - uiPositions["npressed"].x, 0.5f + uiPositions["npressed"].x, buttonsPos[0] + uiPositions["npressed"].y, buttonsPos[0] - uiPositions["npressed"].y);
+    UIRender::UIElement startButtonPrsd     ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "start_button_prsd.png", 
+        0.5f - uiPositions["pressed"].x,  0.5f + uiPositions["pressed"].x,  buttonsPos[0] + uiPositions["pressed"].y,  buttonsPos[0] - uiPositions["pressed"].y);
+    UIRender::UIElement optionsNotPressed   ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "options_button_nprsd.png", 
+        0.5f - uiPositions["npressed"].x, 0.5f + uiPositions["npressed"].x, buttonsPos[1] + uiPositions["npressed"].y, buttonsPos[1] - uiPositions["npressed"].y);
+    UIRender::UIElement optionsPressed      ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "options_button_prsd.png", 
+        0.5f - uiPositions["pressed"].x,  0.5f + uiPositions["pressed"].x,  buttonsPos[1] + uiPositions["pressed"].y,  buttonsPos[1] - uiPositions["pressed"].y);
+    UIRender::UIElement exitNotPressed      ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_nprsd.png", 
+        0.5f - uiPositions["npressed"].x, 0.5f + uiPositions["npressed"].x, buttonsPos[2] + uiPositions["npressed"].y, buttonsPos[2] - uiPositions["npressed"].y);
+    UIRender::UIElement exitPressed         ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_prsd.png", 
+        0.5f - uiPositions["pressed"].x,  0.5f + uiPositions["pressed"].x,  buttonsPos[2] + uiPositions["pressed"].y,  buttonsPos[2] - uiPositions["pressed"].y );
 #pragma endregion
 #pragma region Options
     UIRender::UIElement creditsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.72, 0.53);
@@ -131,12 +151,10 @@ int main()
     UIRender::UIElement onButton("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "On.png", 0.4, 0.6, 0.52, 0.33);
     UIRender::UIElement offButton("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "Off.png", 0.4, 0.6, 0.52, 0.33);
 #pragma endregion
-
 #pragma region StoryScene
     UIRender::UIElement story_00("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_00.png", 0, 1, 1, 0);
     UIRender::UIElement story_01("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_01.png", 0, 1, 1, 0);
 #pragma endregion
-
 #pragma region Game
     /* Text init */
     textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCREEN_WIDTH), 0.0f, static_cast<GLfloat>(SCREEN_WIDTH));
@@ -367,7 +385,7 @@ int main()
         if (keyboardInput->isKeyPressed(GLFW_KEY_TAB))
             isDebugModeOn = !isDebugModeOn;
 
-        /* SCENE LOADER TEST CODE */
+        /* SCENE LOADER */
         if (sceneManager.cActiveScene["mainMenu"])
         {
             if (keyboardInput->isKeyReleased(GLFW_KEY_S))
@@ -378,7 +396,6 @@ int main()
 
                 engine->play2D(bottleSource, false);
             }            
-            
             else if (keyboardInput->isKeyReleased(GLFW_KEY_W))
             {
                 tmpMainMenuIndex--;
@@ -393,6 +410,10 @@ int main()
             boat_b.setActive(false);
 
             /* Set camera variables */
+            // UNCOMMENT THOSE LINES TO VIEW NEW CAMERA IN MAIN MENU
+            //camera.Position = { 608.0f, 37.0f, 719.0f };
+            //camera.Pitch = -17.5f;
+            //camera.Yaw = 53.4f;
             camera.setProjection(projection);
             FrustumCulling::createViewFrustumFromMatrix(&camera);
 
@@ -479,7 +500,7 @@ int main()
 
             /* Render light and update hierarchy */
             dirLight.render(model3D, 31);
-            hierarchy.update(false, isDebugModeOn, collisionIncrement++); // need to be set this way, otherwise debug window won't appear
+            hierarchy.renderWithShader(&model3D);
 
             /* Render water */
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
@@ -488,47 +509,113 @@ int main()
             /* Render title */
             logo.render();
 
-            startNotPressed.render();
-            optionsNotPressed.render();
-            exitNotPressed.render();
+
 
 #pragma endregion
-            /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
-                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.34 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.39)) || (tmpMainMenuIndex == 0))*/
+
+#pragma region UI Elements
+            /* Start button */
             if (tmpMainMenuIndex == 0)
             {
-                startPressed.render();
-                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_SPACE) || keyboardInput->isKeyPressed(GLFW_KEY_V))
+                startButtonPrsd.render();
+                if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                 {
-                 
                     engine->play2D(bottleSource, false);
                     if (isPaused == true)
-                    {
                         sceneManager.changeCurrentScene("game");
-                    }
                     else
                         sceneManager.changeCurrentScene("enterStory_00");
                 }
             }
+            else
+                startButtonNPrs.render();
 
-            /*if (((mouseInput->getCursorPosition().x > SCREEN_WIDTH * 0.4 && mouseInput->getCursorPosition().x < SCREEN_WIDTH * 0.6) 
-                && (mouseInput->getCursorPosition().y > SCREEN_HEIGHT * 0.64 && mouseInput->getCursorPosition().y < SCREEN_HEIGHT * 0.69)) || (tmpMainMenuIndex == 1))*/
+            /* Options button */
             if (tmpMainMenuIndex == 1)
             {
                 optionsPressed.render();
-                if (mouseInput->isButtonReleased(0) || keyboardInput->isKeyReleased(GLFW_KEY_SPACE) || keyboardInput->isKeyReleased(GLFW_KEY_V))
-                {
+                if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                     sceneManager.changeCurrentScene("options");
-                }
             }
+            else
+                optionsNotPressed.render();
+
+            /* Exit button */
             if (tmpMainMenuIndex == 2)
             {
                 exitPressed.render();
-                if (mouseInput->isButtonPressed(0) || keyboardInput->isKeyPressed(GLFW_KEY_SPACE) || keyboardInput->isKeyPressed(GLFW_KEY_V))
-                {
+                if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                     glfwSetWindowShouldClose(mainScene.window, true);
-                }
             }
+            else
+                exitNotPressed.render();
+#pragma endregion
+
+#pragma region Debug Mode
+            if (isDebugModeOn)
+            {
+                ImGui::Begin("Camera and dir light");
+                {
+                    float variables[4];
+                    /* CAMERA */
+                    ImGui::Text("---- CAMERA ----");
+                    // Position
+                    variables[0] = camera.Position.x; variables[1] = camera.Position.y; variables[2] = camera.Position.z;
+                    ImGui::DragFloat3("campos", variables);
+                    camera.Position.x = variables[0]; camera.Position.y = variables[1]; camera.Position.z = variables[2];
+                    // Pitch
+                    variables[0] = camera.Pitch;
+                    ImGui::DragFloat("pitch", variables);
+                    camera.Pitch = variables[0];
+                    // Yaw
+                    variables[0] = camera.Yaw;
+                    ImGui::DragFloat("yaw", variables);
+                    camera.Yaw = variables[0];
+                    ImGui::Text("---- LIGHT -----");
+                    // Shadow map
+                    ImGui::Checkbox("show shadow map", &isShadowMapVisible);
+                    /* Dir light */
+                    // Direction
+                    variables[0] = dirLight.direction.x; variables[1] = dirLight.direction.y; variables[2] = dirLight.direction.z;
+                    ImGui::DragFloat3("direction", variables);
+                    dirLight.direction.x = variables[0]; dirLight.direction.y = variables[1]; dirLight.direction.z = variables[2];
+                    // Ambient
+                    variables[0] = dirLight.ambient.x; variables[1] = dirLight.ambient.y; variables[2] = dirLight.ambient.z; variables[3] = dirLight.ambient.w;
+                    ImGui::DragFloat4("ambient", variables);
+                    dirLight.ambient.x = variables[0]; dirLight.ambient.y = variables[1]; dirLight.ambient.z = variables[2]; dirLight.ambient.w = variables[3];
+                    // Diffuse
+                    variables[0] = dirLight.diffuse.x; variables[1] = dirLight.diffuse.y; variables[2] = dirLight.diffuse.z; variables[3] = dirLight.diffuse.w;
+                    ImGui::DragFloat4("diffuse", variables);
+                    dirLight.diffuse.x = variables[0]; dirLight.diffuse.y = variables[1]; dirLight.diffuse.z = variables[2]; dirLight.diffuse.w = variables[3];
+                    // Specular
+                    variables[0] = dirLight.specular.x; variables[1] = dirLight.specular.y; variables[2] = dirLight.specular.z; variables[3] = dirLight.specular.w;
+                    ImGui::DragFloat4("specular", variables);
+                    dirLight.specular.x = variables[0]; dirLight.specular.y = variables[1]; dirLight.specular.z = variables[2]; dirLight.specular.w = variables[3];
+                    // Bounding region min
+                    variables[0] = dirLight.br.min.x; variables[1] = dirLight.br.min.y; variables[2] = dirLight.br.min.z;
+                    ImGui::DragFloat3("br.min", variables);
+                    dirLight.br.min.x = variables[0]; dirLight.br.min.y = variables[1]; dirLight.br.min.z = variables[2];
+                    // Bounding region max
+                    variables[0] = dirLight.br.max.x; variables[1] = dirLight.br.max.y; variables[2] = dirLight.br.max.z;
+                    ImGui::DragFloat3("br.max", variables);
+                    dirLight.br.max.x = variables[0]; dirLight.br.max.y = variables[1]; dirLight.br.max.z = variables[2];
+                }
+                ImGui::End();
+
+                if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
+                    sceneManager.changeCurrentScene("exitStory_00");
+                else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
+                    sceneManager.changeCurrentScene("exitStory_01");
+
+                collisionBoxShader.use();
+                collisionBoxShader.setUniform("projection", projection);
+                collisionBoxShader.setUniform("view", view);
+                collisionBoxShader.setUniformBool("collision", true);
+
+                if (isShadowMapVisible)
+                    shadowMapUI.render();
+            }
+#pragma endregion
         }
         else if (sceneManager.cActiveScene["enterStory_00"])
         {
@@ -640,7 +727,6 @@ int main()
 
 
         }
-
         else if (sceneManager.cActiveScene["credits"])
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -657,7 +743,6 @@ int main()
         }
         else if (sceneManager.cActiveScene["game"])
         {
-            
             /* Check if player entered pause menu */
             if (keyboardInput->isKeyPressed(GLFW_KEY_ESCAPE))
             {
@@ -790,7 +875,9 @@ int main()
                 monsterSystem.isGameOver = false;
                 sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
             }
+#pragma endregion
 
+#pragma region Debug Mode
             if (isDebugModeOn)
             {
                 ImGui::Begin("Camera and dir light");
@@ -798,9 +885,18 @@ int main()
                     float variables[4];
                     /* CAMERA */
                     ImGui::Text("---- CAMERA ----");
+                    // Position
                     variables[0] = camera.Position.x; variables[1] = camera.Position.y; variables[2] = camera.Position.z;
                     ImGui::DragFloat3("campos", variables);
                     camera.Position.x = variables[0]; camera.Position.y = variables[1]; camera.Position.z = variables[2];
+                    // Pitch
+                    variables[0] = camera.Pitch;
+                    ImGui::DragFloat("pitch", variables);
+                    camera.Pitch = variables[0];
+                    // Yaw
+                    variables[0] = camera.Yaw;
+                    ImGui::DragFloat("yaw", variables);
+                    camera.Yaw = variables[0];
                     ImGui::Text("---- LIGHT -----");
                     // Shadow map
                     ImGui::Checkbox("show shadow map", &isShadowMapVisible);
@@ -847,7 +943,6 @@ int main()
             }
 #pragma endregion
         }
-        
         else if (sceneManager.cActiveScene["exitStory_00"])
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -887,6 +982,7 @@ int main()
             hero_01.activate();
             monster.activate();
         }
+
         /* Update InputSystem */
         keyboardInput->update();
         mouseInput->update();
