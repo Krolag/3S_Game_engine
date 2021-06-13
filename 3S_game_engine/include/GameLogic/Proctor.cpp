@@ -225,6 +225,7 @@ namespace GameLogic
 		ImGui::Text("|--------| NAME |-------------|");
 		if (name.c_str() != NULL)
 			ImGui::Text(name.c_str());
+		ImGui::Checkbox("is active", &activeFlag);
 		ImGui::Text("|--------| TRANSFORM |--------|");
 		float variables[3];
 		/* Position */

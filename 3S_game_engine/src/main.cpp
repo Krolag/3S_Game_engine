@@ -684,8 +684,6 @@ int main()
                 //creditsNotPressed.render();
                 //credits.render("Credits", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.4, 1.5, glm::vec3(1.0, 0.0, 0.0));
 
-
-
             if (keyboardInput->isKeyReleased(GLFW_KEY_S))
             {
                 tmpOptionsMenuIndex++;
