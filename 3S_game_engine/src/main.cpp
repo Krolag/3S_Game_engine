@@ -769,6 +769,7 @@ int main()
                 backPressed.render();
                 if (keyboardInput->isKeyReleased(GLFW_KEY_V))
                 {
+                    tmpOptionsMenuIndex = 0;
                     sceneManager.changeCurrentScene("mainMenu");
                     engine->play2D(mainMenuSource, false);
                 }
