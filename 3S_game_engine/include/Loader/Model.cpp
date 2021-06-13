@@ -73,7 +73,7 @@ namespace Loader
 		if (!noAnim)
 		{
 			scene = importer.ReadFile(_path,
-				aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs); //| aiProcess_PreTransformVertices/*aiProcess_JoinIdenticalVertices*/);
+				aiProcess_Triangulate); //| aiProcess_PreTransformVertices/*aiProcess_JoinIdenticalVertices*/);
 		}
 		else
 		{
