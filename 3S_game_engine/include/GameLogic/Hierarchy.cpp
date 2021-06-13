@@ -16,12 +16,11 @@ namespace GameLogic
 	void Hierarchy::addObject(Proctor* _proctor)
 	{
 		/* Check if given ohject is already assigned to hierarchy */
-		for (unsigned int i = 0; i < proctors.size(); i++)
+		unsigned int size_i = proctors.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
 			if (proctors[i] == _proctor)
-			{
 				return;
-			}
 		}
 		_proctor->setParent(this);
 
@@ -30,65 +29,56 @@ namespace GameLogic
 
 		/* Check if proctor has a Interactable component */
 		if (_proctor->getComponentOfType(C_INTERACTABLE) != NULL)
-		{
 			interactable.push_back(_proctor);
-		}
 		if (_proctor->getComponentOfType(C_TREASURE) != NULL)
-		{
 			treasure.push_back(_proctor);
-		}		
 		if (_proctor->getComponentOfType(C_CASH) != NULL)
-		{
 			cash.push_back(_proctor);
-		}
 	}
 
 	void Hierarchy::removeObject(Proctor* _proctor)
 	{
 		/* Check if any given proctor is in use */
-		for (unsigned int i = 0; i < proctors.size(); i++)
+		unsigned int size_i = proctors.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
 			/* If given proctor is in use, remove it */
 			if (proctors[i] == _proctor)
-			{
 				proctors.erase(proctors.begin() + i);
-			}
 		}
 	}
 
 	Proctor* Hierarchy::getObjectsInRadiusOf(Proctor* _proctor, float _radius)
 	{
 		std::vector<Proctor*> tmp = _proctor->getParentHierarchy()->getCash();
-		for (int i = 0; i < tmp.size(); i++)
+		unsigned int size_i = tmp.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
 			float xDistance = tmp.at(i)->getPosition()[0] - _proctor->getPosition()[0];
 			float zDistance = tmp.at(i)->getPosition()[2] - _proctor->getPosition()[2];
 			float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 			
 			if (distance <= _radius)
-			{
 				return tmp.at(i);
-			}
 		}
 	}
 
 	Proctor* Hierarchy::getObject(std::string _name)
 	{
 		/* Check if proctor with given name is in use */
-		for (unsigned int i = 0; i < proctors.size(); i++)
+		unsigned int size_i = proctors.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
 			/* If proctor with given name is in use, return it */
 			if (proctors[i]->name == _name)
-			{
 				return proctors[i];
-			}
+
 			/* Check if proctor has a child with given name*/
-			for (unsigned int j = 0; j < proctors.at(i)->getChildren().size(); j++)
+			unsigned int size_j = proctors.at(i)->getChildren().size();
+			for (unsigned int j = 0; j < size_j; j++)
 			{
 				if (proctors.at(i)->getChild(j)->name == _name)
-				{
 					return proctors.at(i)->getChild(j);
-				}
 			}
 		}
 
@@ -98,13 +88,12 @@ namespace GameLogic
 	Proctor* Hierarchy::getObject(unsigned int _uuid)
 	{
 		/* Check if proctor with given uuid is in use */
-		for (unsigned int i = 0; i < proctors.size(); i++)
+		unsigned int size_i = proctors.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
 			/* If proctor with given uuid is in use, return it */
 			if (proctors[i]->uuid == _uuid)
-			{
 				return proctors[i];
-			}
 		}
 	}
 
@@ -168,8 +157,8 @@ namespace GameLogic
 		}
 
 		/* Iterate through each proctor */
-		int size = proctors.size();
-		for (int i = 0; i < size; i++)
+		unsigned int size_i = proctors.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
 			MeshRenderer* meshTMP = (MeshRenderer*)proctors[i]->getComponentOfType(C_MESH);
 
@@ -184,14 +173,12 @@ namespace GameLogic
 		update(true, false);
 
 		/* Iterate through each proctor and set old shader */
-		for (int i = 0; i < size; i++)
+		for (unsigned int i = 0; i < size_i; i++)
 		{
 			/* Get mesh component from proctor and check its existance */
 			MeshRenderer* meshTMP = (MeshRenderer*)proctors[i]->getComponentOfType(C_MESH);
 			if (meshTMP != NULL)
-			{
 				meshTMP->setShader(currentlyUsedShader);
-			}
 		}
 	}
 
@@ -199,18 +186,20 @@ namespace GameLogic
 	{
 		/* Draw hierarchy as buttons */
 		ImGui::Begin("Hierarchy");
-		for (auto& a : proctors)
+		unsigned int size_i = proctors.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
-			if (ImGui::Button(a->name.c_str(), { 150.0f, 25.0f }))
+			if (ImGui::Button(proctors[i]->name.c_str(), { 150.0f, 25.0f }))
 			{
-				activeProctorName = a->name;
+				activeProctorName = proctors[i]->name;
 			}
-			for (unsigned int i = 0; i < a->childCount(); i++)
+			unsigned int size_j = proctors[i]->childCount();
+			for (unsigned int j = 0; i < size_j; j++)
 			{
-				if (ImGui::Button(a->getChild(i)->name.c_str(), { 150.0f, 25.0f }))
-				{
-					activeProctorName = a->getChild(i)->name;
-				}
+				std::string name = proctors[i]->getChild(j)->name.c_str();
+
+				if (ImGui::Button(name.c_str(), { 150.0f, 25.0f }))
+					activeProctorName = name;
 			}
 		}
 		ImGui::End();
@@ -218,32 +207,30 @@ namespace GameLogic
 		/* Draw proctor window */
 		ImGui::Begin("Proctor");
 		if (activeProctorName != "none")
-		{
 			getObject(activeProctorName)->drawDebugWindow();
-		}
 		ImGui::End();
 	}
 
 	void Hierarchy::cleanup()
 	{
-		for (auto& a : proctors)
+		unsigned int size_i = proctors.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
-			a->cleanup();
+			proctors[i]->cleanup();
 		}
 	}
 
 	void Hierarchy::update(bool _onlyRender, bool _drawDebug, int collisionIncrement)
 	{
-		/* Update all proctors in objects vector */
-		for (auto& a : proctors)
+		/* Update all proctors */
+		unsigned int size_i = proctors.size();
+		for (unsigned int i = 0; i < size_i; i++)
 		{
-			a->update(_onlyRender);
+			proctors[i]->update(_onlyRender);
 			
 			/* Check if delta time should be set */
 			if (!_onlyRender)
-			{
-				a->setDeltaTime(scene->deltaTime);
-			}
+				proctors[i]->setDeltaTime(scene->deltaTime);
 		}
 
 		/* Check if hierarchy should be only rendering meshes */

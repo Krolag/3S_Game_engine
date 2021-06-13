@@ -33,6 +33,7 @@ uniform Material material;
 uniform int noTex;
 uniform sampler2D shadowMap;
 uniform vec3 viewPos;
+uniform float gamma;
 
 float shadowCalc(vec3 norm, vec3 lighrDir)
 {
@@ -116,7 +117,6 @@ void main()
     /* Gamma correction */
     if (true)
     {
-        float gamma = 2.2f;
         result.rgb = pow(result.rgb, vec3(1.0f / gamma));
     }
 

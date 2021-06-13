@@ -353,6 +353,8 @@ int main()
     Texture debug;
     bool isShadowMapVisible = false;
     UIRender::UIElement shadowMapUI("assets/shaders/ui.vert", "assets/shaders/ui.frag", debug, 0.05, 0.05 + (400.0f / SCREEN_WIDTH), 0.95 - (400.0f / SCREEN_HEIGHT), 0.95);
+
+    float gammaCorrection = 1.2f;
 #pragma endregion
 
     // music
@@ -375,6 +377,9 @@ int main()
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
+        model3D.use();
+        model3D.setUniformFloat("gamma", gammaCorrection);
+
         frameCounter++;
         /* Dear ImGUI new frame setup */
         ImGui_ImplOpenGL3_NewFrame();
@@ -916,6 +921,8 @@ int main()
                     variables[0] = dirLight.br.max.x; variables[1] = dirLight.br.max.y; variables[2] = dirLight.br.max.z;
                     ImGui::DragFloat3("br.max", variables);
                     dirLight.br.max.x = variables[0]; dirLight.br.max.y = variables[1]; dirLight.br.max.z = variables[2];
+                    // Gamma correction
+                    ImGui::SliderFloat("gamma", &gammaCorrection, 0.0f, 3.0f);
                 }
                 ImGui::End();
 
