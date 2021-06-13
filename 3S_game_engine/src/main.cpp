@@ -33,19 +33,6 @@
 #include "Loader/Exporter.h"
 
 using namespace irrklang;
-#pragma region Audio
-//SoundEngine
-ISoundEngine* engine = createIrrKlangDevice();
-// music
-ISoundSource* musicSource = engine->addSoundSourceFromFile("assets/audio/music/shanty.ogg");
-// waves
-ISoundSource* waveSource = engine->addSoundSourceFromFile("assets/audio/sounds/background.ogg");
-// menu
-ISoundSource* bottleSource = engine->addSoundSourceFromFile("assets/audio/sounds/bottle.ogg");
-ISoundSource* mainMenuSource = engine->addSoundSourceFromFile("assets/audio/sounds/mainMenu.ogg");
-// monster
-ISoundSource* heartBeatSource = engine->addSoundSourceFromFile("assets/audio/sounds/beat.ogg");
-#pragma endregion
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
@@ -73,6 +60,9 @@ bool isDebugCameraOn = false;
 bool isPaused = false;
 int main()
 {
+    int tmpMainMenuIndex = 0;
+    int tmpOptionsMenuIndex = 0;
+
 #pragma region Scene init
     /* Load scene */
     Application::Window mainScene("TREASURE HEIST FINAL BUILD", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
@@ -127,7 +117,7 @@ int main()
     uiPositions["npressed"] = { ((586 * 0.5f) / SCREEN_WIDTH) * buttonScaleFactor, ((147 * 0.5f) / SCREEN_HEIGHT) * buttonScaleFactor };
     uiPositions["pressed"]  = { ((601 * 0.5f) / SCREEN_WIDTH) * buttonScaleFactor, ((149 * 0.5f) / SCREEN_HEIGHT) * buttonScaleFactor };
     uiPositions["logo"]     = { ((512 * 0.5f) / SCREEN_WIDTH) * 1.5f, ((251 * 0.5f) / SCREEN_HEIGHT) * 1.5f };
-    float buttonsPos[3] = { 0.45f, 0.45f - 0.14f, 0.45f - (2 * 0.14f)};
+    float buttonsPos[4] = { 0.45f, 0.45f - 0.14f, 0.45f - (2 * 0.14f), 0.45f - (3 * 0.14f)};
 
     /* Load all main menu's ui elements with coorect positions */
     UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png", 
@@ -146,10 +136,14 @@ int main()
         0.5f - uiPositions["pressed"].x,  0.5f + uiPositions["pressed"].x,  buttonsPos[2] + uiPositions["pressed"].y,  buttonsPos[2] - uiPositions["pressed"].y );
 #pragma endregion
 #pragma region Options
-    UIRender::UIElement creditsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "notPressed.png", 0.4, 0.6, 0.72, 0.53);
-    UIRender::UIElement creditsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "pressed.png", 0.4, 0.6, 0.72, 0.53);
-    UIRender::UIElement onButton("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "On.png", 0.4, 0.6, 0.52, 0.33);
-    UIRender::UIElement offButton("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "Off.png", 0.4, 0.6, 0.52, 0.33);
+    UIRender::UIElement backNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "back_button_nprsd.png",
+       0.15f - uiPositions["npressed"].x, 0.15f + uiPositions["npressed"].x, buttonsPos[2] + uiPositions["npressed"].y, buttonsPos[2] - uiPositions["npressed"].y);//0.01, 0.2, 0.32, 0.13);
+    UIRender::UIElement backPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "back_button_prsd.png",
+       0.15f - uiPositions["pressed"].x, 0.15f + uiPositions["pressed"].x, buttonsPos[2] + uiPositions["pressed"].y, buttonsPos[2] - uiPositions["pressed"].y);//0.01, 0.2, 0.32, 0.13);
+    UIRender::UIElement creditsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "credits_button_nprsd.png",
+       0.15f - uiPositions["npressed"].x, 0.15f + uiPositions["npressed"].x, buttonsPos[1] + uiPositions["npressed"].y, buttonsPos[1] - uiPositions["npressed"].y);//0.01, 0.2, 0.32, 0.13);
+    UIRender::UIElement creditsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "credits_button_prsd.png",
+       0.15f - uiPositions["pressed"].x, 0.15f + uiPositions["pressed"].x, buttonsPos[1] + uiPositions["pressed"].y, buttonsPos[1] - uiPositions["pressed"].y);//0.01, 0.2, 0.32, 0.13);
 #pragma endregion
 #pragma region StoryScene
     UIRender::UIElement story_00("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_00.png", 0, 1, 1, 0);
@@ -163,8 +157,14 @@ int main()
 
     /* Create text */
     UIRender::TextRender points("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    // Options text
+    UIRender::TextRender audio("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    UIRender::TextRender music("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    UIRender::TextRender gamma("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    UIRender::TextRender shadows("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    //UIRender::TextRender credits("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    /* Animated mario */
+    /* Animated dukat */
     UIRender::UIElement dukatSpinning[8] = {
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_00.png", 0.01, 0.045, 0.97, 0.91),
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_01.png", 0.01, 0.045, 0.97, 0.91),
@@ -344,8 +344,6 @@ int main()
 
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("mainMenu");
-    int tmpMainMenuIndex = 0;
-    int tmpOptionsMenuIndex = 0;
     bool isSoundsPaused = false;
 
     int animID = 0;
@@ -356,20 +354,35 @@ int main()
 
     float gammaCorrection = 1.2f;
 #pragma endregion
+#pragma region Audio
+
+    float audioValues = 1.00f;
+    float musicValues = 0.15f;
+
+    //SoundEngine
+    ISoundEngine* engine = createIrrKlangDevice();
+    // music
+    //ISoundEngine* musicEngine = createIrrKlangDevice();
+    ISound* musicSource = engine->play2D("assets/audio/music/shanty.ogg", true, false, true);
+    musicSource->setVolume(0.15);
+    // waves
+    //ISoundEngine* waveEngine = createIrrKlangDevice();
+    ISound* waveSource = engine->play2D("assets/audio/sounds/background.ogg", true, false, true);
+    // menu
+    ISoundSource* bottleSource = engine->addSoundSourceFromFile("assets/audio/sounds/bottle.ogg");
+    ISoundSource* mainMenuSource = engine->addSoundSourceFromFile("assets/audio/sounds/mainMenu.ogg");
+    // monster
+    ISoundSource* heartBeatSource = engine->addSoundSourceFromFile("assets/audio/sounds/beat.ogg");
 
     // music
-    musicSource->setDefaultVolume(0.15);
-    engine->play2D(musicSource, true);
-
+    musicSource->setVolume(musicValues);
     // waves
-    waveSource->setDefaultVolume(1);
-    engine->play2D(waveSource, true);
-
+    waveSource->setVolume(audioValues);
     // bottleSource
-    bottleSource->setDefaultVolume(1);
-
-    // 
-    mainMenuSource->setDefaultVolume(1);
+    bottleSource->setDefaultVolume(audioValues);
+    // mainMenu
+    mainMenuSource->setDefaultVolume(audioValues);
+#pragma endregion
 
     bool restartFlag = false;
     int cashSize = importer.cash.size();
@@ -381,6 +394,16 @@ int main()
         model3D.setUniformFloat("gamma", gammaCorrection);
 
         frameCounter++;
+
+        // music volume
+        musicSource->setVolume(musicValues);
+        // waves volume
+        waveSource->setVolume(audioValues);
+        // bottleSource volume
+        bottleSource->setDefaultVolume(audioValues);
+        // mainMenu volume
+        mainMenuSource->setDefaultVolume(audioValues);
+
         /* Dear ImGUI new frame setup */
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -637,20 +660,37 @@ int main()
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            
-            points.render("Press escape, to go back to menu", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            if (keyboardInput->isKeyReleased(GLFW_KEY_ESCAPE))
+
+            //backNotPressed.render();
+
+            if (tmpOptionsMenuIndex != 0)
             {
-                sceneManager.changeCurrentScene("mainMenu");
-                engine->play2D(mainMenuSource, false);
+                audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                audio.render(std::to_string(audioValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
-                
+            //audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
+            if (tmpOptionsMenuIndex != 1)
+            {
+                music.render("Music: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                music.render(std::to_string(musicValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
+            }
+            if (tmpOptionsMenuIndex != 2)
+                gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
+
+            if (tmpOptionsMenuIndex != 3)
+                shadows.render("Shadows resolution: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
+
+            if (tmpOptionsMenuIndex != 4);
+                //creditsNotPressed.render();
+                //credits.render("Credits", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.4, 1.5, glm::vec3(1.0, 0.0, 0.0));
+
+
 
             if (keyboardInput->isKeyReleased(GLFW_KEY_S))
             {
                 tmpOptionsMenuIndex++;
-                if (tmpOptionsMenuIndex > 1)
-                    tmpOptionsMenuIndex = 1;
+                if (tmpOptionsMenuIndex > 5)
+                    tmpOptionsMenuIndex = 5;
 
                 engine->play2D(bottleSource, false);
             }
@@ -664,78 +704,104 @@ int main()
                 engine->play2D(bottleSource, false);
             }
 
-            if (isSoundsPaused == false)
-                onButton.render();
-            else
-                offButton.render();
+            if (tmpOptionsMenuIndex == 0)
+            {
+                audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                audio.render(std::to_string(audioValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                if (keyboardInput->isKeyDown(GLFW_KEY_A))
+                {
+                    if (audioValues >= 0.02)
+                        audioValues -= 0.02f;
+                }
+                else if (keyboardInput->isKeyDown(GLFW_KEY_D))
+                {
+                    if (audioValues <= 0.98)
+                        audioValues += 0.02f;
+                }
 
-            creditsNotPressed.render();
+                for (int i = 0; i < cashSize; i++)
+                {
+                    importer.cash.at(i).get()->getCoinSource()->setDefaultVolume(audioValues);
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    hero_00_pi.getPlayerSounds().at(i)->setDefaultVolume(audioValues);
+                    hero_01_pi.getPlayerSounds().at(i)->setDefaultVolume(audioValues);
+                }
+            }
 
             if (tmpOptionsMenuIndex == 1)
             {
-                if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE) && isSoundsPaused == false)
+                music.render("Music: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                music.render(std::to_string(musicValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                if (keyboardInput->isKeyDown(GLFW_KEY_A))
                 {
-                    engine->play2D(bottleSource, false);
-                    bottleSource->setDefaultVolume(0.0);
-                    mainMenuSource->setDefaultVolume(0);
-                    heartBeatSource->setDefaultVolume(0);
-                    for (int i = 0; i < cashSize; i++)
-                    {
-                        importer.cash.at(i).get()->getCoinSource()->setDefaultVolume(0);
-                    }
-                    for (int i = 0; i < 4; i++)
-                    {
-                        hero_00_pi.getPlayerSounds().at(i)->setDefaultVolume(0);
-                        hero_01_pi.getPlayerSounds().at(i)->setDefaultVolume(0);
-                    }
-                    engine->setAllSoundsPaused(true);
-                    isSoundsPaused = true;
+                    if (musicValues >= 0.01)
+                        musicValues -= 0.01f;
                 }
-                else if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE) && isSoundsPaused == true)
+                else if (keyboardInput->isKeyDown(GLFW_KEY_D))
                 {
-                    bottleSource->setDefaultVolume(1.0);
-                    mainMenuSource->setDefaultVolume(1);
-                    heartBeatSource->setDefaultVolume(1);
-                    for (int i = 0; i < cashSize; i++)
-                    {
-                        importer.cash.at(i).get()->getCoinSource()->setDefaultVolume(1);
-                    }
-                    for (int i = 0; i < 4; i++)
-                    {
-                        hero_00_pi.getPlayerSounds().at(i)->setDefaultVolume(1);
-                        hero_01_pi.getPlayerSounds().at(i)->setDefaultVolume(1);
-                    }
-                    engine->setAllSoundsPaused(false);
-                    engine->play2D(bottleSource, false);
-                    isSoundsPaused = false;
+                    if (musicValues <= 0.99)
+                        musicValues += 0.01f;
                 }
+
+            }
+            if (tmpOptionsMenuIndex == 2)
+            {
+                gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
             }
 
-            if (tmpOptionsMenuIndex == 0)
+            if (tmpOptionsMenuIndex == 3)
             {
+                shadows.render("Shadows resolution: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
+            }
+
+            if (tmpOptionsMenuIndex == 4)
+            {
+                //credits.render("Credits", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.4, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 creditsPressed.render();
-                if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE))
-                {
+                if (keyboardInput->isKeyReleased(GLFW_KEY_V))
                     sceneManager.changeCurrentScene("credits");
-                    engine->play2D(bottleSource, false);
+            }
+            else
+                creditsNotPressed.render();
+
+            if (tmpOptionsMenuIndex == 5)
+            {
+                backPressed.render();
+                if (keyboardInput->isKeyReleased(GLFW_KEY_V))
+                {
+                    sceneManager.changeCurrentScene("mainMenu");
+                    engine->play2D(mainMenuSource, false);
                 }
             }
+            else
+                backNotPressed.render();
 
 
         }
+
         else if (sceneManager.cActiveScene["credits"])
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            points.render("Credits", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Press escape, to go back to options menu", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            points.render("Game made by Slightly Superior", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.8, 2.5, glm::vec3(1.0, 0.0, 0.0));
+            points.render("TGiSK:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.7, 2, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Dawid Paweloszek", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.65, 1, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Weronika Dobies", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.60, 1, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Kuba Podkomorka", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.55, 1, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Ignacy Olesinski", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.50, 1, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Grafika:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.4, 2, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Kinga Kudelska", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.35, 1, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Mateusz Sudra", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.30, 1, glm::vec3(1.0, 0.0, 0.0));
+            points.render("Press escape, to go back to options menu", 0.05, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+
             if (keyboardInput->isKeyReleased(GLFW_KEY_ESCAPE))
             {
                 sceneManager.changeCurrentScene("options");
                 engine->play2D(mainMenuSource, false);
             }
-                
         }
         else if (sceneManager.cActiveScene["game"])
         {
