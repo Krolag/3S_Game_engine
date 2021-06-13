@@ -64,6 +64,7 @@ int main()
 {
     int tmpMainMenuIndex = 0;
     int tmpOptionsMenuIndex = 0;
+    int tmpCreditsIndex = 1;
 
 #pragma region Scene init
     /* Load scene */
@@ -146,6 +147,12 @@ int main()
        0.15f - uiPositions["npressed"].x, 0.15f + uiPositions["npressed"].x, buttonsPos[1] + uiPositions["npressed"].y, buttonsPos[1] - uiPositions["npressed"].y);//0.01, 0.2, 0.32, 0.13);
     UIRender::UIElement creditsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "credits_button_prsd.png",
        0.15f - uiPositions["pressed"].x, 0.15f + uiPositions["pressed"].x, buttonsPos[1] + uiPositions["pressed"].y, buttonsPos[1] - uiPositions["pressed"].y);//0.01, 0.2, 0.32, 0.13);
+#pragma endregion
+#pragma region Credits
+    UIRender::UIElement SSS("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "SSS.png",
+        0.5f - uiPositions["logo"].x, 0.5f + uiPositions["logo"].x, 0.75f + uiPositions["logo"].y, 0.75f - uiPositions["logo"].y);
+    UIRender::UIElement background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "background.png",
+        0.5f - 0.3f, 0.5f + 0.3f, 0.6, 0.2);
 #pragma endregion
 #pragma region StoryScene
     UIRender::UIElement story_00("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_00.png", 0, 1, 1, 0);
@@ -682,7 +689,10 @@ int main()
                 music.render(std::to_string(musicValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
             if (tmpOptionsMenuIndex != 2)
+            {
                 gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                gamma.render(std::to_string(gammaCorrection), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
+            }
 
             if (tmpOptionsMenuIndex != 3)
                 shadows.render("Shadows resolution: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
@@ -751,9 +761,21 @@ int main()
                 }
 
             }
+
             if (tmpOptionsMenuIndex == 2)
             {
                 gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                gamma.render(std::to_string(gammaCorrection), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                if (keyboardInput->isKeyDown(GLFW_KEY_A))
+                {
+                    if (gammaCorrection >= 0.5)
+                        gammaCorrection -= 0.01f;
+                }
+                else if (keyboardInput->isKeyDown(GLFW_KEY_D))
+                {
+                    if (gammaCorrection <= 2)
+                        gammaCorrection += 0.01f;
+                }
             }
 
             if (tmpOptionsMenuIndex == 3)
@@ -791,23 +813,39 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            points.render("Game made by Slightly Superior", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.8, 2.5, glm::vec3(1.0, 0.0, 0.0));
-            points.render("TGiSK:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.7, 2, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Dawid Paweloszek", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.65, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Weronika Dobies", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.60, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Kuba Podkomorka", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.55, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Ignacy Olesinski", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.50, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Grafika:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.4, 2, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Kinga Kudelska", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.35, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Mateusz Sudra", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.30, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Press escape, to go back to options menu", 0.05, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            SSS.render();
+            background.render();
 
-            if (keyboardInput->isKeyReleased(GLFW_KEY_ESCAPE))
+            //points.render("Game made by Slightly Superior", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.8, 2.5, glm::vec3(0.0, 0.0, 0.0));
+            points.render("TGiSK:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.7, 2, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Dawid Paweloszek", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.65, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Weronika Dobies", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.60, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Kuba Podkomorka", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.55, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Ignacy Olesinski", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.50, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Grafika:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.4, 2, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Kinga Kudelska", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.35, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Mateusz Sudra", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.30, 1, glm::vec3(0.0, 0.0, 0.0));
+            //points.render("Press escape, to go back to options menu", 0.05, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+
+            if (keyboardInput->isKeyReleased(GLFW_KEY_W))
+                tmpCreditsIndex = 1;
+
+            if (keyboardInput->isKeyReleased(GLFW_KEY_S))
+                tmpCreditsIndex = 0;
+
+            if (tmpCreditsIndex == 0)
             {
-                sceneManager.changeCurrentScene("options");
-                engine->play2D(mainMenuSource, false);
+                backPressed.render();
+                if (keyboardInput->isKeyReleased(GLFW_KEY_V))
+                {
+                    tmpCreditsIndex = 1;
+                    sceneManager.changeCurrentScene("options");
+                    engine->play2D(mainMenuSource, false);
+                }
             }
-        }
+            else
+                backNotPressed.render();
+            }
         else if (sceneManager.cActiveScene["game"])
         {
             /* Check if player entered pause menu */
