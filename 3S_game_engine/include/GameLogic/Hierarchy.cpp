@@ -237,7 +237,7 @@ namespace GameLogic
 		if (!_onlyRender)
 		{
 			/* At first, update scene time */
-			scene->update();
+			//scene->update();
 
 			/* COLLISION DETECTION */
 			/* First we want to check collsiions between players, swapping order each frame */

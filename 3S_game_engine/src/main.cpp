@@ -390,8 +390,12 @@ int main()
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
+        /* Set gamma value */
+        // TODO: @Ignacy - czy gamma musi byc ustawiana za kazdym razem? Moze tylko w opcjach?
         model3D.use();
         model3D.setUniformFloat("gamma", gammaCorrection);
+        /* At first, update scene time */
+        mainScene.update();
 
         frameCounter++;
 
@@ -438,12 +442,12 @@ int main()
             boat_b.setActive(false);
 
             /* Set camera variables */
-            camera.Position = { 680.0f, 37.0f, 719.0f };
-            camera.Pitch = -17.5f;
-            camera.Yaw = 53.4f;
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
             camera.setProjection(projection);
-            FrustumCulling::createViewFrustumFromMatrix(&camera);
+            //camera.Position = { 680.0f, 37.0f, 719.0f };
+            //camera.Pitch = -17.5f;
+            //camera.Yaw = 53.4f;
+            //FrustumCulling::createViewFrustumFromMatrix(&camera);
 
 #pragma region SHADOWS - ShadowsBuffer
             /* Activate directional light's FBO */
@@ -521,6 +525,7 @@ int main()
 
             /* Render light and update hierarchy */
             dirLight.render(model3D, 31);
+            //hierarchy.update(false, isDebugModeOn, collisionIncrement++);
             hierarchy.renderWithShader(&model3D);
 
             /* Render water */
@@ -778,7 +783,6 @@ int main()
 
 
         }
-
         else if (sceneManager.cActiveScene["credits"])
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
