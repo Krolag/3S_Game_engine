@@ -36,7 +36,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 		float currentDistance = countDistance(currentPosition, oldPosition);
 		//printf("%f", currentDistance);
 
-		if (currentDistance > MIN_DISTANCE)
+		if (currentDistance > MIN_DISTANCE && heartBeats < 3)
 		{
 			engine->setAllSoundsPaused(false);
 			heartBeats = 0;

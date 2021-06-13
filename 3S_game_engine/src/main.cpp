@@ -43,7 +43,7 @@ void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputS
 //maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
 void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, 
     Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
-    float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
+    GameLogic::Boat* boat_b, GameLogic::Proctor* boat, GameLogic::PlayerInput* input_00, GameLogic::PlayerInput* input_01);
 
 // settings
 const unsigned int SCREEN_WIDTH = 1920;
@@ -58,6 +58,8 @@ bool firstMouse = true;
 static bool isDebugModeOn = false;
 bool isDebugCameraOn = false;
 bool isPaused = false;
+
+
 int main()
 {
     int tmpMainMenuIndex = 0;
@@ -201,7 +203,7 @@ int main()
 	
     /* Player One */
     Loader::Model           hero_00_m("assets/models/players/blue1.fbx", "playerOne", true, false);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
@@ -211,7 +213,7 @@ int main()
     hierarchy.addObject(&hero_00);
     /* Player Two */
     Loader::Model           hero_01_m("assets/models/players/red.fbx", "playerTwo", true, true);
-    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.024f));
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_01_m, &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
@@ -521,7 +523,7 @@ int main()
             model3D.setUniform("viewPos", camera.Position);
 
             /* TODO: @Dawid - DEBUG between game camera and debug camera */
-            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01,&boat_b,&boat, &hero_00_pi, &hero_01_pi);
 
             /* Render light and update hierarchy */
             dirLight.render(model3D, 31);
@@ -902,7 +904,7 @@ int main()
             model3D.setUniform("viewPos", camera.Position);
                 
             /* TODO: @Dawid - DEBUG between game camera and debug camera */
-            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+            cameraSwitch(40, 60, 90, 40, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01,&boat_b, &boat,&hero_00_pi, &hero_01_pi);
 
             /* Render light and update hierarchy */
             dirLight.render(model3D, 31);
@@ -1122,7 +1124,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
-    float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight)
+    GameLogic::Boat * boat_b, GameLogic::Proctor* boat, GameLogic::PlayerInput* input_00, GameLogic::PlayerInput* input_01)
 {
     if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
         isDebugCameraOn = !isDebugCameraOn;
@@ -1150,23 +1152,60 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
         float xDistance = player_1->getWorldPosition()[0] - player_2->getWorldPosition()[0];
         float yDistance = player_1->getWorldPosition()[2] - player_2->getWorldPosition()[2];
         float distance = sqrt(xDistance * xDistance + yDistance * yDistance);
-        
-        if (xDistance < -maxDistanceX) xValueRight = 0;
-        else xValueRight = 0.2;
+        int zOffset = 15;
 
-        if (xDistance > maxDistanceX) xValueLeft = 0;
-        else xValueLeft = 0.2;
-
-        if (yDistance < -maxDistanceY) yValueUp = 0;
-        else yValueUp = 0.2;
-
-        if (yDistance > maxDistanceY) yValueDown = 0;
-        else yValueDown = 0.2;
-
-        float camPos = minZoom + distance/maxDistanceX*(maxZoom-minZoom); //clamp
+        float camPos = minZoom + distance/(maxDistanceX)*(maxZoom-minZoom); //clamp
         camera.Yaw = -90; // set yaw to default value
-        camera.ProcessMouseMovement(0, -89); // set pitch to default value
-        camera.Position = glm::vec3((player_1->getWorldPosition()[0] + player_2->getWorldPosition()[0]) / 2.f, camPos, (player_1->getWorldPosition()[2] + player_2->getWorldPosition()[2]) / 2.f);
+        camera.Pitch = -70;
+        if (boat_b->isPlayerOneInBoat() && boat_b->isPlayerTwoInBoat()) {
+            camPos = maxZoom;
+            zOffset = 20;
+        }
+        camera.Position = glm::vec3((player_1->getWorldPosition()[0] + player_2->getWorldPosition()[0]) / 2.f, camPos, ((player_1->getWorldPosition()[2]+ + player_2->getWorldPosition()[2]) / 2.f + zOffset));
         mouseInput->cursorEnable();
+        
+        if (yDistance > -maxDistanceY* camPos/maxZoom)
+        {
+            input_00->yUpDistance = true;
+            input_01->yUpDistance = true;
+        }
+        else
+        {
+            input_00->yUpDistance = false;
+            input_01->yUpDistance = false;
+        }
+
+        if (yDistance < maxDistanceY * camPos/maxZoom)
+        {
+            input_00->yDownDistance = true;
+            input_01->yDownDistance = true;
+        }
+        else
+        {
+            input_00->yDownDistance = false;
+            input_01->yDownDistance = false;
+        }
+
+        if (xDistance < 70 * camPos / maxZoom)
+        {
+            input_00->xRightDistance = true;
+            input_01->xRightDistance = true;
+        }
+        else
+        {
+            input_00->xRightDistance = false;
+            input_01->xRightDistance = false;
+        }
+
+        if (xDistance > -70 * camPos / maxZoom)
+        {
+            input_00->xLeftDistance = true;
+            input_01->xLeftDistance = true;
+        }
+        else
+        {
+            input_00->xLeftDistance = false;
+            input_01->xLeftDistance = false;
+        }
     }
 }

@@ -19,6 +19,11 @@ namespace GameLogic
 	class PlayerInput : public Component
 	{
 	public:
+		bool yUpDistance = false;
+		bool yDownDistance = false;
+		bool xRightDistance = false;
+		bool xLeftDistance = false;
+
 		float maxSpeed = 0.5f;
 		float acceleration = 0.5f;
 		float maxGravity = 3.0f;
