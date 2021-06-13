@@ -186,20 +186,14 @@ namespace GameLogic
 	{
 		/* Draw hierarchy as buttons */
 		ImGui::Begin("Hierarchy");
-		unsigned int size_i = proctors.size();
-		for (unsigned int i = 0; i < size_i; i++)
+		for (auto& a : proctors)
 		{
-			if (ImGui::Button(proctors[i]->name.c_str(), { 150.0f, 25.0f }))
+			if (ImGui::Button(a->name.c_str(), { 150.0f, 25.0f }))
+				activeProctorName = a->name;
+			for (unsigned int i = 0; i < a->childCount(); i++)
 			{
-				activeProctorName = proctors[i]->name;
-			}
-			unsigned int size_j = proctors[i]->childCount();
-			for (unsigned int j = 0; i < size_j; j++)
-			{
-				std::string name = proctors[i]->getChild(j)->name.c_str();
-
-				if (ImGui::Button(name.c_str(), { 150.0f, 25.0f }))
-					activeProctorName = name;
+				if (ImGui::Button(a->getChild(i)->name.c_str(), { 150.0f, 25.0f }))
+					activeProctorName = a->getChild(i)->name;
 			}
 		}
 		ImGui::End();
@@ -236,7 +230,6 @@ namespace GameLogic
 		/* Check if hierarchy should be only rendering meshes */
 		if (!_onlyRender)
 		{
-			/* At first, update scene time */
 			//scene->update();
 
 			/* COLLISION DETECTION */
