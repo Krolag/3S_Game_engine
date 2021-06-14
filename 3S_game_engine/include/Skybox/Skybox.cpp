@@ -18,12 +18,12 @@ Skybox::Skybox(glm::mat4* view, glm::mat4* projection, Camera* camera) : skyboxS
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
     // initialize skybox texture paths array
-    skyboxTexturesPaths[0] = "assets/textures/skybox/right.jpg";
-    skyboxTexturesPaths[1] = "assets/textures/skybox/left.jpg";
-    skyboxTexturesPaths[2] = "assets/textures/skybox/top.jpg";
-    skyboxTexturesPaths[3] = "assets/textures/skybox/bottom.jpg";
-    skyboxTexturesPaths[4] = "assets/textures/skybox/front.jpg";
-    skyboxTexturesPaths[5] = "assets/textures/skybox/back.jpg";
+    skyboxTexturesPaths[0] = "assets/textures/skybox/newSkybox/right.jpg";
+    skyboxTexturesPaths[1] = "assets/textures/skybox/newSkybox/left.jpg";
+    skyboxTexturesPaths[2] = "assets/textures/skybox/newSkybox/top.jpg";
+    skyboxTexturesPaths[3] = "assets/textures/skybox/newSkybox/bottom.jpg";
+    skyboxTexturesPaths[4] = "assets/textures/skybox/newSkybox/front.jpg";
+    skyboxTexturesPaths[5] = "assets/textures/skybox/newSkybox/back.jpg";
 
     // load cube map for skybox
     glGenTextures(1, &skyboxTextureID);
