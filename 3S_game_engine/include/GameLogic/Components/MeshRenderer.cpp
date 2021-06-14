@@ -1,7 +1,6 @@
 #include "MeshRenderer.h"
 #include "GameLogic/Proctor.h"
 #include "GameLogic/Hierarchy.h"
-#include "Camera/FrustumCulling.h"
 
 namespace GameLogic
 {
@@ -36,40 +35,10 @@ namespace GameLogic
 		model->parentRotation = transform.parentRotation;
 		model->scale = transform.scale;
 
-		/* Render model with given shader */
-		/* Check if proctor is in camera view */
-		/* Dont use frustumCulling if object has parent */
-		if (proctor->getComponentOfType(C_COLLIDER) != NULL && proctor->getParentProctor() == NULL)
-		{
-			if (FrustumCulling::boxAABBInFrustum(
-				proctor->transform.position.x,
-				proctor->transform.position.y,
-				proctor->transform.position.z,
-				((BoxCollider*)proctor->getComponentOfType(C_COLLIDER))->getRadius().x * 5.0f, // MULTIPLIED TO REFLECTION ON WATER NOT DISAPPEAR
-				proctor->getParentHierarchy()->getCamera()
-			))
-			if(true)
-			{
-				shader->use();
-				shader->setUniformBool("noAnim", model->getNoAnim());
-				model->render(*shader);				
-			}
-		}
-		/* temporary solution for proctors without colliders */
-		else
-		{
-			if (proctor->getParentProctor() != NULL) 
-			{				
-				shader->use();
-				shader->setUniformBool("noAnim", model->getNoAnim());
-				model->renderChild(*shader);
-			}
-			else {
-				shader->use();
-				shader->setUniformBool("noAnim", model->getNoAnim());
-				model->render(*shader);
-			}
-		}
+		shader->use();
+		shader->setUniformBool("noAnim", model->getNoAnim());
+		model->render(*shader);
+		model->renderChild(*shader);
 	}
 
 	void MeshRenderer::cleanup()

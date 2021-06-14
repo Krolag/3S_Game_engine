@@ -42,7 +42,7 @@ namespace Loader
 		Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<Texture> _textures);
 		Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, aiColor4D _diffuse, aiColor4D _specular);
 
-		void render(Shader shader);
+		void render(Shader& shader);
 		void cleanup();
 
 	private:

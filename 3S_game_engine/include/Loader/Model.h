@@ -42,7 +42,7 @@ namespace Loader
 		Model(bool _noTex = false, glm::vec3 _position = glm::vec3(0.0f), glm::quat _rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3 _scale = glm::vec3(1.0f));
 
 		void init();
-		void render(Shader _shader);
+		void render(Shader& _shader);
 		void renderChild(Shader _shader);
 		void loadModel(std::string _path);
 		void cleanup();

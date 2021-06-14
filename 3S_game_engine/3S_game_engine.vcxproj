@@ -179,7 +179,6 @@
     <ClCompile Include="include\Loader\ModelLibrary.cpp" />
     <ClCompile Include="include\Primitives\Box\Box.cpp" />
     <ClCompile Include="include\UIRender\BackgroundImage.cpp" />
-    <ClCompile Include="include\Camera\Camera.cpp" />
     <ClCompile Include="include\ImGUI\imgui.cpp" />
     <ClCompile Include="include\ImGUI\imgui_demo.cpp" />
     <ClCompile Include="include\ImGUI\imgui_draw.cpp" />
@@ -221,7 +220,6 @@
     <ClInclude Include="include\Framebuffer\Framebuffer.h" />
     <ClInclude Include="include\Application\Application.h" />
     <ClInclude Include="include\Application\Window.h" />
-    <ClInclude Include="include\Camera\FrustumCulling.h" />
     <ClInclude Include="include\GameLogic\Components\BoxCollider.h" />
     <ClInclude Include="include\GameLogic\Components\Cash.h" />
     <ClInclude Include="include\GameLogic\Components\Interactable.h" />

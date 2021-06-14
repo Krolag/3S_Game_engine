@@ -24,7 +24,6 @@
 #include "Camera/Camera.h"
 #include "Light/Light.h"
 #include "Points/Points.h"
-#include "Camera/FrustumCulling.h"
 #include "Loader/Importer.h"
 #include "Water/WaterMesh.h"
 #include "Framebuffer/Framebuffer.h"
@@ -38,9 +37,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse);
 void cameraKeyboardInput(Application::Window* _scene, InputSystem::KeyboardInput* _keyboard);
 void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputSystem::MouseInput* mouse);
-
-//Switch camera position(debug)
-//maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
 void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, 
     Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     GameLogic::Boat* boat_b, GameLogic::Proctor* boat, GameLogic::PlayerInput* input_00, GameLogic::PlayerInput* input_01);
@@ -59,7 +55,6 @@ static bool isDebugModeOn = false;
 bool isDebugCameraOn = false;
 bool isPaused = false;
 
-
 int main()
 {
     int tmpMainMenuIndex = 0;
@@ -72,6 +67,7 @@ int main()
     glfwMakeContextCurrent(mainScene.window);
     glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
     glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSwapInterval(0); // Uncoment this line to remove 60FPS cap
 
     /* Load all OpenGL function pointers */
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -363,6 +359,7 @@ int main()
 
     float gammaCorrection = 1.2f;
 #pragma endregion
+
 #pragma region Audio
 
     float audioValues = 1.00f;
@@ -396,13 +393,15 @@ int main()
     bool restartFlag = false;
     int cashSize = importer.cash.size();
 
+    /* Set gamma correction */
+    model3D.use();
+    model3D.setUniformFloat("gamma", gammaCorrection);
+
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
         /* Set gamma value */
-        // TODO: @Ignacy - czy gamma musi byc ustawiana za kazdym razem? Moze tylko w opcjach?
-        model3D.use();
-        model3D.setUniformFloat("gamma", gammaCorrection);
+
         /* At first, update scene time */
         mainScene.update();
 
@@ -453,10 +452,10 @@ int main()
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
             camera.setProjection(projection);
-            //camera.Position = { 680.0f, 37.0f, 719.0f };
-            //camera.Pitch = -17.5f;
-            //camera.Yaw = 53.4f;
-            //FrustumCulling::createViewFrustumFromMatrix(&camera);
+            camera.activeProctorsRadius = 400.0f;
+            camera.Position = { 702.f, 37.0f, 719.0f };
+            camera.Pitch = -26.5f;
+            camera.Yaw = 53.4f;
 
 #pragma region SHADOWS - ShadowsBuffer
             /* Activate directional light's FBO */
@@ -534,12 +533,14 @@ int main()
 
             /* Render light and update hierarchy */
             dirLight.render(model3D, 31);
-            //hierarchy.update(false, isDebugModeOn, collisionIncrement++);
             hierarchy.renderWithShader(&model3D);
 
             /* Render water */
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
+            
+            /* Render skybox */
+            skybox.render();
 #pragma endregion
 
 #pragma region UI Elements
@@ -779,6 +780,10 @@ int main()
                 }
             }
 
+            // TODO: @Ignacy - czy gamma musi byc ustawiana za kazdym razem? Moze tylko w opcjach?
+            model3D.use();
+            model3D.setUniformFloat("gamma", gammaCorrection);
+
             if (tmpOptionsMenuIndex == 3)
             {
                 shadows.render("Shadows resolution: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
@@ -864,7 +869,6 @@ int main()
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
             camera.setProjection(projection);
-            FrustumCulling::createViewFrustumFromMatrix(&camera);
 
 #pragma region SHADOWS - ShadowsBuffer
             /* Activate directional light's FBO */

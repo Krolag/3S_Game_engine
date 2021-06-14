@@ -45,7 +45,7 @@ namespace Loader
 		setup();
 	}
 
-	void Mesh::render(Shader shader)
+	void Mesh::render(Shader& shader)
 	{
 		if (noTex)
 		{

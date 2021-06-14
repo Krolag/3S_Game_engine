@@ -22,7 +22,7 @@ namespace Loader
 
 	void Model::init() {}
 
-	void Model::render(Shader _shader)
+	void Model::render(Shader& _shader)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, this->position);
@@ -34,14 +34,11 @@ namespace Loader
 		_shader.setUniformFloat("material.shininess", 0.5f);
 
 		for (Mesh mesh : meshes)
-		{
 			mesh.render(_shader);
-		}
 	}
 
 	void Model::renderChild(Shader _shader)
 	{
-		
 		glm::mat4 model = glm::mat4(1.0f);
 
 		model = glm::translate(model, this->parentPosition);
@@ -57,9 +54,7 @@ namespace Loader
 		_shader.setUniformFloat("material.shininess", 0.5f);
 
 		for (Mesh mesh : meshes)
-		{
 			mesh.render(_shader);
-		}
 	}
 
 	void Model::loadModel(std::string _path)
