@@ -35,10 +35,17 @@ namespace GameLogic
 		model->parentRotation = transform.parentRotation;
 		model->scale = transform.scale;
 
-		shader->use();
-		shader->setUniformBool("noAnim", model->getNoAnim());
-		model->render(*shader);
-		model->renderChild(*shader);
+		if (proctor->getParentProctor() != NULL)
+		{
+			shader->use();
+			shader->setUniformBool("noAnim", model->getNoAnim());
+			model->renderChild(*shader);
+		}
+		else {
+			shader->use();
+			shader->setUniformBool("noAnim", model->getNoAnim());
+			model->render(*shader);
+		}
 	}
 
 	void MeshRenderer::cleanup()
