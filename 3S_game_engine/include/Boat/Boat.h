@@ -33,7 +33,7 @@ namespace GameLogic
 		bool isFirstInBoat = false;
 		bool isSecondInBoat = false;
 
-		float waveRotation = 0.001;
+		float waveRotation = 0.0012;
 		float speed = 0;
 		float turnSpeed = 0;
 		float startSpeed = 2;
