@@ -40,6 +40,8 @@ void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputS
 void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, 
     Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     GameLogic::Boat* boat_b, GameLogic::Proctor* boat, GameLogic::PlayerInput* input_00, GameLogic::PlayerInput* input_01);
+int normalizedAudioValue(float _value);
+int normalizedGammaValue(float _value);
 
 // settings
 const unsigned int SCREEN_WIDTH = 1920;
@@ -358,12 +360,17 @@ int main()
     UIRender::UIElement shadowMapUI("assets/shaders/ui.vert", "assets/shaders/ui.frag", debug, 0.05, 0.05 + (400.0f / SCREEN_WIDTH), 0.95 - (400.0f / SCREEN_HEIGHT), 0.95);
 
     float gammaCorrection = 1.2f;
+    int newGammaValue = normalizedGammaValue(gammaCorrection);
+
 #pragma endregion
 
 #pragma region Audio
 
     float audioValues = 1.00f;
     float musicValues = 0.15f;
+    // Normalization of audio values:
+    int newAudioValue = normalizedAudioValue(audioValues);
+    int newMusicValue = normalizedAudioValue(musicValues);
 
     //SoundEngine
     ISoundEngine* engine = createIrrKlangDevice();
@@ -682,26 +689,32 @@ int main()
             if (tmpOptionsMenuIndex != 0)
             {
                 audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
-                audio.render(std::to_string(audioValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                audio.render(std::to_string(newAudioValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
             //audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
             if (tmpOptionsMenuIndex != 1)
             {
                 music.render("Music: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
-                music.render(std::to_string(musicValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                music.render(std::to_string(newMusicValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
             if (tmpOptionsMenuIndex != 2)
             {
                 gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
-                gamma.render(std::to_string(gammaCorrection), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                gamma.render(std::to_string(newGammaValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
 
             if (tmpOptionsMenuIndex != 3)
-                shadows.render("Shadows resolution: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
+            {
+                shadows.render("Music turned: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                if (isSoundsPaused)
+                    shadows.render("OFF", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                else
+                    shadows.render("ON", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
+            }
 
             if (tmpOptionsMenuIndex != 4);
-                //creditsNotPressed.render();
-                //credits.render("Credits", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.4, 1.5, glm::vec3(1.0, 0.0, 0.0));
+            //creditsNotPressed.render();
+            //credits.render("Credits", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.4, 1.5, glm::vec3(1.0, 0.0, 0.0));
 
             if (keyboardInput->isKeyReleased(GLFW_KEY_S))
             {
@@ -724,16 +737,16 @@ int main()
             if (tmpOptionsMenuIndex == 0)
             {
                 audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(0.0, 1.0, 0.0));
-                audio.render(std::to_string(audioValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                audio.render(std::to_string(newAudioValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 if (keyboardInput->isKeyDown(GLFW_KEY_A))
                 {
-                    if (audioValues >= 0.02)
-                        audioValues -= 0.02f;
+                    if (audioValues > 0)
+                        audioValues -= 0.01f;
                 }
                 else if (keyboardInput->isKeyDown(GLFW_KEY_D))
                 {
-                    if (audioValues <= 0.98)
-                        audioValues += 0.02f;
+                    if (audioValues < 1)
+                        audioValues += 0.01f;
                 }
 
                 for (int i = 0; i < cashSize; i++)
@@ -750,44 +763,63 @@ int main()
             if (tmpOptionsMenuIndex == 1)
             {
                 music.render("Music: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(0.0, 1.0, 0.0));
-                music.render(std::to_string(musicValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                music.render(std::to_string(newMusicValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 if (keyboardInput->isKeyDown(GLFW_KEY_A))
                 {
-                    if (musicValues >= 0.01)
+                    if (musicValues > 0)
                         musicValues -= 0.01f;
                 }
                 else if (keyboardInput->isKeyDown(GLFW_KEY_D))
                 {
-                    if (musicValues <= 0.99)
+                    if (musicValues < 1)
                         musicValues += 0.01f;
                 }
-
             }
+
+            newMusicValue = normalizedAudioValue(musicValues);
+            newAudioValue = normalizedAudioValue(audioValues);
 
             if (tmpOptionsMenuIndex == 2)
             {
                 gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
-                gamma.render(std::to_string(gammaCorrection), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                gamma.render(std::to_string(newGammaValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 if (keyboardInput->isKeyDown(GLFW_KEY_A))
                 {
-                    if (gammaCorrection >= 0.5)
-                        gammaCorrection -= 0.01f;
+                    if (gammaCorrection > 0.6)
+                        gammaCorrection -= 0.050f;
                 }
                 else if (keyboardInput->isKeyDown(GLFW_KEY_D))
                 {
-                    if (gammaCorrection <= 2)
-                        gammaCorrection += 0.01f;
+                    if (gammaCorrection < 2.5)
+                        gammaCorrection += 0.050f;
                 }
             }
 
-            // TODO: @Ignacy - czy gamma musi byc ustawiana za kazdym razem? Moze tylko w opcjach?
+            newGammaValue = normalizedGammaValue(gammaCorrection);
             model3D.use();
             model3D.setUniformFloat("gamma", gammaCorrection);
 
             if (tmpOptionsMenuIndex == 3)
             {
-                shadows.render("Shadows resolution: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                shadows.render("Music turned: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                if (isSoundsPaused)
+                    shadows.render("OFF", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                else
+                    shadows.render("ON", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
+
+                if (keyboardInput->isKeyReleased(GLFW_KEY_A) || keyboardInput->isKeyReleased(GLFW_KEY_D))
+                {
+                    if (isSoundsPaused)
+                        isSoundsPaused = false;
+                    else
+                        isSoundsPaused = true;
+                }
             }
+
+            if (isSoundsPaused)
+                musicSource->setIsPaused(true);
+            else
+                musicSource->setIsPaused(false);
 
             if (tmpOptionsMenuIndex == 4)
             {
@@ -813,7 +845,7 @@ int main()
                 backNotPressed.render();
 
 
-        }
+            }
         else if (sceneManager.cActiveScene["credits"])
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -1123,6 +1155,17 @@ int main()
     engine->drop();
 
     return 0;
+}
+
+int normalizedAudioValue(float _audioValue)
+{
+    int normalizedValue = _audioValue * 100;
+    return normalizedValue;
+}
+int normalizedGammaValue(float _gammaValue)
+{
+    int normalizedValue = _gammaValue * 10;
+    return normalizedValue;
 }
 
 void cameraMouseInput(GLFWwindow* window, InputSystem::MouseInput* mouse)
