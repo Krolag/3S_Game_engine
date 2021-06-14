@@ -43,7 +43,7 @@ void mouseOusideWindowsPos(int key, InputSystem::KeyboardInput* keyboard, InputS
 //maxDistanceY/maxDistanceX = ScreenHeight/ScreenWidth
 void cameraSwitch(int minZoom, int maxZoom, float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, 
     Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
-    float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight);
+    GameLogic::Boat* boat_b, GameLogic::Proctor* boat, GameLogic::PlayerInput* input_00, GameLogic::PlayerInput* input_01);
 
 // settings
 const unsigned int SCREEN_WIDTH = 1920;
@@ -58,10 +58,13 @@ bool firstMouse = true;
 static bool isDebugModeOn = false;
 bool isDebugCameraOn = false;
 bool isPaused = false;
+
+
 int main()
 {
     int tmpMainMenuIndex = 0;
     int tmpOptionsMenuIndex = 0;
+    int tmpCreditsIndex = 1;
 
 #pragma region Scene init
     /* Load scene */
@@ -145,6 +148,12 @@ int main()
     UIRender::UIElement creditsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "credits_button_prsd.png",
        0.15f - uiPositions["pressed"].x, 0.15f + uiPositions["pressed"].x, buttonsPos[1] + uiPositions["pressed"].y, buttonsPos[1] - uiPositions["pressed"].y);//0.01, 0.2, 0.32, 0.13);
 #pragma endregion
+#pragma region Credits
+    UIRender::UIElement SSS("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "SSS.png",
+        0.5f - uiPositions["logo"].x, 0.5f + uiPositions["logo"].x, 0.75f + uiPositions["logo"].y, 0.75f - uiPositions["logo"].y);
+    UIRender::UIElement background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "background.png",
+        0.5f - 0.3f, 0.5f + 0.3f, 0.6, 0.2);
+#pragma endregion
 #pragma region StoryScene
     UIRender::UIElement story_00("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_00.png", 0, 1, 1, 0);
     UIRender::UIElement story_01("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_01.png", 0, 1, 1, 0);
@@ -201,7 +210,7 @@ int main()
 	
     /* Player One */
     Loader::Model           hero_00_m("assets/models/players/blue1.fbx", "playerOne", true, false);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
@@ -211,7 +220,7 @@ int main()
     hierarchy.addObject(&hero_00);
     /* Player Two */
     Loader::Model           hero_01_m("assets/models/players/red.fbx", "playerTwo", true, true);
-    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 62.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.024f));
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_01_m, &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
@@ -521,7 +530,7 @@ int main()
             model3D.setUniform("viewPos", camera.Position);
 
             /* TODO: @Dawid - DEBUG between game camera and debug camera */
-            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01,&boat_b,&boat, &hero_00_pi, &hero_01_pi);
 
             /* Render light and update hierarchy */
             dirLight.render(model3D, 31);
@@ -680,7 +689,10 @@ int main()
                 music.render(std::to_string(musicValues), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
             if (tmpOptionsMenuIndex != 2)
+            {
                 gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                gamma.render(std::to_string(gammaCorrection), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
+            }
 
             if (tmpOptionsMenuIndex != 3)
                 shadows.render("Shadows resolution: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
@@ -749,9 +761,21 @@ int main()
                 }
 
             }
+
             if (tmpOptionsMenuIndex == 2)
             {
                 gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                gamma.render(std::to_string(gammaCorrection), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                if (keyboardInput->isKeyDown(GLFW_KEY_A))
+                {
+                    if (gammaCorrection >= 0.5)
+                        gammaCorrection -= 0.01f;
+                }
+                else if (keyboardInput->isKeyDown(GLFW_KEY_D))
+                {
+                    if (gammaCorrection <= 2)
+                        gammaCorrection += 0.01f;
+                }
             }
 
             if (tmpOptionsMenuIndex == 3)
@@ -789,23 +813,39 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            points.render("Game made by Slightly Superior", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.8, 2.5, glm::vec3(1.0, 0.0, 0.0));
-            points.render("TGiSK:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.7, 2, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Dawid Paweloszek", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.65, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Weronika Dobies", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.60, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Kuba Podkomorka", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.55, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Ignacy Olesinski", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.50, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Grafika:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.4, 2, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Kinga Kudelska", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.35, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Mateusz Sudra", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.30, 1, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Press escape, to go back to options menu", 0.05, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            SSS.render();
+            background.render();
 
-            if (keyboardInput->isKeyReleased(GLFW_KEY_ESCAPE))
+            //points.render("Game made by Slightly Superior", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.8, 2.5, glm::vec3(0.0, 0.0, 0.0));
+            points.render("TGiSK:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.7, 2, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Dawid Paweloszek", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.65, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Weronika Dobies", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.60, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Kuba Podkomorka", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.55, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Ignacy Olesinski", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.50, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Grafika:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.4, 2, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Kinga Kudelska", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.35, 1, glm::vec3(0.0, 0.0, 0.0));
+            points.render("Mateusz Sudra", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.30, 1, glm::vec3(0.0, 0.0, 0.0));
+            //points.render("Press escape, to go back to options menu", 0.05, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+
+            if (keyboardInput->isKeyReleased(GLFW_KEY_W))
+                tmpCreditsIndex = 1;
+
+            if (keyboardInput->isKeyReleased(GLFW_KEY_S))
+                tmpCreditsIndex = 0;
+
+            if (tmpCreditsIndex == 0)
             {
-                sceneManager.changeCurrentScene("options");
-                engine->play2D(mainMenuSource, false);
+                backPressed.render();
+                if (keyboardInput->isKeyReleased(GLFW_KEY_V))
+                {
+                    tmpCreditsIndex = 1;
+                    sceneManager.changeCurrentScene("options");
+                    engine->play2D(mainMenuSource, false);
+                }
             }
-        }
+            else
+                backNotPressed.render();
+            }
         else if (sceneManager.cActiveScene["game"])
         {
             /* Check if player entered pause menu */
@@ -902,7 +942,7 @@ int main()
             model3D.setUniform("viewPos", camera.Position);
                 
             /* TODO: @Dawid - DEBUG between game camera and debug camera */
-            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, yValueUp, yValueDown, xValueLeft, xValueRight);
+            cameraSwitch(40, 60, 90, 40, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01,&boat_b, &boat,&hero_00_pi, &hero_01_pi);
 
             /* Render light and update hierarchy */
             dirLight.render(model3D, 31);
@@ -912,6 +952,7 @@ int main()
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
+            skybox.render();
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
@@ -1122,7 +1163,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
-    float& yValueUp, float& yValueDown, float& xValueLeft, float& xValueRight)
+    GameLogic::Boat * boat_b, GameLogic::Proctor* boat, GameLogic::PlayerInput* input_00, GameLogic::PlayerInput* input_01)
 {
     if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
         isDebugCameraOn = !isDebugCameraOn;
@@ -1150,23 +1191,60 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
         float xDistance = player_1->getWorldPosition()[0] - player_2->getWorldPosition()[0];
         float yDistance = player_1->getWorldPosition()[2] - player_2->getWorldPosition()[2];
         float distance = sqrt(xDistance * xDistance + yDistance * yDistance);
-        
-        if (xDistance < -maxDistanceX) xValueRight = 0;
-        else xValueRight = 0.2;
+        int zOffset = 15;
 
-        if (xDistance > maxDistanceX) xValueLeft = 0;
-        else xValueLeft = 0.2;
-
-        if (yDistance < -maxDistanceY) yValueUp = 0;
-        else yValueUp = 0.2;
-
-        if (yDistance > maxDistanceY) yValueDown = 0;
-        else yValueDown = 0.2;
-
-        float camPos = minZoom + distance/maxDistanceX*(maxZoom-minZoom); //clamp
+        float camPos = minZoom + distance/(maxDistanceX)*(maxZoom-minZoom); //clamp
         camera.Yaw = -90; // set yaw to default value
-        camera.ProcessMouseMovement(0, -89); // set pitch to default value
-        camera.Position = glm::vec3((player_1->getWorldPosition()[0] + player_2->getWorldPosition()[0]) / 2.f, camPos, (player_1->getWorldPosition()[2] + player_2->getWorldPosition()[2]) / 2.f);
+        camera.Pitch = -70;
+        if (boat_b->isPlayerOneInBoat() && boat_b->isPlayerTwoInBoat()) {
+            camPos = maxZoom;
+            zOffset = 20;
+        }
+        camera.Position = glm::vec3((player_1->getWorldPosition()[0] + player_2->getWorldPosition()[0]) / 2.f, camPos, ((player_1->getWorldPosition()[2]+ + player_2->getWorldPosition()[2]) / 2.f + zOffset));
         mouseInput->cursorEnable();
+        
+        if (yDistance > -maxDistanceY* camPos/maxZoom)
+        {
+            input_00->yUpDistance = true;
+            input_01->yUpDistance = true;
+        }
+        else
+        {
+            input_00->yUpDistance = false;
+            input_01->yUpDistance = false;
+        }
+
+        if (yDistance < maxDistanceY * camPos/maxZoom)
+        {
+            input_00->yDownDistance = true;
+            input_01->yDownDistance = true;
+        }
+        else
+        {
+            input_00->yDownDistance = false;
+            input_01->yDownDistance = false;
+        }
+
+        if (xDistance < 70 * camPos / maxZoom)
+        {
+            input_00->xRightDistance = true;
+            input_01->xRightDistance = true;
+        }
+        else
+        {
+            input_00->xRightDistance = false;
+            input_01->xRightDistance = false;
+        }
+
+        if (xDistance > -70 * camPos / maxZoom)
+        {
+            input_00->xLeftDistance = true;
+            input_01->xLeftDistance = true;
+        }
+        else
+        {
+            input_00->xLeftDistance = false;
+            input_01->xLeftDistance = false;
+        }
     }
 }

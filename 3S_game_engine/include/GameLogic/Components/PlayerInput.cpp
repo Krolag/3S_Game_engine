@@ -112,13 +112,13 @@ namespace GameLogic
 				}
 
 				/* Horizontal movement */
-				if (keyboard->isKeyDown(GLFW_KEY_A))
+				if (keyboard->isKeyDown(GLFW_KEY_A) && xLeftDistance)
 				{
 					transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
 					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(269.5f), 0.0f);
 					//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(89.5));
 				}
-				else if (keyboard->isKeyDown(GLFW_KEY_D))
+				else if (keyboard->isKeyDown(GLFW_KEY_D) && xRightDistance)
 				{
 					transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
 					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(89.5f), 0.0f);
@@ -126,16 +126,16 @@ namespace GameLogic
 				}
 
 				/* Vertical movement */
-				if (keyboard->isKeyDown(GLFW_KEY_W))
+				if (keyboard->isKeyDown(GLFW_KEY_W) && yUpDistance)
 				{
 					transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed) * deltaTime * 20.0f;
 
 					/* Check for diagonal movement */
-					if (keyboard->isKeyDown(GLFW_KEY_A))
+					if (keyboard->isKeyDown(GLFW_KEY_A) && xLeftDistance)
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-134.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(134.5f));
 
-					else if (keyboard->isKeyDown(GLFW_KEY_D))
+					else if (keyboard->isKeyDown(GLFW_KEY_D) && xRightDistance)
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(134.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(224.5f));
 
@@ -143,16 +143,16 @@ namespace GameLogic
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(179.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(179.5f));
 				}
-				else if (keyboard->isKeyDown(GLFW_KEY_S))
+				else if (keyboard->isKeyDown(GLFW_KEY_S) && yDownDistance)
 				{
 					transform.position += glm::vec3(0.0f, 0.0f, movementSpeed) * deltaTime * 20.0f;
 
 					/* Check for diagonal movement */
-					if (keyboard->isKeyDown(GLFW_KEY_A))
+					if (keyboard->isKeyDown(GLFW_KEY_A) && xLeftDistance)
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-44.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(44.5f));
 
-					else if (keyboard->isKeyDown(GLFW_KEY_D))
+					else if (keyboard->isKeyDown(GLFW_KEY_D) && xRightDistance)
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(44.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-44.5f));
 
@@ -276,13 +276,13 @@ namespace GameLogic
 				}
 
 				/* Horizontal movement */
-				if (keyboard->isKeyDown(GLFW_KEY_J))
+				if (keyboard->isKeyDown(GLFW_KEY_J) && xRightDistance)
 				{
 					transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
 					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(269.5f), 0.0f);
 					//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(89.5));
 				}
-				else if (keyboard->isKeyDown(GLFW_KEY_L))
+				else if (keyboard->isKeyDown(GLFW_KEY_L) && xLeftDistance)
 				{
 					transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
 					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(89.5f), 0.0f);
@@ -290,16 +290,16 @@ namespace GameLogic
 				}
 
 				/* Vertical movement */
-				if (keyboard->isKeyDown(GLFW_KEY_I))
+				if (keyboard->isKeyDown(GLFW_KEY_I) && yDownDistance)
 				{
 					transform.position += glm::vec3(0.0f, 0.0f, -movementSpeed) * deltaTime * 20.0f;
 
 					/* Check for diagonal movement */
-					if (keyboard->isKeyDown(GLFW_KEY_J))
+					if (keyboard->isKeyDown(GLFW_KEY_J) && xRightDistance)
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-134.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(134.5f));
 
-					else if (keyboard->isKeyDown(GLFW_KEY_L))
+					else if (keyboard->isKeyDown(GLFW_KEY_L) && xLeftDistance)
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(134.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(224.5f));
 
@@ -307,16 +307,16 @@ namespace GameLogic
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(179.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(179.5f));
 				}
-				else if (keyboard->isKeyDown(GLFW_KEY_K))
+				else if (keyboard->isKeyDown(GLFW_KEY_K) && yUpDistance)
 				{
 					transform.position += glm::vec3(0.0f, 0.0f, movementSpeed) * deltaTime * 20.0f;
 
 					/* Check for diagonal movement */
-					if (keyboard->isKeyDown(GLFW_KEY_J))
+					if (keyboard->isKeyDown(GLFW_KEY_J) && xRightDistance)
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-44.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(44.5f));
 
-					else if (keyboard->isKeyDown(GLFW_KEY_L))
+					else if (keyboard->isKeyDown(GLFW_KEY_L) && xLeftDistance)
 						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(44.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-44.5f));
 
