@@ -11,6 +11,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <IrrKlang/irrKlang.h>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
 
 /* Load 3SE packages */
 #include "Application/Application.h"
@@ -351,7 +354,7 @@ int main()
 
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("mainMenu");
-    bool isSoundsPaused = false;
+    bool isMusicPlaying = false;
 
     int animID = 0;
 
@@ -375,11 +378,8 @@ int main()
     //SoundEngine
     ISoundEngine* engine = createIrrKlangDevice();
     // music
-    //ISoundEngine* musicEngine = createIrrKlangDevice();
     ISound* musicSource = engine->play2D("assets/audio/music/shanty.ogg", true, false, true);
-    musicSource->setVolume(0.15);
     // waves
-    //ISoundEngine* waveEngine = createIrrKlangDevice();
     ISound* waveSource = engine->play2D("assets/audio/sounds/background.ogg", true, false, true);
     // menu
     ISoundSource* bottleSource = engine->addSoundSourceFromFile("assets/audio/sounds/bottle.ogg");
@@ -403,6 +403,42 @@ int main()
     /* Set gamma correction */
     model3D.use();
     model3D.setUniformFloat("gamma", gammaCorrection);
+#pragma region Load Options
+    int i = -1;
+    std::string txtLine;
+    std::ifstream optionsFile;
+    optionsFile.open("assets/optionsSave.txt");
+    if (optionsFile.is_open())
+    {
+        while (std::getline(optionsFile, txtLine))
+        {
+            i++;
+            if (i == 0)
+                audioValues = std::stof(txtLine);
+            else if (i == 1)
+                musicValues = std::stof(txtLine);
+            else if (i == 2)
+                gammaCorrection = std::stof(txtLine);
+            else if (i == 3)
+            {
+                int tmpIntToBool = std::stoi(txtLine);
+                if (tmpIntToBool == 0)
+                    isMusicPlaying = false;
+                else
+                    isMusicPlaying = true;
+            }
+        }
+    }
+    else
+        std::cout << "Unable to open the file" << std::endl;
+
+    optionsFile.close();
+
+    if (isMusicPlaying)
+        musicSource->setIsPaused(false);
+    else
+        musicSource->setIsPaused(true);
+#pragma endregion
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
@@ -706,7 +742,7 @@ int main()
             if (tmpOptionsMenuIndex != 3)
             {
                 shadows.render("Music turned: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
-                if (isSoundsPaused)
+                if (!isMusicPlaying)
                     shadows.render("OFF", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
                 else
                     shadows.render("ON", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
@@ -802,24 +838,24 @@ int main()
             if (tmpOptionsMenuIndex == 3)
             {
                 shadows.render("Music turned: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
-                if (isSoundsPaused)
+                if (!isMusicPlaying)
                     shadows.render("OFF", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 else
                     shadows.render("ON", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
 
                 if (keyboardInput->isKeyReleased(GLFW_KEY_A) || keyboardInput->isKeyReleased(GLFW_KEY_D))
                 {
-                    if (isSoundsPaused)
-                        isSoundsPaused = false;
+                    if (isMusicPlaying)
+                        isMusicPlaying = false;
                     else
-                        isSoundsPaused = true;
+                        isMusicPlaying = true;
                 }
             }
 
-            if (isSoundsPaused)
-                musicSource->setIsPaused(true);
-            else
+            if (isMusicPlaying)
                 musicSource->setIsPaused(false);
+            else
+                musicSource->setIsPaused(true);
 
             if (tmpOptionsMenuIndex == 4)
             {
@@ -1150,6 +1186,18 @@ int main()
     ImGui::DestroyContext();
 
     hierarchy.cleanup();
+#pragma region Save Options
+    std::ofstream optionsSave("assets/optionsSave.txt");
+    optionsSave << std::fixed << std::setprecision(2) << newAudioValue / 100.0f << std::endl;
+    optionsSave << std::fixed << std::setprecision(2) << newMusicValue / 100.0f << std::endl;
+    optionsSave << std::fixed << std::setprecision(1) << newGammaValue / 10.0f << std::endl;
+    if (isMusicPlaying)
+        optionsSave << 1 << std::endl;
+    else
+        optionsSave << 0 << std::endl;
+
+    optionsSave.close();
+#pragma endregion
 
     glfwTerminate();
     engine->drop();
