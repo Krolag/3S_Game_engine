@@ -221,7 +221,7 @@ namespace GameLogic
 		for (unsigned int i = 0; i < size_i; i++)
 		{
 			/* Checking for distance from proctor to camera and setting the active flag */
-			if (glm::distance(glm::vec2(proctors[i]->getPosition().x, proctors[i]->getPosition().z), glm::vec2(camera->Position.x, camera->Position.z)) > 50.0f)
+			if (glm::distance(glm::vec2(proctors[i]->getPosition().x, proctors[i]->getPosition().z), glm::vec2(camera->Position.x, camera->Position.z)) > camera->activeProctorsRadius)
 				proctors[i]->activeFlag = false;
 			else
 				proctors[i]->activeFlag = true;

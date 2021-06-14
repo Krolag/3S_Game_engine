@@ -22,7 +22,7 @@ const float PITCH = -89.0f;
 const float SPEED = 200.5f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
-
+const float ACTIVE_PROCTORS_RADIUS = 60.0f;
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
@@ -41,12 +41,13 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
+    float activeProctorsRadius;
     /* Camera planes */
     glm::mat4 projection;
     float frustum[6][4];
 
     // constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), activeProctorsRadius(ACTIVE_PROCTORS_RADIUS)
     {
         Position = position;
         WorldUp = up;

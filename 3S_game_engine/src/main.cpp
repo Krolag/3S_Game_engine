@@ -604,6 +604,7 @@ int main()
                     variables[0] = camera.Yaw;
                     ImGui::DragFloat("yaw", variables);
                     camera.Yaw = variables[0];
+                    ImGui::DragFloat("active radius:", &camera.activeProctorsRadius);
                     ImGui::Text("---- LIGHT -----");
                     // Shadow map
                     ImGui::Checkbox("show shadow map", &isShadowMapVisible);
@@ -1003,6 +1004,7 @@ int main()
                     variables[0] = camera.Yaw;
                     ImGui::DragFloat("yaw", variables);
                     camera.Yaw = variables[0];
+                    ImGui::DragFloat("active radius:", &camera.activeProctorsRadius);
                     ImGui::Text("---- LIGHT -----");
                     // Shadow map
                     ImGui::Checkbox("show shadow map", &isShadowMapVisible);
