@@ -220,6 +220,12 @@ namespace GameLogic
 		unsigned int size_i = proctors.size();
 		for (unsigned int i = 0; i < size_i; i++)
 		{
+			/* Checking for distance from proctor to camera and setting the active flag */
+			if (glm::distance(glm::vec2(proctors[i]->getPosition().x, proctors[i]->getPosition().z), glm::vec2(camera->Position.x, camera->Position.z)) > 50.0f)
+				proctors[i]->activeFlag = false;
+			else
+				proctors[i]->activeFlag = true;
+			
 			proctors[i]->update(_onlyRender);
 			
 			/* Check if delta time should be set */
@@ -254,12 +260,12 @@ namespace GameLogic
 					}
 				}
 			}
-			
+			int ii = 0;
 			/* Collision detection loop for anything else than player-player */
 			for (int i = 0; i < proctors.size(); ++i)
 			{
-				/* Check if proctor has collider */
-				if(proctors.at(i)->getComponentOfType(C_COLLIDER) != NULL)
+				/* Check if proctor has collider and is active */
+				if(proctors.at(i)->getComponentOfType(C_COLLIDER) != NULL && proctors.at(i)->activeFlag)
 				{
 					/* If proctor has collider on it, check if proctors collider is not static */
 					if(!((BoxCollider*)proctors.at(i)->getComponentOfType(C_COLLIDER))->isStatic)
@@ -267,8 +273,8 @@ namespace GameLogic
 						/* If proctors collider is not static, check collisions with other proctors */
 						for (int j = 0; j < proctors.size(); ++j)
 						{
-							/* Check if j == i to not check collider on itself and check if other proctor has collider */
-							if (j == i || proctors.at(j)->getComponentOfType(C_COLLIDER) == NULL)
+							/* Check if j == i to not check collider on itself, check if other proctor has collider and check if proctor isn't active */
+							if (j == i || proctors.at(j)->getComponentOfType(C_COLLIDER) == NULL || proctors.at(j)->activeFlag == false)
 								continue;
 							
 							/* Don't check collisions on players here, because we have checked it already */
@@ -281,10 +287,12 @@ namespace GameLogic
 								continue;
 							/* Check collisions between two proctors */
 							((BoxCollider*)proctors.at(i)->getComponentOfType(C_COLLIDER))->checkCollisionOBB((BoxCollider*)proctors.at(j)->getComponentOfType(C_COLLIDER));
+							ii++;
 						}
 					}
 				}
 			}
+			std::cout << "Collision loop ii: " << ii << "\n";
 			
 			/* If hierarchy is active and _drawDebug is true, draw debug window */
 			if (active && _drawDebug)
