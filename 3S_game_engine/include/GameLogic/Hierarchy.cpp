@@ -260,7 +260,7 @@ namespace GameLogic
 					}
 				}
 			}
-			int ii = 0;
+			
 			/* Collision detection loop for anything else than player-player */
 			for (int i = 0; i < proctors.size(); ++i)
 			{
@@ -287,12 +287,10 @@ namespace GameLogic
 								continue;
 							/* Check collisions between two proctors */
 							((BoxCollider*)proctors.at(i)->getComponentOfType(C_COLLIDER))->checkCollisionOBB((BoxCollider*)proctors.at(j)->getComponentOfType(C_COLLIDER));
-							ii++;
 						}
 					}
 				}
 			}
-			std::cout << "Collision loop ii: " << ii << "\n";
 			
 			/* If hierarchy is active and _drawDebug is true, draw debug window */
 			if (active && _drawDebug)
