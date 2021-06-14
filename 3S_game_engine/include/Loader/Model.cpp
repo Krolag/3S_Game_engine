@@ -71,15 +71,9 @@ namespace Loader
 		Assimp::Importer importer;
 		const aiScene* scene;
 		if (!noAnim)
-		{
-			scene = importer.ReadFile(_path,
-				aiProcess_Triangulate); //| aiProcess_PreTransformVertices/*aiProcess_JoinIdenticalVertices*/);
-		}
+			scene = importer.ReadFile(_path, aiProcess_Triangulate);
 		else
-		{
-			scene = importer.ReadFile(_path,
-				aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_PreTransformVertices/*aiProcess_JoinIdenticalVertices*/);
-		}
+			scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_PreTransformVertices);
 
 		this->scene = scene;
 
@@ -91,7 +85,6 @@ namespace Loader
 		}
 
 		directory = _path.substr(0, _path.find_last_of("/"));
-
 		processNode(scene->mRootNode, scene);
 	}
 
@@ -130,16 +123,9 @@ namespace Loader
 			vertex.normal = AssimpGLMHelpers::GetGLMVec(_mesh->mNormals[i]);
 			/* Textures */
 			if (_mesh->mTextureCoords[0])
-			{
-				vertex.texCoord = glm::vec2(
-					_mesh->mTextureCoords[0][i].x,
-					_mesh->mTextureCoords[0][i].y
-				);
-			}
+				vertex.texCoord = glm::vec2( _mesh->mTextureCoords[0][i].x, _mesh->mTextureCoords[0][i].y);
 			else
-			{
 				vertex.texCoord = glm::vec2(0.0f);
-			}
 
 			/* Push completed data */
 			vertices.push_back(vertex);
@@ -151,16 +137,13 @@ namespace Loader
 			aiFace face = _mesh->mFaces[i];
 
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
-			{
 				indices.push_back(face.mIndices[j]);
-			}
 		}
 
 		/* Process Material */
 		if (_mesh->mMaterialIndex >= 0)
 		{
 			aiMaterial* material = _scene->mMaterials[_mesh->mMaterialIndex];
-
 			extractBoneWeightForVertices(vertices, _mesh, _scene);
 
 			if (noTex)
@@ -192,6 +175,9 @@ namespace Loader
 
 	void Model::setVertexBoneDataToDefault(Vertex& _vertex)
 	{
+		if (noAnim)
+			return;
+
 		for (int i = 0; i < MAX_BONE_WEIGHTS; i++)
 		{
 			_vertex.boneIDs[i] = -1;
@@ -201,6 +187,9 @@ namespace Loader
 
 	void Model::setVertexBoneData(Vertex& _vertex, int _boneID, float _weight)
 	{
+		if (noAnim)
+			return;
+
 		for (int i = 0; i < MAX_BONE_WEIGHTS; i++)
 		{
 			if (_vertex.boneIDs[i] < 0)
@@ -214,8 +203,11 @@ namespace Loader
 
 	void Model::extractBoneWeightForVertices(std::vector<Vertex>& _vertices, aiMesh* _mesh, const aiScene* _scene)
 	{
-		auto& _boneInfoMap = this->boneInfoMap;
-		int& _boneCount = this->boneCount;
+		if (noAnim)
+			return;
+
+		auto& _boneInfoMap = boneInfoMap;
+		int& _boneCount = boneCount;
 
 		for (int boneIndex = 0; boneIndex < _mesh->mNumBones; boneIndex++)
 		{
@@ -288,9 +280,7 @@ namespace Loader
 	void Model::cleanup()
 	{
 		for (Mesh mesh : meshes)
-		{
 			mesh.cleanup();
-		}
 	}
 
 	std::vector<Mesh> Model::getMeshes() const
