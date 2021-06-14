@@ -30,7 +30,8 @@ namespace GameLogic
 		float gravityAcceleration = 5.5f; // 15.0f;
 		float cGravity = 0.0f;
 		float movementSpeed = 0;
-		float maxInteractionDistance = 10.0f;
+		float maxInteractionDistance = 6.0f;
+		float maxBoatInteractionDistance = 15.0f;
 		float radius = maxInteractionDistance;
 		int frameCounter = 0;
 		Proctor* coinProctor;

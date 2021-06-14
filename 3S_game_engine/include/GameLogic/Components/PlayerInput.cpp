@@ -177,7 +177,7 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
-					if (distance <= maxInteractionDistance)
+					if (distance <= maxBoatInteractionDistance)
 					{
 						if (tmp.at(i)->name == "boat")
 						{
@@ -341,7 +341,7 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
-					if (distance <= maxInteractionDistance)
+					if (distance <= maxBoatInteractionDistance)
 					{
 						if (tmp.at(i)->name == "boat")
 						{
