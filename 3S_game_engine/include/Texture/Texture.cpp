@@ -64,7 +64,7 @@ void Texture::load(bool _flip)
 	}
 	else
 	{
-		std::cerr << "Failed to load image at " << path << std::endl;
+		//std::cerr << "Failed to load image at " << path << std::endl;
 	}
 
 	stbi_image_free(data);

@@ -112,42 +112,54 @@ int main()
 #pragma region UI init
 #pragma region MainMenu
     /* Buttons can be scaled with buttonScaleFactor */
-    float buttonScaleFactor = 0.9f;
+    float menuButtonScaleFactor = 0.9f;
+    float optionsButtonScaleFactor = 0.7f;
     /* Map that will contain name of each ui element and vector of top, bottom, left and right !calculated! positions
-     * Each texture coord is calculated using this equation on width (same for height): ((texture_width / screen_width) * scale) 
+     * Each texture coord is calculated using this equation on width (same for height): ((texture_width / screen_width) * scale)
      * I'm using map for optimization purpose, so each elemnt's texcoords can be calculated only once
      */
     std::map<std::string, glm::vec2> uiPositions;
-    uiPositions["npressed"] = { ((586 * 0.5f) / SCREEN_WIDTH) * buttonScaleFactor, ((147 * 0.5f) / SCREEN_HEIGHT) * buttonScaleFactor };
-    uiPositions["pressed"]  = { ((601 * 0.5f) / SCREEN_WIDTH) * buttonScaleFactor, ((149 * 0.5f) / SCREEN_HEIGHT) * buttonScaleFactor };
-    uiPositions["logo"]     = { ((512 * 0.5f) / SCREEN_WIDTH) * 1.5f, ((251 * 0.5f) / SCREEN_HEIGHT) * 1.5f };
-    float buttonsPos[4] = { 0.45f, 0.45f - 0.14f, 0.45f - (2 * 0.14f), 0.45f - (3 * 0.14f)};
+    uiPositions["npressed"] = { ((586 * 0.5f) / SCREEN_WIDTH), ((147 * 0.5f) / SCREEN_HEIGHT) };
+    uiPositions["pressed"] = { ((601 * 0.5f) / SCREEN_WIDTH), ((149 * 0.5f) / SCREEN_HEIGHT) };
+    uiPositions["logo"] = { ((512 * 0.5f) / SCREEN_WIDTH) * 1.5f, ((251 * 0.5f) / SCREEN_HEIGHT) * 1.5f };
+    float buttonsPos[4] = { 0.45f, 0.45f - 0.14f, 0.45f - (2 * 0.14f), 0.45f - (3 * 0.14f) };
 
     /* Load all main menu's ui elements with coorect positions */
-    UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png", 
+    UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png",
         0.5f - uiPositions["logo"].x, 0.5f + uiPositions["logo"].x, 0.75f + uiPositions["logo"].y, 0.75f - uiPositions["logo"].y);
-    UIRender::UIElement startButtonNPrs     ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "start_button_nprsd.png",
-        0.5f - uiPositions["npressed"].x, 0.5f + uiPositions["npressed"].x, buttonsPos[0] + uiPositions["npressed"].y, buttonsPos[0] - uiPositions["npressed"].y);
-    UIRender::UIElement startButtonPrsd     ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "start_button_prsd.png", 
-        0.5f - uiPositions["pressed"].x,  0.5f + uiPositions["pressed"].x,  buttonsPos[0] + uiPositions["pressed"].y,  buttonsPos[0] - uiPositions["pressed"].y);
-    UIRender::UIElement optionsNotPressed   ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "options_button_nprsd.png", 
-        0.5f - uiPositions["npressed"].x, 0.5f + uiPositions["npressed"].x, buttonsPos[1] + uiPositions["npressed"].y, buttonsPos[1] - uiPositions["npressed"].y);
-    UIRender::UIElement optionsPressed      ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "options_button_prsd.png", 
-        0.5f - uiPositions["pressed"].x,  0.5f + uiPositions["pressed"].x,  buttonsPos[1] + uiPositions["pressed"].y,  buttonsPos[1] - uiPositions["pressed"].y);
-    UIRender::UIElement exitNotPressed      ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_nprsd.png", 
-        0.5f - uiPositions["npressed"].x, 0.5f + uiPositions["npressed"].x, buttonsPos[2] + uiPositions["npressed"].y, buttonsPos[2] - uiPositions["npressed"].y);
-    UIRender::UIElement exitPressed         ("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_prsd.png", 
-        0.5f - uiPositions["pressed"].x,  0.5f + uiPositions["pressed"].x,  buttonsPos[2] + uiPositions["pressed"].y,  buttonsPos[2] - uiPositions["pressed"].y );
+    UIRender::UIElement startButtonNPrs("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "start_button_nprsd.png",
+        0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[0] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[0] - uiPositions["npressed"].y * menuButtonScaleFactor);
+    UIRender::UIElement startButtonPrsd("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "start_button_prsd.png",
+        0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[0] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[0] - uiPositions["pressed"].y * menuButtonScaleFactor);
+    UIRender::UIElement optionsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "options_button_nprsd.png",
+        0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[1] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[1] - uiPositions["npressed"].y * menuButtonScaleFactor);
+    UIRender::UIElement optionsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "options_button_prsd.png",
+        0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[1] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[1] - uiPositions["pressed"].y * menuButtonScaleFactor);
+    UIRender::UIElement exitNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_nprsd.png",
+        0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[2] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[2] - uiPositions["npressed"].y * menuButtonScaleFactor);
+    UIRender::UIElement exitPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_prsd.png",
+        0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[2] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[2] - uiPositions["pressed"].y * menuButtonScaleFactor);
 #pragma endregion
 #pragma region Options
     UIRender::UIElement backNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "back_button_nprsd.png",
-       0.15f - uiPositions["npressed"].x, 0.15f + uiPositions["npressed"].x, buttonsPos[2] + uiPositions["npressed"].y, buttonsPos[2] - uiPositions["npressed"].y);//0.01, 0.2, 0.32, 0.13);
+        0.15f - uiPositions["npressed"].x * optionsButtonScaleFactor, 0.15f + uiPositions["npressed"].x * optionsButtonScaleFactor, buttonsPos[2] + uiPositions["npressed"].y * optionsButtonScaleFactor, buttonsPos[2] - uiPositions["npressed"].y * optionsButtonScaleFactor);//0.01, 0.2, 0.32, 0.13);
     UIRender::UIElement backPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "back_button_prsd.png",
-       0.15f - uiPositions["pressed"].x, 0.15f + uiPositions["pressed"].x, buttonsPos[2] + uiPositions["pressed"].y, buttonsPos[2] - uiPositions["pressed"].y);//0.01, 0.2, 0.32, 0.13);
+        0.15f - uiPositions["pressed"].x * optionsButtonScaleFactor, 0.15f + uiPositions["pressed"].x * optionsButtonScaleFactor, buttonsPos[2] + uiPositions["pressed"].y * optionsButtonScaleFactor, buttonsPos[2] - uiPositions["pressed"].y * optionsButtonScaleFactor);//0.01, 0.2, 0.32, 0.13);
     UIRender::UIElement creditsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "credits_button_nprsd.png",
-       0.15f - uiPositions["npressed"].x, 0.15f + uiPositions["npressed"].x, buttonsPos[1] + uiPositions["npressed"].y, buttonsPos[1] - uiPositions["npressed"].y);//0.01, 0.2, 0.32, 0.13);
+        0.15f - uiPositions["npressed"].x * optionsButtonScaleFactor, 0.15f + uiPositions["npressed"].x * optionsButtonScaleFactor, buttonsPos[1] + uiPositions["npressed"].y * optionsButtonScaleFactor, buttonsPos[1] - uiPositions["npressed"].y * optionsButtonScaleFactor);//0.01, 0.2, 0.32, 0.13);
     UIRender::UIElement creditsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "credits_button_prsd.png",
-       0.15f - uiPositions["pressed"].x, 0.15f + uiPositions["pressed"].x, buttonsPos[1] + uiPositions["pressed"].y, buttonsPos[1] - uiPositions["pressed"].y);//0.01, 0.2, 0.32, 0.13);
+        0.15f - uiPositions["pressed"].x * optionsButtonScaleFactor, 0.15f + uiPositions["pressed"].x * optionsButtonScaleFactor, buttonsPos[1] + uiPositions["pressed"].y * optionsButtonScaleFactor, buttonsPos[1] - uiPositions["pressed"].y * optionsButtonScaleFactor);//0.01, 0.2, 0.32, 0.13);
+
+    UIRender::UIElement optionsBackground("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "background.png",
+        0.65f - 0.4f, 0.65f + 0.3f, 0.96, 0.35);
+
+    // Sliders
+    UIRender::UIElement audioSlider("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "slider.png",
+        0.75f - 0.365f, 0.75f + 0.015f, 0.83 + 0.01 - 0.1, 0.83 - 0.01 - 0.1);
+    UIRender::UIElement musicSlider("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "slider.png",
+        0.75f - 0.365f, 0.75f + 0.015f, 0.73 + 0.01 - 0.1, 0.73 - 0.01 - 0.1);
+    UIRender::UIElement gammaSlider("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "slider.png",
+        0.75f - 0.365f, 0.75f + 0.015f, 0.63 + 0.01 - 0.1, 0.63 - 0.01 - 0.1);
 #pragma endregion
 #pragma region Credits
     UIRender::UIElement SSS("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "SSS.png",
@@ -730,32 +742,134 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            //backNotPressed.render();
+            hero_00_pi.setActive(false);
+            hero_01_pi.setActive(false);
+            boat_b.setActive(false);
+
+            /* Set camera variables */
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
+            camera.setProjection(projection);
+            camera.activeProctorsRadius = 400.0f;
+            camera.Position = { 702.f, 37.0f, 719.0f };
+            camera.Pitch = -26.5f;
+            camera.Yaw = 53.4f;
+
+#pragma region SHADOWS - ShadowsBuffer
+            /* Activate directional light's FBO */
+            dirLight.shadowFBO.activate();
+
+            depthShader.use();
+            view = camera.GetViewMatrix();
+            glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            /* Note that those values are constant */
+            glm::mat4 proj = glm::ortho(680.0f, 860.0f, -899.0f, -719.0f, dirLight.br.min.z, dirLight.br.max.z);
+            dirLight.lightSpaceMatrix = proj * lightView;
+            depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
+            dirLight.render(depthShader, 31);
+            hierarchy.renderWithShader(&depthShader);
+            shadowMapUI.setTexture(dirLight.shadowFBO.textures[0]);
+            dirLight.shadowFBO.unbind();
+#pragma endregion
+
+            /* Enable cliiping */
+            glEnable(GL_CLIP_DISTANCE0);
+
+#pragma region WATER - ReflectionBuffer
+            /* Start rendering meshes beneath water to ReflectionBuffer */
+            reflectFramebuffer.activate();
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+            /* Set camera underwater to get reflection */
+            float distance = 2 * (camera.Position.y - waterYpos);
+            camera.Position.y -= distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            /* Set shader variables - projection, view, plane */
+            model3D.use();
+            view = camera.GetViewMatrix();
+            model = glm::mat4(1.0f);
+            model3D.setUniform("projection", projection);
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // Clipping everything under water plane
+
+            /* Render objects for ReflectionBuffer */
+            dirLight.render(model3D, 31);
+            hierarchy.renderWithShader(&model3D);
+            skybox.render();
+
+            /* Set camera position to default */
+            camera.Position.y += distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            /* Close ReflectionBuffer */
+            reflectFramebuffer.unbind();
+#pragma endregion
+
+            /* Disable cliiping */
+            glDisable(GL_CLIP_DISTANCE0);
+
+#pragma region Default rendering
+            /* Clear everything */
+            glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_CULL_FACE);
+
+            /* Set model shader variables - projection, view */
+            view = camera.GetViewMatrix();
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            model3D.setUniform("view", view);
+            model3D.setUniform("viewPos", camera.Position);
+
+            /* TODO: @Dawid - DEBUG between game camera and debug camera */
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, &boat_b, &boat, &hero_00_pi, &hero_01_pi);
+
+            /* Render light and update hierarchy */
+            dirLight.render(model3D, 31);
+            hierarchy.renderWithShader(&model3D);
+
+            /* Render water */
+            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
+            water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
+
+            /* Render skybox */
+            skybox.render();
+#pragma endregion
+
+            optionsBackground.render();
+
+            audioSlider.render();
+            musicSlider.render();
+            gammaSlider.render();
 
             if (tmpOptionsMenuIndex != 0)
             {
-                audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
-                audio.render(std::to_string(newAudioValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                audio.render("Audio: ", SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                audio.render(std::to_string(newAudioValue), SCREEN_WIDTH * 0.65, SCREEN_HEIGHT * 0.75, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
             //audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(1.0, 0.0, 0.0));
             if (tmpOptionsMenuIndex != 1)
             {
-                music.render("Music: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
-                music.render(std::to_string(newMusicValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                music.render("Music: ", SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.65, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                music.render(std::to_string(newMusicValue), SCREEN_WIDTH * 0.65, SCREEN_HEIGHT * 0.65, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
             if (tmpOptionsMenuIndex != 2)
             {
-                gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
-                gamma.render(std::to_string(newGammaValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                gamma.render("Gamma: ", SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.55, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                gamma.render(std::to_string(newGammaValue), SCREEN_WIDTH * 0.65, SCREEN_HEIGHT * 0.55, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
 
             if (tmpOptionsMenuIndex != 3)
             {
-                shadows.render("Music turned: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                shadows.render("Music turned: ", SCREEN_WIDTH * 0.45, SCREEN_HEIGHT * 0.45, 1.5, glm::vec3(1.0, 0.0, 0.0));
                 if (!isMusicPlaying)
-                    shadows.render("OFF", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                    shadows.render("OFF", SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.45, 1.5, glm::vec3(1.0, 0.0, 0.0));
                 else
-                    shadows.render("ON", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(1.0, 0.0, 0.0));
+                    shadows.render("ON", SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.45, 1.5, glm::vec3(1.0, 0.0, 0.0));
             }
 
             if (tmpOptionsMenuIndex != 4);
@@ -782,8 +896,8 @@ int main()
 
             if (tmpOptionsMenuIndex == 0)
             {
-                audio.render("Audio: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(0.0, 1.0, 0.0));
-                audio.render(std::to_string(newAudioValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.8, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                audio.render("Audio: ", SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                audio.render(std::to_string(newAudioValue), SCREEN_WIDTH * 0.65, SCREEN_HEIGHT * 0.75, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 if (keyboardInput->isKeyDown(GLFW_KEY_A))
                 {
                     if (audioValues > 0)
@@ -806,10 +920,14 @@ int main()
                 }
             }
 
+            UIRender::UIElement audioPointer("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "notExists.png",
+                (0.75f - 0.015f) + ((newAudioValue * 0.01f) * 0.35f) - 0.35f, (0.75f + 0.015f) + ((newAudioValue * 0.01f) * 0.35f) - 0.35f, 0.83 + 0.015 - 0.1, 0.83 - 0.015 - 0.1);
+            audioPointer.render();
+
             if (tmpOptionsMenuIndex == 1)
             {
-                music.render("Music: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(0.0, 1.0, 0.0));
-                music.render(std::to_string(newMusicValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.7, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                music.render("Music: ", SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.65, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                music.render(std::to_string(newMusicValue), SCREEN_WIDTH * 0.65, SCREEN_HEIGHT * 0.65, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 if (keyboardInput->isKeyDown(GLFW_KEY_A))
                 {
                     if (musicValues > 0)
@@ -825,10 +943,14 @@ int main()
             newMusicValue = normalizedAudioValue(musicValues);
             newAudioValue = normalizedAudioValue(audioValues);
 
+            UIRender::UIElement musicPointer("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "notExists.png",
+                (0.75f - 0.015f) + ((newMusicValue * 0.01f) * 0.35f) - 0.35f, (0.75f + 0.015f) + ((newMusicValue * 0.01f) * 0.35f) - 0.35f, 0.73 + 0.015 - 0.1, 0.73 - 0.015 - 0.1);
+            musicPointer.render();
+
             if (tmpOptionsMenuIndex == 2)
             {
-                gamma.render("Gamma: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
-                gamma.render(std::to_string(newGammaValue), SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.6, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                gamma.render("Gamma: ", SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.55, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                gamma.render(std::to_string(newGammaValue), SCREEN_WIDTH * 0.65, SCREEN_HEIGHT * 0.55, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 if (keyboardInput->isKeyDown(GLFW_KEY_A))
                 {
                     if (gammaCorrection > 0.6)
@@ -845,13 +967,17 @@ int main()
             model3D.use();
             model3D.setUniformFloat("gamma", gammaCorrection);
 
+            UIRender::UIElement gammaPointer("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "noExists.png",
+                0.2975 + (newGammaValue * 0.0175), 0.3275 + (newGammaValue * 0.0175), 0.63 + 0.015 - 0.1, 0.63 - 0.015 - 0.1);
+            gammaPointer.render();
+
             if (tmpOptionsMenuIndex == 3)
             {
-                shadows.render("Music turned: ", SCREEN_WIDTH * 0.01, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                shadows.render("Music turned: ", SCREEN_WIDTH * 0.45, SCREEN_HEIGHT * 0.45, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 if (!isMusicPlaying)
-                    shadows.render("OFF", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                    shadows.render("OFF", SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.45, 1.5, glm::vec3(0.0, 1.0, 0.0));
                 else
-                    shadows.render("ON", SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 1.5, glm::vec3(0.0, 1.0, 0.0));
+                    shadows.render("ON", SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.45, 1.5, glm::vec3(0.0, 1.0, 0.0));
 
                 if (keyboardInput->isKeyReleased(GLFW_KEY_A) || keyboardInput->isKeyReleased(GLFW_KEY_D))
                 {
@@ -891,7 +1017,7 @@ int main()
                 backNotPressed.render();
 
 
-            }
+        }
         else if (sceneManager.cActiveScene["credits"])
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
