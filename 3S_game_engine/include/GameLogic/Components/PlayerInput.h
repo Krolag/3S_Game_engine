@@ -86,14 +86,13 @@ namespace GameLogic
 
 		void usePlayerOneInput();
 		void usePlayerTwoInput();
+		void primaryButtonInUse();
 
 		//Chest testing
 		void openChest();
 		bool isChestOpen = false;
 		int randomNumber = 0;
 		std::string input;
-		
-
 	};
 }
 #endif // !PLAYERINPUT_H

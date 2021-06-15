@@ -51,7 +51,6 @@ const unsigned int SCREEN_WIDTH = 1920;
 const unsigned int SCREEN_HEIGHT = 1080;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCREEN_WIDTH / 2.0f;
 float lastY = SCREEN_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -60,17 +59,23 @@ static bool isDebugModeOn = false;
 bool isDebugCameraOn = false;
 bool isPaused = false;
 
-// 20408
-// 20392
+/* CREATE GLOBAL VALUES USE IN WHOLE PROJECT */
+Application::Window mainScene("TREASURE HEIST FINAL BUILD", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
+GameLogic::Hierarchy hierarchy(&mainScene);
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+
 int main()
 {
     int tmpMainMenuIndex = 0;
     int tmpOptionsMenuIndex = 0;
     int tmpCreditsIndex = 1;
+    int collisionIncrement = 1;
+    int frameCounter = 0;
+    int random = 0;
+    bool restartFlag = false;
 
 #pragma region Scene init
     /* Load scene */
-    Application::Window mainScene("TREASURE HEIST FINAL BUILD", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
     glfwMakeContextCurrent(mainScene.window);
     glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
     glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -82,10 +87,6 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
-    int collisionIncrement = 1;
-    int frameCounter = 0;
-    int random =0;
 #pragma endregion
 
 #pragma region ImGUI init
@@ -165,8 +166,6 @@ int main()
         0.75f - 0.365f, 0.75f + 0.015f, 0.63 + 0.01 - 0.1, 0.63 - 0.01 - 0.1);
 #pragma endregion
 #pragma region Credits
-    UIRender::UIElement SSS("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "SSS.png",
-        0.5f - uiPositions["logo"].x, 0.5f + uiPositions["logo"].x, 0.75f + uiPositions["logo"].y, 0.75f - uiPositions["logo"].y);
     UIRender::UIElement background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "background.png",
         0.5f - 0.3f, 0.5f + 0.3f, 0.6, 0.2);
 #pragma endregion
@@ -224,8 +223,7 @@ int main()
 #pragma endregion
 
 #pragma region Proctors init
-    /* Create object hierarchy */
-    GameLogic::Hierarchy hierarchy(&mainScene);
+
     hierarchy.setCamera(&camera);
 
     /* Create models library */
@@ -241,13 +239,12 @@ int main()
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, &boat_m, &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
     /* Player One */
-    Loader::Model           hero_00_m("assets/models/players/blue1.fbx", "playerOne", true, false);
+    Loader::Model           hero_00_m("assets/models/players/blue1.fbx", "playerOne", true, true);
     GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
-    //hero_00_pi.setFootstepSound(footstepSource);
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     /* Player Two */
@@ -397,31 +394,21 @@ int main()
     zones.push_back(&safe_zone_5);
     Monster monsterSystem(&boat, zones);
 
+    int cashSize = importer.cash.size();
+
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("mainMenu");
 #pragma endregion
 
 #pragma region Audio
-
-
-
-    //SoundEngine
+    /* Create sound engine */
     ISoundEngine* engine = createIrrKlangDevice();
-    // music
     ISound* musicSource = engine->play2D("assets/audio/music/shanty.ogg", true, false, true);
-    // waves
     ISound* waveSource = engine->play2D("assets/audio/sounds/background.ogg", true, false, true);
-    // menu
     ISoundSource* bottleSource = engine->addSoundSourceFromFile("assets/audio/sounds/bottle.ogg");
     ISoundSource* mainMenuSource = engine->addSoundSourceFromFile("assets/audio/sounds/mainMenu.ogg");
-    // monster
     ISoundSource* heartBeatSource = engine->addSoundSourceFromFile("assets/audio/sounds/beat.ogg");
-
-
 #pragma endregion
-
-    bool restartFlag = false;
-    int cashSize = importer.cash.size();
 
 #pragma region Load Options
     /* Create option variables */
@@ -429,7 +416,7 @@ int main()
     bool isMusicPlaying = false;
     float audioValues = 1.00f;
     float musicValues = 0.15f;
-    // Normalization of audio values:
+    /* Normalization of audio values */
     int newGammaValue = normalizedGammaValue(gammaCorrection);
     int newAudioValue = normalizedAudioValue(audioValues);
     int newMusicValue = normalizedAudioValue(musicValues);
@@ -457,6 +444,7 @@ int main()
         std::cout << "Unable to open the file" << std::endl;
     optionsFile.close();
 
+    /* Set loaded values */
     model3D.use();
     model3D.setUniformFloat("gamma", gammaCorrection);
     mainMenuSource->setDefaultVolume(audioValues);
@@ -548,7 +536,7 @@ int main()
             /* Render objects for ReflectionBuffer */
             dirLight.render(model3D, 31);
             hierarchy.renderWithShader(&model3D);
-            //skybox.render();
+            skybox.render();
 
             /* Set camera position to default */
             camera.Position.y += distance;
@@ -585,6 +573,8 @@ int main()
             /* Render water */
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
+
+            skybox.render();
 #pragma endregion
 
 #pragma region UI Elements
@@ -633,8 +623,8 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             story_00.render();
-            points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                 sceneManager.changeCurrentScene("enterStory_01");
         }
         else if (sceneManager.cActiveScene["enterStory_01"])
@@ -642,8 +632,8 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             story_01.render();
-            points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                 sceneManager.changeCurrentScene("game");
             
         }
@@ -680,10 +670,10 @@ int main()
             dirLight.shadowFBO.unbind();
 #pragma endregion
 
+#pragma region WATER - ReflectionBuffer
             /* Enable cliiping */
             glEnable(GL_CLIP_DISTANCE0);
 
-#pragma region WATER - ReflectionBuffer
             /* Start rendering meshes beneath water to ReflectionBuffer */
             reflectFramebuffer.activate();
             glEnable(GL_DEPTH_TEST);
@@ -715,10 +705,10 @@ int main()
 
             /* Close ReflectionBuffer */
             reflectFramebuffer.unbind();
-#pragma endregion
 
             /* Disable cliiping */
             glDisable(GL_CLIP_DISTANCE0);
+#pragma endregion
 
 #pragma region Default rendering
             /* Clear everything */
@@ -789,7 +779,7 @@ int main()
             {
                 tmpOptionsMenuIndex++;
                 if (tmpOptionsMenuIndex > 5)
-                    tmpOptionsMenuIndex = 5;
+                    tmpOptionsMenuIndex = 0;
 
                 engine->play2D(bottleSource, false);
             }
@@ -798,7 +788,7 @@ int main()
             {
                 tmpOptionsMenuIndex--;
                 if (tmpOptionsMenuIndex < 0)
-                    tmpOptionsMenuIndex = 0;
+                    tmpOptionsMenuIndex = 5;
 
                 engine->play2D(bottleSource, false);
             }
@@ -932,20 +922,6 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            SSS.render();
-            background.render();
-
-            //points.render("Game made by Slightly Superior", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.8, 2.5, glm::vec3(0.0, 0.0, 0.0));
-            points.render("TGiSK:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.7, 2, glm::vec3(0.0, 0.0, 0.0));
-            points.render("Dawid Paweloszek", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.65, 1, glm::vec3(0.0, 0.0, 0.0));
-            points.render("Weronika Dobies", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.60, 1, glm::vec3(0.0, 0.0, 0.0));
-            points.render("Kuba Podkomorka", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.55, 1, glm::vec3(0.0, 0.0, 0.0));
-            points.render("Ignacy Olesinski", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.50, 1, glm::vec3(0.0, 0.0, 0.0));
-            points.render("Grafika:", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.4, 2, glm::vec3(0.0, 0.0, 0.0));
-            points.render("Kinga Kudelska", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.35, 1, glm::vec3(0.0, 0.0, 0.0));
-            points.render("Mateusz Sudra", SCREEN_WIDTH * 0.05, SCREEN_HEIGHT * 0.30, 1, glm::vec3(0.0, 0.0, 0.0));
-            //points.render("Press escape, to go back to options menu", 0.05, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-
             if (keyboardInput->isKeyReleased(GLFW_KEY_W))
                 tmpCreditsIndex = 1;
 
@@ -955,7 +931,7 @@ int main()
             if (tmpCreditsIndex == 0)
             {
                 backPressed.render();
-                if (keyboardInput->isKeyReleased(GLFW_KEY_V))
+                if (keyboardInput->isKeyReleased(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                 {
                     tmpCreditsIndex = 1;
                     sceneManager.changeCurrentScene("options");
@@ -1004,10 +980,10 @@ int main()
             dirLight.shadowFBO.unbind();
 #pragma endregion
 
-            /* Enable cliiping */
+#pragma region WATER - ReflectionBuffer
+            /* Enable clipping */
             glEnable(GL_CLIP_DISTANCE0);
 
-#pragma region WATER - ReflectionBuffer
             /* Start rendering meshes beneath water to ReflectionBuffer */
             reflectFramebuffer.activate();
             glEnable(GL_DEPTH_TEST);
@@ -1030,7 +1006,7 @@ int main()
             /* Render objects for ReflectionBuffer */
             dirLight.render(model3D, 31);
             hierarchy.renderWithShader(&model3D);
-            //skybox.render();
+            skybox.render();
 
             /* Set camera position to default */
             camera.Position.y += distance;
@@ -1039,10 +1015,10 @@ int main()
 
             /* Close ReflectionBuffer */
             reflectFramebuffer.unbind();
-#pragma endregion
 
             /* Disable cliiping */
             glDisable(GL_CLIP_DISTANCE0);
+#pragma endregion
 
 #pragma region Default rendering
             /* Clear everything */
@@ -1069,7 +1045,6 @@ int main()
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
-            //skybox.render();
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
@@ -1100,15 +1075,15 @@ int main()
                 //points.render(hero_01_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
 
             /* TEST chest interaction*/
-           // if (hero_00_pi.isPlayerOneUsingChest) 
-           // {                
-           //     if (hero_00_pi.timepassed==0) {
-           //         random = rand() % 3;
-           //         //std::cout << random << "\n";
-           //         hero_00_pi.buttonToPress = random;
-           //     }
-           //     arrows[random].render();
-           // }   
+            if (hero_00_pi.isPlayerOneUsingChest) 
+            {                
+                if (hero_00_pi.timepassed == 0) {
+                    random = rand() % 3;
+                    //std::cout << random << "\n";
+                    hero_00_pi.buttonToPress = random;
+                }
+                arrows[random].render();
+            }   
 
             /* Render dukat */
             dukatSpinning[dukatSpinIndex].render();
@@ -1130,94 +1105,26 @@ int main()
             }
 #pragma endregion
 
-#pragma region Debug Mode
-            if (isDebugModeOn)
-            {
-                ImGui::Begin("Camera and dir light");
-                {
-                    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-                    float variables[4];
-                    /* CAMERA */
-                    ImGui::Text("---- CAMERA ----");
-                    // Position
-                    variables[0] = camera.Position.x; variables[1] = camera.Position.y; variables[2] = camera.Position.z;
-                    ImGui::DragFloat3("campos", variables);
-                    camera.Position.x = variables[0]; camera.Position.y = variables[1]; camera.Position.z = variables[2];
-                    // Pitch
-                    variables[0] = camera.Pitch;
-                    ImGui::DragFloat("pitch", variables);
-                    camera.Pitch = variables[0];
-                    // Yaw
-                    variables[0] = camera.Yaw;
-                    ImGui::DragFloat("yaw", variables);
-                    camera.Yaw = variables[0];
-                    ImGui::DragFloat("active radius:", &camera.activeProctorsRadius);
-                    ImGui::Text("---- LIGHT -----");
-                    /* Dir light */
-                    // Direction
-                    variables[0] = dirLight.direction.x; variables[1] = dirLight.direction.y; variables[2] = dirLight.direction.z;
-                    ImGui::DragFloat3("direction", variables);
-                    dirLight.direction.x = variables[0]; dirLight.direction.y = variables[1]; dirLight.direction.z = variables[2];
-                    // Ambient
-                    variables[0] = dirLight.ambient.x; variables[1] = dirLight.ambient.y; variables[2] = dirLight.ambient.z; variables[3] = dirLight.ambient.w;
-                    ImGui::DragFloat4("ambient", variables);
-                    dirLight.ambient.x = variables[0]; dirLight.ambient.y = variables[1]; dirLight.ambient.z = variables[2]; dirLight.ambient.w = variables[3];
-                    // Diffuse
-                    variables[0] = dirLight.diffuse.x; variables[1] = dirLight.diffuse.y; variables[2] = dirLight.diffuse.z; variables[3] = dirLight.diffuse.w;
-                    ImGui::DragFloat4("diffuse", variables);
-                    dirLight.diffuse.x = variables[0]; dirLight.diffuse.y = variables[1]; dirLight.diffuse.z = variables[2]; dirLight.diffuse.w = variables[3];
-                    // Specular
-                    variables[0] = dirLight.specular.x; variables[1] = dirLight.specular.y; variables[2] = dirLight.specular.z; variables[3] = dirLight.specular.w;
-                    ImGui::DragFloat4("specular", variables);
-                    dirLight.specular.x = variables[0]; dirLight.specular.y = variables[1]; dirLight.specular.z = variables[2]; dirLight.specular.w = variables[3];
-                    // Bounding region min
-                    variables[0] = dirLight.br.min.x; variables[1] = dirLight.br.min.y; variables[2] = dirLight.br.min.z;
-                    ImGui::DragFloat3("br.min", variables);
-                    dirLight.br.min.x = variables[0]; dirLight.br.min.y = variables[1]; dirLight.br.min.z = variables[2];
-                    // Bounding region max
-                    variables[0] = dirLight.br.max.x; variables[1] = dirLight.br.max.y; variables[2] = dirLight.br.max.z;
-                    ImGui::DragFloat3("br.max", variables);
-                    dirLight.br.max.x = variables[0]; dirLight.br.max.y = variables[1]; dirLight.br.max.z = variables[2];
-                    // Gamma correction
-                    ImGui::SliderFloat("gamma", &gammaCorrection, 0.0f, 3.0f);
-                }
-                ImGui::End();
-
-                if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
-                    sceneManager.changeCurrentScene("exitStory_00");
-                else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
-                    sceneManager.changeCurrentScene("exitStory_01");
-
-                collisionBoxShader.use();
-                collisionBoxShader.setUniform("projection", projection);
-                collisionBoxShader.setUniform("view", view);
-                collisionBoxShader.setUniformBool("collision", true);
-            }
-#pragma endregion
         }
         else if (sceneManager.cActiveScene["exitStory_00"])
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             points.render("You loose", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            if (keyboardInput->isKeyReleased(GLFW_KEY_SPACE))
-            { 
-                restartFlag = true;
+            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            restartFlag = true;
+            if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                 sceneManager.changeCurrentScene("mainMenu");
-            }
         }
         else if (sceneManager.cActiveScene["exitStory_01"])
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             points.render("You win, ARRRRRR", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
-            points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
-            {
-                restartFlag = true;
+            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            restartFlag = true;
+            if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                 sceneManager.changeCurrentScene("mainMenu");
-            }
         }
 
         if (restartFlag)
@@ -1226,14 +1133,77 @@ int main()
             Points::getInstance()->setScore(0);
             unsigned int size = hierarchy.getProctors().size();
             for (int i = 0; i < size; i++)
-            {
                 hierarchy.getProctors()[i]->activate();
-            }
             boat.activate();
             hero_00.activate();
             hero_01.activate();
             monster.activate();
         }
+
+#pragma region Debug Mode
+        if (isDebugModeOn)
+        {
+            ImGui::Begin("Camera and dir light");
+            {
+                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                float variables[4];
+                /* CAMERA */
+                ImGui::Text("---- CAMERA ----");
+                // Position
+                variables[0] = camera.Position.x; variables[1] = camera.Position.y; variables[2] = camera.Position.z;
+                ImGui::DragFloat3("campos", variables);
+                camera.Position.x = variables[0]; camera.Position.y = variables[1]; camera.Position.z = variables[2];
+                // Pitch
+                variables[0] = camera.Pitch;
+                ImGui::DragFloat("pitch", variables);
+                camera.Pitch = variables[0];
+                // Yaw
+                variables[0] = camera.Yaw;
+                ImGui::DragFloat("yaw", variables);
+                camera.Yaw = variables[0];
+                ImGui::DragFloat("active radius:", &camera.activeProctorsRadius);
+                ImGui::Text("---- LIGHT -----");
+                /* Dir light */
+                // Direction
+                variables[0] = dirLight.direction.x; variables[1] = dirLight.direction.y; variables[2] = dirLight.direction.z;
+                ImGui::DragFloat3("direction", variables);
+                dirLight.direction.x = variables[0]; dirLight.direction.y = variables[1]; dirLight.direction.z = variables[2];
+                // Ambient
+                variables[0] = dirLight.ambient.x; variables[1] = dirLight.ambient.y; variables[2] = dirLight.ambient.z; variables[3] = dirLight.ambient.w;
+                ImGui::DragFloat4("ambient", variables);
+                dirLight.ambient.x = variables[0]; dirLight.ambient.y = variables[1]; dirLight.ambient.z = variables[2]; dirLight.ambient.w = variables[3];
+                // Diffuse
+                variables[0] = dirLight.diffuse.x; variables[1] = dirLight.diffuse.y; variables[2] = dirLight.diffuse.z; variables[3] = dirLight.diffuse.w;
+                ImGui::DragFloat4("diffuse", variables);
+                dirLight.diffuse.x = variables[0]; dirLight.diffuse.y = variables[1]; dirLight.diffuse.z = variables[2]; dirLight.diffuse.w = variables[3];
+                // Specular
+                variables[0] = dirLight.specular.x; variables[1] = dirLight.specular.y; variables[2] = dirLight.specular.z; variables[3] = dirLight.specular.w;
+                ImGui::DragFloat4("specular", variables);
+                dirLight.specular.x = variables[0]; dirLight.specular.y = variables[1]; dirLight.specular.z = variables[2]; dirLight.specular.w = variables[3];
+                // Bounding region min
+                variables[0] = dirLight.br.min.x; variables[1] = dirLight.br.min.y; variables[2] = dirLight.br.min.z;
+                ImGui::DragFloat3("br.min", variables);
+                dirLight.br.min.x = variables[0]; dirLight.br.min.y = variables[1]; dirLight.br.min.z = variables[2];
+                // Bounding region max
+                variables[0] = dirLight.br.max.x; variables[1] = dirLight.br.max.y; variables[2] = dirLight.br.max.z;
+                ImGui::DragFloat3("br.max", variables);
+                dirLight.br.max.x = variables[0]; dirLight.br.max.y = variables[1]; dirLight.br.max.z = variables[2];
+                // Gamma correction
+                ImGui::SliderFloat("gamma", &gammaCorrection, 0.0f, 3.0f);
+            }
+            ImGui::End();
+
+            if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
+                sceneManager.changeCurrentScene("exitStory_00");
+            else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
+                sceneManager.changeCurrentScene("exitStory_01");
+
+            collisionBoxShader.use();
+            collisionBoxShader.setUniform("projection", projection);
+            collisionBoxShader.setUniform("view", view);
+            collisionBoxShader.setUniformBool("collision", true);
+        }
+#pragma endregion
 
         /* Update InputSystem */
         keyboardInput->update();
@@ -1256,6 +1226,7 @@ int main()
     ImGui::DestroyContext();
 
     hierarchy.cleanup();
+
 #pragma region Save Options
     std::ofstream optionsSave("assets/optionsSave.txt");
     optionsSave << std::fixed << std::setprecision(2) << newAudioValue / 100.0f << std::endl;
@@ -1280,6 +1251,7 @@ int normalizedAudioValue(float _audioValue)
     int normalizedValue = _audioValue * 100;
     return normalizedValue;
 }
+
 int normalizedGammaValue(float _gammaValue)
 {
     int normalizedValue = _gammaValue * 10;

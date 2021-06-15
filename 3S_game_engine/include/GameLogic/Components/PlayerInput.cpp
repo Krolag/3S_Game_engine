@@ -167,64 +167,7 @@ namespace GameLogic
 			/* Collect players primary and secondary button info */
 			if (keyboard->isKeyReleased(GLFW_KEY_V))
 			{
-				/* Create tmp for easy acces */
-				std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
-				isCluePickedUp = false;
-
-				/* Check if player is near the interactable proctor */
-				for (unsigned int i = 0; i < tmp.size(); i++)
-				{
-					float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
-					float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
-					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
-					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
-
-					if (tmp.at(i)->name == "boat" && distance <= maxBoatInteractionDistance)
-					{
-						if (!isPlayerOneInBoat)
-						{
-							boat->attachPlayerOne(proctor);
-						}
-					}
-
-					if (distance <= maxInteractionDistance)
-					{
-						//isPlayerOneUsingChest = true;
-						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL) //&& isChestOpen
-						{
-							tmp.at(i)->deactivate();
-							//isChestOpen = false;
-							//tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
-							((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
-						}
-
-						if (tmp.at(i)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(i)->getComponentOfType(C_INTERACTABLE)->isActive() == true)
-						{
-							if (tmp.at(i)->name == "x-1" || tmp.at(i)->name == "x-2" || tmp.at(i)->name == "x-3" || tmp.at(i)->name == "x-4" || tmp.at(i)->name == "x-5")
-							{
-								tmp.at(i)->deactivate();
-								/*tmp.at(i)->getComponentOfType(C_INTERACTABLE)->setActive(false);
-								tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));*/
-								if (tmp.at(i)->name == "x-1")
-									//clueText = "The winds blow NORTH";
-									clue = 0;
-								if (tmp.at(i)->name == "x-2")
-									//clueText = "The winds blow NORTH-WEST";
-									clue = 1;
-								if (tmp.at(i)->name == "x-3")
-									//clueText = "The winds blow SOUTH-WEST";
-									clue = 2;
-								if (tmp.at(i)->name == "x-4")
-									//clueText = "The winds blow SOUTH";
-									clue = 3;
-								if (tmp.at(i)->name == "x-5")
-									clueText = "Familiar odor...?";
-
-								isCluePickedUp = true;
-							}
-						}	
-					}
-				}
+				primaryButtonInUse();
 			}
 			if (keyboard->isKeyPressed(GLFW_KEY_B) && isPlayerOneInBoat)
 			{
@@ -337,63 +280,7 @@ namespace GameLogic
 			/* Collect players update */
 			if (keyboard->isKeyReleased(GLFW_KEY_PERIOD))
 			{
-				/* Create tmp for easy acces */
-				std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
-				isCluePickedUp = false;
-
-				/* Check if player is near the interactable proctor */
-				for (unsigned int i = 0; i < tmp.size(); i++)
-				{
-					float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
-					float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
-					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
-					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
-
-					if (tmp.at(i)->name == "boat" && distance <= maxBoatInteractionDistance)
-					{
-						if (!isPlayerTwoInBoat)
-						{
-							boat->attachPlayerTwo(proctor);
-						}
-					}
-
-					if (distance <= maxInteractionDistance)
-					{
-						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
-						{
-							tmp.at(i)->deactivate();
-							((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
-						}
-
-						if (tmp.at(i)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(i)->getComponentOfType(C_INTERACTABLE)->isActive() == true)
-						{
-							if (tmp.at(i)->name == "x-1" || tmp.at(i)->name == "x-2" || tmp.at(i)->name == "x-3" || tmp.at(i)->name == "x-4" || tmp.at(i)->name == "x-5")
-							{
-								tmp.at(i)->deactivate();
-								/*tmp.at(i)->getComponentOfType(C_INTERACTABLE)->setActive(false);
-								tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));*/
-
-								if (tmp.at(i)->name == "x-1")
-									//clueText = "The winds blow NORTH";
-									clue = 0;
-								if (tmp.at(i)->name == "x-2")
-									//clueText = "The winds blow NORTH-WEST";
-									clue = 1;
-								if (tmp.at(i)->name == "x-3")
-									//clueText = "The winds blow SOUTH-WEST";
-									clue = 2;
-								if (tmp.at(i)->name == "x-4")
-									//clueText = "The winds blow SOUTH";
-									clue = 3;
-								if (tmp.at(i)->name == "x-5")
-									clueText = "Familiar odor...?";
-
-								isCluePickedUp = true;
-							}
-						}
-						
-					}
-				}
+				primaryButtonInUse();
 			}
 
 			if (keyboard->isKeyPressed(GLFW_KEY_SLASH) && isPlayerTwoInBoat)
@@ -421,6 +308,78 @@ namespace GameLogic
 		}
 	}
 
+	void PlayerInput::primaryButtonInUse()
+	{
+		/* Create tmp for easy acces */
+		std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
+		isCluePickedUp = false;
+
+		/* Initialize first tmp values as start distance and index */
+		float xDistance = tmp.at(0)->getPosition()[0] - proctor->getPosition()[0];
+		float zDistance = tmp.at(0)->getPosition()[2] - proctor->getPosition()[2];
+		float closestDistance = sqrt(xDistance * xDistance + zDistance * zDistance);
+		float closestIndex = 0;
+		unsigned int size = tmp.size();
+
+		/* Calculate distance for each interactable proctor */
+		for (unsigned int i = 1; i < size; i++)
+		{
+			float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
+			float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
+			float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
+
+			if (distance < closestDistance)
+			{
+				closestDistance = distance;
+				closestIndex = i;
+			}
+		}
+
+		/* Check if closest thing is boat */
+		if (tmp.at(closestIndex)->name == "boat" && closestDistance <= maxBoatInteractionDistance)
+		{
+			if (!isPlayerOneInBoat)
+				boat->attachPlayerOne(proctor);
+		}
+		/* Else check which type of object is the closest */
+		else if (closestDistance <= maxInteractionDistance)
+		{
+			//isPlayerOneUsingChest = true;
+			if (tmp.at(closestIndex)->getComponentOfType(C_TREASURE) != NULL) //&& isChestOpen
+			{
+				tmp.at(closestIndex)->deactivate();
+				//isChestOpen = false;
+				//tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
+				((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
+			}
+
+			if (tmp.at(closestIndex)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(closestIndex)->getComponentOfType(C_INTERACTABLE)->isActive() == true)
+			{
+				if (tmp.at(closestIndex)->name == "x-1" || tmp.at(closestIndex)->name == "x-2" || tmp.at(closestIndex)->name == "x-3" || tmp.at(closestIndex)->name == "x-4" || tmp.at(closestIndex)->name == "x-5")
+				{
+					tmp.at(closestIndex)->deactivate();
+					/*tmp.at(i)->getComponentOfType(C_INTERACTABLE)->setActive(false);
+					tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));*/
+					if (tmp.at(closestIndex)->name == "x-1")
+						//clueText = "The winds blow NORTH";
+						clue = 0;
+					if (tmp.at(closestIndex)->name == "x-2")
+						//clueText = "The winds blow NORTH-WEST";
+						clue = 1;
+					if (tmp.at(closestIndex)->name == "x-3")
+						//clueText = "The winds blow SOUTH-WEST";
+						clue = 2;
+					if (tmp.at(closestIndex)->name == "x-4")
+						//clueText = "The winds blow SOUTH";
+						clue = 3;
+					if (tmp.at(closestIndex)->name == "x-5")
+						clueText = "Familiar odor...?";
+
+					isCluePickedUp = true;
+				}
+			}
+		}
+	}
 
 	void PlayerInput::openChest()
 	{
