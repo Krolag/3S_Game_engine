@@ -61,7 +61,6 @@ bool isPaused = false;
 
 /* CREATE GLOBAL VALUES USE IN WHOLE PROJECT */
 Application::Window mainScene("TREASURE HEIST FINAL BUILD", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
-GameLogic::Hierarchy hierarchy(&mainScene);
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 int main()
@@ -217,14 +216,33 @@ int main()
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_3.png", 0.05, 0.089, 0.97, 0.91)
     };
 
+    float healthPosX = ((320 * 0.5f) / 1920) * 0.5f;
+    float healthPosY = ((320 * 0.5f) / 1080) * 0.5f;
+    UIRender::UIElement health[6] = {
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "empty.png",
+        0.4 - healthPosX, 0.4 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "empty.png",
+        0.5 - healthPosX, 0.5 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "empty.png",
+        0.6 - healthPosX, 0.6 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "full.png",
+        0.4 - healthPosX, 0.4 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "full.png",
+        0.5 - healthPosX, 0.5 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "full.png",
+        0.6 - healthPosX, 0.6 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY)
+    };
+
     int dukatSpinIndex = 0;
     float timeBetweenFrames = 0.10f;
 #pragma endregion
 #pragma endregion
 
 #pragma region Proctors init
-
+    GameLogic::Hierarchy hierarchy(&mainScene);
     hierarchy.setCamera(&camera);
+    for (int i = 0; i < 6; i++)
+        hierarchy.health[i] = &health[i];
 
     /* Create models library */
     Loader::ModelLibrary modelLibrary;
@@ -277,65 +295,64 @@ int main()
     
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
-    for (int i = 0; i < size; ++i)
-    {
-        importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
-            GameLogic::C_MESH,
-            importer.importedProctors.at(i).get(),
-            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-            &model3D
-        ));
-
-        std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
-         
-        /* Check which components needs to be added */
-        // BoxCollider
-        if (tmpCompoBooleanValues[0])
-        {
-            importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
-                GameLogic::C_COLLIDER,
-                importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-                importer.importedProctors.at(i).get(),
-                &collisionBoxShader,
-                tmpCompoBooleanValues[1]
-                ));
-        }
-        // Interactables
-        if (tmpCompoBooleanValues[2])
-        {
-            importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
-                GameLogic::C_INTERACTABLE,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-        // Treasures
-        if (tmpCompoBooleanValues[3])
-        {
-            importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
-                GameLogic::C_TREASURE,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-        // Cash
-        if (tmpCompoBooleanValues[4])
-        {
-            importer.cash.push_back(std::make_shared<GameLogic::Cash>(
-                GameLogic::C_CASH,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-    	// Enemy
-    	if(tmpCompoBooleanValues[5])
-    	{
-            importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
-                importer.importedProctors.at(i).get(),
-                &hero_00,
-                &hero_01,
-                importer.prepareModelName(importer.importedProctors.at(i).get()->name)
-            ));
-    	}
-        hierarchy.addObject(importer.importedProctors.at(i).get());
-    }
+    //for (int i = 0; i < size; ++i)
+    //{
+    //    importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
+    //        GameLogic::C_MESH,
+    //        importer.importedProctors.at(i).get(),
+    //        importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+    //        &model3D
+    //    ));
+    //    std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
+    //     
+    //    /* Check which components needs to be added */
+    //    // BoxCollider
+    //    if (tmpCompoBooleanValues[0])
+    //    {
+    //        importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
+    //            GameLogic::C_COLLIDER,
+    //            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+    //            importer.importedProctors.at(i).get(),
+    //            &collisionBoxShader,
+    //            tmpCompoBooleanValues[1]
+    //            ));
+    //    }
+    //    // Interactables
+    //    if (tmpCompoBooleanValues[2])
+    //    {
+    //        importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
+    //            GameLogic::C_INTERACTABLE,
+    //            importer.importedProctors.at(i).get()
+    //            ));
+    //    }
+    //    // Treasures
+    //    if (tmpCompoBooleanValues[3])
+    //    {
+    //        importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
+    //            GameLogic::C_TREASURE,
+    //            importer.importedProctors.at(i).get()
+    //            ));
+    //    }
+    //    // Cash
+    //    if (tmpCompoBooleanValues[4])
+    //    {
+    //        importer.cash.push_back(std::make_shared<GameLogic::Cash>(
+    //            GameLogic::C_CASH,
+    //            importer.importedProctors.at(i).get()
+    //            ));
+    //    }
+    //	// Enemy
+    //	if(tmpCompoBooleanValues[5])
+    //	{
+    //        importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
+    //            importer.importedProctors.at(i).get(),
+    //            &hero_00,
+    //            &hero_01,
+    //            importer.prepareModelName(importer.importedProctors.at(i).get()->name)
+    //        ));
+    //	}
+    //    hierarchy.addObject(importer.importedProctors.at(i).get());
+    //}
 	
     GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(766.0f, 0.0f, 810.0f));
     GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(-350.0f, 0.0f, 350.0f));
@@ -454,6 +471,9 @@ int main()
     waveSource->setVolume(audioValues);
 #pragma endregion
 
+#pragma region HealthSystem
+#pragma endregion
+
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
@@ -469,6 +489,10 @@ int main()
         /* Enable/disable debug mode */
         if (keyboardInput->isKeyPressed(GLFW_KEY_TAB))
             isDebugModeOn = !isDebugModeOn;
+        if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
+        {
+            hierarchy.takeDamage();
+        }
 
         /* SCENE LOADER */
         if (sceneManager.cActiveScene["mainMenu"])
@@ -1095,6 +1119,20 @@ int main()
             }
             if (dukatSpinIndex >= 8)
                 dukatSpinIndex = 0;
+
+            /* Render health */
+            int size = 6;
+            if (hierarchy.playerHealth == 2)    size = 5;
+            if (hierarchy.playerHealth == 1)    size = 4;
+            if (hierarchy.playerHealth == 0)
+            {
+                sceneManager.changeCurrentScene("exitStory_00");
+                hierarchy.playerHealth = 3;
+            }
+            for (int i = 0; i < size; i++)
+            {
+                hierarchy.health[i]->render();
+            }
 
             /* Update monster system */
             monsterSystem.update(engine, heartBeatSource,bottleSource,&monster);

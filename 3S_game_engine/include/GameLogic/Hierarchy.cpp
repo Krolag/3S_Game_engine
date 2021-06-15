@@ -214,6 +214,17 @@ namespace GameLogic
 		}
 	}
 
+	void Hierarchy::takeDamage()
+	{
+		playerHealth--;
+
+		auto* hearth = health[0];
+		
+		if (playerHealth <= 0)
+			// TODO: @Dawid - change scene
+			true;
+	}
+
 	void Hierarchy::update(bool _onlyRender, bool _drawDebug, int collisionIncrement)
 	{
 		/* Update all proctors */
@@ -236,8 +247,6 @@ namespace GameLogic
 		/* Check if hierarchy should be only rendering meshes */
 		if (!_onlyRender)
 		{
-			//scene->update();
-
 			/* COLLISION DETECTION */
 			/* First we want to check collsiions between players, swapping order each frame */
 			Proctor* hero_00 = getObject("hero_00");

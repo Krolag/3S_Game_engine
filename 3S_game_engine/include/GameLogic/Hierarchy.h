@@ -6,6 +6,7 @@
 #include "GameLogic/Proctor.h"
 #include "Camera/Camera.h"
 #include <vector>
+#include "UIRender/UIElement.h"
 
 namespace GameLogic
 {
@@ -42,6 +43,11 @@ namespace GameLogic
 		void renderWithShader(Shader* _shader);
 		void drawHierarchyWindow();
 
+		/* Player methods */
+		int playerHealth = 3;
+		UIRender::UIElement* health[6];
+		void takeDamage();
+
 		void update(bool _onlyRender = false, bool _drawDebug = false, int collisionIncrement = 0);
 		void cleanup();
 
@@ -53,6 +59,7 @@ namespace GameLogic
 		std::vector<Proctor*> cash;
 		Application::Window* scene;
 		Camera* camera;
+
 
 		/* Debug window variables */
 		bool active;
