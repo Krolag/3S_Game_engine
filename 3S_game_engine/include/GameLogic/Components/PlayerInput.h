@@ -39,6 +39,17 @@ namespace GameLogic
 		float timepassed = 0;
 		int buttonToPress;
 		bool isPlayerOneUsingChest = false;
+//#pragma region Clues
+//		UIRender::UIElement clues[4] = {
+//			UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_00.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2),
+//			UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_01.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2),
+//			UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_02.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2),
+//			UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_03.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2)
+//			//UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_04.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2)
+//		};
+//#pragma endregion
+
+		int clue;
 
 		Proctor* coinProctor;
 		irrklang::ISoundEngine* playerSounds = irrklang::createIrrKlangDevice();
@@ -49,7 +60,7 @@ namespace GameLogic
 		};
 		std::string clueText;
 		bool isCluePickedUp = false;
-		int clues[5]{ 0, 1, 2, 3, 4 };
+		//int clues[5]{ 0, 1, 2, 3, 4 };
 
 		/* Constructors */
 		PlayerInput(ComponentType _type, Proctor* _proctor);

@@ -174,6 +174,15 @@ int main()
     UIRender::UIElement story_00("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_00.png", 0, 1, 1, 0);
     UIRender::UIElement story_01("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_01.png", 0, 1, 1, 0);
 #pragma endregion
+#pragma region Clues
+    UIRender::UIElement clues[4] = {
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_00.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_01.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_02.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_03.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2)
+        //UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_04.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2)
+    };
+#pragma endregion
 #pragma region Game
     /* Text init */
     textProjection = glm::ortho(0.0f, static_cast<GLfloat>(SCREEN_WIDTH), 0.0f, static_cast<GLfloat>(SCREEN_WIDTH));
@@ -1066,9 +1075,29 @@ int main()
 
             /* Check if player picked up clue */
             if (hero_00_pi.isCluePickedUp)
-                points.render(hero_00_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
+            {
+                if (hero_00_pi.clue == 0)
+                    clues[0].render();
+                if (hero_00_pi.clue == 1)
+                    clues[1].render();
+                if (hero_00_pi.clue == 2)
+                    clues[2].render();
+                if (hero_00_pi.clue == 3)
+                    clues[3].render();
+            }
+          
             else if (hero_01_pi.isCluePickedUp)
-                points.render(hero_01_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
+            {
+                if (hero_01_pi.clue == 0)
+                    clues[0].render();
+                if (hero_01_pi.clue == 1)
+                    clues[1].render();
+                if (hero_01_pi.clue == 2)
+                    clues[2].render();
+                if (hero_01_pi.clue == 3)
+                    clues[3].render();
+            }
+                //points.render(hero_01_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
 
             /* TEST chest interaction*/
            // if (hero_00_pi.isPlayerOneUsingChest) 

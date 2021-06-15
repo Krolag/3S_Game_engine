@@ -206,13 +206,17 @@ namespace GameLogic
 								/*tmp.at(i)->getComponentOfType(C_INTERACTABLE)->setActive(false);
 								tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));*/
 								if (tmp.at(i)->name == "x-1")
-									clueText = "The winds blow NORTH";
+									//clueText = "The winds blow NORTH";
+									clue = 0;
 								if (tmp.at(i)->name == "x-2")
-									clueText = "The winds blow NORTH-WEST";
+									//clueText = "The winds blow NORTH-WEST";
+									clue = 1;
 								if (tmp.at(i)->name == "x-3")
-									clueText = "The winds blow SOUTH-WEST";
+									//clueText = "The winds blow SOUTH-WEST";
+									clue = 2;
 								if (tmp.at(i)->name == "x-4")
-									clueText = "The winds blow SOUTH";
+									//clueText = "The winds blow SOUTH";
+									clue = 3;
 								if (tmp.at(i)->name == "x-5")
 									clueText = "Familiar odor...?";
 
@@ -370,13 +374,17 @@ namespace GameLogic
 								tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));*/
 
 								if (tmp.at(i)->name == "x-1")
-									clueText = "The winds blow NORTH";
+									//clueText = "The winds blow NORTH";
+									clue = 0;
 								if (tmp.at(i)->name == "x-2")
-									clueText = "The winds blow NORTH-WEST";
+									//clueText = "The winds blow NORTH-WEST";
+									clue = 1;
 								if (tmp.at(i)->name == "x-3")
-									clueText = "The winds blow SOUTH-WEST";
+									//clueText = "The winds blow SOUTH-WEST";
+									clue = 2;
 								if (tmp.at(i)->name == "x-4")
-									clueText = "The winds blow SOUTH";
+									//clueText = "The winds blow SOUTH";
+									clue = 3;
 								if (tmp.at(i)->name == "x-5")
 									clueText = "Familiar odor...?";
 
