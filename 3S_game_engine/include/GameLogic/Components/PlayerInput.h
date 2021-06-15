@@ -34,6 +34,12 @@ namespace GameLogic
 		float maxBoatInteractionDistance = 15.0f;
 		float radius = maxInteractionDistance;
 		int frameCounter = 0;
+
+		//colect chest TEST
+		float timepassed = 0;
+		int buttonToPress;
+		bool isPlayerOneUsingChest = false;
+
 		Proctor* coinProctor;
 		irrklang::ISoundEngine* playerSounds = irrklang::createIrrKlangDevice();
 		std::vector<irrklang::ISoundSource*> footsteps = { playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_00.ogg"),
@@ -67,10 +73,15 @@ namespace GameLogic
 		bool isPlayerOneInBoat = false;
 		bool isPlayerTwoInBoat = false;
 
-		int randomNumber = 0;
-
 		void usePlayerOneInput();
 		void usePlayerTwoInput();
+
+		//Chest testing
+		void openChest();
+		bool isChestOpen = false;
+		int randomNumber = 0;
+		std::string input;
+		
 
 	};
 }

@@ -79,6 +79,7 @@ namespace GameLogic
 		else
 			usePlayerTwoInput();
 
+		//if (isPlayerOneUsingChest) openChest();
 	}
 
 	void PlayerInput::usePlayerOneInput()
@@ -188,9 +189,11 @@ namespace GameLogic
 
 					if (distance <= maxInteractionDistance)
 					{
-						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
+						//isPlayerOneUsingChest = true;
+						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL) //&& isChestOpen
 						{
 							tmp.at(i)->deactivate();
+							//isChestOpen = false;
 							//tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 							((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
 						}
@@ -407,6 +410,28 @@ namespace GameLogic
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
+		}
+	}
+
+
+	void PlayerInput::openChest()
+	{
+		timepassed += proctor->getParentHierarchy()->getDeltaTime();
+		if (timepassed > 0.8) {
+			timepassed = 0;
+		}
+		if (keyboard->isKeyPressed(GLFW_KEY_V) && buttonToPress==0) {
+			input.append(std::to_string(0));
+			timepassed = 0;
+		}
+		else if(keyboard->isKeyPressed(GLFW_KEY_V) && !buttonToPress == 0)
+		{
+			input = "";
+		}
+		std::cout << input << "\n";
+		if (input.compare("000") == 0) { 
+			isChestOpen = true;
+			isPlayerOneUsingChest = false;
 		}
 	}
 }

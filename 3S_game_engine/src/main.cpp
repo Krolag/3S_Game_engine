@@ -83,6 +83,7 @@ int main()
 
     int collisionIncrement = 1;
     int frameCounter = 0;
+    int random =0;
 #pragma endregion
 
 #pragma region ImGUI init
@@ -197,6 +198,11 @@ int main()
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_06.png", 0.01, 0.045, 0.97, 0.91),
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_07.png", 0.01, 0.045, 0.97, 0.91),
     };
+
+    UIRender::UIElement arrows[4] = { UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_0.png", 0.05, 0.089, 0.97, 0.91),
+                                    UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_1.png", 0.05, 0.089, 0.97, 0.91),
+                                    UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_2.png", 0.05, 0.089, 0.97, 0.91),
+                                    UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_3.png", 0.05, 0.089, 0.97, 0.91)};
 
     int dukatSpinIndex = 0;
     float timeBetweenFrames = 0.10f;
@@ -1170,6 +1176,17 @@ int main()
                 points.render(hero_00_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
             else if (hero_01_pi.isCluePickedUp)
                 points.render(hero_01_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
+
+            /* TEST chest interaction*/
+           // if (hero_00_pi.isPlayerOneUsingChest) 
+           // {                
+           //     if (hero_00_pi.timepassed==0) {
+           //         random = rand() % 3;
+           //         //std::cout << random << "\n";
+           //         hero_00_pi.buttonToPress = random;
+           //     }
+           //     arrows[random].render();
+           // }   
 
             /* Render dukat */
             dukatSpinning[dukatSpinIndex].render();
