@@ -66,10 +66,12 @@ namespace GameLogic
 		bool isPlayerOne;
 		bool isPlayerOneInBoat = false;
 		bool isPlayerTwoInBoat = false;
+
 		int randomNumber = 0;
 
 		void usePlayerOneInput();
 		void usePlayerTwoInput();
+
 	};
 }
 #endif // !PLAYERINPUT_H

@@ -14,7 +14,7 @@ public:
 	void update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, GameLogic::Proctor* monster);
 
 private:
-	const int SAFE_DISTANCE = 100; // radius of safe zone around island
+	const int SAFE_DISTANCE = 200; // radius of safe zone around island
 	const int TIME_BETWEEN_POSITIONS_UPDATE = 3;
 	const int MIN_DISTANCE = 18; // minimum distance beetwen current and last boat position 
 

@@ -78,6 +78,7 @@ namespace GameLogic
 			usePlayerOneInput();
 		else
 			usePlayerTwoInput();
+
 	}
 
 	void PlayerInput::usePlayerOneInput()
@@ -177,22 +178,23 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
-					if (distance <= maxBoatInteractionDistance)
+					if (tmp.at(i)->name == "boat" && distance <= maxBoatInteractionDistance)
 					{
-						if (tmp.at(i)->name == "boat")
+						if (!isPlayerOneInBoat)
 						{
-							if (!isPlayerOneInBoat)
-							{
-								boat->attachPlayerOne(proctor);
-							}
+							boat->attachPlayerOne(proctor);
 						}
+					}
 
+					if (distance <= maxInteractionDistance)
+					{
 						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
 						{
 							tmp.at(i)->deactivate();
 							//tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 							((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
 						}
+
 						if (tmp.at(i)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(i)->getComponentOfType(C_INTERACTABLE)->isActive() == true)
 						{
 							if (tmp.at(i)->name == "x-1" || tmp.at(i)->name == "x-2" || tmp.at(i)->name == "x-3" || tmp.at(i)->name == "x-4" || tmp.at(i)->name == "x-5")
@@ -213,8 +215,7 @@ namespace GameLogic
 
 								isCluePickedUp = true;
 							}
-						}
-
+						}	
 					}
 				}
 			}
@@ -341,21 +342,22 @@ namespace GameLogic
 					float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
 					//std::cout << tmp.at(i)->name << ": " << distance << std::endl;
 
-					if (distance <= maxBoatInteractionDistance)
+					if (tmp.at(i)->name == "boat" && distance <= maxBoatInteractionDistance)
 					{
-						if (tmp.at(i)->name == "boat")
+						if (!isPlayerTwoInBoat)
 						{
-							if (!isPlayerTwoInBoat)
-							{
-								boat->attachPlayerTwo(proctor);
-							}
+							boat->attachPlayerTwo(proctor);
 						}
+					}
 
+					if (distance <= maxInteractionDistance)
+					{
 						if (tmp.at(i)->getComponentOfType(C_TREASURE) != NULL)
 						{
 							tmp.at(i)->deactivate();
 							((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
 						}
+
 						if (tmp.at(i)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(i)->getComponentOfType(C_INTERACTABLE)->isActive() == true)
 						{
 							if (tmp.at(i)->name == "x-1" || tmp.at(i)->name == "x-2" || tmp.at(i)->name == "x-3" || tmp.at(i)->name == "x-4" || tmp.at(i)->name == "x-5")
@@ -363,7 +365,7 @@ namespace GameLogic
 								tmp.at(i)->deactivate();
 								/*tmp.at(i)->getComponentOfType(C_INTERACTABLE)->setActive(false);
 								tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));*/
-								
+
 								if (tmp.at(i)->name == "x-1")
 									clueText = "The winds blow NORTH";
 								if (tmp.at(i)->name == "x-2")
@@ -378,6 +380,7 @@ namespace GameLogic
 								isCluePickedUp = true;
 							}
 						}
+						
 					}
 				}
 			}
