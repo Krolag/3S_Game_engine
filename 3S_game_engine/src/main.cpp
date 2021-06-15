@@ -60,6 +60,8 @@ static bool isDebugModeOn = false;
 bool isDebugCameraOn = false;
 bool isPaused = false;
 
+// 20408
+// 20392
 int main()
 {
     int tmpMainMenuIndex = 0;
@@ -72,7 +74,7 @@ int main()
     glfwMakeContextCurrent(mainScene.window);
     glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
     glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSwapInterval(0); // Uncoment this line to remove 60FPS cap
+    //glfwSwapInterval(0); // Uncoment this line to remove 60FPS cap
 
     /* Load all OpenGL function pointers */
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -199,10 +201,13 @@ int main()
         UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_07.png", 0.01, 0.045, 0.97, 0.91),
     };
 
-    UIRender::UIElement arrows[4] = { UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_0.png", 0.05, 0.089, 0.97, 0.91),
-                                    UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_1.png", 0.05, 0.089, 0.97, 0.91),
-                                    UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_2.png", 0.05, 0.089, 0.97, 0.91),
-                                    UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_3.png", 0.05, 0.089, 0.97, 0.91)};
+    /* Arrows for chest opening */
+    UIRender::UIElement arrows[4] = { 
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_0.png", 0.05, 0.089, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_1.png", 0.05, 0.089, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_2.png", 0.05, 0.089, 0.97, 0.91),
+        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_3.png", 0.05, 0.089, 0.97, 0.91)
+    };
 
     int dukatSpinIndex = 0;
     float timeBetweenFrames = 0.10f;
@@ -226,7 +231,6 @@ int main()
     GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, &boat_m, &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
-	
     /* Player One */
     Loader::Model           hero_00_m("assets/models/players/blue1.fbx", "playerOne", true, false);
     GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
@@ -257,6 +261,10 @@ int main()
     GameLogic::Proctor      monster("monster", glm::vec3(0.0f, -1000.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
     GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, &enemy_00_m, &model3D);
     hierarchy.addObject(&monster);
+
+    hero_00_pi.setActive(false);
+    hero_01_pi.setActive(false);
+    boat_b.setActive(false);
 
     /* Create importer with given *.xml file */
     Loader::Importer importer("assets/scenes/exported_scene.xml", &model3D, true, 10.0f);
@@ -382,26 +390,11 @@ int main()
 
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("mainMenu");
-    bool isMusicPlaying = false;
-
-    int animID = 0;
-
-    Texture debug;
-    bool isShadowMapVisible = false;
-    UIRender::UIElement shadowMapUI("assets/shaders/ui.vert", "assets/shaders/ui.frag", debug, 0.05, 0.05 + (400.0f / SCREEN_WIDTH), 0.95 - (400.0f / SCREEN_HEIGHT), 0.95);
-
-    float gammaCorrection = 1.2f;
-    int newGammaValue = normalizedGammaValue(gammaCorrection);
-
 #pragma endregion
 
 #pragma region Audio
 
-    float audioValues = 1.00f;
-    float musicValues = 0.15f;
-    // Normalization of audio values:
-    int newAudioValue = normalizedAudioValue(audioValues);
-    int newMusicValue = normalizedAudioValue(musicValues);
+
 
     //SoundEngine
     ISoundEngine* engine = createIrrKlangDevice();
@@ -415,23 +408,23 @@ int main()
     // monster
     ISoundSource* heartBeatSource = engine->addSoundSourceFromFile("assets/audio/sounds/beat.ogg");
 
-    // music
-    musicSource->setVolume(musicValues);
-    // waves
-    waveSource->setVolume(audioValues);
-    // bottleSource
-    bottleSource->setDefaultVolume(audioValues);
-    // mainMenu
-    mainMenuSource->setDefaultVolume(audioValues);
+
 #pragma endregion
 
     bool restartFlag = false;
     int cashSize = importer.cash.size();
 
-    /* Set gamma correction */
-    model3D.use();
-    model3D.setUniformFloat("gamma", gammaCorrection);
 #pragma region Load Options
+    /* Create option variables */
+    float gammaCorrection = 1.2f;
+    bool isMusicPlaying = false;
+    float audioValues = 1.00f;
+    float musicValues = 0.15f;
+    // Normalization of audio values:
+    int newGammaValue = normalizedGammaValue(gammaCorrection);
+    int newAudioValue = normalizedAudioValue(audioValues);
+    int newMusicValue = normalizedAudioValue(musicValues);
+
     int i = -1;
     std::string txtLine;
     std::ifstream optionsFile;
@@ -448,44 +441,28 @@ int main()
             else if (i == 2)
                 gammaCorrection = std::stof(txtLine);
             else if (i == 3)
-            {
-                int tmpIntToBool = std::stoi(txtLine);
-                if (tmpIntToBool == 0)
-                    isMusicPlaying = false;
-                else
-                    isMusicPlaying = true;
-            }
+                isMusicPlaying = std::stoi(txtLine);
         }
     }
     else
         std::cout << "Unable to open the file" << std::endl;
-
     optionsFile.close();
 
-    if (isMusicPlaying)
-        musicSource->setIsPaused(false);
-    else
-        musicSource->setIsPaused(true);
+    model3D.use();
+    model3D.setUniformFloat("gamma", gammaCorrection);
+    mainMenuSource->setDefaultVolume(audioValues);
+    bottleSource->setDefaultVolume(audioValues);
+    musicSource->setIsPaused(!isMusicPlaying);
+    musicSource->setVolume(musicValues);
+    waveSource->setVolume(audioValues);
 #pragma endregion
 
     /* Render loop */
     while (!glfwWindowShouldClose(mainScene.window))
     {
-        /* Set gamma value */
-
         /* At first, update scene time */
         mainScene.update();
-
         frameCounter++;
-
-        // music volume
-        musicSource->setVolume(musicValues);
-        // waves volume
-        waveSource->setVolume(audioValues);
-        // bottleSource volume
-        bottleSource->setDefaultVolume(audioValues);
-        // mainMenu volume
-        mainMenuSource->setDefaultVolume(audioValues);
 
         /* Dear ImGUI new frame setup */
         ImGui_ImplOpenGL3_NewFrame();
@@ -503,22 +480,16 @@ int main()
             {
                 tmpMainMenuIndex++;
                 if (tmpMainMenuIndex > 2)
-                    tmpMainMenuIndex = 2;
-
+                    tmpMainMenuIndex = 0;
                 engine->play2D(bottleSource, false);
             }            
             else if (keyboardInput->isKeyReleased(GLFW_KEY_W))
             {
                 tmpMainMenuIndex--;
                 if (tmpMainMenuIndex < 0)
-                    tmpMainMenuIndex = 0;
-
+                    tmpMainMenuIndex = 2;
                 engine->play2D(bottleSource, false);
             }
-
-            hero_00_pi.setActive(false);
-            hero_01_pi.setActive(false);
-            boat_b.setActive(false);
 
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
@@ -531,7 +502,6 @@ int main()
 #pragma region SHADOWS - ShadowsBuffer
             /* Activate directional light's FBO */
             dirLight.shadowFBO.activate();
-
             depthShader.use();
             view = camera.GetViewMatrix();
             glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -541,14 +511,12 @@ int main()
             depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
             dirLight.render(depthShader, 31);
             hierarchy.renderWithShader(&depthShader);
-            shadowMapUI.setTexture(dirLight.shadowFBO.textures[0]);
             dirLight.shadowFBO.unbind();
 #pragma endregion
 
+#pragma region WATER - ReflectionBuffer
             /* Enable cliiping */
             glEnable(GL_CLIP_DISTANCE0);
-
-#pragma region WATER - ReflectionBuffer
             /* Start rendering meshes beneath water to ReflectionBuffer */
             reflectFramebuffer.activate();
             glEnable(GL_DEPTH_TEST);
@@ -580,10 +548,10 @@ int main()
 
             /* Close ReflectionBuffer */
             reflectFramebuffer.unbind();
-#pragma endregion
 
             /* Disable cliiping */
             glDisable(GL_CLIP_DISTANCE0);
+#pragma endregion
 
 #pragma region Default rendering
             /* Clear everything */
@@ -599,7 +567,6 @@ int main()
             model3D.setUniform("view", view);
             model3D.setUniform("viewPos", camera.Position);
 
-            /* TODO: @Dawid - DEBUG between game camera and debug camera */
             cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01,&boat_b,&boat, &hero_00_pi, &hero_01_pi);
 
             /* Render light and update hierarchy */
@@ -609,9 +576,6 @@ int main()
             /* Render water */
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
-            
-            /* Render skybox */
-            //skybox.render();
 #pragma endregion
 
 #pragma region UI Elements
@@ -654,74 +618,6 @@ int main()
             else
                 exitNotPressed.render();
 #pragma endregion
-
-#pragma region Debug Mode
-            if (isDebugModeOn)
-            {
-                ImGui::Begin("Camera and dir light");
-                {
-                    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-                    float variables[4];
-                    /* CAMERA */
-                    ImGui::Text("---- CAMERA ----");
-                    // Position
-                    variables[0] = camera.Position.x; variables[1] = camera.Position.y; variables[2] = camera.Position.z;
-                    ImGui::DragFloat3("campos", variables);
-                    camera.Position.x = variables[0]; camera.Position.y = variables[1]; camera.Position.z = variables[2];
-                    // Pitch
-                    variables[0] = camera.Pitch;
-                    ImGui::DragFloat("pitch", variables);
-                    camera.Pitch = variables[0];
-                    // Yaw
-                    variables[0] = camera.Yaw;
-                    ImGui::DragFloat("yaw", variables);
-                    camera.Yaw = variables[0];
-                    ImGui::DragFloat("active radius:", &camera.activeProctorsRadius);
-                    ImGui::Text("---- LIGHT -----");
-                    // Shadow map
-                    ImGui::Checkbox("show shadow map", &isShadowMapVisible);
-                    /* Dir light */
-                    // Direction
-                    variables[0] = dirLight.direction.x; variables[1] = dirLight.direction.y; variables[2] = dirLight.direction.z;
-                    ImGui::DragFloat3("direction", variables);
-                    dirLight.direction.x = variables[0]; dirLight.direction.y = variables[1]; dirLight.direction.z = variables[2];
-                    // Ambient
-                    variables[0] = dirLight.ambient.x; variables[1] = dirLight.ambient.y; variables[2] = dirLight.ambient.z; variables[3] = dirLight.ambient.w;
-                    ImGui::DragFloat4("ambient", variables);
-                    dirLight.ambient.x = variables[0]; dirLight.ambient.y = variables[1]; dirLight.ambient.z = variables[2]; dirLight.ambient.w = variables[3];
-                    // Diffuse
-                    variables[0] = dirLight.diffuse.x; variables[1] = dirLight.diffuse.y; variables[2] = dirLight.diffuse.z; variables[3] = dirLight.diffuse.w;
-                    ImGui::DragFloat4("diffuse", variables);
-                    dirLight.diffuse.x = variables[0]; dirLight.diffuse.y = variables[1]; dirLight.diffuse.z = variables[2]; dirLight.diffuse.w = variables[3];
-                    // Specular
-                    variables[0] = dirLight.specular.x; variables[1] = dirLight.specular.y; variables[2] = dirLight.specular.z; variables[3] = dirLight.specular.w;
-                    ImGui::DragFloat4("specular", variables);
-                    dirLight.specular.x = variables[0]; dirLight.specular.y = variables[1]; dirLight.specular.z = variables[2]; dirLight.specular.w = variables[3];
-                    // Bounding region min
-                    variables[0] = dirLight.br.min.x; variables[1] = dirLight.br.min.y; variables[2] = dirLight.br.min.z;
-                    ImGui::DragFloat3("br.min", variables);
-                    dirLight.br.min.x = variables[0]; dirLight.br.min.y = variables[1]; dirLight.br.min.z = variables[2];
-                    // Bounding region max
-                    variables[0] = dirLight.br.max.x; variables[1] = dirLight.br.max.y; variables[2] = dirLight.br.max.z;
-                    ImGui::DragFloat3("br.max", variables);
-                    dirLight.br.max.x = variables[0]; dirLight.br.max.y = variables[1]; dirLight.br.max.z = variables[2];
-                }
-                ImGui::End();
-
-                if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
-                    sceneManager.changeCurrentScene("exitStory_00");
-                else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
-                    sceneManager.changeCurrentScene("exitStory_01");
-
-                collisionBoxShader.use();
-                collisionBoxShader.setUniform("projection", projection);
-                collisionBoxShader.setUniform("view", view);
-                collisionBoxShader.setUniformBool("collision", true);
-
-                if (isShadowMapVisible)
-                    shadowMapUI.render();
-            }
-#pragma endregion
         }
         else if (sceneManager.cActiveScene["enterStory_00"])
         {
@@ -731,7 +627,6 @@ int main()
             points.render("Press space, to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
                 sceneManager.changeCurrentScene("enterStory_01");
-            
         }
         else if (sceneManager.cActiveScene["enterStory_01"])
         {
@@ -773,7 +668,6 @@ int main()
             depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
             dirLight.render(depthShader, 31);
             hierarchy.renderWithShader(&depthShader);
-            shadowMapUI.setTexture(dirLight.shadowFBO.textures[0]);
             dirLight.shadowFBO.unbind();
 #pragma endregion
 
@@ -1098,7 +992,6 @@ int main()
             depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
             dirLight.render(depthShader, 31);
             hierarchy.renderWithShader(&depthShader);
-            shadowMapUI.setTexture(dirLight.shadowFBO.textures[0]);
             dirLight.shadowFBO.unbind();
 #pragma endregion
 
@@ -1231,8 +1124,6 @@ int main()
                     camera.Yaw = variables[0];
                     ImGui::DragFloat("active radius:", &camera.activeProctorsRadius);
                     ImGui::Text("---- LIGHT -----");
-                    // Shadow map
-                    ImGui::Checkbox("show shadow map", &isShadowMapVisible);
                     /* Dir light */
                     // Direction
                     variables[0] = dirLight.direction.x; variables[1] = dirLight.direction.y; variables[2] = dirLight.direction.z;
@@ -1272,9 +1163,6 @@ int main()
                 collisionBoxShader.setUniform("projection", projection);
                 collisionBoxShader.setUniform("view", view);
                 collisionBoxShader.setUniformBool("collision", true);
-
-                if (isShadowMapVisible)
-                    shadowMapUI.render();
             }
 #pragma endregion
         }
