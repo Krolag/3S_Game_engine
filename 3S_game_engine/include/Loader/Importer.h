@@ -4,6 +4,7 @@
 #include <cmath>
 #include "ModelLibrary.h"
 #include "GameLogic/Proctor.h"
+#include "GameLogic/GameLogic.h"
 #include "RapidXml/rapidxml.hpp"
 #include "RapidXml/rapidxml_print.hpp"
 #include "RapidXml/rapidxml_utils.hpp"
@@ -25,6 +26,7 @@ namespace Loader
 		std::vector<std::shared_ptr<GameLogic::Interactable>> interactables;
 		std::vector<std::shared_ptr<GameLogic::Treasure>> treasures;
 		std::vector<std::shared_ptr<GameLogic::Cash>> cash;
+		std::vector<std::shared_ptr<GameLogic::Enemy>> enemies;
 		
 		/* Constructor */
 		Importer(const std::string xmlPath, Shader* _model3DShader, bool _isFrom3SE, float _divider);

@@ -8,7 +8,7 @@ namespace GameLogic
 	/* Default enemy values */
 	constexpr float MAX_HEALTH_DEFAULT = 100.0f;
 	constexpr float DAMAGE_DEFAULT = 26.0f;
-	constexpr float SIGHT_RADIUS_DEFAULT = 10.0f;
+	constexpr float SIGHT_RADIUS_DEFAULT = 15.0f;
 	constexpr float ATTACK_RADIUS_DEFAULT = 0.5f;
 	constexpr float MAX_VELOCITY_DEFAULT = 0.05f;
 	constexpr float ACCELERATION_DEFAULT = 0.001f;
@@ -21,9 +21,50 @@ namespace GameLogic
 		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), currentlyChasedPlayer(nullptr),
 		maxHealth(MAX_HEALTH_DEFAULT), currentHealth(MAX_HEALTH_DEFAULT), damage(DAMAGE_DEFAULT), sightRadius(SIGHT_RADIUS_DEFAULT), attackRadius(ATTACK_RADIUS_DEFAULT),
 		maxVelocity(MAX_VELOCITY_DEFAULT), currentVelocity(0.0f), acceleration(ACCELERATION_DEFAULT),
-		maxGravity(MAX_GRAVITY_DEFAULT), currentGravity(0.0f), gravityAcceleration(GRAVITY_ACCELERATION_DEFAULT), currentState(STOIC_STATE),
-		wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
+		maxGravity(MAX_GRAVITY_DEFAULT), currentGravity(0.0f), gravityAcceleration(GRAVITY_ACCELERATION_DEFAULT),
+		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
 	{
+		if (_proctor != NULL)
+		{
+			proctor->addComponent(this);
+		}
+	}
+
+	// Constructor initialize enemy by the given type
+	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, std::string _enemyType) : Component(C_ENEMY, _proctor),
+		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), currentlyChasedPlayer(nullptr),
+		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
+	{
+		if(_enemyType == "locals_00" || _enemyType == "locals_01")
+		{
+			// Initialize normal enemy
+			maxHealth = MAX_HEALTH_DEFAULT;
+			currentHealth = MAX_HEALTH_DEFAULT;
+			damage = DAMAGE_DEFAULT;
+			sightRadius = SIGHT_RADIUS_DEFAULT;
+			attackRadius = ATTACK_RADIUS_DEFAULT;
+			maxVelocity = MAX_VELOCITY_DEFAULT;
+			currentVelocity = 0.0f;
+			acceleration = ACCELERATION_DEFAULT;
+			maxGravity = MAX_GRAVITY_DEFAULT;
+			currentGravity = 0.0f;
+			gravityAcceleration = GRAVITY_ACCELERATION_DEFAULT;
+		}
+		else
+		{
+			// Initialize heavy enemy
+			maxHealth = MAX_HEALTH_DEFAULT * 2.0f;
+			currentHealth = MAX_HEALTH_DEFAULT * 2.0f;
+			damage = DAMAGE_DEFAULT * 1.5f;
+			sightRadius = SIGHT_RADIUS_DEFAULT;
+			attackRadius = ATTACK_RADIUS_DEFAULT * 1.5f;
+			maxVelocity = MAX_VELOCITY_DEFAULT * 0.6f;
+			currentVelocity = 0.0f;
+			acceleration = ACCELERATION_DEFAULT * 0.7f;
+			maxGravity = MAX_GRAVITY_DEFAULT;
+			currentGravity = 0.0f;
+			gravityAcceleration = GRAVITY_ACCELERATION_DEFAULT;
+		}
 		if (_proctor != NULL)
 		{
 			proctor->addComponent(this);

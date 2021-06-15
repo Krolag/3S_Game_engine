@@ -122,7 +122,15 @@ namespace Loader
 				else
 					isCash->value(sceneDocument.allocate_string("false"));
 				components->append_node(isCash);
-
+				/* isEnemy */
+				xml_node<>* isEnemy = sceneDocument.allocate_node(node_element, "isEnemy");
+				isEnemy = sceneDocument.clone_node(isEnemy);
+				if (_proctors.at(i)->getComponentOfType(GameLogic::C_ENEMY) != NULL)
+					isEnemy->value(sceneDocument.allocate_string("true"));
+				else
+					isEnemy->value(sceneDocument.allocate_string("false"));
+				components->append_node(isEnemy);
+				
 				gameModel->append_node(components);
 
 				

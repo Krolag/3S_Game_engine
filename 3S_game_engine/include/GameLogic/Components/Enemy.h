@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <glm/fwd.hpp>
 #include <glm/vec3.hpp>
 #include "GameLogic/Components/Component.h"
@@ -21,6 +22,7 @@ namespace GameLogic
 
 		/* Constructors/Destructors */
 		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef);
+		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, std::string _enemyType);
 		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, float _maxHealth, float _damage, float _sightRadius, float _attackRadius, float _maxVelocity, float _acceleration, float _maxGravity, float _gravityAcceleration);
 		~Enemy();
 

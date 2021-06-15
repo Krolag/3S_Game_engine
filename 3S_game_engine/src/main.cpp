@@ -72,7 +72,7 @@ int main()
     glfwMakeContextCurrent(mainScene.window);
     glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
     glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    //glfwSwapInterval(0); // Uncoment this line to remove 60FPS cap
+    glfwSwapInterval(0); // Uncoment this line to remove 60FPS cap
 
     /* Load all OpenGL function pointers */
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -292,6 +292,16 @@ int main()
                 importer.importedProctors.at(i).get()
                 ));
         }
+    	// Enemy
+    	if(tmpCompoBooleanValues[5])
+    	{
+            importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
+                importer.importedProctors.at(i).get(),
+                &hero_00,
+                &hero_01,
+                importer.prepareModelName(importer.importedProctors.at(i).get()->name)
+            ));
+    	}
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
 	
@@ -543,7 +553,7 @@ int main()
             /* Render objects for ReflectionBuffer */
             dirLight.render(model3D, 31);
             hierarchy.renderWithShader(&model3D);
-            skybox.render();
+            //skybox.render();
 
             /* Set camera position to default */
             camera.Position.y += distance;
@@ -583,7 +593,7 @@ int main()
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
             
             /* Render skybox */
-            skybox.render();
+            //skybox.render();
 #pragma endregion
 
 #pragma region UI Elements
@@ -986,7 +996,7 @@ int main()
             /* Render objects for ReflectionBuffer */
             dirLight.render(model3D, 31);
             hierarchy.renderWithShader(&model3D);
-            skybox.render();
+            //skybox.render();
 
             /* Set camera position to default */
             camera.Position.y += distance;
@@ -1025,7 +1035,7 @@ int main()
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
-            skybox.render();
+            //skybox.render();
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
