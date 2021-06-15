@@ -1124,7 +1124,7 @@ int main()
             int size = 6;
             if (hierarchy.playerHealth == 2)    size = 5;
             if (hierarchy.playerHealth == 1)    size = 4;
-            if (hierarchy.playerHealth == 0)
+            if (hierarchy.playerHealth <= 0)
             {
                 sceneManager.changeCurrentScene("exitStory_00");
                 hierarchy.playerHealth = 3;

@@ -73,11 +73,20 @@ namespace GameLogic
 
 		randomNumber = rand() % 4;
 
+		/* Check if player should take damage from drowning */
+		if (proctor->transform.position.y < 0.0f)
+		{
+			std::cout << "KURWA TONE MIETEK " << std::endl;
+			proctor->getParentHierarchy()->takeDamage();
+			proctor->transform.position.y = proctor->getParentHierarchy()->getCamera()->Position.y;
+		}
+
 		/* Check which player should get update */
 		if (isPlayerOne) 
 			usePlayerOneInput();
 		else
 			usePlayerTwoInput();
+
 
 		//if (isPlayerOneUsingChest) openChest();
 	}

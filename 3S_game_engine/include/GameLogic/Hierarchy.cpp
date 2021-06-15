@@ -217,12 +217,6 @@ namespace GameLogic
 	void Hierarchy::takeDamage()
 	{
 		playerHealth--;
-
-		auto* hearth = health[0];
-		
-		if (playerHealth <= 0)
-			// TODO: @Dawid - change scene
-			true;
 	}
 
 	void Hierarchy::update(bool _onlyRender, bool _drawDebug, int collisionIncrement)
