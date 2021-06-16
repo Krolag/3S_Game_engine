@@ -3,6 +3,7 @@
 class WaterMesh
 {
 public:
+	glm::vec3 waterColor = glm::vec3(0.4f, 0.8f, 0.9f);
 
 	WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPath, std::string geometryShaderPath, int VertexCount, int size);
 	~WaterMesh();

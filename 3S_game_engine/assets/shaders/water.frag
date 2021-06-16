@@ -14,8 +14,8 @@ in vec3 normalG;
 
 uniform sampler2D reflectionTexture;
 uniform vec3 lightPos;
+uniform vec3 waterColor;
 
-vec3 waterColor = vec3(0.4,0.8,0.9);
 vec3 lightColor = vec3(1.0,1.0,1.0);
 
 vec2 clipSpaceToTexCoords(vec4 clipSpace){

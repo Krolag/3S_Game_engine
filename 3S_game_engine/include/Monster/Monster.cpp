@@ -1,8 +1,9 @@
 #include "Monster.h"
 
-Monster::Monster(GameLogic::Proctor* boat, std::vector<GameLogic::Proctor*> zoneVector)
+Monster::Monster(GameLogic::Proctor* boat, std::vector<GameLogic::Proctor*> zoneVector, WaterMesh* water)
 {
 	this->boat = boat;
+	this->water = water;
 	zone = zoneVector;
 }
 
@@ -26,7 +27,7 @@ float Monster::countDistance(glm::vec3 object_1, glm::vec3 object_2)
 	return glm::distance(object_1, object_2);
 }
 
-void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music,GameLogic::Proctor* monster)
+void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music,GameLogic::Proctor* monster,bool isMusicPlaying)
 {
 	timeElapsed += boat->getDeltaTime();
 	if (timeElapsed > TIME_BETWEEN_POSITIONS_UPDATE) //every 3 seconds update boat position
@@ -38,7 +39,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 
 		if (currentDistance > MIN_DISTANCE && heartBeats < 3)
 		{
-			engine->setAllSoundsPaused(false);
+			if (isMusicPlaying) { engine->setAllSoundsPaused(false); }			
 			heartBeats = 0;
 			timeElapsed = 0;
 		}
@@ -60,20 +61,31 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 		if (heartBeats == 4) 
 		{
 			isGameOver = true;
+			engine->setAllSoundsPaused(false);
+			heartBeats = 0;
 		}
 	}
 }
 
-void Monster::update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, GameLogic::Proctor* monster)
+void Monster::update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, GameLogic::Proctor* monster, bool isMusicPlaying)
 {
+	float colorChange = 0.3 * boat->getParentHierarchy()->getDeltaTime();
 	if(heartBeats >= 3 && monster->transform.position.y < -35){
 		time += boat->getDeltaTime() * 4;
 		monster->transform.position.y += time;
 	}
+	if (heartBeats > 1 && water->waterColor.z > 0.1) 
+	{	
+		water->waterColor -= glm::vec3(colorChange,colorChange,colorChange);
+		std::cout << water->waterColor.z << "\n";
+	}
+	else if(water->waterColor.z < 0.9){
+		water->waterColor += glm::vec3(colorChange, colorChange, colorChange);
+	}
 
 	if (!isInSafeZone())
 	{
-		isPositionChanged(engine,audio,music,monster);
+		isPositionChanged(engine,audio,music,monster,isMusicPlaying);
 	}
 	else
 	{

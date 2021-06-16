@@ -448,7 +448,7 @@ int main()
     zones.push_back(&safe_zone_3);
     zones.push_back(&safe_zone_4);
     zones.push_back(&safe_zone_5);
-    Monster monsterSystem(&boat, zones);
+    Monster monsterSystem(&boat, zones,&water);
 #pragma endregion
 
 #pragma region Scene Manager
@@ -1161,10 +1161,11 @@ int main()
             }   
 
             /* Update monster system */
-            monsterSystem.update(engine, heartBeatSource,bottleSource,&monster);
+            monsterSystem.update(engine, heartBeatSource,bottleSource,&monster, isMusicPlaying);
             if (monsterSystem.isGameOver) 
             {
                 monsterSystem.isGameOver = false;
+                water.waterColor = glm::vec3(0.4f, 0.6f, 0.9f);
                 sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
             }
 #pragma region UI Rendering
