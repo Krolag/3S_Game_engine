@@ -706,6 +706,12 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            mainMenuSource->setDefaultVolume(audioValues);
+            bottleSource->setDefaultVolume(audioValues);
+            musicSource->setIsPaused(!isMusicPlaying);
+            musicSource->setVolume(musicValues);
+            waveSource->setVolume(audioValues);
+
             hero_00_pi.setActive(false);
             hero_01_pi.setActive(false);
             boat_b.setActive(false);
