@@ -104,12 +104,11 @@ int main()
     glm::mat4 model;
 
     /* Create shaders */
-    Shader model3D("assets/shaders/model3D.vert", "assets/shaders/model3D.frag");
-    Shader textShader("assets/shaders/text.vert", "assets/shaders/text.frag");
-    Shader collisionBoxShader("assets/shaders/boxCollider2.vert", "assets/shaders/boxCollider2.frag");
-    Shader depthShader("assets/shaders/depthShader.vert", "assets/shaders/depthShader.frag");
-    Shader debugShader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
-
+    Shader model3D              ("./assets/shaders/model3D.vert",       "./assets/shaders/model3D.frag");
+    Shader textShader           ("./assets/shaders/text.vert",          "./assets/shaders/text.frag");
+    Shader collisionBoxShader   ("./assets/shaders/boxCollider2.vert",  "./assets/shaders/boxCollider2.frag");
+    Shader depthShader          ("./assets/shaders/depthShader.vert",   "./assets/shaders/depthShader.frag");
+    Shader debugShader          ("./assets/shaders/basic.vert",         "./assets/shaders/basic.frag");
 #pragma endregion
 
 #pragma region UI init
@@ -128,61 +127,66 @@ int main()
     float buttonsPos[4] = { 0.45f, 0.45f - 0.14f, 0.45f - (2 * 0.14f), 0.45f - (3 * 0.14f) };
 
     /* Load all main menu's ui elements with coorect positions */
-    UIRender::UIElement logo("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "logo.png",
+    UIRender::UIElement logo("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "logo.png",
         0.5f - uiPositions["logo"].x, 0.5f + uiPositions["logo"].x, 0.75f + uiPositions["logo"].y, 0.75f - uiPositions["logo"].y);
-    UIRender::UIElement startButtonNPrs("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "start_button_nprsd.png",
+    UIRender::UIElement startButtonNPrs("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "start_button_nprsd.png",
         0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[0] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[0] - uiPositions["npressed"].y * menuButtonScaleFactor);
-    UIRender::UIElement startButtonPrsd("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "start_button_prsd.png",
+    UIRender::UIElement startButtonPrsd("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "start_button_prsd.png",
         0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[0] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[0] - uiPositions["pressed"].y * menuButtonScaleFactor);
-    UIRender::UIElement optionsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "options_button_nprsd.png",
+    UIRender::UIElement optionsNotPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "options_button_nprsd.png",
         0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[1] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[1] - uiPositions["npressed"].y * menuButtonScaleFactor);
-    UIRender::UIElement optionsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "options_button_prsd.png",
+    UIRender::UIElement optionsPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "options_button_prsd.png",
         0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[1] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[1] - uiPositions["pressed"].y * menuButtonScaleFactor);
-    UIRender::UIElement exitNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_nprsd.png",
+    UIRender::UIElement exitNotPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "exit_button_nprsd.png",
         0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[2] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[2] - uiPositions["npressed"].y * menuButtonScaleFactor);
-    UIRender::UIElement exitPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_prsd.png",
+    UIRender::UIElement exitPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "exit_button_prsd.png",
         0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[2] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[2] - uiPositions["pressed"].y * menuButtonScaleFactor);
-    UIRender::UIElement resumeNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "resume_button_nprsd.png",
+    UIRender::UIElement resumeNotPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "resume_button_nprsd.png",
         0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[0] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[0] - uiPositions["npressed"].y * menuButtonScaleFactor);
-    UIRender::UIElement resumePressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "resume_button_prsd.png",
+    UIRender::UIElement resumePressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "resume_button_prsd.png",
         0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[0] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[0] - uiPositions["pressed"].y * menuButtonScaleFactor);
 #pragma endregion
 #pragma region Options
-    UIRender::UIElement backNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "back_button_nprsd.png",
+    UIRender::UIElement backNotPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "back_button_nprsd.png",
         0.15f - uiPositions["npressed"].x * optionsButtonScaleFactor, 0.15f + uiPositions["npressed"].x * optionsButtonScaleFactor, buttonsPos[2] + uiPositions["npressed"].y * optionsButtonScaleFactor, buttonsPos[2] - uiPositions["npressed"].y * optionsButtonScaleFactor);//0.01, 0.2, 0.32, 0.13);
-    UIRender::UIElement backPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "back_button_prsd.png",
+    UIRender::UIElement backPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "back_button_prsd.png",
         0.15f - uiPositions["pressed"].x * optionsButtonScaleFactor, 0.15f + uiPositions["pressed"].x * optionsButtonScaleFactor, buttonsPos[2] + uiPositions["pressed"].y * optionsButtonScaleFactor, buttonsPos[2] - uiPositions["pressed"].y * optionsButtonScaleFactor);//0.01, 0.2, 0.32, 0.13);
-    UIRender::UIElement creditsNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "credits_button_nprsd.png",
+    UIRender::UIElement creditsNotPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "credits_button_nprsd.png",
         0.15f - uiPositions["npressed"].x * optionsButtonScaleFactor, 0.15f + uiPositions["npressed"].x * optionsButtonScaleFactor, buttonsPos[1] + uiPositions["npressed"].y * optionsButtonScaleFactor, buttonsPos[1] - uiPositions["npressed"].y * optionsButtonScaleFactor);//0.01, 0.2, 0.32, 0.13);
-    UIRender::UIElement creditsPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "credits_button_prsd.png",
+    UIRender::UIElement creditsPressed("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/button", "credits_button_prsd.png",
         0.15f - uiPositions["pressed"].x * optionsButtonScaleFactor, 0.15f + uiPositions["pressed"].x * optionsButtonScaleFactor, buttonsPos[1] + uiPositions["pressed"].y * optionsButtonScaleFactor, buttonsPos[1] - uiPositions["pressed"].y * optionsButtonScaleFactor);//0.01, 0.2, 0.32, 0.13);
 
-    UIRender::UIElement optionsBackground("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "background.png",
+    UIRender::UIElement optionsBackground("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "background.png",
         0.65f - 0.4f, 0.65f + 0.3f, 0.96, 0.35);
 
+    UIRender::TextRender audio("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    UIRender::TextRender music("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    UIRender::TextRender gamma("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    UIRender::TextRender shadows("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+
     // Sliders
-    UIRender::UIElement audioSlider("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "slider.png",
+    UIRender::UIElement audioSlider("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "slider.png",
         0.75f - 0.365f, 0.75f + 0.015f, 0.83 + 0.01 - 0.1, 0.83 - 0.01 - 0.1);
-    UIRender::UIElement musicSlider("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "slider.png",
+    UIRender::UIElement musicSlider("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "slider.png",
         0.75f - 0.365f, 0.75f + 0.015f, 0.73 + 0.01 - 0.1, 0.73 - 0.01 - 0.1);
-    UIRender::UIElement gammaSlider("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "slider.png",
+    UIRender::UIElement gammaSlider("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "slider.png",
         0.75f - 0.365f, 0.75f + 0.015f, 0.63 + 0.01 - 0.1, 0.63 - 0.01 - 0.1);
 #pragma endregion
 #pragma region Credits
-    UIRender::UIElement background("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "background.png",
+    UIRender::UIElement background("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "background.png",
         0.5f - 0.3f, 0.5f + 0.3f, 0.6, 0.2);
 #pragma endregion
 #pragma region StoryScene
-    UIRender::UIElement story_00("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_00.png", 0, 1, 1, 0);
-    UIRender::UIElement story_01("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/story", "story_01.png", 0, 1, 1, 0);
+    UIRender::UIElement story_00("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "story_00.png", 0, 1, 1, 0);
+    UIRender::UIElement story_01("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "story_01.png", 0, 1, 1, 0);
 #pragma endregion
 #pragma region Clues
     UIRender::UIElement clues[4] = {
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_00.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_01.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_02.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_03.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2)
-        //UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_04.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2)
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_00.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_01.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_02.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_03.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2)
+        //UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_04.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2)
     };
 #pragma endregion
 #pragma region Game
@@ -192,50 +196,47 @@ int main()
     glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "textProjection"), 1, GL_FALSE, glm::value_ptr(textProjection));
 
     /* Create text */
-    UIRender::TextRender points("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
-    // Options text
-    UIRender::TextRender audio("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
-    UIRender::TextRender music("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
-    UIRender::TextRender gamma("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
-    UIRender::TextRender shadows("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
-    //UIRender::TextRender credits("assets/shaders/text.vert", "assets/shaders/text.frag", "assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    UIRender::TextRender points("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
 
     /* Animated dukat */
     UIRender::UIElement dukatSpinning[8] = {
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_00.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_01.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_02.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_03.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_04.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_05.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_06.png", 0.01, 0.045, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/dukat", "dukat_07.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/dukat", "dukat_00.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/dukat", "dukat_01.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/dukat", "dukat_02.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/dukat", "dukat_03.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/dukat", "dukat_04.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/dukat", "dukat_05.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/dukat", "dukat_06.png", 0.01, 0.045, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/dukat", "dukat_07.png", 0.01, 0.045, 0.97, 0.91),
     };
 
     /* Arrows for chest opening */
     UIRender::UIElement arrows[4] = { 
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_0.png", 0.05, 0.089, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_1.png", 0.05, 0.089, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_2.png", 0.05, 0.089, 0.97, 0.91),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/keys", "key_3.png", 0.05, 0.089, 0.97, 0.91)
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/keys", "key_0.png", 0.05, 0.089, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/keys", "key_1.png", 0.05, 0.089, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/keys", "key_2.png", 0.05, 0.089, 0.97, 0.91),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/keys", "key_3.png", 0.05, 0.089, 0.97, 0.91)
     };
 
+    /* Health */
     float healthPosX = ((320 * 0.5f) / 1920) * 0.5f;
     float healthPosY = ((320 * 0.5f) / 1080) * 0.5f;
     UIRender::UIElement health[6] = {
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "empty.png",
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/health", "empty.png",
         0.4 - healthPosX, 0.4 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "empty.png",
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/health", "empty.png",
         0.5 - healthPosX, 0.5 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "empty.png",
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/health", "empty.png",
         0.6 - healthPosX, 0.6 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "full.png",
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/health", "full.png",
         0.4 - healthPosX, 0.4 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "full.png",
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/health", "full.png",
         0.5 - healthPosX, 0.5 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
-        UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/health", "full.png",
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/health", "full.png",
         0.6 - healthPosX, 0.6 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY)
     };
+
+    /* Players control */
 
     int dukatSpinIndex = 0;
     float timeBetweenFrames = 0.10f;
@@ -253,7 +254,7 @@ int main()
 
     /* Load models for not-serializable proctors */
     /* Boat */
-    Loader::Model           boat_m("assets/models/boat/bbot.fbx", "boat", true, true);
+    Loader::Model           boat_m("./assets/models/boat/bbot.fbx", "boat", true, true);
     GameLogic::Proctor      boat("boat", glm::vec3(704.0f, 2.2f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, &boat_m, &model3D);
     GameLogic::Boat         boat_b(GameLogic::C_MOVEMENT, &boat);
@@ -261,7 +262,7 @@ int main()
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, &boat_m, &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
     /* Player One */
-    Loader::Model           hero_00_m("assets/models/players/blue1.fbx", "playerOne", true, true);
+    Loader::Model           hero_00_m("./assets/models/players/blue1.fbx", "playerOne", true, true);
     GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
@@ -270,7 +271,7 @@ int main()
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     /* Player Two */
-    Loader::Model           hero_01_m("assets/models/players/red.fbx", "playerTwo", true, true);
+    Loader::Model           hero_01_m("./assets/models/players/red.fbx", "playerTwo", true, true);
     GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 6.0f, 850.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_01_m, &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
@@ -279,7 +280,7 @@ int main()
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, &hero_01_m, &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     // Locals
-    Loader::Model           enemy_00_m("assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
+    Loader::Model           enemy_00_m("./assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
     GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 810.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
     GameLogic::MeshRenderer enemy_00_mr(GameLogic::C_MESH, &enemy_00, &enemy_00_m, &model3D);
     GameLogic::Enemy        enemy_00_e(&enemy_00, &hero_00, &hero_01);
@@ -295,7 +296,7 @@ int main()
     boat_b.setActive(false);
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("assets/scenes/exported_scene.xml", &model3D, true, 10.0f);
+    Loader::Importer importer("./assets/scenes/exported_scene.xml", &model3D, true, 10.0f);
     
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
@@ -379,7 +380,7 @@ int main()
     );
 
     /* Water and water's frame buffer */
-    WaterMesh water("assets/shaders/water.vert", "assets/shaders/water.frag", "assets/shaders/water.geom", 900, 3000);
+    WaterMesh water("./assets/shaders/water.vert", "./assets/shaders/water.frag", "./assets/shaders/water.geom", 900, 3000);
     float waterYpos = 1.5f;
     Framebuffer reflectFramebuffer(SCREEN_WIDTH, SCREEN_HEIGHT, GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     reflectFramebuffer.generate();
@@ -429,11 +430,11 @@ int main()
 #pragma region Audio
     /* Create sound engine */
     ISoundEngine* engine = createIrrKlangDevice();
-    ISound* musicSource = engine->play2D("assets/audio/music/shanty.ogg", true, false, true);
-    ISound* waveSource = engine->play2D("assets/audio/sounds/background.ogg", true, false, true);
-    ISoundSource* bottleSource = engine->addSoundSourceFromFile("assets/audio/sounds/bottle.ogg");
-    ISoundSource* mainMenuSource = engine->addSoundSourceFromFile("assets/audio/sounds/mainMenu.ogg");
-    ISoundSource* heartBeatSource = engine->addSoundSourceFromFile("assets/audio/sounds/beat.ogg");
+    ISound* musicSource = engine->play2D("./assets/audio/music/shanty.ogg", true, false, true);
+    ISound* waveSource = engine->play2D("./assets/audio/sounds/background.ogg", true, false, true);
+    ISoundSource* bottleSource = engine->addSoundSourceFromFile("./assets/audio/sounds/bottle.ogg");
+    ISoundSource* mainMenuSource = engine->addSoundSourceFromFile("./assets/audio/sounds/mainMenu.ogg");
+    ISoundSource* heartBeatSource = engine->addSoundSourceFromFile("./assets/audio/sounds/beat.ogg");
 #pragma endregion
 
 #pragma region Load Options
@@ -450,7 +451,7 @@ int main()
     int i = -1;
     std::string txtLine;
     std::ifstream optionsFile;
-    optionsFile.open("assets/optionsSave.txt");
+    optionsFile.open("./assets/optionsSave.txt");
     if (optionsFile.is_open())
     {
         while (std::getline(optionsFile, txtLine))
@@ -855,7 +856,7 @@ int main()
                 }
             }
 
-            UIRender::UIElement audioPointer("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "notExists.png",
+            UIRender::UIElement audioPointer("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "notExists.png",
                 (0.75f - 0.015f) + ((newAudioValue * 0.01f) * 0.35f) - 0.35f, (0.75f + 0.015f) + ((newAudioValue * 0.01f) * 0.35f) - 0.35f, 0.83 + 0.015 - 0.1, 0.83 - 0.015 - 0.1);
             audioPointer.render();
 
@@ -878,7 +879,7 @@ int main()
             newMusicValue = normalizedAudioValue(musicValues);
             newAudioValue = normalizedAudioValue(audioValues);
 
-            UIRender::UIElement musicPointer("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "notExists.png",
+            UIRender::UIElement musicPointer("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "notExists.png",
                 (0.75f - 0.015f) + ((newMusicValue * 0.01f) * 0.35f) - 0.35f, (0.75f + 0.015f) + ((newMusicValue * 0.01f) * 0.35f) - 0.35f, 0.73 + 0.015 - 0.1, 0.73 - 0.015 - 0.1);
             musicPointer.render();
 
@@ -902,7 +903,7 @@ int main()
             model3D.use();
             model3D.setUniformFloat("gamma", gammaCorrection);
 
-            UIRender::UIElement gammaPointer("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures", "noExists.png",
+            UIRender::UIElement gammaPointer("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "noExists.png",
                 0.2975 + (newGammaValue * 0.0175), 0.3275 + (newGammaValue * 0.0175), 0.63 + 0.015 - 0.1, 0.63 - 0.015 - 0.1);
             gammaPointer.render();
 
@@ -1419,7 +1420,7 @@ int main()
     }
 
 	/* Export scene to xml file */
-    //Loader::Exporter::exportScene(hierarchy.getProctors(), "assets/scenes/exported_scene.xml");
+    //Loader::Exporter::exportScene(hierarchy.getProctors(), "./assets/scenes/exported_scene.xml");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -1428,7 +1429,7 @@ int main()
     hierarchy.cleanup();
 
 #pragma region Save Options
-    std::ofstream optionsSave("assets/optionsSave.txt");
+    std::ofstream optionsSave("./assets/optionsSave.txt");
     optionsSave << std::fixed << std::setprecision(2) << newAudioValue / 100.0f << std::endl;
     optionsSave << std::fixed << std::setprecision(2) << newMusicValue / 100.0f << std::endl;
     optionsSave << std::fixed << std::setprecision(1) << newGammaValue / 10.0f << std::endl;

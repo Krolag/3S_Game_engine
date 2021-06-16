@@ -6,7 +6,7 @@
 #include "GameLogic/Proctor.h"
 #include "InputSystem/KeyboardInput.h"
 #include "Points/Points.h"
-#include "../../UIRender/UIRender.h"
+#include "UIRender/UIElement.h"
 #include <string.h>
 #include "../../IrrKlang/irrKlang.h"
 
@@ -34,11 +34,15 @@ namespace GameLogic
 		float maxBoatInteractionDistance = 15.0f;
 		float radius = maxInteractionDistance;
 		int frameCounter = 0;
+		
+		UIRender::UIElement* controlsPlayerOne[6];
+		UIRender::UIElement* controlsPlayerTwo[6];
 
 		//colect chest TEST
 		float timepassed = 0;
 		int buttonToPress;
 		bool isPlayerOneUsingChest = false;
+
 //#pragma region Clues
 //		UIRender::UIElement clues[4] = {
 //			UIRender::UIElement("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/clues", "clue_00.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2),
