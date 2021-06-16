@@ -31,6 +31,7 @@ namespace Application
 		cActiveScene["tutorial"] = false;
 		cActiveScene["options"] = false;
 		cActiveScene["game"] = false;
+		cActiveScene["resume"] = false;
 		cActiveScene["exitStory_00"] = false;
 		cActiveScene["exitStory_01"] = false;
 		cActiveScene["credits"] = false;

@@ -142,6 +142,10 @@ int main()
         0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[2] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[2] - uiPositions["npressed"].y * menuButtonScaleFactor);
     UIRender::UIElement exitPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "exit_button_prsd.png",
         0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[2] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[2] - uiPositions["pressed"].y * menuButtonScaleFactor);
+    UIRender::UIElement resumeNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "resume_button_nprsd.png",
+        0.5f - uiPositions["npressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["npressed"].x * menuButtonScaleFactor, buttonsPos[0] + uiPositions["npressed"].y * menuButtonScaleFactor, buttonsPos[0] - uiPositions["npressed"].y * menuButtonScaleFactor);
+    UIRender::UIElement resumePressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "resume_button_prsd.png",
+        0.5f - uiPositions["pressed"].x * menuButtonScaleFactor, 0.5f + uiPositions["pressed"].x * menuButtonScaleFactor, buttonsPos[0] + uiPositions["pressed"].y * menuButtonScaleFactor, buttonsPos[0] - uiPositions["pressed"].y * menuButtonScaleFactor);
 #pragma endregion
 #pragma region Options
     UIRender::UIElement backNotPressed("assets/shaders/ui.vert", "assets/shaders/ui.frag", "assets/textures/button", "back_button_nprsd.png",
@@ -354,11 +358,9 @@ int main()
     //    hierarchy.addObject(importer.importedProctors.at(i).get());
     //}
 	
-    GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(766.0f, 0.0f, 810.0f));
-    GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(-350.0f, 0.0f, 350.0f));
-    GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(-400.0f, 0.0f, -350.0f));
-    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(700.0f, 0.0f, 0.0f));
-    GameLogic::Proctor safe_zone_5("safe_zone_5", glm::vec3(334.0f, 0.0f, -810.0f));
+
+    int cashSize = importer.cash.size();
+
 #pragma endregion
 
 #pragma region Environment
@@ -402,7 +404,13 @@ int main()
     float yValueDown = 0.2;
 #pragma endregion
 
-#pragma region TEST CODE
+#pragma region Monster System
+    GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(766.0f, 0.0f, 810.0f));
+    GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(-350.0f, 0.0f, 350.0f));
+    GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(-400.0f, 0.0f, -350.0f));
+    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(700.0f, 0.0f, 0.0f));
+    GameLogic::Proctor safe_zone_5("safe_zone_5", glm::vec3(334.0f, 0.0f, -810.0f));
+
     std::vector<GameLogic::Proctor*> zones;
     zones.push_back(&safe_zone_1);
     zones.push_back(&safe_zone_2);
@@ -410,11 +418,12 @@ int main()
     zones.push_back(&safe_zone_4);
     zones.push_back(&safe_zone_5);
     Monster monsterSystem(&boat, zones);
+#pragma endregion
 
-    int cashSize = importer.cash.size();
-
+#pragma region Scene Manager
     Application::Scene sceneManager;
     sceneManager.changeCurrentScene("mainMenu");
+    bool isResumeFlag = false;
 #pragma endregion
 
 #pragma region Audio
@@ -673,10 +682,13 @@ int main()
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
             camera.setProjection(projection);
-            camera.activeProctorsRadius = 400.0f;
-            camera.Position = { 702.f, 37.0f, 719.0f };
-            camera.Pitch = -26.5f;
-            camera.Yaw = 53.4f;
+            if (!isResumeFlag)
+            {
+                camera.activeProctorsRadius = 400.0f;
+                camera.Position = { 702.f, 37.0f, 719.0f };
+                camera.Pitch = -26.5f;
+                camera.Yaw = 53.4f;
+            }
 
 #pragma region SHADOWS - ShadowsBuffer
             /* Activate directional light's FBO */
@@ -932,7 +944,10 @@ int main()
                 if (keyboardInput->isKeyReleased(GLFW_KEY_V))
                 {
                     tmpOptionsMenuIndex = 0;
-                    sceneManager.changeCurrentScene("mainMenu");
+                    if (!isResumeFlag)
+                        sceneManager.changeCurrentScene("mainMenu");
+                    else
+                        sceneManager.changeCurrentScene("resume");
                     engine->play2D(mainMenuSource, false);
                 }
             }
@@ -971,7 +986,8 @@ int main()
             if (keyboardInput->isKeyPressed(GLFW_KEY_ESCAPE))
             {
                 isPaused = true;
-                sceneManager.changeCurrentScene("mainMenu");
+                sceneManager.changeCurrentScene("resume");
+                isResumeFlag = true;
                 engine->play2D(mainMenuSource, false);
             }
 
@@ -981,6 +997,7 @@ int main()
 
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
+            camera.activeProctorsRadius = 100.0f;
             camera.setProjection(projection);
 
 #pragma region SHADOWS - ShadowsBuffer
@@ -1142,7 +1159,152 @@ int main()
                 sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
             }
 #pragma endregion
+        }
+        else if (sceneManager.cActiveScene["resume"])
+        {
+            if (keyboardInput->isKeyReleased(GLFW_KEY_S))
+            {
+                tmpMainMenuIndex++;
+                if (tmpMainMenuIndex > 2)
+                    tmpMainMenuIndex = 0;
+                engine->play2D(bottleSource, false);
+            }
+            else if (keyboardInput->isKeyReleased(GLFW_KEY_W))
+            {
+                tmpMainMenuIndex--;
+                if (tmpMainMenuIndex < 0)
+                    tmpMainMenuIndex = 2;
+                engine->play2D(bottleSource, false);
+            }
 
+            /* Set camera variables */
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
+            camera.setProjection(projection);
+
+#pragma region SHADOWS - ShadowsBuffer
+            /* Activate directional light's FBO */
+            dirLight.shadowFBO.activate();
+            depthShader.use();
+            view = camera.GetViewMatrix();
+            glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            /* Note that those values are constant */
+            glm::mat4 proj = glm::ortho(680.0f, 860.0f, -899.0f, -719.0f, dirLight.br.min.z, dirLight.br.max.z);
+            dirLight.lightSpaceMatrix = proj * lightView;
+            depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
+            dirLight.render(depthShader, 31);
+            hierarchy.renderWithShader(&depthShader);
+            dirLight.shadowFBO.unbind();
+#pragma endregion
+
+#pragma region WATER - ReflectionBuffer
+            /* Enable cliiping */
+            glEnable(GL_CLIP_DISTANCE0);
+            /* Start rendering meshes beneath water to ReflectionBuffer */
+            reflectFramebuffer.activate();
+            glEnable(GL_DEPTH_TEST);
+            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+            /* Set camera underwater to get reflection */
+            float distance = 2 * (camera.Position.y - waterYpos);
+            camera.Position.y -= distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            /* Set shader variables - projection, view, plane */
+            model3D.use();
+            view = camera.GetViewMatrix();
+            model = glm::mat4(1.0f);
+            model3D.setUniform("projection", projection);
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // Clipping everything under water plane
+
+            /* Render objects for ReflectionBuffer */
+            dirLight.render(model3D, 31);
+            hierarchy.renderWithShader(&model3D);
+            skybox.render();
+
+            /* Set camera position to default */
+            camera.Position.y += distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            /* Close ReflectionBuffer */
+            reflectFramebuffer.unbind();
+
+            /* Disable cliiping */
+            glDisable(GL_CLIP_DISTANCE0);
+#pragma endregion
+
+#pragma region Default rendering
+            /* Clear everything */
+            glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_CULL_FACE);
+
+            /* Set model shader variables - projection, view */
+            view = camera.GetViewMatrix();
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            model3D.setUniform("view", view);
+            model3D.setUniform("viewPos", camera.Position);
+
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, &boat_b, &boat, &hero_00_pi, &hero_01_pi);
+
+            /* Render light and update hierarchy */
+            dirLight.render(model3D, 31);
+            hierarchy.renderWithShader(&model3D);
+
+            /* Render water */
+            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
+            water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
+
+            skybox.render();
+#pragma endregion
+
+#pragma region UI Elements
+            /* Render title */
+            logo.render();
+
+            /* Resume button */
+            if (tmpMainMenuIndex == 0)
+            {
+                resumePressed.render();
+                if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
+                {
+                    engine->play2D(bottleSource, false);
+                    if (isPaused == true)
+                    {
+                        sceneManager.changeCurrentScene("game");
+                        isResumeFlag = false;
+                    }
+                    else
+                        sceneManager.changeCurrentScene("enterStory_00");
+                }
+            }
+            else
+                resumeNotPressed.render();
+
+            /* Options button */
+            if (tmpMainMenuIndex == 1)
+            {
+                optionsPressed.render();
+                if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
+                    sceneManager.changeCurrentScene("options");
+            }
+            else
+                optionsNotPressed.render();
+
+            /* Exit button */
+            if (tmpMainMenuIndex == 2)
+            {
+                exitPressed.render();
+                if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
+                    glfwSetWindowShouldClose(mainScene.window, true);
+            }
+            else
+                exitNotPressed.render();
+#pragma endregion
         }
         else if (sceneManager.cActiveScene["exitStory_00"])
         {
