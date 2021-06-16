@@ -66,6 +66,8 @@ namespace GameLogic
 		isPlayerOneInBoat = boat->isPlayerOneInBoat();
 		isPlayerTwoInBoat = boat->isPlayerTwoInBoat();
 
+		checkForDistance();
+
 		/* Apply gravity */
 		cGravity += gravityAcceleration * proctor->getDeltaTime();
 		if (cGravity >= maxGravity)
@@ -76,7 +78,6 @@ namespace GameLogic
 		/* Check if player should take damage from drowning */
 		if (proctor->transform.position.y < 0.0f)
 		{
-			std::cout << "KURWA TONE MIETEK " << std::endl;
 			proctor->getParentHierarchy()->takeDamage();
 			proctor->transform.position.y = proctor->getParentHierarchy()->getCamera()->Position.y;
 		}
@@ -89,6 +90,38 @@ namespace GameLogic
 
 
 		//if (isPlayerOneUsingChest) openChest();
+	}
+
+	void PlayerInput::checkForDistance()
+	{
+		std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
+
+		/* Initialize first tmp values as start distance and index */
+		float xDistance = tmp.at(0)->getPosition()[0] - proctor->getPosition()[0];
+		float zDistance = tmp.at(0)->getPosition()[2] - proctor->getPosition()[2];
+		closestDistance = sqrt(xDistance * xDistance + zDistance * zDistance);
+		closestIndex = 0;
+		unsigned int size = tmp.size();
+
+		/* Calculate distance for each interactable proctor */
+		for (unsigned int i = 1; i < size; i++)
+		{
+			float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
+			float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
+			float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
+
+			if (distance < closestDistance)
+			{
+				closestDistance = distance;
+				closestIndex = i;
+			}
+		}
+
+		stayCloseToInteractable = false;
+		if (closestDistance < maxBoatInteractionDistance && tmp.at(closestIndex)->name == "boat")
+			stayCloseToInteractable = true;
+		if (closestDistance < maxInteractionDistance)
+			stayCloseToInteractable = true;
 	}
 
 	void PlayerInput::usePlayerOneInput()
@@ -116,6 +149,10 @@ namespace GameLogic
 					keyboard->isKeyDown(GLFW_KEY_D)) && 
 					frameCounter % 10 == 0)
 				{
+					/* Check if player clicked any button */
+					if (!isFirstClicked)
+						isFirstClicked = true;
+
 					playerSounds->play2D(footsteps.at(randomNumber));
 
 					//if (proctor->getComponentOfType(C_ANIMA) != NULL)
@@ -323,32 +360,18 @@ namespace GameLogic
 		std::vector<Proctor*> tmp = proctor->getParentHierarchy()->getInteractable();
 		isCluePickedUp = false;
 
-		/* Initialize first tmp values as start distance and index */
-		float xDistance = tmp.at(0)->getPosition()[0] - proctor->getPosition()[0];
-		float zDistance = tmp.at(0)->getPosition()[2] - proctor->getPosition()[2];
-		float closestDistance = sqrt(xDistance * xDistance + zDistance * zDistance);
-		float closestIndex = 0;
-		unsigned int size = tmp.size();
-
-		/* Calculate distance for each interactable proctor */
-		for (unsigned int i = 1; i < size; i++)
-		{
-			float xDistance = tmp.at(i)->getPosition()[0] - proctor->getPosition()[0];
-			float zDistance = tmp.at(i)->getPosition()[2] - proctor->getPosition()[2];
-			float distance = sqrt(xDistance * xDistance + zDistance * zDistance);
-
-			if (distance < closestDistance)
-			{
-				closestDistance = distance;
-				closestIndex = i;
-			}
-		}
-
 		/* Check if closest thing is boat */
 		if (tmp.at(closestIndex)->name == "boat" && closestDistance <= maxBoatInteractionDistance)
 		{
-			if (!isPlayerOneInBoat)
+			// todo: @Dawid fix for second player
+			if (!isPlayerOneInBoat && isPlayerOne)
+			{
 				boat->attachPlayerOne(proctor);
+			}
+			if (!isPlayerTwoInBoat && !isPlayerOne)
+			{
+				boat->attachPlayerTwo(proctor);
+			}
 		}
 		/* Else check which type of object is the closest */
 		else if (closestDistance <= maxInteractionDistance)

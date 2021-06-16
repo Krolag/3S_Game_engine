@@ -57,13 +57,16 @@ namespace GameLogic
 
 		Proctor* coinProctor;
 		irrklang::ISoundEngine* playerSounds = irrklang::createIrrKlangDevice();
-		std::vector<irrklang::ISoundSource*> footsteps = { playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_00.ogg"),
-								   playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_01.ogg"),
-								   playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_02.ogg"),
-								   playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_03.ogg")
+		std::vector<irrklang::ISoundSource*> footsteps = { 
+			playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_00.ogg"),
+			playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_01.ogg"),
+			playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_02.ogg"),
+			playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_03.ogg")
 		};
 		std::string clueText;
 		bool isCluePickedUp = false;
+		bool isFirstClicked = false;
+		bool stayCloseToInteractable = false;
 		//int clues[5]{ 0, 1, 2, 3, 4 };
 
 		/* Constructors */
@@ -77,6 +80,10 @@ namespace GameLogic
 		bool getScheme();
 
 		void update();
+
+		void checkForDistance();
+		float closestDistance;
+		float closestIndex;
 
 	protected:
 		InputSystem::KeyboardInput* keyboard;

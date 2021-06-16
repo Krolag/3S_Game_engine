@@ -38,7 +38,7 @@ namespace Loader
 			std::string proctorName = firstNode->first_attribute("name")->value();
 			std::string modelName = prepareModelName(proctorName);	// just proctor name without number
 			// Make a path with accurate extension
-			std::string modelPath = "assets/models/serializable/" + modelName + ".fbx";
+			std::string modelPath = "./assets/models/serializable/" + modelName + ".fbx";
 			
 			// Add model to the model library if it is not already on the list
 			if (!isNameInImportedList(modelName))

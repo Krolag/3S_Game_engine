@@ -237,6 +237,36 @@ int main()
     };
 
     /* Players control */
+    float playerOneControlsSizeX = ((100 * 0.5f) / 1920) * 0.5f;
+    float playerOneControlsSizeY = ((100 * 0.5f) / 1080) * 0.5f;
+    std::vector<glm::vec2> playerOneControlsPos = {
+        {0.05f, 0.15f},     // A
+        {0.08f, 0.15f},     // S
+        {0.11f, 0.15f},     // D
+        {0.08f, 0.21f},     // W
+        {0.065f, 0.09f},    // V
+        {0.095f, 0.09f}     // B
+    };
+    UIRender::UIElement playerOneControls[6] = {
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "a.png",
+        playerOneControlsPos[0].x - playerOneControlsSizeX, playerOneControlsPos[0].x + playerOneControlsSizeX, 
+        playerOneControlsPos[0].y + playerOneControlsSizeY, playerOneControlsPos[0].y - playerOneControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "s.png",
+        playerOneControlsPos[1].x - playerOneControlsSizeX, playerOneControlsPos[1].x + playerOneControlsSizeX,
+        playerOneControlsPos[1].y + playerOneControlsSizeY, playerOneControlsPos[1].y - playerOneControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "d.png",
+        playerOneControlsPos[2].x - playerOneControlsSizeX, playerOneControlsPos[2].x + playerOneControlsSizeX,
+        playerOneControlsPos[2].y + playerOneControlsSizeY, playerOneControlsPos[2].y - playerOneControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "w.png",
+        playerOneControlsPos[3].x - playerOneControlsSizeX, playerOneControlsPos[3].x + playerOneControlsSizeX,
+        playerOneControlsPos[3].y + playerOneControlsSizeY, playerOneControlsPos[3].y - playerOneControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "v.png",
+        playerOneControlsPos[4].x - playerOneControlsSizeX, playerOneControlsPos[4].x + playerOneControlsSizeX,
+        playerOneControlsPos[4].y + playerOneControlsSizeY, playerOneControlsPos[4].y - playerOneControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "b.png",
+        playerOneControlsPos[5].x - playerOneControlsSizeX, playerOneControlsPos[5].x + playerOneControlsSizeX,
+        playerOneControlsPos[5].y + playerOneControlsSizeY, playerOneControlsPos[5].y - playerOneControlsSizeY)
+    };
 
     int dukatSpinIndex = 0;
     float timeBetweenFrames = 0.10f;
@@ -268,6 +298,8 @@ int main()
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
+    for (int i = 0; i < 6; i++)
+        hero_00_pi.controlsPlayerOne[i] = &playerOneControls[i];
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     /* Player Two */
@@ -300,68 +332,66 @@ int main()
     
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
-    //for (int i = 0; i < size; ++i)
-    //{
-    //    importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
-    //        GameLogic::C_MESH,
-    //        importer.importedProctors.at(i).get(),
-    //        importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-    //        &model3D
-    //    ));
-    //    std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
-    //     
-    //    /* Check which components needs to be added */
-    //    // BoxCollider
-    //    if (tmpCompoBooleanValues[0])
-    //    {
-    //        importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
-    //            GameLogic::C_COLLIDER,
-    //            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-    //            importer.importedProctors.at(i).get(),
-    //            &collisionBoxShader,
-    //            tmpCompoBooleanValues[1]
-    //            ));
-    //    }
-    //    // Interactables
-    //    if (tmpCompoBooleanValues[2])
-    //    {
-    //        importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
-    //            GameLogic::C_INTERACTABLE,
-    //            importer.importedProctors.at(i).get()
-    //            ));
-    //    }
-    //    // Treasures
-    //    if (tmpCompoBooleanValues[3])
-    //    {
-    //        importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
-    //            GameLogic::C_TREASURE,
-    //            importer.importedProctors.at(i).get()
-    //            ));
-    //    }
-    //    // Cash
-    //    if (tmpCompoBooleanValues[4])
-    //    {
-    //        importer.cash.push_back(std::make_shared<GameLogic::Cash>(
-    //            GameLogic::C_CASH,
-    //            importer.importedProctors.at(i).get()
-    //            ));
-    //    }
-    //	// Enemy
-    //	if(tmpCompoBooleanValues[5])
-    //	{
-    //        importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
-    //            importer.importedProctors.at(i).get(),
-    //            &hero_00,
-    //            &hero_01,
-    //            importer.prepareModelName(importer.importedProctors.at(i).get()->name)
-    //        ));
-    //	}
-    //    hierarchy.addObject(importer.importedProctors.at(i).get());
-    //}
-	
+    for (int i = 0; i < size; ++i)
+    {
+        importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
+            GameLogic::C_MESH,
+            importer.importedProctors.at(i).get(),
+            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+            &model3D
+        ));
+        std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
+         
+        /* Check which components needs to be added */
+        // BoxCollider
+        if (tmpCompoBooleanValues[0])
+        {
+            importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
+                GameLogic::C_COLLIDER,
+                importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+                importer.importedProctors.at(i).get(),
+                &collisionBoxShader,
+                tmpCompoBooleanValues[1]
+                ));
+        }
+        // Interactables
+        if (tmpCompoBooleanValues[2])
+        {
+            importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
+                GameLogic::C_INTERACTABLE,
+                importer.importedProctors.at(i).get()
+                ));
+        }
+        // Treasures
+        if (tmpCompoBooleanValues[3])
+        {
+            importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
+                GameLogic::C_TREASURE,
+                importer.importedProctors.at(i).get()
+                ));
+        }
+        // Cash
+        if (tmpCompoBooleanValues[4])
+        {
+            importer.cash.push_back(std::make_shared<GameLogic::Cash>(
+                GameLogic::C_CASH,
+                importer.importedProctors.at(i).get()
+                ));
+        }
+    	// Enemy
+    	if(tmpCompoBooleanValues[5])
+    	{
+            importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
+                importer.importedProctors.at(i).get(),
+                &hero_00,
+                &hero_01,
+                importer.prepareModelName(importer.importedProctors.at(i).get()->name)
+            ));
+    	}
+        hierarchy.addObject(importer.importedProctors.at(i).get());
+    }
 
     int cashSize = importer.cash.size();
-
 #pragma endregion
 
 #pragma region Environment
@@ -1087,6 +1117,9 @@ int main()
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
+            if (!isDebugModeOn)
+                skybox.render();
+
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
@@ -1127,6 +1160,14 @@ int main()
                 arrows[random].render();
             }   
 
+            /* Update monster system */
+            monsterSystem.update(engine, heartBeatSource,bottleSource,&monster);
+            if (monsterSystem.isGameOver) 
+            {
+                monsterSystem.isGameOver = false;
+                sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
+            }
+#pragma region UI Rendering
             /* Render dukat */
             dukatSpinning[dukatSpinIndex].render();
             timeBetweenFrames -= mainScene.deltaTime;
@@ -1152,13 +1193,15 @@ int main()
                 hierarchy.health[i]->render();
             }
 
-            /* Update monster system */
-            monsterSystem.update(engine, heartBeatSource,bottleSource,&monster);
-            if (monsterSystem.isGameOver) 
+            /* Render controls */
+            for (int i = 0; i < 6; i++)
             {
-                monsterSystem.isGameOver = false;
-                sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
+                if (!hero_00_pi.isFirstClicked && i < 4)
+                    hero_00_pi.controlsPlayerOne[i]->render();
+                if (hero_00_pi.stayCloseToInteractable && i == 4)
+                    hero_00_pi.controlsPlayerOne[i]->render();
             }
+#pragma endregion
 #pragma endregion
         }
         else if (sceneManager.cActiveScene["resume"])
