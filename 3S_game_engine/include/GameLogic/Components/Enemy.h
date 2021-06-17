@@ -21,9 +21,9 @@ namespace GameLogic
 		/* Public fields */
 
 		/* Constructors/Destructors */
-		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef);
-		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, std::string _enemyType);
-		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, float _maxHealth, float _damage, float _sightRadius, float _attackRadius, float _maxVelocity, float _acceleration, float _maxGravity, float _gravityAcceleration);
+		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID);
+		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, std::string _enemyType);
+		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, float _maxHealth, float _damage, float _sightRadius, float _attackRadius, float _maxVelocity, float _acceleration, float _maxGravity, float _gravityAcceleration);
 		~Enemy();
 
 		/* Public methods */
@@ -47,6 +47,7 @@ namespace GameLogic
 		float maxGravity;
 		float currentGravity;
 		float gravityAcceleration;
+		int islandID;
 		
 		EnemyState currentState;
 		

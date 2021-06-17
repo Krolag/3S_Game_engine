@@ -14,11 +14,23 @@ namespace GameLogic
 	constexpr float ACCELERATION_DEFAULT = 0.001f;
 	constexpr float MAX_GRAVITY_DEFAULT = 0.05f;
 	constexpr float GRAVITY_ACCELERATION_DEFAULT = 0.01f;
+	//const std::vector<float[4]> boundaries = {
+	//	// xmin, xmax, zmin, zmax
+	//	{720.0f, 799.0f, 39.0f, -79.0f},	// 1st island boundaries
+	//	{1, 1, 1, 1},						// 2nd island boundaries
+	//	{1, 1, 1, 1}						// 3rd island boundaries
+	//};
+	const float boundaries[4][4] = {
+		{720.0f, 799.0f, 39.0f, -79.0f},
+		{720.0f, 799.0f, 39.0f, -79.0f},
+		{720.0f, 799.0f, 39.0f, -79.0f},
+		{720.0f, 799.0f, 39.0f, -79.0f}
+	};
 
 	/* Constructors and destructors */
 	// Constructor initialize enemy by default values
-	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef) : Component(C_ENEMY, _proctor),
-		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), currentlyChasedPlayer(nullptr),
+	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID) : Component(C_ENEMY, _proctor),
+		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), currentlyChasedPlayer(nullptr),
 		maxHealth(MAX_HEALTH_DEFAULT), currentHealth(MAX_HEALTH_DEFAULT), damage(DAMAGE_DEFAULT), sightRadius(SIGHT_RADIUS_DEFAULT), attackRadius(ATTACK_RADIUS_DEFAULT),
 		maxVelocity(MAX_VELOCITY_DEFAULT), currentVelocity(0.0f), acceleration(ACCELERATION_DEFAULT),
 		maxGravity(MAX_GRAVITY_DEFAULT), currentGravity(0.0f), gravityAcceleration(GRAVITY_ACCELERATION_DEFAULT),
@@ -31,8 +43,8 @@ namespace GameLogic
 	}
 
 	// Constructor initialize enemy by the given type
-	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, std::string _enemyType) : Component(C_ENEMY, _proctor),
-		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), currentlyChasedPlayer(nullptr),
+	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, std::string _enemyType) : Component(C_ENEMY, _proctor),
+		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), currentlyChasedPlayer(nullptr),
 		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
 	{
 		if(_enemyType == "locals_00" || _enemyType == "locals_01")
@@ -72,10 +84,10 @@ namespace GameLogic
 	}
 
 	// Constructor initialize enemy with given values
-	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, float _maxHealth, float _damage, float _sightRadius, float _attackRadius,
+	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, float _maxHealth, float _damage, float _sightRadius, float _attackRadius,
 		float _maxVelocity, float _acceleration, float _maxGravity, float _gravityAcceleration) :
 		Component(C_ENEMY, _proctor),
-		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), currentlyChasedPlayer(nullptr),
+		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), currentlyChasedPlayer(nullptr),
 		maxHealth(_maxHealth), currentHealth(_maxHealth), damage(_damage), sightRadius(_sightRadius), attackRadius(_attackRadius),
 		maxVelocity(_maxVelocity), currentVelocity(0.0f), acceleration(_acceleration),
 		maxGravity(_maxGravity), currentGravity(0.0f), gravityAcceleration(_gravityAcceleration),
@@ -169,12 +181,14 @@ namespace GameLogic
 		}
 		else
 		{
-			currentVelocity += acceleration;
+			/* Increment velocity and gravity */
+			if (currentVelocity < maxVelocity) currentVelocity += acceleration;
+			if (currentGravity < maxGravity) currentGravity += gravityAcceleration;
 			glm::vec3 enemyNormalDown = glm::vec3(0.0f, 0.0f, -1.0f);
-
+			glm::vec3 enemyPosition = proctor->getPosition() -= glm::vec3(wanderDirection.x * currentVelocity, currentGravity, wanderDirection.z * currentVelocity);
 			/* Chase player */
-			proctor->setPosition(proctor->getPosition() -= glm::vec3(wanderDirection.x * currentVelocity, 0.0f, wanderDirection.z * currentVelocity));
-
+			proctor->setPosition(enemyPosition);
+			
 			/* Calc rotation to look at the chased player */
 			float dot = enemyNormalDown.x * wanderDirection.x + enemyNormalDown.z * wanderDirection.z;	// dot product between enemy starting rotation and direction to player
 			float det = enemyNormalDown.x * wanderDirection.z - wanderDirection.x * enemyNormalDown.z;	// determinant
@@ -183,6 +197,12 @@ namespace GameLogic
 			/* Apply rotation */
 			glm::quat enemyStartRotation = glm::quat(1.0f, 0.0f, -angle, 0.0f);
 			proctor->setRotation(enemyStartRotation);
+
+			/* Check boundaries for island */
+			if (enemyPosition.x < boundaries[islandID][0]) wanderDirection.x *= -1;
+			if (enemyPosition.x > boundaries[islandID][1]) wanderDirection.x *= -1;
+			if (enemyPosition.z < boundaries[islandID][2]) wanderDirection.z *= -1;
+			if (enemyPosition.z > boundaries[islandID][3]) wanderDirection.z *= -1;
 		}
 		
 		/* If first player is in sight radius then chase him */
@@ -221,6 +241,12 @@ namespace GameLogic
 			currentVelocity += acceleration;
 		}
 
+		/* Increment current gravity by gravity acceleration */
+		if (currentGravity < maxGravity)
+		{
+			currentGravity += gravityAcceleration;
+		}
+
 		/* Calculate direction to player */
 		glm::vec3 playerPosition = currentlyChasedPlayer->getPosition();
 		glm::vec3 enemyPosition = proctor->getPosition();
@@ -228,7 +254,7 @@ namespace GameLogic
 		glm::vec3 enemyNormalDown = glm::vec3(0.0f, 0.0f, -1.0f);
 		
 		/* Chase player */
-		proctor->setPosition(enemyPosition -= glm::vec3(direction.x * currentVelocity, 0.0f, direction.z * currentVelocity));
+		proctor->setPosition(enemyPosition -= glm::vec3(direction.x * currentVelocity, currentGravity, direction.z * currentVelocity));
 
 		/* Calc rotation to look at the chased player */
 		float dot = enemyNormalDown.x * direction.x + enemyNormalDown.z * direction.z;	// dot product between enemy starting rotation and direction to player

@@ -341,13 +341,10 @@ int main()
     //hero_01_pi.setFootstepSound(footstepSource);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, &hero_01_m, &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
+	
     // Locals
     Loader::Model           enemy_00_m("./assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
-    GameLogic::Proctor      enemy_00("enemy_00", glm::vec3(770.f, 5.0f, 810.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.05f));
-    GameLogic::MeshRenderer enemy_00_mr(GameLogic::C_MESH, &enemy_00, &enemy_00_m, &model3D);
-    GameLogic::Enemy        enemy_00_e(&enemy_00, &hero_00, &hero_01);
-    GameLogic::BoxCollider  enemy_00_bc(GameLogic::C_COLLIDER, &enemy_00_m, &enemy_00, &collisionBoxShader, false);
-    hierarchy.addObject(&enemy_00);
+
     // Kraken
     GameLogic::Proctor      monster("monster", glm::vec3(0.0f, -1000.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
     GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, &enemy_00_m, &model3D);
@@ -359,9 +356,10 @@ int main()
 
     /* Create importer with given *.xml file */
     Loader::Importer importer("./assets/scenes/scene.xml", &model3D, false, 10.0f);
-    
+	
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
+    int enemiesIterator = -1;
     for (int i = 0; i < size; ++i)
     {
         importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
@@ -415,12 +413,16 @@ int main()
                 importer.importedProctors.at(i).get(),
                 &hero_00,
                 &hero_01,
+                importer.enemiesIslands[enemiesIterator++],
                 importer.prepareModelName(importer.importedProctors.at(i).get()->name)
             ));
     	}
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
 
+	/* Clear vector which is now unused */
+    importer.enemiesIslands.clear();
+	
     int cashSize = importer.cash.size();
 #pragma endregion
 

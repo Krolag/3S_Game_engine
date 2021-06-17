@@ -39,7 +39,14 @@ namespace Loader
 			std::string modelName = prepareModelName(proctorName);	// just proctor name without number
 			// Make a path with accurate extension
 			std::string modelPath = "./assets/models/serializable/" + modelName + ".fbx";
-			
+
+			/* If islandID not equal 0 then assign it to enemies */
+			int islandID = (int)strtod(firstNode->first_attribute("island_id")->value(), NULL);
+			if (islandID != 0)
+			{
+				enemiesIslands.push_back(islandID);
+			}
+
 			// Add model to the model library if it is not already on the list
 			if (!isNameInImportedList(modelName))
 			{

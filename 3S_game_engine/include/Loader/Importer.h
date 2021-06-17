@@ -27,6 +27,7 @@ namespace Loader
 		std::vector<std::shared_ptr<GameLogic::Treasure>> treasures;
 		std::vector<std::shared_ptr<GameLogic::Cash>> cash;
 		std::vector<std::shared_ptr<GameLogic::Enemy>> enemies;
+		std::vector<int> enemiesIslands;
 		
 		/* Constructor */
 		Importer(const std::string xmlPath, Shader* _model3DShader, bool _isFrom3SE, float _divider);
