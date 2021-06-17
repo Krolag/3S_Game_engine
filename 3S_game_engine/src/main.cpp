@@ -585,10 +585,10 @@ int main()
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
             camera.setProjection(projection);
-            camera.activeProctorsRadius = 400.0f;
-            camera.Position = { 702.f, 37.0f, 719.0f };
-            camera.Pitch = -26.5f;
-            camera.Yaw = 53.4f;
+            camera.activeProctorsRadius = 710.0f;
+            camera.Position = { 648.5f, 25.5f, -340.0f };
+            camera.Pitch = -9.3f;
+            camera.Yaw = -44.2f;
 
 #pragma region SHADOWS - ShadowsBuffer
             /* Activate directional light's FBO */
@@ -751,10 +751,10 @@ int main()
             camera.setProjection(projection);
             if (!isResumeFlag)
             {
-                camera.activeProctorsRadius = 400.0f;
-                camera.Position = { 702.f, 37.0f, 719.0f };
-                camera.Pitch = -26.5f;
-                camera.Yaw = 53.4f;
+                camera.activeProctorsRadius = 710.0f;
+                camera.Position = { 648.5f, 25.5f, -340.0f };
+                camera.Pitch = -9.3f;
+                camera.Yaw = -44.2f;
             }
 
 #pragma region SHADOWS - ShadowsBuffer
@@ -1025,8 +1025,97 @@ int main()
         }
         else if (sceneManager.cActiveScene["credits"])
         {
+            /* Set camera variables */
+            projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
+            camera.setProjection(projection);
+            if (!isResumeFlag)
+            {
+                camera.activeProctorsRadius = 710.0f;
+                camera.Position = { 648.5f, 25.5f, -340.0f };
+                camera.Pitch = -9.3f;
+                camera.Yaw = -44.2f;
+            }
+
+#pragma region SHADOWS - ShadowsBuffer
+            /* Activate directional light's FBO */
+            dirLight.shadowFBO.activate();
+            depthShader.use();
+            view = camera.GetViewMatrix();
+            glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            /* Note that those values are constant */
+            glm::mat4 proj = glm::ortho(680.0f, 860.0f, -899.0f, -719.0f, dirLight.br.min.z, dirLight.br.max.z);
+            dirLight.lightSpaceMatrix = proj * lightView;
+            depthShader.setUniform("lightSpaceMatrix", dirLight.lightSpaceMatrix);
+            dirLight.render(depthShader, 31);
+            hierarchy.renderWithShader(&depthShader);
+            dirLight.shadowFBO.unbind();
+#pragma endregion
+
+#pragma region WATER - ReflectionBuffer
+            /* Enable cliiping */
+            glEnable(GL_CLIP_DISTANCE0);
+            /* Start rendering meshes beneath water to ReflectionBuffer */
+            reflectFramebuffer.activate();
+            glEnable(GL_DEPTH_TEST);
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+            /* Set camera underwater to get reflection */
+            float distance = 2 * (camera.Position.y - waterYpos);
+            camera.Position.y -= distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            /* Set shader variables - projection, view, plane */
+            model3D.use();
+            view = camera.GetViewMatrix();
+            model = glm::mat4(1.0f);
+            model3D.setUniform("projection", projection);
+            model3D.setUniform("view", view);
+            model3D.setUniform("plane", glm::vec4(0, 1, 0, -waterYpos)); // Clipping everything under water plane
+
+            /* Render objects for ReflectionBuffer */
+            dirLight.render(model3D, 31);
+            hierarchy.renderWithShader(&model3D);
+            skybox.render();
+
+            /* Set camera position to default */
+            camera.Position.y += distance;
+            camera.Pitch = -camera.Pitch;
+            camera.updateCameraVectors();
+
+            /* Close ReflectionBuffer */
+            reflectFramebuffer.unbind();
+
+            /* Disable cliiping */
+            glDisable(GL_CLIP_DISTANCE0);
+#pragma endregion
+
+#pragma region Default rendering
+            /* Clear everything */
+            glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_CULL_FACE);
+
+            /* Set model shader variables - projection, view */
+            view = camera.GetViewMatrix();
+            model3D.use();
+            model3D.setUniform("projection", projection);
+            model3D.setUniform("view", view);
+            model3D.setUniform("viewPos", camera.Position);
+
+            cameraSwitch(35, 60, 90, 45, mouseInput, keyboardInput, &mainScene, &hero_00, &hero_01, &boat_b, &boat, &hero_00_pi, &hero_01_pi);
+
+            /* Render light and update hierarchy */
+            dirLight.render(model3D, 31);
+            hierarchy.renderWithShader(&model3D);
+
+            /* Render water */
+            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
+            water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
+
+            skybox.render();
+#pragma endregion
 
             if (keyboardInput->isKeyReleased(GLFW_KEY_W))
                 tmpCreditsIndex = 1;
@@ -1064,7 +1153,7 @@ int main()
 
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
-            //camera.activeProctorsRadius = 100.0f;
+            camera.activeProctorsRadius = 100.0f;
             camera.setProjection(projection);
 
 #pragma region SHADOWS - ShadowsBuffer
