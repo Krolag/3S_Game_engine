@@ -47,6 +47,7 @@ namespace GameLogic
 		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), currentlyChasedPlayer(nullptr),
 		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
 	{
+		std::cout << "ENEMY CONSTRUCTOR ISLAND ID: " << islandID << "\n";
 		if(_enemyType == "locals_00" || _enemyType == "locals_01")
 		{
 			// Initialize normal enemy
