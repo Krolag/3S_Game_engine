@@ -407,16 +407,16 @@ int main()
                 ));
         }
     	// Enemy
-    	if(tmpCompoBooleanValues[5])
-    	{
-            importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
-                importer.importedProctors.at(i).get(),
-                &hero_00,
-                &hero_01,
-                importer.enemiesIslands[enemiesIterator++],
-                importer.prepareModelName(importer.importedProctors.at(i).get()->name)
-            ));
-    	}
+    	//if(tmpCompoBooleanValues[5])
+    	//{
+        //    importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
+        //        importer.importedProctors.at(i).get(),
+        //        &hero_00,
+        //        &hero_01,
+        //        importer.enemiesIslands[enemiesIterator++],
+        //        importer.prepareModelName(importer.importedProctors.at(i).get()->name)
+        //    ));
+    	//}
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
 
@@ -469,17 +469,15 @@ int main()
 
 #pragma region Monster System
     GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(766.0f, 0.0f, 810.0f));
-    GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(-350.0f, 0.0f, 350.0f));
-    GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(-400.0f, 0.0f, -350.0f));
-    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(700.0f, 0.0f, 0.0f));
-    GameLogic::Proctor safe_zone_5("safe_zone_5", glm::vec3(334.0f, 0.0f, -810.0f));
+    GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(307.0f, 0.0f, -787.0f));
+    GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(0, 0.0f, 75.0f));
+    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(714.0f, 0.0f, -421.0f));
 
     std::vector<GameLogic::Proctor*> zones;
     zones.push_back(&safe_zone_1);
     zones.push_back(&safe_zone_2);
     zones.push_back(&safe_zone_3);
     zones.push_back(&safe_zone_4);
-    zones.push_back(&safe_zone_5);
     Monster monsterSystem(&boat, zones,&water);
 #pragma endregion
 

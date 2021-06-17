@@ -14,7 +14,7 @@ bool Monster::isInSafeZone() //check distance from each tile
 	{
 		float distance = countDistance(boat->getPosition(), t->getPosition());
 		if (distance > SAFE_DISTANCE) overDistance++;
-		//std::cout << distance << "\n";
+		std::cout << distance << "\n";
 	}
 
 	if (overDistance == zone.size()) return false;
