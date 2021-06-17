@@ -27,7 +27,7 @@ float Monster::countDistance(glm::vec3 object_1, glm::vec3 object_2)
 	return glm::distance(object_1, object_2);
 }
 
-void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music,GameLogic::Proctor* monster,bool isMusicPlaying)
+void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, ISound* backgroundSound,GameLogic::Proctor* monster,bool isMusicPlaying)
 {
 	timeElapsed += boat->getDeltaTime();
 	if (timeElapsed > TIME_BETWEEN_POSITIONS_UPDATE) //every 3 seconds update boat position
@@ -39,6 +39,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 
 		if (currentDistance > MIN_DISTANCE && heartBeats < 3)
 		{
+			backgroundSound->setIsPaused(false);
 			if (isMusicPlaying) { engine->setAllSoundsPaused(false); }			
 			heartBeats = 0;
 			timeElapsed = 0;
@@ -67,7 +68,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 	}
 }
 
-void Monster::update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, GameLogic::Proctor* monster, bool isMusicPlaying)
+void Monster::update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, ISound* backgroundSound, GameLogic::Proctor* monster, bool isMusicPlaying)
 {
 	float colorChange = 0.3 * boat->getParentHierarchy()->getDeltaTime();
 	if(heartBeats >= 3 && monster->transform.position.y < -35){
@@ -85,7 +86,7 @@ void Monster::update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* mu
 
 	if (!isInSafeZone())
 	{
-		isPositionChanged(engine,audio,music,monster,isMusicPlaying);
+		isPositionChanged(engine,audio,music, backgroundSound,monster,isMusicPlaying);
 	}
 	else
 	{

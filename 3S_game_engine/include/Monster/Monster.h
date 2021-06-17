@@ -11,8 +11,8 @@ public:
 	Monster(GameLogic::Proctor* boat, std::vector<GameLogic::Proctor*> islandTiles, WaterMesh* water);
 	bool isInSafeZone();
 	float countDistance(glm::vec3 object_1, glm::vec3 object_2);
-	void isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, GameLogic::Proctor* monster, bool isMusicPlaying);
-	void update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, GameLogic::Proctor* monster, bool isMusicPlaying);
+	void isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, ISound* backgroundSound, GameLogic::Proctor* monster, bool isMusicPlaying);
+	void update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, ISound* backgroundSound, GameLogic::Proctor* monster, bool isMusicPlaying);
 
 private:
 	WaterMesh* water;

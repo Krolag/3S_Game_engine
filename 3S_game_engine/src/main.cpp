@@ -1168,7 +1168,7 @@ int main()
 
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
-            camera.activeProctorsRadius = 100.0f;
+           // camera.activeProctorsRadius = 100.0f;
             camera.setProjection(projection);
 
 #pragma region SHADOWS - ShadowsBuffer
@@ -1258,7 +1258,7 @@ int main()
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
             /* Update monster system */
-            monsterSystem.update(engine, heartBeatSource, bottleSource, &monster, isMusicPlaying);
+            monsterSystem.update(engine, heartBeatSource, bottleSource, waveSource, &monster, isMusicPlaying);
             if (monsterSystem.isGameOver)
             {
                 monsterSystem.isGameOver = false;
