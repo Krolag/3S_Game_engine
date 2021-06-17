@@ -10,16 +10,10 @@ namespace GameLogic
 	constexpr float DAMAGE_DEFAULT = 26.0f;
 	constexpr float SIGHT_RADIUS_DEFAULT = 15.0f;
 	constexpr float ATTACK_RADIUS_DEFAULT = 0.5f;
-	constexpr float MAX_VELOCITY_DEFAULT = 0.05f;
-	constexpr float ACCELERATION_DEFAULT = 0.001f;
-	constexpr float MAX_GRAVITY_DEFAULT = 0.05f;
-	constexpr float GRAVITY_ACCELERATION_DEFAULT = 0.01f;
-	//const std::vector<float[4]> boundaries = {
-	//	// xmin, xmax, zmin, zmax
-	//	{720.0f, 799.0f, 39.0f, -79.0f},	// 1st island boundaries
-	//	{1, 1, 1, 1},						// 2nd island boundaries
-	//	{1, 1, 1, 1}						// 3rd island boundaries
-	//};
+	constexpr float MAX_VELOCITY_DEFAULT = 7.0f;
+	constexpr float ACCELERATION_DEFAULT = 0.2f;
+	constexpr float MAX_GRAVITY_DEFAULT = 8.0f;
+	constexpr float GRAVITY_ACCELERATION_DEFAULT = 0.3f;
 	const float boundaries[4][4] = {
 		{720.0f, 799.0f, 39.0f, -79.0f},
 		{720.0f, 799.0f, 39.0f, -79.0f},
@@ -170,30 +164,40 @@ namespace GameLogic
 			{
 				/* Apply rotation */
 				glm::quat enemyRotation = proctor->getRotation();
-				enemyRotation.y += glm::radians(1.0f);
+				enemyRotation.y += glm::radians(10.0f * proctor->getParentHierarchy()->getDeltaTime());
 				proctor->setRotation(enemyRotation);
 			}
 			else
 			{
 				glm::quat enemyRotation = proctor->getRotation();
-				enemyRotation.y -= glm::radians(1.0f);
+				enemyRotation.y -= glm::radians(10.0f * proctor->getParentHierarchy()->getDeltaTime());
 				proctor->setRotation(enemyRotation);
 			}
 		}
 		else
 		{
-			/* Increment velocity and gravity */
-			if (currentVelocity < maxVelocity) currentVelocity += acceleration;
-			if (currentGravity < maxGravity) currentGravity += gravityAcceleration;
+			/* Increment velocity */
+			if (currentVelocity < maxVelocity)
+			{
+				currentVelocity += acceleration;
+			}
+
+			/* Increment gravity */
+			if (currentGravity < maxGravity)
+			{
+				currentGravity += gravityAcceleration;
+			}
+			
 			glm::vec3 enemyNormalDown = glm::vec3(0.0f, 0.0f, -1.0f);
-			glm::vec3 enemyPosition = proctor->getPosition() -= glm::vec3(wanderDirection.x * currentVelocity, currentGravity, wanderDirection.z * currentVelocity);
-			/* Chase player */
+			glm::vec3 enemyPosition = proctor->getPosition() -= glm::vec3(wanderDirection.x * currentVelocity * proctor->getParentHierarchy()->getDeltaTime(), currentGravity * proctor->getParentHierarchy()->getDeltaTime(), wanderDirection.z * currentVelocity * proctor->getParentHierarchy()->getDeltaTime());
+
+			/* Wander */
 			proctor->setPosition(enemyPosition);
 			
 			/* Calc rotation to look at the chased player */
-			float dot = enemyNormalDown.x * wanderDirection.x + enemyNormalDown.z * wanderDirection.z;	// dot product between enemy starting rotation and direction to player
+			float dot = enemyNormalDown.x * wanderDirection.x + enemyNormalDown.z * wanderDirection.z;	// dot product between enemy starting rotation and wander direction
 			float det = enemyNormalDown.x * wanderDirection.z - wanderDirection.x * enemyNormalDown.z;	// determinant
-			float angle = atan2(det, dot);											// angle between enemy starting position and direction to player in radians
+			float angle = atan2(det, dot);											// angle between enemy starting position and wander direction
 
 			/* Apply rotation */
 			glm::quat enemyStartRotation = glm::quat(1.0f, 0.0f, -angle, 0.0f);
@@ -211,6 +215,7 @@ namespace GameLogic
 		{
 			currentlyChasedPlayer = playerOneRef;
 			currentState = CHASING_STATE;
+			// play music
 			return;
 		}
 
@@ -219,6 +224,7 @@ namespace GameLogic
 		{
 			currentlyChasedPlayer = playerTwoRef;
 			currentState = CHASING_STATE;
+			// play music
 			return;
 		}
 
@@ -255,7 +261,7 @@ namespace GameLogic
 		glm::vec3 enemyNormalDown = glm::vec3(0.0f, 0.0f, -1.0f);
 		
 		/* Chase player */
-		proctor->setPosition(enemyPosition -= glm::vec3(direction.x * currentVelocity, currentGravity, direction.z * currentVelocity));
+		proctor->setPosition(enemyPosition -= glm::vec3(direction.x * currentVelocity * proctor->getParentHierarchy()->getDeltaTime(), currentGravity * proctor->getParentHierarchy()->getDeltaTime(), direction.z * currentVelocity * proctor->getParentHierarchy()->getDeltaTime()));
 
 		/* Calc rotation to look at the chased player */
 		float dot = enemyNormalDown.x * direction.x + enemyNormalDown.z * direction.z;	// dot product between enemy starting rotation and direction to player

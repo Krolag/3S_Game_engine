@@ -78,7 +78,7 @@ int main()
     glfwMakeContextCurrent(mainScene.window);
     glfwSetFramebufferSizeCallback(mainScene.window, framebuffer_size_callback);
     glfwSetInputMode(mainScene.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    //glfwSwapInterval(0); // Uncoment this line to remove 60FPS cap
+    glfwSwapInterval(0); // Uncoment this line to remove 60FPS cap
 
     /* Load all OpenGL function pointers */
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
