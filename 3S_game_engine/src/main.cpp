@@ -108,7 +108,6 @@ int main()
     Shader textShader           ("./assets/shaders/text.vert",          "./assets/shaders/text.frag");
     Shader collisionBoxShader   ("./assets/shaders/boxCollider2.vert",  "./assets/shaders/boxCollider2.frag");
     Shader depthShader          ("./assets/shaders/depthShader.vert",   "./assets/shaders/depthShader.frag");
-    Shader debugShader          ("./assets/shaders/basic.vert",         "./assets/shaders/basic.frag");
 #pragma endregion
 
 #pragma region UI init
