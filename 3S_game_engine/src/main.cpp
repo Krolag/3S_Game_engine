@@ -1249,9 +1249,17 @@ int main()
             model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
-            if (!isDebugModeOn)
-                skybox.render();
+            /* Update monster system */
+            monsterSystem.update(engine, heartBeatSource, bottleSource, &monster, isMusicPlaying);
+            if (monsterSystem.isGameOver)
+            {
+                monsterSystem.isGameOver = false;
+                water.waterColor = glm::vec3(0.4f, 0.6f, 0.9f);
+                sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
+            }
+#pragma endregion
 
+#pragma region UI Rendering
             /* Render text */
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.05, SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.08), 1.3, glm::vec3(1.0, 0.75, 0.0));
 
@@ -1281,26 +1289,17 @@ int main()
             }
                 //points.render(hero_01_pi.clueText, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, 2, glm::vec3(1.0, 0.0, 0.0));
 
-            /* TEST chest interaction*/
-            if (hero_00_pi.isPlayerOneUsingChest) 
-            {                
-                if (hero_00_pi.timepassed == 0) {
-                    random = rand() % 3;
-                    //std::cout << random << "\n";
-                    hero_00_pi.buttonToPress = random;
-                }
-                arrows[random].render();
-            }   
+            ///* TEST chest interaction*/
+            //if (hero_00_pi.isPlayerOneUsingChest) 
+            //{                
+            //    if (hero_00_pi.timepassed == 0) {
+            //        random = rand() % 3;
+            //        //std::cout << random << "\n";
+            //        hero_00_pi.buttonToPress = random;
+            //    }
+            //    arrows[random].render();
+            //}   
 
-            /* Update monster system */
-            monsterSystem.update(engine, heartBeatSource,bottleSource,&monster, isMusicPlaying);
-            if (monsterSystem.isGameOver) 
-            {
-                monsterSystem.isGameOver = false;
-                water.waterColor = glm::vec3(0.4f, 0.6f, 0.9f);
-                sceneManager.changeCurrentScene("exitStory_00"); //TODO reset main scene
-            }
-#pragma region UI Rendering
             /* Render dukat */
             dukatSpinning[dukatSpinIndex].render();
             timeBetweenFrames -= mainScene.deltaTime;
@@ -1345,7 +1344,6 @@ int main()
                 hero_00_pi.isFinalChestOpen = false;
                 hero_01_pi.isFinalChestOpen = false;
             }
-#pragma endregion
 #pragma endregion
         }
         else if (sceneManager.cActiveScene["resume"])
@@ -1488,7 +1486,7 @@ int main()
             {
                 exitPressed.render();
                 if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
-                    glfwSetWindowShouldClose(mainScene.window, true);
+                    sceneManager.changeCurrentScene("mainMenu");
             }
             else
                 exitNotPressed.render();
