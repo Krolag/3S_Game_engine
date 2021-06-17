@@ -364,7 +364,7 @@ int main()
 	
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
-    int enemiesIterator = -1;
+    int enemiesIterator = 0;
     for (int i = 0; i < size; ++i)
     {
         importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
@@ -412,16 +412,16 @@ int main()
                 ));
         }
     	// Enemy
-    	//if(tmpCompoBooleanValues[5])
-    	//{
-        //    importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
-        //        importer.importedProctors.at(i).get(),
-        //        &hero_00,
-        //        &hero_01,
-        //        importer.enemiesIslands[enemiesIterator++],
-        //        importer.prepareModelName(importer.importedProctors.at(i).get()->name)
-        //    ));
-    	//}
+    	if(tmpCompoBooleanValues[5])
+    	{
+            importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
+                importer.importedProctors.at(i).get(),
+                &hero_00,
+                &hero_01,
+                importer.enemiesIslands[enemiesIterator++],
+                importer.prepareModelName(importer.importedProctors.at(i).get()->name)
+            ));
+    	}
         hierarchy.addObject(importer.importedProctors.at(i).get());
     }
 
