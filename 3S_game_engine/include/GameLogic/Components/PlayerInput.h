@@ -23,6 +23,8 @@ namespace GameLogic
 		bool yDownDistance = false;
 		bool xRightDistance = false;
 		bool xLeftDistance = false;
+		bool isPlayerOneInBoat = false;
+		bool isPlayerTwoInBoat = false;
 
 		float maxSpeed = 0.5f;
 		float acceleration = 0.5f;
@@ -82,8 +84,7 @@ namespace GameLogic
 		Proctor* parent = nullptr;
 		Boat* boat;
 		bool isPlayerOne;
-		bool isPlayerOneInBoat = false;
-		bool isPlayerTwoInBoat = false;
+
 
 		void usePlayerOneInput();
 		void usePlayerTwoInput();

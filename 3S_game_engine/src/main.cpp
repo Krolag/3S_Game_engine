@@ -292,11 +292,12 @@ int main()
         playerTwoControlsPos[3].x - playerControlsSizeX, playerTwoControlsPos[3].x + playerControlsSizeX,
         playerTwoControlsPos[3].y + playerControlsSizeY, playerTwoControlsPos[3].y - playerControlsSizeY),
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "period.png",
-        playerTwoControlsPos[4].x - playerControlsSizeX, playerTwoControlsPos[4].x + playerControlsSizeX,
-        playerTwoControlsPos[4].y + playerControlsSizeY, playerTwoControlsPos[4].y - playerControlsSizeY),
-        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "slash.png",
         playerTwoControlsPos[5].x - playerControlsSizeX, playerTwoControlsPos[5].x + playerControlsSizeX,
-        playerTwoControlsPos[5].y + playerControlsSizeY, playerTwoControlsPos[5].y - playerControlsSizeY)
+        playerTwoControlsPos[5].y + playerControlsSizeY, playerTwoControlsPos[5].y - playerControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "slash.png",
+        playerTwoControlsPos[4].x - playerControlsSizeX, playerTwoControlsPos[4].x + playerControlsSizeX,
+        playerTwoControlsPos[4].y + playerControlsSizeY, playerTwoControlsPos[4].y - playerControlsSizeY)
+
     };
 
     int dukatSpinIndex = 0;
@@ -572,14 +573,14 @@ int main()
         /* SCENE LOADER */
         if (sceneManager.cActiveScene["mainMenu"])
         {
-            if (keyboardInput->isKeyReleased(GLFW_KEY_S))
+            if (keyboardInput->isKeyPressed(GLFW_KEY_S) || keyboardInput->isKeyPressed(GLFW_KEY_K))
             {
                 tmpMainMenuIndex++;
                 if (tmpMainMenuIndex > 2)
                     tmpMainMenuIndex = 0;
                 engine->play2D(bottleSource, false);
             }            
-            else if (keyboardInput->isKeyReleased(GLFW_KEY_W))
+            else if (keyboardInput->isKeyPressed(GLFW_KEY_W) || keyboardInput->isKeyPressed(GLFW_KEY_I))
             {
                 tmpMainMenuIndex--;
                 if (tmpMainMenuIndex < 0)
@@ -715,6 +716,13 @@ int main()
             }
             else
                 exitNotPressed.render();
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (i == 0 || i == 2) continue;
+                hero_00_pi.controls[i]->render();
+                hero_01_pi.controls[i]->render();
+            }
 #pragma endregion
         }
         else if (sceneManager.cActiveScene["enterStory_00"])
@@ -1326,17 +1334,39 @@ int main()
             }
 
             /* Render controls */
-            for (int i = 0; i < 6; i++)
+            // Player One
+            if (!hero_00_pi.isFirstClicked)
             {
-                if (!hero_00_pi.isFirstClicked && i < 4)
+                for (int i = 0; i < 4; i++)
                     hero_00_pi.controls[i]->render();
-                if (!hero_01_pi.isFirstClicked && i < 4)
-                    hero_01_pi.controls[i]->render();
-                if (hero_00_pi.stayCloseToInteractable && i == 4)
+            }
+            if (hero_00_pi.stayCloseToInteractable)     
+                hero_00_pi.controls[4]->render();
+            if (hero_00_pi.isPlayerOneInBoat)
+            {
+                for (int i = 1; i < 6; i++)
+                {
+                    if (i == 2) continue;
                     hero_00_pi.controls[i]->render();
-                if (hero_01_pi.stayCloseToInteractable && i == 4)
+                }
+            }
+            // Player Two
+            if (!hero_01_pi.isFirstClicked)
+            {
+                for (int i = 0; i < 4; i++)
                     hero_01_pi.controls[i]->render();
             }
+            if (hero_01_pi.stayCloseToInteractable)     
+                hero_01_pi.controls[4]->render();
+            if (hero_01_pi.isPlayerTwoInBoat)
+            {
+                for (int i = 1; i < 6; i++)
+                {
+                    if (i == 2) continue;
+                    hero_01_pi.controls[i]->render();
+                }
+            }
+
 
             if (hero_00_pi.isFinalChestOpen == true || hero_01_pi.isFinalChestOpen == true)
             {
@@ -1348,14 +1378,14 @@ int main()
         }
         else if (sceneManager.cActiveScene["resume"])
         {
-            if (keyboardInput->isKeyReleased(GLFW_KEY_S))
+            if (keyboardInput->isKeyPressed(GLFW_KEY_S) || keyboardInput->isKeyPressed(GLFW_KEY_K))
             {
                 tmpMainMenuIndex++;
                 if (tmpMainMenuIndex > 2)
                     tmpMainMenuIndex = 0;
                 engine->play2D(bottleSource, false);
             }
-            else if (keyboardInput->isKeyReleased(GLFW_KEY_W))
+            else if (keyboardInput->isKeyPressed(GLFW_KEY_W) || keyboardInput->isKeyPressed(GLFW_KEY_I))
             {
                 tmpMainMenuIndex--;
                 if (tmpMainMenuIndex < 0)
@@ -1490,6 +1520,13 @@ int main()
             }
             else
                 exitNotPressed.render();
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (i == 0 || i == 2) continue;
+                hero_00_pi.controls[i]->render();
+                hero_01_pi.controls[i]->render();
+            }
 #pragma endregion
         }
         else if (sceneManager.cActiveScene["exitStory_00"])
