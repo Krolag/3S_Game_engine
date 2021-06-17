@@ -468,10 +468,10 @@ int main()
 #pragma endregion
 
 #pragma region Monster System
-    GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(766.0f, 0.0f, 810.0f));
+    GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(766.0f, 0.0f, -384.0f));
     GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(307.0f, 0.0f, -787.0f));
     GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(0, 0.0f, 75.0f));
-    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(714.0f, 0.0f, -421.0f));
+    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(714.0f, 0.0f, -21.0f));
 
     std::vector<GameLogic::Proctor*> zones;
     zones.push_back(&safe_zone_1);
