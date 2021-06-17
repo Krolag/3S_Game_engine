@@ -386,6 +386,13 @@ namespace GameLogic
 				((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
 			}
 
+			// finalChest
+			if (tmp.at(closestIndex)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(closestIndex)->name == "finalChest-1")
+			{
+				tmp.at(closestIndex)->deactivate();
+				isFinalChestOpen = true;
+			}
+
 			if (tmp.at(closestIndex)->getComponentOfType(C_INTERACTABLE) != NULL && tmp.at(closestIndex)->getComponentOfType(C_INTERACTABLE)->isActive() == true)
 			{
 				if (tmp.at(closestIndex)->name == "x-1" || tmp.at(closestIndex)->name == "x-2" || tmp.at(closestIndex)->name == "x-3" || tmp.at(closestIndex)->name == "x-4" || tmp.at(closestIndex)->name == "x-5")

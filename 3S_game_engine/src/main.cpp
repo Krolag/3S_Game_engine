@@ -179,6 +179,9 @@ int main()
     UIRender::UIElement story_00("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "story_00.png", 0, 1, 1, 0);
     UIRender::UIElement story_01("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "story_01.png", 0, 1, 1, 0);
 #pragma endregion
+#pragma region winScene
+    UIRender::UIElement winScene("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "winScene.png", 0, 1, 1, 0);
+#pragma endregion
 #pragma region Clues
     UIRender::UIElement clues[4] = {
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_00.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
@@ -321,7 +324,8 @@ int main()
     hierarchy.addObject(&boat);
     /* Player One */
     Loader::Model           hero_00_m("./assets/models/players/blue1.fbx", "playerOne", true, true);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(698.0f, 6.5f, 30.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
+    //709.0f, 6.5f, 27.37f
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(709.0f, 6.5f, 27.37f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
@@ -332,7 +336,8 @@ int main()
     hierarchy.addObject(&hero_00);
     /* Player Two */
     Loader::Model           hero_01_m("./assets/models/players/red.fbx", "playerTwo", true, true);
-    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(709.0f, 6.5f, 27.37f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
+    //698.0f, 6.5f, 30.0f
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(698.0f, 6.5f, 30.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_01_m, &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
@@ -1333,6 +1338,13 @@ int main()
                 if (hero_01_pi.stayCloseToInteractable && i == 4)
                     hero_01_pi.controls[i]->render();
             }
+
+            if (hero_00_pi.isFinalChestOpen == true || hero_01_pi.isFinalChestOpen == true)
+            {
+                sceneManager.changeCurrentScene("exitStory_01");
+                hero_00_pi.isFinalChestOpen = false;
+                hero_01_pi.isFinalChestOpen = false;
+            }
 #pragma endregion
 #pragma endregion
         }
@@ -1496,7 +1508,9 @@ int main()
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            points.render("You win, ARRRRRR", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
+            winScene.render();
+            points.render("GOLD", SCREEN_WIDTH * 0.66, SCREEN_HEIGHT * 0.715, 3, glm::vec3(1.0, 0.75, 0.0));
+            points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.63, SCREEN_HEIGHT * 0.57, 3, glm::vec3(1.0, 0.75, 0.0));
             points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
             restartFlag = true;
             if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
