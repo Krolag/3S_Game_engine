@@ -288,10 +288,10 @@ int main()
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "i.png",
         playerTwoControlsPos[3].x - playerControlsSizeX, playerTwoControlsPos[3].x + playerControlsSizeX,
         playerTwoControlsPos[3].y + playerControlsSizeY, playerTwoControlsPos[3].y - playerControlsSizeY),
-        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "slash.png",
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "period.png",
         playerTwoControlsPos[4].x - playerControlsSizeX, playerTwoControlsPos[4].x + playerControlsSizeX,
         playerTwoControlsPos[4].y + playerControlsSizeY, playerTwoControlsPos[4].y - playerControlsSizeY),
-        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "period.png",
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "slash.png",
         playerTwoControlsPos[5].x - playerControlsSizeX, playerTwoControlsPos[5].x + playerControlsSizeX,
         playerTwoControlsPos[5].y + playerControlsSizeY, playerTwoControlsPos[5].y - playerControlsSizeY)
     };
