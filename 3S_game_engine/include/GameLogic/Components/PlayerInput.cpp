@@ -160,13 +160,13 @@ namespace GameLogic
 				if (keyboard->isKeyDown(GLFW_KEY_A) && xLeftDistance)
 				{
 					transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(269.5f), 0.0f);
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(89.5f), 0.0f);
 					//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(89.5));
 				}
 				else if (keyboard->isKeyDown(GLFW_KEY_D) && xRightDistance)
 				{
 					transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(89.5f), 0.0f);
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(269.5f), 0.0f);
 					//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-89.5f));
 				}
 
@@ -177,15 +177,15 @@ namespace GameLogic
 
 					/* Check for diagonal movement */
 					if (keyboard->isKeyDown(GLFW_KEY_A) && xLeftDistance)
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-134.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(44.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(134.5f));
 
 					else if (keyboard->isKeyDown(GLFW_KEY_D) && xRightDistance)
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(134.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-44.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(224.5f));
 
 					else
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(179.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(179.5f));
 				}
 				else if (keyboard->isKeyDown(GLFW_KEY_S) && yDownDistance)
@@ -194,15 +194,15 @@ namespace GameLogic
 
 					/* Check for diagonal movement */
 					if (keyboard->isKeyDown(GLFW_KEY_A) && xLeftDistance)
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-44.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(134.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(44.5f));
 
 					else if (keyboard->isKeyDown(GLFW_KEY_D) && xRightDistance)
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(44.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-134.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-44.5f));
 
 					else
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(179.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, 0.0f);
 				}
 			}
@@ -276,13 +276,13 @@ namespace GameLogic
 				if (keyboard->isKeyDown(GLFW_KEY_J) && xRightDistance)
 				{
 					transform.position += glm::vec3(-movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(269.5f), 0.0f);
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(89.5f), 0.0f);
 					//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(89.5));
 				}
 				else if (keyboard->isKeyDown(GLFW_KEY_L) && xLeftDistance)
 				{
 					transform.position += glm::vec3(movementSpeed, 0.0f, 0.0f) * deltaTime * 20.0f;
-					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(89.5f), 0.0f);
+					transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(269.5f), 0.0f);
 					//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-89.5f));
 				}
 
@@ -293,15 +293,15 @@ namespace GameLogic
 
 					/* Check for diagonal movement */
 					if (keyboard->isKeyDown(GLFW_KEY_J) && xRightDistance)
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-134.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(44.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(134.5f));
 
 					else if (keyboard->isKeyDown(GLFW_KEY_L) && xLeftDistance)
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(134.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-44.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(224.5f));
 
 					else
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(179.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(179.5f));
 				}
 				else if (keyboard->isKeyDown(GLFW_KEY_K) && yUpDistance)
@@ -310,15 +310,16 @@ namespace GameLogic
 
 					/* Check for diagonal movement */
 					if (keyboard->isKeyDown(GLFW_KEY_J) && xRightDistance)
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-44.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(134.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(44.5f));
 
 					else if (keyboard->isKeyDown(GLFW_KEY_L) && xLeftDistance)
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(44.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(-134.5f), 0.0f);
+
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, glm::radians(-44.5f));
 
 					else
-						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(0.5f), 0.0f);
+						transform.rotation = glm::quat(1.0f, 0.0f, glm::radians(179.5f), 0.0f);
 						//transform.rotation = glm::quat(1.0f, glm::radians(89.5f), 0.0f, 0.0f);
 				}
 			}

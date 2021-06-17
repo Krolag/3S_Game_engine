@@ -321,7 +321,7 @@ int main()
     hierarchy.addObject(&boat);
     /* Player One */
     Loader::Model           hero_00_m("./assets/models/players/blue1.fbx", "playerOne", true, true);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(709.0f, 6.5f, 27.37f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(698.0f, 6.5f, 30.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
@@ -332,7 +332,7 @@ int main()
     hierarchy.addObject(&hero_00);
     /* Player Two */
     Loader::Model           hero_01_m("./assets/models/players/red.fbx", "playerTwo", true, true);
-    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(698.0f, 6.5f, 30.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(709.0f, 6.5f, 27.37f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_01_m, &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
@@ -360,7 +360,7 @@ int main()
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
     int enemiesIterator = -1;
-    for (int i = 0; i < 1; ++i)
+    for (int i = 0; i < size; ++i)
     {
         importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
             GameLogic::C_MESH,
