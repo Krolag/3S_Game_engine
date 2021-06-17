@@ -360,7 +360,7 @@ int main()
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
     int enemiesIterator = -1;
-    for (int i = 0; i < 1; ++i)
+    for (int i = 0; i < size; ++i)
     {
         importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
             GameLogic::C_MESH,
