@@ -61,7 +61,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 		if (heartBeats == 4) 
 		{
 			isGameOver = true;
-			engine->setAllSoundsPaused(false);
+			if (isMusicPlaying) engine->setAllSoundsPaused(false);
 			heartBeats = 0;
 		}
 	}
