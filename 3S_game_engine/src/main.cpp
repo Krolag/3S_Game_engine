@@ -173,7 +173,7 @@ int main()
 #pragma endregion
 #pragma region Credits
     UIRender::UIElement credits("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "credits.png",
-        0.5f - 0.4f, 0.5f + 0.45f, 0.98, 0.23);
+        0.5f - 0.2f, 0.5f + 0.45f, 0.94, 0.19);
 #pragma endregion
 #pragma region StoryScene
     UIRender::UIElement story_00("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "story_00.png", 0, 1, 1, 0);
