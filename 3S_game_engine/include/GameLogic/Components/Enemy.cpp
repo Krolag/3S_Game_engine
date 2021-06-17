@@ -304,4 +304,9 @@ namespace GameLogic
 		
 		return distanceToPlayer;
 	}
+
+	void Enemy::setCurrentGravity(float _currentGravity)
+	{
+		currentGravity = _currentGravity;
+	}
 }

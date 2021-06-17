@@ -2,9 +2,8 @@
 #ifndef BOXCOLLIDER_H
 #define BOXCOLLIDER_H
 
+#include "GameLogic/GameLogic.h"
 #include "Component.h"
-#include "GameLogic/Proctor.h"
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 

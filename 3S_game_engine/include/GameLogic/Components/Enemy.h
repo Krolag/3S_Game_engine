@@ -33,6 +33,7 @@ namespace GameLogic
 		/* Getters */
 
 		/* Setters */
+		void setCurrentGravity(float _currentGravity);
 
 	private:
 		/* Private fields */

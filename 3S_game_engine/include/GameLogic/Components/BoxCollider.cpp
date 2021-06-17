@@ -220,6 +220,11 @@ namespace GameLogic
 		{
 			((PlayerInput*)proctor->getComponentOfType(C_MOVEMENT))->cGravity = 0.0f;
 		}
+
+		if(this->proctor->getComponentOfType(C_ENEMY) != NULL)
+		{
+			((Enemy*)proctor->getComponentOfType(C_ENEMY))->setCurrentGravity(0.0f);
+		}
 		
 		glm::vec3 otherToThisVector = otherCollider->proctor->transform.position - this->proctor->transform.position;
 		if(glm::dot(separationVector, otherToThisVector) >= 0)
