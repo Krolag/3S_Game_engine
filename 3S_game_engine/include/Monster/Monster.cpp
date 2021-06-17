@@ -14,7 +14,7 @@ bool Monster::isInSafeZone() //check distance from each tile
 	{
 		float distance = countDistance(boat->getPosition(), t->getPosition());
 		if (distance > SAFE_DISTANCE) overDistance++;
-		std::cout << distance << "\n";
+		//std::cout << distance << "\n";
 	}
 
 	if (overDistance == zone.size()) return false;
@@ -37,7 +37,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 		float currentDistance = countDistance(currentPosition, oldPosition);
 		//printf("%f", currentDistance);
 
-		if (currentDistance > MIN_DISTANCE && heartBeats < 3)
+		if (currentDistance > MIN_DISTANCE && heartBeats < 3 && !isDeepWater())
 		{
 			backgroundSound->setIsPaused(false);
 			if (isMusicPlaying) { engine->setAllSoundsPaused(false); }			
@@ -45,7 +45,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 			timeElapsed = 0;
 		}
 
-		if (currentDistance < MIN_DISTANCE)
+		if (currentDistance < MIN_DISTANCE || isDeepWater())
 		{
 			engine->setAllSoundsPaused();
 			if(heartBeats < 2) engine->play2D(audio,false);
@@ -62,6 +62,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 		if (heartBeats == 4) 
 		{
 			isGameOver = true;
+			backgroundSound->setIsPaused(false);
 			if (isMusicPlaying) engine->setAllSoundsPaused(false);
 			heartBeats = 0;
 		}
@@ -69,7 +70,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 }
 
 void Monster::update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, ISound* backgroundSound, GameLogic::Proctor* monster, bool isMusicPlaying)
-{
+{	
 	float colorChange = 0.3 * boat->getParentHierarchy()->getDeltaTime();
 	if(heartBeats >= 3 && monster->transform.position.y < -35){
 		time += boat->getDeltaTime() * 4;
@@ -92,4 +93,15 @@ void Monster::update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* mu
 	{
 		timeElapsed = 0;
 	}
+}
+
+bool Monster::isDeepWater()
+{
+	float boat_x = boat->getPosition().x;
+	float boat_z = boat->getPosition().z;
+	if (boat_x < X_LEFT || boat_x > X_RIGHT || boat_z > Z_UP || boat_z < Z_DOWN) {
+		std::cout << "dzban";
+		return true;
+	}
+	return false;
 }

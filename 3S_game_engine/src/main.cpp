@@ -1761,7 +1761,7 @@ void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY
         camera.Yaw = -90; // set yaw to default value
         camera.Pitch = -70;
         if (boat_b->isPlayerOneInBoat() && boat_b->isPlayerTwoInBoat()) {
-            camPos = maxZoom;
+            camPos = maxZoom+minZoom;
             zOffset = 20;
         }
         camera.Position = glm::vec3((player_1->getWorldPosition()[0] + player_2->getWorldPosition()[0]) / 2.f, camPos, ((player_1->getWorldPosition()[2]+ + player_2->getWorldPosition()[2]) / 2.f + zOffset));
