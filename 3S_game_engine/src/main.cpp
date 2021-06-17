@@ -1064,7 +1064,7 @@ int main()
 
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
-            camera.activeProctorsRadius = 100.0f;
+            //camera.activeProctorsRadius = 100.0f;
             camera.setProjection(projection);
 
 #pragma region SHADOWS - ShadowsBuffer
