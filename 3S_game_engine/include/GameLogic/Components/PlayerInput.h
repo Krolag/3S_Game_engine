@@ -35,8 +35,7 @@ namespace GameLogic
 		float radius = maxInteractionDistance;
 		int frameCounter = 0;
 		
-		UIRender::UIElement* controlsPlayerOne[6];
-		UIRender::UIElement* controlsPlayerTwo[6];
+		UIRender::UIElement* controls[6];
 
 		//colect chest TEST
 		float timepassed = 0;

@@ -236,8 +236,8 @@ int main()
     };
 
     /* Players control */
-    float playerOneControlsSizeX = ((100 * 0.5f) / 1920) * 0.5f;
-    float playerOneControlsSizeY = ((100 * 0.5f) / 1080) * 0.5f;
+    float playerControlsSizeX = ((120 * 0.5f) / 1920) * 0.55f;
+    float playerControlsSizeY = ((120 * 0.5f) / 1080) * 0.55f;
     std::vector<glm::vec2> playerOneControlsPos = {
         {0.05f, 0.15f},     // A
         {0.08f, 0.15f},     // S
@@ -246,25 +246,54 @@ int main()
         {0.065f, 0.09f},    // V
         {0.095f, 0.09f}     // B
     };
+    std::vector<glm::vec2> playerTwoControlsPos = {
+        {1-0.05f, 0.15f},     // L
+        {1-0.08f, 0.15f},     // K
+        {1-0.11f, 0.15f},     // J
+        {1-0.08f, 0.21f},     // I
+        {1-0.065f, 0.09f},    // /
+        {1-0.095f, 0.09f}     // .
+    };
+
     UIRender::UIElement playerOneControls[6] = {
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "a.png",
-        playerOneControlsPos[0].x - playerOneControlsSizeX, playerOneControlsPos[0].x + playerOneControlsSizeX, 
-        playerOneControlsPos[0].y + playerOneControlsSizeY, playerOneControlsPos[0].y - playerOneControlsSizeY),
+        playerOneControlsPos[0].x - playerControlsSizeX, playerOneControlsPos[0].x + playerControlsSizeX, 
+        playerOneControlsPos[0].y + playerControlsSizeY, playerOneControlsPos[0].y - playerControlsSizeY),
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "s.png",
-        playerOneControlsPos[1].x - playerOneControlsSizeX, playerOneControlsPos[1].x + playerOneControlsSizeX,
-        playerOneControlsPos[1].y + playerOneControlsSizeY, playerOneControlsPos[1].y - playerOneControlsSizeY),
+        playerOneControlsPos[1].x - playerControlsSizeX, playerOneControlsPos[1].x + playerControlsSizeX,
+        playerOneControlsPos[1].y + playerControlsSizeY, playerOneControlsPos[1].y - playerControlsSizeY),
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "d.png",
-        playerOneControlsPos[2].x - playerOneControlsSizeX, playerOneControlsPos[2].x + playerOneControlsSizeX,
-        playerOneControlsPos[2].y + playerOneControlsSizeY, playerOneControlsPos[2].y - playerOneControlsSizeY),
+        playerOneControlsPos[2].x - playerControlsSizeX, playerOneControlsPos[2].x + playerControlsSizeX,
+        playerOneControlsPos[2].y + playerControlsSizeY, playerOneControlsPos[2].y - playerControlsSizeY),
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "w.png",
-        playerOneControlsPos[3].x - playerOneControlsSizeX, playerOneControlsPos[3].x + playerOneControlsSizeX,
-        playerOneControlsPos[3].y + playerOneControlsSizeY, playerOneControlsPos[3].y - playerOneControlsSizeY),
+        playerOneControlsPos[3].x - playerControlsSizeX, playerOneControlsPos[3].x + playerControlsSizeX,
+        playerOneControlsPos[3].y + playerControlsSizeY, playerOneControlsPos[3].y - playerControlsSizeY),
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "v.png",
-        playerOneControlsPos[4].x - playerOneControlsSizeX, playerOneControlsPos[4].x + playerOneControlsSizeX,
-        playerOneControlsPos[4].y + playerOneControlsSizeY, playerOneControlsPos[4].y - playerOneControlsSizeY),
+        playerOneControlsPos[4].x - playerControlsSizeX, playerOneControlsPos[4].x + playerControlsSizeX,
+        playerOneControlsPos[4].y + playerControlsSizeY, playerOneControlsPos[4].y - playerControlsSizeY),
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "b.png",
-        playerOneControlsPos[5].x - playerOneControlsSizeX, playerOneControlsPos[5].x + playerOneControlsSizeX,
-        playerOneControlsPos[5].y + playerOneControlsSizeY, playerOneControlsPos[5].y - playerOneControlsSizeY)
+        playerOneControlsPos[5].x - playerControlsSizeX, playerOneControlsPos[5].x + playerControlsSizeX,
+        playerOneControlsPos[5].y + playerControlsSizeY, playerOneControlsPos[5].y - playerControlsSizeY)
+    };
+    UIRender::UIElement playerTwoControls[6] = {
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "l.png",
+        playerTwoControlsPos[0].x - playerControlsSizeX, playerTwoControlsPos[0].x + playerControlsSizeX,
+        playerTwoControlsPos[0].y + playerControlsSizeY, playerTwoControlsPos[0].y - playerControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "k.png",
+        playerTwoControlsPos[1].x - playerControlsSizeX, playerTwoControlsPos[1].x + playerControlsSizeX,
+        playerTwoControlsPos[1].y + playerControlsSizeY, playerTwoControlsPos[1].y - playerControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "j.png",
+        playerTwoControlsPos[2].x - playerControlsSizeX, playerTwoControlsPos[2].x + playerControlsSizeX,
+        playerTwoControlsPos[2].y + playerControlsSizeY, playerTwoControlsPos[2].y - playerControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "i.png",
+        playerTwoControlsPos[3].x - playerControlsSizeX, playerTwoControlsPos[3].x + playerControlsSizeX,
+        playerTwoControlsPos[3].y + playerControlsSizeY, playerTwoControlsPos[3].y - playerControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "slash.png",
+        playerTwoControlsPos[4].x - playerControlsSizeX, playerTwoControlsPos[4].x + playerControlsSizeX,
+        playerTwoControlsPos[4].y + playerControlsSizeY, playerTwoControlsPos[4].y - playerControlsSizeY),
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/controls", "period.png",
+        playerTwoControlsPos[5].x - playerControlsSizeX, playerTwoControlsPos[5].x + playerControlsSizeX,
+        playerTwoControlsPos[5].y + playerControlsSizeY, playerTwoControlsPos[5].y - playerControlsSizeY)
     };
 
     int dukatSpinIndex = 0;
@@ -284,7 +313,7 @@ int main()
     /* Load models for not-serializable proctors */
     /* Boat */
     Loader::Model           boat_m("./assets/models/boat/bbot.fbx", "boat", true, true);
-    GameLogic::Proctor      boat("boat", glm::vec3(704.0f, 2.2f, 802.0f), glm::quat(1.0f, 0.0f, 1.6f, 0.0f), glm::vec3(0.09f));
+    GameLogic::Proctor      boat("boat", glm::vec3(778.0f, 2.2f, -166.5f), glm::quat(1.0f, 0.0f, 2.47f, 0.0f), glm::vec3(0.09f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, &boat_m, &model3D);
     GameLogic::Boat         boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
@@ -292,21 +321,23 @@ int main()
     hierarchy.addObject(&boat);
     /* Player One */
     Loader::Model           hero_00_m("./assets/models/players/blue1.fbx", "playerOne", true, true);
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(770.0f, 6.0f, -110.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(709.0f, 6.5f, 27.37f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
     for (int i = 0; i < 6; i++)
-        hero_00_pi.controlsPlayerOne[i] = &playerOneControls[i];
+        hero_00_pi.controls[i] = &playerOneControls[i];
     GameLogic::BoxCollider  hero_00_bc(GameLogic::C_COLLIDER, &hero_00_m, &hero_00, &collisionBoxShader, false);
     hierarchy.addObject(&hero_00);
     /* Player Two */
     Loader::Model           hero_01_m("./assets/models/players/red.fbx", "playerTwo", true, true);
-    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(770.0f, 6.0f, -110.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(698.0f, 6.5f, 30.0f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_01_m, &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
+    for (int i = 0; i < 6; i++)
+        hero_01_pi.controls[i] = &playerTwoControls[i];
     //hero_01_pi.setFootstepSound(footstepSource);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, &hero_01_m, &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
@@ -1203,9 +1234,13 @@ int main()
             for (int i = 0; i < 6; i++)
             {
                 if (!hero_00_pi.isFirstClicked && i < 4)
-                    hero_00_pi.controlsPlayerOne[i]->render();
+                    hero_00_pi.controls[i]->render();
+                if (!hero_01_pi.isFirstClicked && i < 4)
+                    hero_01_pi.controls[i]->render();
                 if (hero_00_pi.stayCloseToInteractable && i == 4)
-                    hero_00_pi.controlsPlayerOne[i]->render();
+                    hero_00_pi.controls[i]->render();
+                if (hero_01_pi.stayCloseToInteractable && i == 4)
+                    hero_01_pi.controls[i]->render();
             }
 #pragma endregion
 #pragma endregion

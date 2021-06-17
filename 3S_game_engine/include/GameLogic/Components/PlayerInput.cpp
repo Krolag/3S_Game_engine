@@ -87,9 +87,6 @@ namespace GameLogic
 			usePlayerOneInput();
 		else
 			usePlayerTwoInput();
-
-
-		//if (isPlayerOneUsingChest) openChest();
 	}
 
 	void PlayerInput::checkForDistance()
@@ -267,6 +264,9 @@ namespace GameLogic
 					keyboard->isKeyDown(GLFW_KEY_L))
 					&& frameCounter % 10 == 0)
 				{
+					if (!isFirstClicked)
+						isFirstClicked = true;
+					
 					playerSounds->play2D(footsteps.at(randomNumber));
 
 					//((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
