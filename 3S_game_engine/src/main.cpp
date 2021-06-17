@@ -172,8 +172,8 @@ int main()
         0.75f - 0.365f, 0.75f + 0.015f, 0.63 + 0.01 - 0.1, 0.63 - 0.01 - 0.1);
 #pragma endregion
 #pragma region Credits
-    UIRender::UIElement background("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "background.png",
-        0.5f - 0.3f, 0.5f + 0.3f, 0.6, 0.2);
+    UIRender::UIElement credits("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "credits.png",
+        0.5f - 0.4f, 0.5f + 0.45f, 0.98, 0.23);
 #pragma endregion
 #pragma region StoryScene
     UIRender::UIElement story_00("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "story_00.png", 0, 1, 1, 0);
@@ -360,7 +360,7 @@ int main()
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
     int enemiesIterator = -1;
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < 1; ++i)
     {
         importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
             GameLogic::C_MESH,
@@ -1027,6 +1027,8 @@ int main()
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            credits.render();
 
             if (keyboardInput->isKeyReleased(GLFW_KEY_W))
                 tmpCreditsIndex = 1;
