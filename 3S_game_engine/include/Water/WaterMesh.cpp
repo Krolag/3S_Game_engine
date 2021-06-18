@@ -38,7 +38,7 @@ WaterMesh::WaterMesh(std::string vertexShaderPath, std::string fragmentShaderPat
 
 	waterShader.use();
 	waterShader.setUniformInt("reflectionTexture", 0);
-	waterShader.setUniform("lightColor", 0.6f, 0.6f, 0.6f);
+	waterShader.setUniform("lightColor", 0.9f, 0.9f, 0.9f);
 }
 
 void WaterMesh::render(glm::mat4 model, glm::mat4 projection, glm::mat4 view, int reflectionTex, float time,glm::vec3 cameraPos)
