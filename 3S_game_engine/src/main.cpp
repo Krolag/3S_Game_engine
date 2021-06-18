@@ -1649,7 +1649,7 @@ int main()
     }
 
 	/* Export scene to xml file */
-    Loader::Exporter::exportScene(hierarchy.getProctors(), "./assets/scenes/exported_scene.xml");
+    //Loader::Exporter::exportScene(hierarchy.getProctors(), "./assets/scenes/exported_scene.xml");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
