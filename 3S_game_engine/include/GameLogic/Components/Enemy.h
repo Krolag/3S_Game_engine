@@ -3,6 +3,9 @@
 #include <glm/fwd.hpp>
 #include <glm/vec3.hpp>
 #include "GameLogic/Components/Component.h"
+#include "../../IrrKlang/irrKlang.h"
+
+
 
 namespace GameLogic
 {
@@ -17,6 +20,7 @@ namespace GameLogic
 	class Enemy : public Component
 	{
 	public:
+		//irrklang::ISoundEngine* enemyEngine;
 		/* Constructors/Destructors */
 		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID);
 		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, std::string _enemyType);
@@ -48,6 +52,7 @@ namespace GameLogic
 		float currentGravity;
 		float gravityAcceleration;
 		int islandID;
+		irrklang::ISoundEngine* enemyEngine = irrklang::createIrrKlangDevice();
 		
 		EnemyState currentState;
 		

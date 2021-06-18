@@ -137,6 +137,7 @@ namespace GameLogic
 		}
 		// TODO: @Ignacy or @Kuba play music for locals taking damage
 		currentlyChasedPlayer = playerRef;
+		
 		currentState = CHASING_STATE;
 	}
 
@@ -227,6 +228,7 @@ namespace GameLogic
 			currentlyChasedPlayer = playerOneRef;
 			currentState = CHASING_STATE;
 			// play music
+			enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/spotted_GW.ogg", false);
 			return;
 		}
 
@@ -236,6 +238,7 @@ namespace GameLogic
 			currentlyChasedPlayer = playerTwoRef;
 			currentState = CHASING_STATE;
 			// TODO: @Ignacy or @Kuba play music for chasing player
+			enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/spotted_GW.ogg", false);
 			return;
 		}
 
@@ -249,6 +252,7 @@ namespace GameLogic
 		if (distanceToPlayer(currentlyChasedPlayer) > sightRadius)
 		{
 			currentlyChasedPlayer = nullptr;
+			enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/escape_GW.ogg", false);
 			currentState = STOIC_STATE;
 			return;
 		}
@@ -289,7 +293,7 @@ namespace GameLogic
 			/* Change state of enemy for attack state */
 			currentState = ATTACK_STATE;
 			std::cout << proctor->name << " starts attack on " << currentlyChasedPlayer->name << "\n";
-			// TODO: @Ignacy or @Kuba play local attack audio here
+			enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/attack_GW.ogg", false);
 			// TODO: @Kuba @Dawid ANIMACJE ... TA TA TA. PLAY ATTACK ANIMATION HERE
 		}
 	}
@@ -319,6 +323,10 @@ namespace GameLogic
 			{
 				std::cout << proctor->name << " is damaging " << currentlyChasedPlayer->name << "\n";
 				/* apply damage to player if he is within damage radius */
+				if (currentlyChasedPlayer->name == "playerOne")
+					enemyEngine->play2D("./assets/audio/recordedSounds/Players/Dawid/damage_D.ogg", false);				
+				else if (currentlyChasedPlayer->name == "playerTwo")
+					enemyEngine->play2D("./assets/audio/recordedSounds/Players/Kuba/damage_K.ogg", false);
 				proctor->getParentHierarchy()->takeDamage();
 			}
 
