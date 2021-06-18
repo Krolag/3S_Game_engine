@@ -477,10 +477,10 @@ int main()
 #pragma endregion
 
 #pragma region Monster System
-    GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(781.0f, 0.0f, -130.0f));
-    GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(710.0f, 0.0f, -430.0f));
-    GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(334.0f, 0.0f, -803.0f));
-    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(0.0f, 0.0f, -200.0f));
+    GameLogic::Proctor safe_zone_1("safe_zone_1", glm::vec3(703.0f, 0.0f, -130.0f));
+    GameLogic::Proctor safe_zone_2("safe_zone_2", glm::vec3(701.0f, 0.0f, -380.0f));
+    GameLogic::Proctor safe_zone_3("safe_zone_3", glm::vec3(430.0f, 0.0f, -927.0f));
+    GameLogic::Proctor safe_zone_4("safe_zone_4", glm::vec3(-50.0f, 0.0f, -500.0f));
 
     std::vector<GameLogic::Proctor*> zones;
     zones.push_back(&safe_zone_1);
@@ -1127,10 +1127,10 @@ int main()
             hierarchy.renderWithShader(&model3D);
 
             /* Render water */
-            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
+            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1300));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
-            skybox.render();
+          
 #pragma endregion
 
             credits.render();
