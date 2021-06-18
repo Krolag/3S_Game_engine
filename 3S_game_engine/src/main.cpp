@@ -325,8 +325,7 @@ int main()
     hierarchy.addObject(&boat);
     /* Player One */
     Loader::Model           hero_00_m("./assets/models/players/blue1.fbx", "playerOne", true, false);
-    //709.0f, 6.5f, 27.37f
-    GameLogic::Proctor      hero_00("playerOne", glm::vec3(698.0f, 6.5f, 30.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
+    GameLogic::Proctor      hero_00("playerOne", glm::vec3(621.332f, 6.5f, 25.568f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
     hero_00_an.playAnimation(0);
@@ -337,8 +336,7 @@ int main()
     hierarchy.addObject(&hero_00);
     /* Player Two */
     Loader::Model           hero_01_m("./assets/models/players/red.fbx", "playerTwo", true, true);
-    //698.0f, 6.5f, 30.0f
-    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(709.0f, 6.5f, 27.37f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
+    GameLogic::Proctor      hero_01("playerTwo", glm::vec3(625.963f, 6.5f, 25.425f), glm::quat(1.0f, glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_01_mr(GameLogic::C_MESH, &hero_01, &hero_01_m, &model3D);
     //GameLogic::Anima        hero_01_an(GameLogic::C_ANIMA, &hero_01);
     GameLogic::PlayerInput  hero_01_pi(GameLogic::C_MOVEMENT, &hero_01, false, &boat_b);
@@ -347,11 +345,8 @@ int main()
     //hero_01_pi.setFootstepSound(footstepSource);
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, &hero_01_m, &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
-	
-    // Locals
-    Loader::Model           enemy_00_m("./assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
-
     // Kraken
+    Loader::Model           enemy_00_m("./assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
     GameLogic::Proctor      monster("monster", glm::vec3(0.0f, -1000.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
     GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, &enemy_00_m, &model3D);
     hierarchy.addObject(&monster);

@@ -28,10 +28,10 @@ namespace GameLogic
 
 		float maxSpeed = 0.5f;
 		float acceleration = 0.5f;
-		float maxGravity = 10.0f;
-		float gravityAcceleration = 5.5f; // 15.0f;
-		float cGravity = 0.0f;
 		float movementSpeed = 0;
+		float maxGravity = 30.0f;
+		float gravityAcceleration = 18.0f;
+		float cGravity = 0.0f;
 		float maxInteractionDistance = 6.0f;
 		float maxBoatInteractionDistance = 15.0f;
 		float radius = maxInteractionDistance;
