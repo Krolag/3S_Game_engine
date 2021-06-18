@@ -57,6 +57,8 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 		if (heartBeats == 3) {
 			
 			boat_b->isAttacking = true;
+			engine->play2D("./assets/audio/recordedSounds/Players/Kuba/death_kraken_K.ogg", false);
+			engine->play2D("./assets/audio/recordedSounds/Players/Dawid/death_kraken_D.ogg", false);
 			monster->transform.scale = glm::vec3(0.4, 0.4, 0.4);
 			monster->transform.position = currentPosition + glm::vec3(0.0f, -100.0f, 0.0f);
 			engine->play2D(music, false);
