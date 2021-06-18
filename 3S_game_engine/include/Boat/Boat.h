@@ -11,6 +11,8 @@ namespace GameLogic
 	{
 	public:
 		Transform defaultInitialTransform;
+		bool isAttacking = false;
+
 		Boat(GameLogic::ComponentType _type, GameLogic::Proctor* _proctor);
 
 		void update();
