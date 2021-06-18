@@ -180,8 +180,9 @@ int main()
     UIRender::UIElement story_00("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "story_00.png", 0, 1, 1, 0);
     UIRender::UIElement story_01("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "story_01.png", 0, 1, 1, 0);
 #pragma endregion
-#pragma region winScene
+#pragma region endScenes
     UIRender::UIElement winScene("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "winScene.png", 0, 1, 1, 0);
+    UIRender::UIElement lostScene("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/story", "lostScene.png", 0, 1, 1, 0);
 #pragma endregion
 #pragma region Clues
     UIRender::UIElement clues[4] = {
@@ -1548,11 +1549,15 @@ int main()
         {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            points.render("You loose", SCREEN_WIDTH * 0.35, SCREEN_HEIGHT * 0.5, 3, glm::vec3(1.0, 0.0, 0.0));
+            lostScene.render();
+            points.render("GOLD", SCREEN_WIDTH * 0.66, SCREEN_HEIGHT * 0.715, 3, glm::vec3(1.0, 0.75, 0.0));
+            points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.63, SCREEN_HEIGHT * 0.57, 3, glm::vec3(1.0, 0.75, 0.0));
             points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            restartFlag = true;
             if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
+            {
+                restartFlag = true;
                 sceneManager.changeCurrentScene("mainMenu");
+            }
         }
         else if (sceneManager.cActiveScene["exitStory_01"])
         {
