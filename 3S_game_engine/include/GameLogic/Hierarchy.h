@@ -27,6 +27,7 @@ namespace GameLogic
 		std::vector<Proctor*> getInteractable();
 		std::vector<Proctor*> getTreasure();
 		std::vector<Proctor*> getCash();
+		std::vector<Proctor*> getEnemiesList();
 
 		/* Scene method */
 		float getDeltaTime();

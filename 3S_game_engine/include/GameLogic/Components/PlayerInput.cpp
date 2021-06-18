@@ -12,8 +12,13 @@
 
 namespace GameLogic
 {
+	constexpr float ATTACK_RADIUS = 6.3f;
+	constexpr float DAMAGE_RADIUS = 8.3f;
+	constexpr float ATTACK_TIME = 1.0f;
+	constexpr float PLAYER_DAMAGE = 51.0f;
+	
 	PlayerInput::PlayerInput(ComponentType _type, Proctor* _proctor)
-		: Component(_type, _proctor), parent(_proctor)
+		: Component(_type, _proctor), parent(_proctor), attackTimer(0.0f)
 	{ 
 		if (_proctor != NULL)
 		{
@@ -23,7 +28,7 @@ namespace GameLogic
 	}
 
 	PlayerInput::PlayerInput(ComponentType _type, Proctor* _proctor, bool _isPlayerOne, Boat* _boat)
-		: Component(_type, _proctor), parent(_proctor), isPlayerOne(_isPlayerOne), boat(_boat)
+		: Component(_type, _proctor), parent(_proctor), isPlayerOne(_isPlayerOne), boat(_boat), attackTimer(0.0f)
 	{ 
 		if (_proctor != NULL)
 		{
@@ -75,6 +80,49 @@ namespace GameLogic
 
 		randomNumber = rand() % 4;
 
+		Proctor* nearestEnemy = getNearestEnemy();
+		/* Check if nearest enemy is within attack radius */
+		if(distanceTo(nearestEnemy) < ATTACK_RADIUS || nearestEnemy != NULL)
+		{
+			std::cout << "enemy is within attack radius of " << proctor->name << ", distance = " << distanceTo(nearestEnemy) << "\n";
+			playerInAttackRadius = true;
+			///* Calculate direction to nearest enemy */
+			//glm::vec3 enemyPos = nearestEnemy->getPosition();
+			//glm::vec3 playerPos = proctor->getPosition();
+			//glm::vec3 direction = glm::normalize(playerPos - enemyPos);
+			//glm::vec3 playerNormalDown = glm::vec3(0.0f, 0.0f, -1.0f);
+
+			///* Calc rotation to look at the chased player */
+			//float dot = playerNormalDown.x * direction.x + playerNormalDown.z * direction.z;	// dot product between enemy starting rotation and direction to player
+			//float det = playerNormalDown.x * direction.z - direction.x * playerNormalDown.z;	// determinant
+			//float angle = atan2(det, dot);												// angle between enemy starting position and direction to player in radians
+
+			///* Apply rotation */
+			//glm::quat enemyStartRotation = glm::quat(1.0f, 0.0f, -angle, 0.0f);
+			//proctor->setRotation(enemyStartRotation);
+			
+			/* Show possibility of attack in controls if not attacking */
+			// TODO: @Anyone show possibility of attack for player and change boolean isPlayerAttacking
+			
+			/* If attacking then check for time on timer */
+			if(isPlayerAttacking)
+			{
+				if (attackTimer > ATTACK_TIME)
+				{
+					/* Attack enemy and apply damage to it if timer passed the attack time */
+					((Enemy*)nearestEnemy)->takeDamage(proctor, PLAYER_DAMAGE);
+					attackTimer = 0.0f;
+					isPlayerAttacking = false;
+				}
+				/* Increment attacking timer */
+				attackTimer += proctor->getParentHierarchy()->getDeltaTime();
+			}
+		}
+		else
+		{
+			playerInAttackRadius = false;
+		}
+		
 		/* Check if player should take damage from drowning */
 		if (proctor->transform.position.y < 0.0f)
 		{
@@ -141,6 +189,26 @@ namespace GameLogic
 			stayCloseToInteractable = true;
 		if (closestDistance < maxInteractionDistance)
 			stayCloseToInteractable = true;
+	}
+
+	Proctor* PlayerInput::getNearestEnemy()
+	{
+		std::vector<Proctor*> enemiesList = proctor->getParentHierarchy()->getEnemiesList();
+		float minDistance = FLT_MAX;
+		Proctor* nearestEnemy = NULL;
+		for (auto enemy : enemiesList)
+		{
+			if(distanceTo(enemy) < minDistance)
+			{
+				nearestEnemy = enemy;
+			}
+		}
+		return nearestEnemy;
+	}
+
+	float PlayerInput::distanceTo(Proctor* _proctor)
+	{
+		return glm::distance(glm::vec2(_proctor->getPosition().x, _proctor->getPosition().z), glm::vec2(proctor->getPosition().x, proctor->getPosition().z));
 	}
 
 	void PlayerInput::usePlayerOneInput()
@@ -264,7 +332,8 @@ namespace GameLogic
 			/* Update players transform */
 			proctor->setTransform(transform);
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
-			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
+			if(!isPlayerAttacking)
+				((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
 		}
 	}
@@ -394,7 +463,8 @@ namespace GameLogic
 			/* Update players transform */
 			proctor->setTransform(transform);
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->position = transform.position;
-			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
+			if (!isPlayerAttacking)
+				((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->rotation = transform.rotation;
 			((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->scale = transform.scale;
 		}
 	}

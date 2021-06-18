@@ -117,6 +117,23 @@ namespace GameLogic
 		return cash;
 	}
 
+	std::vector<Proctor*> Hierarchy::getEnemiesList()
+	{
+		std::vector<Proctor*> enemiesList;
+		for (auto& proctor : proctors)
+		{
+			if (proctor->getComponentOfType(C_MESH) != NULL)
+			{
+				std::string proctorModelName = ((MeshRenderer*)proctor->getComponentOfType(C_MESH))->model->name;
+				if(proctorModelName == "locals_max_01" || proctorModelName == "locals_max_00" || proctorModelName == "locals_01" || proctorModelName == "locals_00")
+				{
+					enemiesList.push_back(proctor);
+				}
+			}
+		}
+		return enemiesList;
+	}
+
 	float Hierarchy::getDeltaTime()
 	{
 		return scene->deltaTime;
