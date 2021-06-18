@@ -60,7 +60,7 @@ bool isDebugCameraOn = false;
 bool isPaused = false;
 
 /* CREATE GLOBAL VALUES USE IN WHOLE PROJECT */
-Application::Window mainScene("TREASURE HEIST FINAL BUILD", SCREEN_WIDTH, SCREEN_HEIGHT, false); // false - window, true - fullscreen 
+Application::Window mainScene("TREASURE HEIST FINAL BUILD", SCREEN_WIDTH, SCREEN_HEIGHT, true); // false - window, true - fullscreen 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 int main()
