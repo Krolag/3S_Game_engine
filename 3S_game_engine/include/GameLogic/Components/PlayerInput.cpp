@@ -78,6 +78,10 @@ namespace GameLogic
 		/* Check if player should take damage from drowning */
 		if (proctor->transform.position.y < 0.0f)
 		{
+			if (isPlayerOne)
+				playerSounds->play2D(drown_D, false);
+			else
+				playerSounds->play2D(drown_K, false);
 			proctor->getParentHierarchy()->takeDamage();
 			proctor->transform.position.y = proctor->getParentHierarchy()->getCamera()->Position.y;
 		}
@@ -214,6 +218,7 @@ namespace GameLogic
 			/* Collect players primary and secondary button info */
 			if (keyboard->isKeyReleased(GLFW_KEY_V))
 			{
+				whichPlayerInteracts = 1;
 				primaryButtonInUse();
 			}
 			if (keyboard->isKeyPressed(GLFW_KEY_B) && isPlayerOneInBoat)
@@ -335,6 +340,7 @@ namespace GameLogic
 			/* Collect players update */
 			if (keyboard->isKeyReleased(GLFW_KEY_PERIOD))
 			{
+				whichPlayerInteracts = 2;
 				primaryButtonInUse();
 			}
 
@@ -385,12 +391,14 @@ namespace GameLogic
 		/* Else check which type of object is the closest */
 		else if (closestDistance <= maxInteractionDistance)
 		{
-			//isPlayerOneUsingChest = true;
+			if (whichPlayerInteracts == 1)
+				playerSounds->play2D(chest_D, false);
+			else if (whichPlayerInteracts == 2)
+				playerSounds->play2D(chest_K, false);
+
 			if (tmp.at(closestIndex)->getComponentOfType(C_TREASURE) != NULL) //&& isChestOpen
 			{
 				tmp.at(closestIndex)->deactivate();
-				//isChestOpen = false;
-				//tmp.at(i)->getParentHierarchy()->removeObject(tmp.at(i));
 				((Cash*)this->proctor->getParentHierarchy()->getObjectsInRadiusOf(this->proctor, radius)->getComponentOfType(GameLogic::C_CASH))->setFollow(true);
 			}
 

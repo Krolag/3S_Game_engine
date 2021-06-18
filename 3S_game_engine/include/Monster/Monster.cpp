@@ -1,8 +1,9 @@
 #include "Monster.h"
 
-Monster::Monster(GameLogic::Proctor* boat, std::vector<GameLogic::Proctor*> zoneVector, WaterMesh* water)
+Monster::Monster(GameLogic::Proctor* boat, std::vector<GameLogic::Proctor*> zoneVector, WaterMesh* water, GameLogic::Boat* boat_b)
 {
 	this->boat = boat;
+	this->boat_b = boat_b;
 	this->water = water;
 	zone = zoneVector;
 }
@@ -35,7 +36,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 		oldPosition = currentPosition;
 		currentPosition = boat->getPosition();
 		float currentDistance = countDistance(currentPosition, oldPosition);
-		//printf("%f", currentDistance);
+		//printf("%f \n", currentDistance);
 
 		if (currentDistance > MIN_DISTANCE && heartBeats < 3 && !isDeepWater())
 		{
@@ -54,6 +55,10 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 		}
 
 		if (heartBeats == 3) {
+			
+			boat_b->isAttacking = true;
+			engine->play2D("./assets/audio/recordedSounds/Players/Kuba/death_kraken_K.ogg", false);
+			engine->play2D("./assets/audio/recordedSounds/Players/Dawid/death_kraken_D.ogg", false);
 			monster->transform.scale = glm::vec3(0.4, 0.4, 0.4);
 			monster->transform.position = currentPosition + glm::vec3(0.0f, -100.0f, 0.0f);
 			engine->play2D(music, false);
@@ -61,6 +66,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 
 		if (heartBeats == 4) 
 		{
+			boat_b->isAttacking = false;
 			isGameOver = true;
 			backgroundSound->setIsPaused(false);
 			if (isMusicPlaying) engine->setAllSoundsPaused(false);
@@ -72,7 +78,7 @@ void Monster::isPositionChanged(ISoundEngine* engine, ISoundSource* audio, ISoun
 void Monster::update(ISoundEngine* engine, ISoundSource* audio, ISoundSource* music, ISound* backgroundSound, GameLogic::Proctor* monster, bool isMusicPlaying)
 {	
 	float colorChange = 0.3 * boat->getParentHierarchy()->getDeltaTime();
-	if(heartBeats >= 3 && monster->transform.position.y < -35){
+	if(heartBeats >= 3 && monster->transform.position.y < 20){
 		time += boat->getDeltaTime() * 4;
 		monster->transform.position.y += time;
 	}

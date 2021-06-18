@@ -345,8 +345,8 @@ int main()
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, &hero_01_m, &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     // Kraken
-    Loader::Model           enemy_00_m("./assets/models/serializable/locals_00.fbx", "enemy_00", true, true);
-    GameLogic::Proctor      monster("monster", glm::vec3(0.0f, -1000.0f, 0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
+    Loader::Model           enemy_00_m("./assets/models/kraken/kraken.fbx", "enemy_00", true, true);
+    GameLogic::Proctor      monster("monster", glm::vec3(703.0f, -200.0f, -130.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
     GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, &enemy_00_m, &model3D);
     hierarchy.addObject(&monster);
 
@@ -476,7 +476,7 @@ int main()
     zones.push_back(&safe_zone_2);
     zones.push_back(&safe_zone_3);
     zones.push_back(&safe_zone_4);
-    Monster monsterSystem(&boat, zones,&water);
+    Monster monsterSystem(&boat, zones,&water, &boat_b);
 #pragma endregion
 
 #pragma region Scene Manager

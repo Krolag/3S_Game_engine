@@ -47,15 +47,22 @@ namespace GameLogic
 
 		int clue;
 		bool isFinalChestOpen = false;
+		int whichPlayerInteracts = 0; // 0 - noOne, 1 - first, 2 - second
 
 		Proctor* coinProctor;
 		irrklang::ISoundEngine* playerSounds = irrklang::createIrrKlangDevice();
 		std::vector<irrklang::ISoundSource*> footsteps = { 
-			playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_00.ogg"),
-			playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_01.ogg"),
-			playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_02.ogg"),
-			playerSounds->addSoundSourceFromFile("assets/audio/sounds/footstep_03.ogg")
+			playerSounds->addSoundSourceFromFile("./assets/audio/sounds/footstep_00.ogg"),
+			playerSounds->addSoundSourceFromFile("./assets/audio/sounds/footstep_01.ogg"),
+			playerSounds->addSoundSourceFromFile("./assets/audio/sounds/footstep_02.ogg"),
+			playerSounds->addSoundSourceFromFile("./assets/audio/sounds/footstep_03.ogg")
 		};
+
+		//Recorded sounds
+		irrklang::ISoundSource* chest_D = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Dawid/chest_D.ogg");
+		irrklang::ISoundSource* chest_K = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Kuba/chest_K.ogg");
+		irrklang::ISoundSource* drown_D = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Dawid/drown_D.ogg");
+		irrklang::ISoundSource* drown_K = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Kuba/drown_K.ogg");
 		std::string clueText;
 		bool isCluePickedUp = false;
 		bool isFirstClicked = false;

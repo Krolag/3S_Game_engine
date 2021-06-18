@@ -35,6 +35,11 @@ namespace GameLogic
 		{
 			turnSpeed += turnSpeed * -deltaTime;
 		}
+
+		if (isAttacking) {
+			speed = 0;
+			turnSpeed = 0;
+		}
 	}
 
 	void Boat::attachPlayerOne(GameLogic::Proctor* player)
@@ -101,7 +106,7 @@ namespace GameLogic
 	{
 		transform = proctor->getTransform();
 
-		if (isFirstInBoat && isSecondInBoat) 
+		if (isFirstInBoat && isSecondInBoat && !isAttacking) 
 		{
 			((BoxCollider*)proctor->getComponentOfType(GameLogic::C_COLLIDER))->isStatic = false;
 
