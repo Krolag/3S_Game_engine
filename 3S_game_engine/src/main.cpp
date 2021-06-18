@@ -346,7 +346,7 @@ int main()
     hierarchy.addObject(&hero_01);
     // Kraken
     Loader::Model           monster_m("./assets/models/kraken/kraken.fbx", "enemy_00", true, true);
-    GameLogic::Proctor      monster("monster", glm::vec3(703.0f, -200.0f, -130.0f), glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f), glm::vec3(0.04f));
+    GameLogic::Proctor      monster("monster", glm::vec3(703.0f, -200.0f, -130.0f), glm::quat(1.0f, 0.0f, 0.0f, glm::radians(180.0f)), glm::vec3(0.04f));
     GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, &monster_m, &model3D);
     hierarchy.addObject(&monster);
 
