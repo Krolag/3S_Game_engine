@@ -189,7 +189,7 @@ int main()
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_00.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_01.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_02.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2),
-        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_03.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2)
+        UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "boozeClue.png", 0.5 - 0.2, 0.5 + 0.2, 0.5 + 0.2, 0.5 - 0.2)
         //UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/clues", "clue_04.png", 0.5 - 0.1, 0.5 + 0.1, 0.5 + 0.2, 0.5 - 0.2)
     };
 #pragma endregion
