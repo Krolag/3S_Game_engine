@@ -27,7 +27,7 @@ private:
 
 	const int SAFE_DISTANCE = 200; // radius of safe zone around island
 	const int TIME_BETWEEN_POSITIONS_UPDATE = 3;
-	const int MIN_DISTANCE = 55; // minimum distance beetwen current and last boat position 
+	const int MIN_DISTANCE = 35; // minimum distance beetwen current and last boat position 
 
 	float time = 0;
 	float timeElapsed = 0;
