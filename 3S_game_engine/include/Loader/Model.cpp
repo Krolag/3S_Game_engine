@@ -59,7 +59,7 @@ namespace Loader
 
 	void Model::loadModel(std::string _path)
 	{
-		cleanup();
+		//cleanup();
 		path = _path;
 
 
@@ -120,17 +120,34 @@ namespace Loader
 		{
 			Vertex vertex;
 
+			glm::vec3 vector;
+			vector.x = _mesh->mVertices[i].x;
+			vector.y = _mesh->mVertices[i].y;
+			vector.z = _mesh->mVertices[i].z;
 			setVertexBoneDataToDefault(vertex);
+
 
 			/* Position */
 			vertex.position = AssimpGLMHelpers::GetGLMVec(_mesh->mVertices[i]);
 			/* Normal vectors */
+			if (_mesh->HasNormals())
+			{
+				vector.x = _mesh->mNormals[i].x;
+				vector.y = _mesh->mNormals[i].y;
+				vector.z = _mesh->mNormals[i].z;
+				vertex.normal = vector;
+			}
 			vertex.normal = AssimpGLMHelpers::GetGLMVec(_mesh->mNormals[i]);
 			/* Textures */
-			if (_mesh->mTextureCoords[0])
-				vertex.texCoord = glm::vec2( _mesh->mTextureCoords[0][i].x, _mesh->mTextureCoords[0][i].y);
+			if (_mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+			{
+				glm::vec2 vec;
+				vec.x = _mesh->mTextureCoords[0][i].x;
+				vec.y = _mesh->mTextureCoords[0][i].y;
+				vertex.texCoord = vec;
+			}
 			else
-				vertex.texCoord = glm::vec2(0.0f);
+				vertex.texCoord = glm::vec2(0.0f, 0.0f);
 
 			/* Push completed data */
 			vertices.push_back(vertex);
@@ -145,37 +162,42 @@ namespace Loader
 				indices.push_back(face.mIndices[j]);
 		}
 
-		/* Process Material */
-		if (_mesh->mMaterialIndex >= 0)
-		{
-			aiMaterial* material = _scene->mMaterials[_mesh->mMaterialIndex];
-			extractBoneWeightForVertices(vertices, _mesh, _scene);
+		aiMaterial* material = _scene->mMaterials[_mesh->mMaterialIndex];
 
-			if (noTex)
-			{
-				/* Diffuse color */
-				aiColor4D diff(1.0f);
-				aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diff);
-				/* Specular color*/
-				aiColor4D spec(1.0f);
-				aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &spec);
+		/* Diffuse color */
+		aiColor4D diff(1.0f);
+		aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diff);
+		/* Specular color*/
+		aiColor4D spec(1.0f);
+		aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &spec);
 
-				/* Return properly collected data */
-				return Mesh(vertices, indices, diff, spec);
-			}
-			else
-			{
-				/* Diffuse maps */
-				std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE);
-				textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-				/* Specular maps */
-				std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR);
-				textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-				
-				/* Return properly collected data */
-				return Mesh(vertices, indices, textures);
-			}
-		}
+		extractBoneWeightForVertices(vertices, _mesh, _scene);
+
+		/* Return properly collected data */
+		return Mesh(vertices, indices, diff, spec);
+
+		///* Process Material */
+		//if (_mesh->mMaterialIndex >= 0)
+		//{
+		//	
+
+		//	if (noTex)
+		//	{
+
+		//	}
+		//	else
+		//	{
+		//		/* Diffuse maps */
+		//		std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE);
+		//		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+		//		/* Specular maps */
+		//		std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR);
+		//		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+		//		
+		//		/* Return properly collected data */
+		//		return Mesh(vertices, indices, textures);
+		//	}
+		//}
 	}
 
 	void Model::setVertexBoneDataToDefault(Vertex& _vertex)
