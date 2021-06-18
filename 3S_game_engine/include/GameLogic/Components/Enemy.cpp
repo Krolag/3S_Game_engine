@@ -10,6 +10,7 @@ namespace GameLogic
 	constexpr float DAMAGE_DEFAULT = 26.0f;
 	constexpr float SIGHT_RADIUS_DEFAULT = 15.0f;
 	constexpr float ATTACK_RADIUS_DEFAULT = 0.5f;
+	constexpr float DAMAGE_RADIUS_DEFAULT = 1.0f;
 	constexpr float MAX_VELOCITY_DEFAULT = 7.0f;
 	constexpr float ACCELERATION_DEFAULT = 0.2f;
 	constexpr float MAX_GRAVITY_DEFAULT = 8.0f;
@@ -25,7 +26,8 @@ namespace GameLogic
 	// Constructor initialize enemy by default values
 	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID) : Component(C_ENEMY, _proctor),
 		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), currentlyChasedPlayer(nullptr),
-		maxHealth(MAX_HEALTH_DEFAULT), currentHealth(MAX_HEALTH_DEFAULT), damage(DAMAGE_DEFAULT), sightRadius(SIGHT_RADIUS_DEFAULT), attackRadius(ATTACK_RADIUS_DEFAULT),
+		maxHealth(MAX_HEALTH_DEFAULT), currentHealth(MAX_HEALTH_DEFAULT), damage(DAMAGE_DEFAULT),
+		sightRadius(SIGHT_RADIUS_DEFAULT), attackRadius(ATTACK_RADIUS_DEFAULT), damageRadius(DAMAGE_RADIUS_DEFAULT),
 		maxVelocity(MAX_VELOCITY_DEFAULT), currentVelocity(0.0f), acceleration(ACCELERATION_DEFAULT),
 		maxGravity(MAX_GRAVITY_DEFAULT), currentGravity(0.0f), gravityAcceleration(GRAVITY_ACCELERATION_DEFAULT),
 		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
@@ -50,6 +52,7 @@ namespace GameLogic
 			damage = DAMAGE_DEFAULT;
 			sightRadius = SIGHT_RADIUS_DEFAULT;
 			attackRadius = ATTACK_RADIUS_DEFAULT;
+			damageRadius = DAMAGE_RADIUS_DEFAULT;
 			maxVelocity = MAX_VELOCITY_DEFAULT;
 			currentVelocity = 0.0f;
 			acceleration = ACCELERATION_DEFAULT;
@@ -65,6 +68,7 @@ namespace GameLogic
 			damage = DAMAGE_DEFAULT * 1.5f;
 			sightRadius = SIGHT_RADIUS_DEFAULT;
 			attackRadius = ATTACK_RADIUS_DEFAULT * 1.5f;
+			damageRadius = DAMAGE_RADIUS_DEFAULT * 2.0f;
 			maxVelocity = MAX_VELOCITY_DEFAULT * 0.6f;
 			currentVelocity = 0.0f;
 			acceleration = ACCELERATION_DEFAULT * 0.7f;
@@ -79,11 +83,11 @@ namespace GameLogic
 	}
 
 	// Constructor initialize enemy with given values
-	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, float _maxHealth, float _damage, float _sightRadius, float _attackRadius,
+	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, float _maxHealth, float _damage, float _sightRadius, float _attackRadius, float _damageRadius,
 		float _maxVelocity, float _acceleration, float _maxGravity, float _gravityAcceleration) :
 		Component(C_ENEMY, _proctor),
 		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), currentlyChasedPlayer(nullptr),
-		maxHealth(_maxHealth), currentHealth(_maxHealth), damage(_damage), sightRadius(_sightRadius), attackRadius(_attackRadius),
+		maxHealth(_maxHealth), currentHealth(_maxHealth), damage(_damage), sightRadius(_sightRadius), attackRadius(_attackRadius), damageRadius(_damageRadius),
 		maxVelocity(_maxVelocity), currentVelocity(0.0f), acceleration(_acceleration),
 		maxGravity(_maxGravity), currentGravity(0.0f), gravityAcceleration(_gravityAcceleration),
 		currentState(STOIC_STATE),
@@ -133,6 +137,11 @@ namespace GameLogic
 		}
 		currentlyChasedPlayer = playerRef;
 		currentState = CHASING_STATE;
+	}
+
+	int Enemy::getIslandID()
+	{
+		return islandID;
 	}
 
 	void Enemy::stoicBehaviour()
@@ -276,6 +285,7 @@ namespace GameLogic
 		if(distanceToPlayer(currentlyChasedPlayer) < attackRadius)
 		{
 			currentState = ATTACK_STATE;
+			std::cout << proctor->name << " starts attack on " << currentlyChasedPlayer->name << "\n";
 			// PLAY ATTACK ANIMATION HERE
 			// TODO: @Kuba @Dawid ANIMACJE ... TA TA TA
 		}
@@ -284,6 +294,7 @@ namespace GameLogic
 	void Enemy::attackBehaviour()
 	{
 		std::cout << "ATTACKING\n";
+		
 		// IF ANIMATION HAS ENDED THEN CHECK IF CURRENTLY CHASED IS WITHIN ATTACK RADIUS
 		// IF CURRENTLY CHASED IS WITHIN ATTACK RADIUS THEN APPLY DAMAGE TO HIM
 		// CHASE CURRENTLY CHASED AGAIN

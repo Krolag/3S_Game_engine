@@ -32,6 +32,15 @@ namespace Loader
 				
 				/* Attributes */
 				gameModel->append_attribute(sceneDocument.allocate_attribute("name", _proctors.at(i)->name.c_str()));
+
+				if(_proctors.at(i)->getComponentOfType(GameLogic::C_ENEMY) != NULL)
+				{
+					gameModel->append_attribute(sceneDocument.allocate_attribute("island_id", std::to_string(((GameLogic::Enemy*)_proctors.at(i)->getComponentOfType(GameLogic::C_ENEMY))->getIslandID()).c_str()));
+				}
+				else
+				{
+					gameModel->append_attribute(sceneDocument.allocate_attribute("island_id", std::to_string(0).c_str()));
+				}
 				
 				/* Position */
 				xml_node<>* position = sceneDocument.allocate_node(node_element, "Position");

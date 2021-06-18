@@ -23,7 +23,7 @@ namespace GameLogic
 		/* Constructors/Destructors */
 		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID);
 		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, std::string _enemyType);
-		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, float _maxHealth, float _damage, float _sightRadius, float _attackRadius, float _maxVelocity, float _acceleration, float _maxGravity, float _gravityAcceleration);
+		Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, float _maxHealth, float _damage, float _sightRadius, float _attackRadius, float _damageRadius, float _maxVelocity, float _acceleration, float _maxGravity, float _gravityAcceleration);
 		~Enemy();
 
 		/* Public methods */
@@ -31,7 +31,8 @@ namespace GameLogic
 		void takeDamage(Proctor* playerRef, float damage);
 
 		/* Getters */
-
+		int getIslandID();
+		
 		/* Setters */
 		void setCurrentGravity(float _currentGravity);
 
@@ -42,6 +43,7 @@ namespace GameLogic
 		float sightRadius;
 		float damage;
 		float attackRadius;
+		float damageRadius;
 		float maxVelocity;
 		float currentVelocity;
 		float acceleration;
@@ -59,6 +61,7 @@ namespace GameLogic
 
 		glm::vec3 wanderDirection;
 		float newWanderDirectionTimer;
+		float attackTimer;
 		
 		/* Private methods */
 		void stoicBehaviour();
