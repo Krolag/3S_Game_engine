@@ -464,11 +464,6 @@ int main()
     /* Create InputSystem elements */
     InputSystem::MouseInput* mouseInput = new InputSystem::MouseInput(mainScene.window);
     InputSystem::KeyboardInput* keyboardInput = new InputSystem::KeyboardInput(mainScene.window);
-
-    float xValueRight = 0.2;
-    float xValueLeft = 0.2;
-    float yValueUp = 0.2;
-    float yValueDown = 0.2;
 #pragma endregion
 
 #pragma region Monster System
@@ -1166,7 +1161,7 @@ int main()
 
             /* Set camera variables */
             projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);
-           // camera.activeProctorsRadius = 100.0f;
+            camera.activeProctorsRadius = 150.0f;
             camera.setProjection(projection);
 
 #pragma region SHADOWS - ShadowsBuffer
@@ -1176,11 +1171,15 @@ int main()
             depthShader.use();
             view = camera.GetViewMatrix();
             glm::mat4 lightView = glm::lookAt(-2.0f * dirLight.direction, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            float offset = 0;
+            if (boat_b.isPlayerOneInBoat() && boat_b.isPlayerTwoInBoat()) {
+                offset = 50.0f;
+            }
             glm::mat4 proj = glm::ortho(
-                dirLight.br.min.x + camera.Position.x,
-                dirLight.br.max.x + camera.Position.x,
-                dirLight.br.min.y - camera.Position.z,
-                dirLight.br.max.y - camera.Position.z,
+                dirLight.br.min.x + camera.Position.x - offset,
+                dirLight.br.max.x + camera.Position.x + offset,
+                dirLight.br.min.y - camera.Position.z - offset,
+                dirLight.br.max.y - camera.Position.z + offset,
                 dirLight.br.min.z, 
                 dirLight.br.max.z);
             dirLight.lightSpaceMatrix = proj * lightView;
