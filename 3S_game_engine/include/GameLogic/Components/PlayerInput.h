@@ -66,7 +66,9 @@ namespace GameLogic
 		irrklang::ISoundSource* chest_D = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Dawid/chest_D.ogg");
 		irrklang::ISoundSource* chest_K = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Kuba/chest_K.ogg");
 		irrklang::ISoundSource* drown_D = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Dawid/drown_D.ogg");
-		irrklang::ISoundSource* drown_K = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Kuba/drown_K.ogg");
+		irrklang::ISoundSource* drown_K = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Kuba/drown_K.ogg");		
+		irrklang::ISoundSource* attack_D = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Dawid/attack_D.ogg");
+		irrklang::ISoundSource* attack_K = playerSounds->addSoundSourceFromFile("./assets/audio/recordedSounds/Players/Kuba/attack_K.ogg");
 		std::string clueText;
 		bool isCluePickedUp = false;
 		bool isFirstClicked = false;

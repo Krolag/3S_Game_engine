@@ -162,6 +162,7 @@ int main()
     UIRender::TextRender music("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
     UIRender::TextRender gamma("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
     UIRender::TextRender shadows("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
+    UIRender::TextRender instructions("./assets/shaders/text.vert", "./assets/shaders/text.frag", "./assets/fonts/medieval.ttf", SCREEN_WIDTH, SCREEN_HEIGHT);
 
     // Sliders
     UIRender::UIElement audioSlider("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures", "slider.png",
@@ -246,16 +247,16 @@ int main()
         {0.08f, 0.15f},     // S
         {0.11f, 0.15f},     // D
         {0.08f, 0.21f},     // W
-        {0.065f, 0.09f},    // V
-        {0.095f, 0.09f}     // B
+        {0.05f, 0.09f},    // V
+        {0.08f, 0.09f}     // B
     };
     std::vector<glm::vec2> playerTwoControlsPos = {
         {1-0.05f, 0.15f},     // L
         {1-0.08f, 0.15f},     // K
         {1-0.11f, 0.15f},     // J
         {1-0.08f, 0.21f},     // I
-        {1-0.065f, 0.09f},    // /
-        {1-0.095f, 0.09f}     // .
+        {1-0.05f, 0.09f},    // /
+        {1-0.08f, 0.09f}     // .
     };
 
     UIRender::UIElement playerOneControls[6] = {
@@ -363,68 +364,68 @@ int main()
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
     int enemiesIterator = 0;
-    for (int i = 0; i < size; ++i)
-    {
-        importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
-            GameLogic::C_MESH,
-            importer.importedProctors.at(i).get(),
-            importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-            &model3D
-        ));
-        std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
-         
-        /* Check which components needs to be added */
-        // BoxCollider
-        if (tmpCompoBooleanValues[0])
-        {
-            importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
-                GameLogic::C_COLLIDER,
-                importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
-                importer.importedProctors.at(i).get(),
-                &collisionBoxShader,
-                tmpCompoBooleanValues[1]
-                ));
-        }
-        // Interactables
-        if (tmpCompoBooleanValues[2])
-        {
-            importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
-                GameLogic::C_INTERACTABLE,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-        // Treasures
-        if (tmpCompoBooleanValues[3])
-        {
-            importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
-                GameLogic::C_TREASURE,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-        // Cash
-        if (tmpCompoBooleanValues[4])
-        {
-            importer.cash.push_back(std::make_shared<GameLogic::Cash>(
-                GameLogic::C_CASH,
-                importer.importedProctors.at(i).get()
-                ));
-        }
-    	// Enemy
-    	if(tmpCompoBooleanValues[5])
-    	{
-            importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
-                importer.importedProctors.at(i).get(),
-                &hero_00,
-                &hero_01,
-                importer.enemiesIslands[enemiesIterator++],
-                importer.prepareModelName(importer.importedProctors.at(i).get()->name)
-            ));
-    	}
-        hierarchy.addObject(importer.importedProctors.at(i).get());
-    }
-
-	/* Clear vector which is now unused */
-    importer.enemiesIslands.clear();
+   for (int i = 0; i < size; ++i)
+   {
+       importer.meshRenderers.push_back(std::make_shared<GameLogic::MeshRenderer>(
+           GameLogic::C_MESH,
+           importer.importedProctors.at(i).get(),
+           importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+           &model3D
+       ));
+       std::vector<bool> tmpCompoBooleanValues = importer.componetsBooleanValues[i];
+        
+       /* Check which components needs to be added */
+       // BoxCollider
+       if (tmpCompoBooleanValues[0])
+       {
+           importer.boxColliders.push_back(std::make_shared<GameLogic::BoxCollider>(
+               GameLogic::C_COLLIDER,
+               importer.importedModelLibrary.getModel(importer.prepareModelName(importer.importedProctors.at(i).get()->name)),
+               importer.importedProctors.at(i).get(),
+               &collisionBoxShader,
+               tmpCompoBooleanValues[1]
+               ));
+       }
+       // Interactables
+       if (tmpCompoBooleanValues[2])
+       {
+           importer.interactables.push_back(std::make_shared<GameLogic::Interactable>(
+               GameLogic::C_INTERACTABLE,
+               importer.importedProctors.at(i).get()
+               ));
+       }
+       // Treasures
+       if (tmpCompoBooleanValues[3])
+       {
+           importer.treasures.push_back(std::make_shared<GameLogic::Treasure>(
+               GameLogic::C_TREASURE,
+               importer.importedProctors.at(i).get()
+               ));
+       }
+       // Cash
+       if (tmpCompoBooleanValues[4])
+       {
+           importer.cash.push_back(std::make_shared<GameLogic::Cash>(
+               GameLogic::C_CASH,
+               importer.importedProctors.at(i).get()
+               ));
+       }
+   	// Enemy
+   	if(tmpCompoBooleanValues[5])
+   	{
+           importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
+               importer.importedProctors.at(i).get(),
+               &hero_00,
+               &hero_01,
+               importer.enemiesIslands[enemiesIterator++],
+               importer.prepareModelName(importer.importedProctors.at(i).get()->name)
+           ));
+   	}
+       hierarchy.addObject(importer.importedProctors.at(i).get());
+   }
+  
+///* Clear vector which is now unused */
+   importer.enemiesIslands.clear();
 	
     int cashSize = importer.cash.size();
 #pragma endregion
@@ -1331,36 +1332,54 @@ int main()
 
             /* Render controls */
             // Player One
+
             if (!hero_00_pi.isFirstClicked)
             {
                 for (int i = 0; i < 4; i++)
                     hero_00_pi.controls[i]->render();
+
+                instructions.render("MOVEMENT", 35, 89,1.0, glm::vec3(1.0, 1.0, 1.0));
             }
-            if (hero_00_pi.stayCloseToInteractable)     
+
+            if (hero_00_pi.stayCloseToInteractable)
+            {
                 hero_00_pi.controls[4]->render();
+                instructions.render("USE", 133, 77, 1.0, glm::vec3(1.0, 1.0, 1.0));
+            }
             if (hero_00_pi.isPlayerOneInBoat)
             {
                 for (int i = 1; i < 6; i++)
                 {
                     if (i == 2) continue;
                     hero_00_pi.controls[i]->render();
-                }
+                }  
+                instructions.render("DIRECTION", 15, 182, 0.4, glm::vec3(1.0, 1.0, 1.0));
+                instructions.render("ROW", 2, 90, 0.4, glm::vec3(1.0, 1.0, 1.0));
+                instructions.render("LEAVE", 195, 90, 0.4, glm::vec3(1.0, 1.0, 1.0));
             }
+
             // Player Two
             if (!hero_01_pi.isFirstClicked)
             {
                 for (int i = 0; i < 4; i++)
                     hero_01_pi.controls[i]->render();
+                instructions.render("MOVEMENT", 1635, 89, 1.0, glm::vec3(1.0, 1.0, 1.0));
             }
-            if (hero_01_pi.stayCloseToInteractable)     
+            if (hero_01_pi.stayCloseToInteractable)
+            {
                 hero_01_pi.controls[4]->render();
+                instructions.render("USE", 1639, 77, 1.0, glm::vec3(1.0, 1.0, 1.0));
+            }
             if (hero_01_pi.isPlayerTwoInBoat)
             {
                 for (int i = 1; i < 6; i++)
                 {
                     if (i == 2) continue;
                     hero_01_pi.controls[i]->render();
-                }
+                    instructions.render("DIRECTION", 1800, 182, 0.4, glm::vec3(1.0, 1.0, 1.0));
+                    instructions.render("ROW", 1678, 90, 0.4, glm::vec3(1.0, 1.0, 1.0));
+                    instructions.render("LEAVE", 1856, 90, 0.4, glm::vec3(1.0, 1.0, 1.0));
+                }                
             }
 
 
