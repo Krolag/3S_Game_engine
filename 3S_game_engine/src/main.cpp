@@ -1577,6 +1577,10 @@ int main()
         if (restartFlag)
         {
             restartFlag = false;
+            if (hero_00_pi.isPlayerOneInBoat)
+                boat_b.detachPlayerOne(&hero_00);
+            else if (hero_00_pi.isPlayerTwoInBoat)
+                boat_b.detachPlayerTwo(&hero_01);
             Points::getInstance()->setScore(0);
             unsigned int size = hierarchy.getProctors().size();
             for (int i = 0; i < size; i++)
