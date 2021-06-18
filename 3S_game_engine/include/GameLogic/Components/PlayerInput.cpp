@@ -110,6 +110,11 @@ namespace GameLogic
 				if (attackTimer > ATTACK_TIME)
 				{
 					/* Attack enemy and apply damage to it if timer passed the attack time */
+					if (isPlayerOne)
+						playerSounds->play2D(attack_D, false);
+					else
+						playerSounds->play2D(attack_K, false);
+
 					((Enemy*)nearestEnemy)->takeDamage(proctor, PLAYER_DAMAGE);
 					attackTimer = 0.0f;
 					isPlayerAttacking = false;
