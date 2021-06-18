@@ -71,6 +71,8 @@ namespace GameLogic
 		bool isCluePickedUp = false;
 		bool isFirstClicked = false;
 		bool stayCloseToInteractable = false;
+		bool isPlayerAttacking = false;
+		bool playerInAttackRadius = false;
 		//int clues[5]{ 0, 1, 2, 3, 4 };
 
 		/* Constructors */
@@ -89,6 +91,8 @@ namespace GameLogic
 		float closestDistance;
 		float closestIndex;
 
+		Proctor* getNearestEnemy();
+		float distanceTo(Proctor* _proctor);
 	protected:
 		InputSystem::KeyboardInput* keyboard;
 
@@ -96,7 +100,7 @@ namespace GameLogic
 		Proctor* parent = nullptr;
 		Boat* boat;
 		bool isPlayerOne;
-
+		float attackTimer;
 
 		void usePlayerOneInput();
 		void usePlayerTwoInput();

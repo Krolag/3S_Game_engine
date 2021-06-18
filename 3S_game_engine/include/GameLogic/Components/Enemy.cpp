@@ -42,11 +42,11 @@ namespace GameLogic
 
 	// Constructor initialize enemy by the given type
 	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, std::string _enemyType) : Component(C_ENEMY, _proctor),
-		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), currentlyChasedPlayer(nullptr),
+		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), enemyType(_enemyType), currentlyChasedPlayer(nullptr),
 		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f), attackTimer(0.0f)
 	{
 		std::cout << "ENEMY CONSTRUCTOR ISLAND ID: " << islandID << "\n";
-		if(_enemyType == "locals_00" || _enemyType == "locals_01")
+		if(enemyType == "locals_00" || enemyType == "locals_01")
 		{
 			// Initialize normal enemy
 			maxHealth = MAX_HEALTH_DEFAULT;
@@ -228,7 +228,10 @@ namespace GameLogic
 			currentlyChasedPlayer = playerOneRef;
 			currentState = CHASING_STATE;
 			// play music
-			enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/spotted_GW.ogg", false);
+			if(enemyType == "locals_max_00" || enemyType == "locals_max_01")
+				enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/spotted_GW.ogg", false);
+			else
+				enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBrown/spotted_GN.ogg", false);
 			return;
 		}
 
@@ -237,8 +240,11 @@ namespace GameLogic
 		{
 			currentlyChasedPlayer = playerTwoRef;
 			currentState = CHASING_STATE;
-			// TODO: @Ignacy or @Kuba play music for chasing player
-			enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/spotted_GW.ogg", false);
+			// play music
+			if (enemyType == "locals_max_00" || enemyType == "locals_max_01")
+				enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/spotted_GW.ogg", false);
+			else
+				enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBrown/spotted_GN.ogg", false);
 			return;
 		}
 
@@ -252,7 +258,11 @@ namespace GameLogic
 		if (distanceToPlayer(currentlyChasedPlayer) > sightRadius)
 		{
 			currentlyChasedPlayer = nullptr;
-			enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/escape_GW.ogg", false);
+			// play music
+			if (enemyType == "locals_max_00" || enemyType == "locals_max_01")
+				enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/escape_GW.ogg", false);
+			else
+				enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBrown/escape_GN.ogg", false);
 			currentState = STOIC_STATE;
 			return;
 		}
@@ -293,7 +303,11 @@ namespace GameLogic
 			/* Change state of enemy for attack state */
 			currentState = ATTACK_STATE;
 			std::cout << proctor->name << " starts attack on " << currentlyChasedPlayer->name << "\n";
-			enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/attack_GW.ogg", false);
+			// play music
+			if (enemyType == "locals_max_00" || enemyType == "locals_max_01")
+				enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBlank/attack_GW.ogg", false);
+			else
+				enemyEngine->play2D("./assets/audio/recordedSounds/Locals/Giga/GigaBrown/attack_GN.ogg", false);
 			// TODO: @Kuba @Dawid ANIMACJE ... TA TA TA. PLAY ATTACK ANIMATION HERE
 		}
 	}
