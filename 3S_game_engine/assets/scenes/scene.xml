@@ -1,6 +1,102 @@
 <?xml version="1.0"?>
 <GameModelsCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <GameModels>
+	<GameModel name="locals_00-1" model_id="1" island_id="1">
+      <Position>
+        <x>75.4</x>
+        <y>0.72</y>
+        <z>2.03</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071068</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270.019775</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>0.6886011</x>
+        <y>0.6886011</y>
+        <z>0.6886011</z>
+      </Scale>
+      <components>
+        <isColliderOn>true</isColliderOn>
+        <isColliderStatic>false</isColliderStatic>
+        <isInteractable>false</isInteractable>
+        <isTreasure>false</isTreasure>
+        <isCash>false</isCash>
+        <isEnemy>true</isEnemy>
+      </components>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="locals_max_01-1" model_id="2" island_id="1">
+      <Position>
+        <x>75.69934</x>
+        <y>0.6</y>
+        <z>1.21</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071069</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>0.16342999</x>
+        <y>0.160196885</y>
+        <z>0.16342999</z>
+      </Scale>
+      <components>
+        <isColliderOn>true</isColliderOn>
+        <isColliderStatic>false</isColliderStatic>
+        <isInteractable>false</isInteractable>
+        <isTreasure>false</isTreasure>
+        <isCash>false</isCash>
+        <isEnemy>true</isEnemy>
+      </components>
+      <ChildrenModels />
+    </GameModel>
+    <GameModel name="locals_max_00-1" model_id="3" island_id="1">
+      <Position>
+        <x>74.79994</x>
+        <y>0.5</y>
+        <z>1.35</z>
+      </Position>
+      <Rotation>
+        <x>-0.7071069</x>
+        <y>0</y>
+        <z>-0</z>
+        <w>0.7071067</w>
+        <eulerAngles>
+          <x>270</x>
+          <y>0</y>
+          <z>0</z>
+        </eulerAngles>
+      </Rotation>
+      <Scale>
+        <x>0.196494028</x>
+        <y>0.192606837</y>
+        <z>0.196494028</z>
+      </Scale>
+      <components>
+        <isColliderOn>true</isColliderOn>
+        <isColliderStatic>false</isColliderStatic>
+        <isInteractable>false</isInteractable>
+        <isTreasure>false</isTreasure>
+        <isCash>false</isCash>
+        <isEnemy>true</isEnemy>
+      </components>
+      <ChildrenModels />
+    </GameModel>
     <GameModel name="finalChest-1" model_id="0" island_id="0">
       <Position>
         <x>11</x>
