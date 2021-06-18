@@ -9,12 +9,14 @@ namespace GameLogic
 	constexpr float MAX_HEALTH_DEFAULT = 100.0f;
 	constexpr float DAMAGE_DEFAULT = 26.0f;
 	constexpr float SIGHT_RADIUS_DEFAULT = 15.0f;
-	constexpr float ATTACK_RADIUS_DEFAULT = 0.5f;
-	constexpr float DAMAGE_RADIUS_DEFAULT = 1.0f;
+	constexpr float ATTACK_RADIUS_DEFAULT = 4.3f;
+	constexpr float DAMAGE_RADIUS_DEFAULT = 2.0f*ATTACK_RADIUS_DEFAULT;
 	constexpr float MAX_VELOCITY_DEFAULT = 7.0f;
 	constexpr float ACCELERATION_DEFAULT = 0.2f;
 	constexpr float MAX_GRAVITY_DEFAULT = 8.0f;
 	constexpr float GRAVITY_ACCELERATION_DEFAULT = 0.3f;
+	constexpr float WANDER_STAY_TIME = 4.0f;
+	constexpr float ATTACK_TIME = 1.0f;
 	const float boundaries[4][4] = {
 		{720.0f, 799.0f, 39.0f, -79.0f},
 		{720.0f, 799.0f, 39.0f, -79.0f},
@@ -30,7 +32,7 @@ namespace GameLogic
 		sightRadius(SIGHT_RADIUS_DEFAULT), attackRadius(ATTACK_RADIUS_DEFAULT), damageRadius(DAMAGE_RADIUS_DEFAULT),
 		maxVelocity(MAX_VELOCITY_DEFAULT), currentVelocity(0.0f), acceleration(ACCELERATION_DEFAULT),
 		maxGravity(MAX_GRAVITY_DEFAULT), currentGravity(0.0f), gravityAcceleration(GRAVITY_ACCELERATION_DEFAULT),
-		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
+		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f), attackTimer(0.0f)
 	{
 		if (_proctor != NULL)
 		{
@@ -41,7 +43,7 @@ namespace GameLogic
 	// Constructor initialize enemy by the given type
 	Enemy::Enemy(Proctor* _proctor, Proctor* _playerOneRef, Proctor* _playerTwoRef, int _islandID, std::string _enemyType) : Component(C_ENEMY, _proctor),
 		playerOneRef(_playerOneRef), playerTwoRef(_playerTwoRef), islandID(_islandID), currentlyChasedPlayer(nullptr),
-		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
+		currentState(STOIC_STATE), wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f), attackTimer(0.0f)
 	{
 		std::cout << "ENEMY CONSTRUCTOR ISLAND ID: " << islandID << "\n";
 		if(_enemyType == "locals_00" || _enemyType == "locals_01")
@@ -68,7 +70,7 @@ namespace GameLogic
 			damage = DAMAGE_DEFAULT * 1.5f;
 			sightRadius = SIGHT_RADIUS_DEFAULT;
 			attackRadius = ATTACK_RADIUS_DEFAULT * 1.5f;
-			damageRadius = DAMAGE_RADIUS_DEFAULT * 2.0f;
+			damageRadius = DAMAGE_RADIUS_DEFAULT * 1.5f;
 			maxVelocity = MAX_VELOCITY_DEFAULT * 0.6f;
 			currentVelocity = 0.0f;
 			acceleration = ACCELERATION_DEFAULT * 0.7f;
@@ -91,7 +93,7 @@ namespace GameLogic
 		maxVelocity(_maxVelocity), currentVelocity(0.0f), acceleration(_acceleration),
 		maxGravity(_maxGravity), currentGravity(0.0f), gravityAcceleration(_gravityAcceleration),
 		currentState(STOIC_STATE),
-		wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f)
+		wanderDirection(glm::vec3(0.0f)), newWanderDirectionTimer(0.0f), attackTimer(0.0f)
 	{
 		if (_proctor != NULL)
 		{
@@ -118,9 +120,6 @@ namespace GameLogic
 			case ATTACK_STATE:
 				attackBehaviour();
 				break;
-			case DYING_STATE:
-				dyingBehaviour();
-				break;
 			}
 		}
 	}
@@ -130,11 +129,13 @@ namespace GameLogic
 		currentHealth -= damage;
 		if (currentHealth < 0.0f)
 		{
-			// PLAY DEATH ANIMATION HERE
+			// TODO: @Ignacy or @Kuba play music for locals dying
+			proctor->setScale(glm::vec3(0.0f, 0.0f, 0.0f));
 			currentState = DEAD_STATE;
 			currentlyChasedPlayer = nullptr;
 			return;
 		}
+		// TODO: @Ignacy or @Kuba play music for locals taking damage
 		currentlyChasedPlayer = playerRef;
 		currentState = CHASING_STATE;
 	}
@@ -148,8 +149,7 @@ namespace GameLogic
 	{
 		/* Enemy wandering */
 		/* If appropriate amount of time passed, then calculate new random wander direction */
-		newWanderDirectionTimer += proctor->getParentHierarchy()->getDeltaTime();
-		if (newWanderDirectionTimer > 4)
+		if (newWanderDirectionTimer > WANDER_STAY_TIME)
 		{
 			Application::Randomizer randomizer;
 			
@@ -169,7 +169,7 @@ namespace GameLogic
 		/* If enemy is staying in place, then rotate him left and right, else move and rotate enemy in wander direction */
 		if (wanderDirection.x == 0.0f && wanderDirection.z == 0.0f)
 		{
-			if (newWanderDirectionTimer > 1.33)
+			if (newWanderDirectionTimer > WANDER_STAY_TIME/3.0f)
 			{
 				/* Apply rotation */
 				glm::quat enemyRotation = proctor->getRotation();
@@ -218,6 +218,8 @@ namespace GameLogic
 			if (enemyPosition.z < boundaries[islandID][2]) wanderDirection.z *= -1;
 			if (enemyPosition.z > boundaries[islandID][3]) wanderDirection.z *= -1;
 		}
+
+		newWanderDirectionTimer += proctor->getParentHierarchy()->getDeltaTime();
 		
 		/* If first player is in sight radius then chase him */
 		if(distanceToPlayer(playerOneRef) <= sightRadius)
@@ -233,7 +235,7 @@ namespace GameLogic
 		{
 			currentlyChasedPlayer = playerTwoRef;
 			currentState = CHASING_STATE;
-			// play music
+			// TODO: @Ignacy or @Kuba play music for chasing player
 			return;
 		}
 
@@ -280,29 +282,55 @@ namespace GameLogic
 		/* Apply rotation */
 		glm::quat enemyStartRotation = glm::quat(1.0f, 0.0f, -angle, 0.0f);
 		proctor->setRotation(enemyStartRotation);
-				
+		
 		/* If currently chased player is within attack radius then attack him */
 		if(distanceToPlayer(currentlyChasedPlayer) < attackRadius)
 		{
+			/* Change state of enemy for attack state */
 			currentState = ATTACK_STATE;
 			std::cout << proctor->name << " starts attack on " << currentlyChasedPlayer->name << "\n";
-			// PLAY ATTACK ANIMATION HERE
-			// TODO: @Kuba @Dawid ANIMACJE ... TA TA TA
+			// TODO: @Ignacy or @Kuba play local attack audio here
+			// TODO: @Kuba @Dawid ANIMACJE ... TA TA TA. PLAY ATTACK ANIMATION HERE
 		}
 	}
 
 	void Enemy::attackBehaviour()
 	{
-		std::cout << "ATTACKING\n";
-		
-		// IF ANIMATION HAS ENDED THEN CHECK IF CURRENTLY CHASED IS WITHIN ATTACK RADIUS
-		// IF CURRENTLY CHASED IS WITHIN ATTACK RADIUS THEN APPLY DAMAGE TO HIM
-		// CHASE CURRENTLY CHASED AGAIN
-	}
+		/* Calculate direction to player */
+		glm::vec3 playerPosition = currentlyChasedPlayer->getPosition();
+		glm::vec3 enemyPosition = proctor->getPosition();
+		glm::vec3 direction = glm::normalize(enemyPosition - playerPosition);
+		glm::vec3 enemyNormalDown = glm::vec3(0.0f, 0.0f, -1.0f);
 
-	void Enemy::dyingBehaviour()
-	{
-		// IF ANIMATION HAS ENDED THEN SCALE TO 0 0 0 AND CHANGE STATE TO DEAD
+		/* Calc rotation to look at the chased player */
+		float dot = enemyNormalDown.x * direction.x + enemyNormalDown.z * direction.z;	// dot product between enemy starting rotation and direction to player
+		float det = enemyNormalDown.x * direction.z - direction.x * enemyNormalDown.z;	// determinant
+		float angle = atan2(det, dot);											// angle between enemy starting position and direction to player in radians
+
+		/* Apply rotation */
+		glm::quat enemyStartRotation = glm::quat(1.0f, 0.0f, -angle, 0.0f);
+		proctor->setRotation(enemyStartRotation);
+		
+		/* Check if animation attack time has ended */
+		if (attackTimer > ATTACK_TIME)
+		{
+			/* If attack animation time has ended then check if enemy is within damage radius */
+			if(distanceToPlayer(currentlyChasedPlayer) < damageRadius)
+			{
+				std::cout << proctor->name << " is damaging " << currentlyChasedPlayer->name << "\n";
+				/* apply damage to player if he is within damage radius */
+				proctor->getParentHierarchy()->takeDamage();
+			}
+
+			/* Chase currently chased player again */
+			currentState = CHASING_STATE;
+
+			/* Restart attack timer */
+			attackTimer = 0.0f;
+		}
+
+		/* Increment attack timer */
+		attackTimer += proctor->getParentHierarchy()->getDeltaTime();
 	}
 
 	float Enemy::distanceToPlayer(Proctor* player)
