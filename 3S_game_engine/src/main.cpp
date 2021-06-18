@@ -222,8 +222,8 @@ int main()
     };
 
     /* Health */
-    float healthPosX = ((320 * 0.5f) / 1920) * 0.5f;
-    float healthPosY = ((320 * 0.5f) / 1080) * 0.5f;
+    float healthPosX = ((320 * 0.6f) / 1920) * 0.3f;
+    float healthPosY = ((320 * 0.6f) / 1080) * 0.3f;
     UIRender::UIElement health[6] = {
         UIRender::UIElement("./assets/shaders/ui.vert", "./assets/shaders/ui.frag", "./assets/textures/health", "empty.png",
         0.4 - healthPosX, 0.4 + healthPosX, 0.9 + healthPosY, 0.9 - healthPosY),
@@ -723,7 +723,7 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             story_00.render();
-            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 1.0f, 1.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                 sceneManager.changeCurrentScene("enterStory_01");
         }
@@ -732,7 +732,7 @@ int main()
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             story_01.render();
-            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 1.0f, 1.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
                 sceneManager.changeCurrentScene("game");
             
