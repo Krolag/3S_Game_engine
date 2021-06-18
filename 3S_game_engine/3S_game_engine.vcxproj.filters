@@ -105,13 +105,21 @@
     <ClInclude Include="include\AnimationSystem\System\Animation.h" />
     <ClInclude Include="include\AnimationSystem\System\Animator.h" />
     <ClInclude Include="include\Monster\Monster.h" />
-    <ClInclude Include="include\AnimationSystem\AnimationSystem.h" />
     <ClInclude Include="include\AnimationSystem\System\BoneInfo.h" />
     <ClInclude Include="include\GameLogic\Components\Anima.h" />
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Boat\Boat.h" />
     <ClInclude Include="include\GameLogic\Components\Enemy.h" />
     <ClInclude Include="include\BoundingRegion\BoundingRegion.h" />
+    <ClInclude Include="include\AnimationSystem\defines.h" />
+    <ClInclude Include="include\AnimationSystem\Animation.h" />
+    <ClInclude Include="include\AnimationSystem\SkeletalModel.h" />
+    <ClInclude Include="include\AnimationSystem\AnimMesh.h" />
+    <ClInclude Include="include\AnimationSystem\Namer.h" />
+    <ClInclude Include="include\AnimationSystem\Vertex.h" />
+    <ClInclude Include="include\AnimationSystem\cg_exception.h" />
+    <ClInclude Include="include\AnimationSystem\AnimationSystem.h" />
+    <ClInclude Include="include\AnimationSystem\Model3D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\model_loading.vert" />

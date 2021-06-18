@@ -62,11 +62,21 @@ namespace Loader
 		cleanup();
 		path = _path;
 
+
+
 		/* Read file via Assimp */
 		Assimp::Importer importer;
 		const aiScene* scene;
 		if (!noAnim)
-			scene = importer.ReadFile(_path, aiProcess_Triangulate);
+			scene = importer.ReadFile(
+				_path, 
+				aiProcess_JoinIdenticalVertices |
+				aiProcess_SortByPType |
+				aiProcess_Triangulate |
+				aiProcess_GenSmoothNormals |
+				aiProcess_FlipUVs |
+				aiProcess_LimitBoneWeights
+			);
 		else
 			scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_PreTransformVertices);
 
@@ -274,6 +284,9 @@ namespace Loader
 
 	void Model::cleanup()
 	{
+		glDeleteVertexArrays(1, &VAO);
+		VAO = 0;
+
 		for (Mesh mesh : meshes)
 			mesh.cleanup();
 	}

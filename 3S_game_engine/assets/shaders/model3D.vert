@@ -44,11 +44,11 @@ void main()
 		/* Calculate total position */
 		for (int i = 0; i < MAX_WEIGHTS; i++)
 		{
-				vec4 localPosition = jointTransforms[inJointIndices[i]] * vec4(inPos, 1.0f);
-				totalLocalPosition += localPosition * inWeights[i];
+			vec4 localPosition = jointTransforms[inJointIndices[i]] * vec4(inPos, 1.0f);
+			totalLocalPosition += localPosition * inWeights[i];
 
-				vec4 worldNormal = jointTransforms[inJointIndices[i]] * vec4(inNormal, 1.0f);
-				totalNormal += worldNormal * inWeights[i];
+			vec4 worldNormal = jointTransforms[inJointIndices[i]] * vec4(inNormal, 1.0f);
+			totalNormal += worldNormal * inWeights[i];
 		}
 
 		FragPos = vec3(model * totalLocalPosition);

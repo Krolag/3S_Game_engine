@@ -26,6 +26,9 @@ namespace Loader
 	class Model
 	{
 	public:
+		/* TEST CODE */
+		GLuint VAO;
+
 		std::string path;
 		std::string name;
 		const aiScene* scene;
