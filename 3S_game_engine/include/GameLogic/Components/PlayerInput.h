@@ -44,6 +44,10 @@ namespace GameLogic
 		float currentTime = 0.0f;
 		int buttonToPress;
 		bool isPlayerOneUsingChest = false;
+		bool isPlayerMoving = false;
+		bool isInAir = false;
+		float timeInAir = 1;
+		float cTimeInAir = 0;
 
 		int clue;
 		bool isFinalChestOpen = false;

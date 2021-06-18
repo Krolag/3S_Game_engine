@@ -324,7 +324,7 @@ int main()
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, &boat_m, &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
     /* Player One */
-    Loader::Model           hero_00_m("./assets/models/players/postacie.fbx", "playerOne", true, true);
+    Loader::Model           hero_00_m("./assets/models/players/blue1.fbx", "playerOne", true, true);
     GameLogic::Proctor      hero_00("playerOne", glm::vec3(621.332f, 6.5f, 25.568f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
     //GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00, &hero_00_m, &model3D);
@@ -345,9 +345,9 @@ int main()
     GameLogic::BoxCollider  hero_01_bc(GameLogic::C_COLLIDER, &hero_01_m, &hero_01, &collisionBoxShader, false);
     hierarchy.addObject(&hero_01);
     // Kraken
-    Loader::Model           enemy_00_m("./assets/models/kraken/kraken.fbx", "enemy_00", true, true);
-    GameLogic::Proctor      monster("monster", glm::vec3(703.0f, -200.0f, -130.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.04f));
-    GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, &enemy_00_m, &model3D);
+    Loader::Model           monster_m("./assets/models/kraken/kraken.fbx", "enemy_00", true, true);
+    GameLogic::Proctor      monster("monster", glm::vec3(703.0f, -200.0f, -130.0f), glm::quat(1.0f, 0.0f, glm::radians(180.0f), 0.0f), glm::vec3(0.04f));
+    GameLogic::MeshRenderer monster_mr(GameLogic::C_MESH, &monster, &monster_m, &model3D);
     hierarchy.addObject(&monster);
 
     hero_00_pi.setActive(false);

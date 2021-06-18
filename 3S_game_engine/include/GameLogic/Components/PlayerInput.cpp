@@ -91,6 +91,24 @@ namespace GameLogic
 			usePlayerOneInput();
 		else
 			usePlayerTwoInput();
+
+		/* If any player is moving */
+		if (isPlayerMoving)
+		{
+			if (cTimeInAir >= 0 && cTimeInAir < 0.2)
+			{
+				proctor->transform.position.y += 10.0f * proctor->getDeltaTime();
+				isInAir = true;
+			}
+			if (cTimeInAir >= 0.2 && cTimeInAir < 0.4)
+			{
+				proctor->transform.position.y -= 10.0f * proctor->getDeltaTime();
+				isInAir = false;
+			}
+			if (cTimeInAir >= 0.4)
+				cTimeInAir = 0;
+		}
+		cTimeInAir += proctor->getDeltaTime();
 	}
 
 	void PlayerInput::checkForDistance()
@@ -144,11 +162,14 @@ namespace GameLogic
 				}
 
 				/* If any movement key is used, play sound and animation */
-				if ((keyboard->isKeyDown(GLFW_KEY_W) || 
-					keyboard->isKeyDown(GLFW_KEY_S) || 
-					keyboard->isKeyDown(GLFW_KEY_A) || 
+				if ((keyboard->isKeyDown(GLFW_KEY_W) ||
+					keyboard->isKeyDown(GLFW_KEY_S) ||
+					keyboard->isKeyDown(GLFW_KEY_A) ||
 					keyboard->isKeyDown(GLFW_KEY_D)))
 				{
+					if (!isPlayerOneInBoat)
+						isPlayerMoving = true;
+
 					/* Check if player clicked any button */
 					if (!isFirstClicked)
 						isFirstClicked = true;
@@ -163,6 +184,8 @@ namespace GameLogic
 					//if (proctor->getComponentOfType(C_ANIMA) != NULL)
 					//	((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(-1);
 				}
+				else
+					isPlayerMoving = false;
 
 				/* Horizontal movement */
 				if (keyboard->isKeyDown(GLFW_KEY_A) && xLeftDistance)
@@ -272,6 +295,9 @@ namespace GameLogic
 					keyboard->isKeyDown(GLFW_KEY_J) ||
 					keyboard->isKeyDown(GLFW_KEY_L)))
 				{
+					if (!isPlayerTwoInBoat)
+						isPlayerMoving = true;
+
 					if (!isFirstClicked)
 						isFirstClicked = true;
 					
@@ -283,6 +309,10 @@ namespace GameLogic
 					}
 
 					//((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
+				}
+				else
+				{
+					isPlayerMoving = false;
 				}
 
 				/* Horizontal movement */
