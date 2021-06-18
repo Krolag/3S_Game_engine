@@ -364,7 +364,7 @@ int main()
     hero_01.setInitialTransform();
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("./assets/scenes/scene.xml", &model3D, false, 10.0f);
+    Loader::Importer importer("./assets/scenes/exported_scene.xml", &model3D, false, 10.0f);
 	
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
@@ -1550,9 +1550,11 @@ int main()
             points.render("GOLD", SCREEN_WIDTH * 0.66, SCREEN_HEIGHT * 0.715, 3, glm::vec3(1.0, 0.75, 0.0));
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.63, SCREEN_HEIGHT * 0.57, 3, glm::vec3(1.0, 0.75, 0.0));
             points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
-            restartFlag = true;
             if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
+            {
                 sceneManager.changeCurrentScene("mainMenu");
+                restartFlag = true;
+            }
         }
 
         if (restartFlag)
