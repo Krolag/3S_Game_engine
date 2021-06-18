@@ -443,9 +443,9 @@ int main()
     DirLight dirLight(
         // 170.8f  /  -134.9f  /  212.0f 
         glm::vec3(0.0f, -26.0f, -0.2f),
-        glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
-        glm::vec4(0.6f, 0.6f, 0.6f, 1.0f),
-        glm::vec4(0.75f, 0.75f, 0.75f, 1.0f),
+        glm::vec4(0.45f, 0.45f, 0.45f, 1.0f),
+        glm::vec4(0.5f, 0.5f, 0.5f, 1.0f),
+        glm::vec4(0.2f, 0.2f, 0.2f, 1.0f),
         BoundingRegion(glm::vec3(-50.0f, -50.0f, 0.5f), glm::vec3(50.0f, 50.0f, 80.0f)),
         8000
     );
