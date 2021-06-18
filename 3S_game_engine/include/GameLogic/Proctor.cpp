@@ -210,9 +210,7 @@ namespace GameLogic
 	void Proctor::activate()
 	{
 		activeFlag = true;
-		transform.position = initialTransform.position;
-		//transform.rotation = initialTransform.rotation; // to jest imo zbedne
-		transform.scale = initialTransform.scale;
+		transform = initialTransform;
 	}
 
 	void Proctor::setInitialTransform()

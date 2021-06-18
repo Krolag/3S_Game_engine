@@ -360,6 +360,9 @@ int main()
     hero_01_pi.setActive(false);
     boat_b.setActive(false);
 
+    hero_00.setInitialTransform();
+    hero_01.setInitialTransform();
+
     /* Create importer with given *.xml file */
     Loader::Importer importer("./assets/scenes/scene.xml", &model3D, false, 10.0f);
 	

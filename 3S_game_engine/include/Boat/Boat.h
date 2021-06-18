@@ -10,6 +10,7 @@ namespace GameLogic
 	class Boat : public Component
 	{
 	public:
+		Transform defaultInitialTransform;
 		Boat(GameLogic::ComponentType _type, GameLogic::Proctor* _proctor);
 
 		void update();

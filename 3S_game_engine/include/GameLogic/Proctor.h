@@ -36,6 +36,7 @@ namespace GameLogic
 		Transform transform;
 		Transform parentTransform;
 		Transform beginTransform;
+		Transform initialTransform;
 		bool activeFlag = true;
 
 		/* Constructors / Destructors */
@@ -100,7 +101,6 @@ namespace GameLogic
 		bool isStatic = false;
 		float deltaTime;
 		std::vector<Component*> components;
-		Transform initialTransform;
 	};
 }
 
