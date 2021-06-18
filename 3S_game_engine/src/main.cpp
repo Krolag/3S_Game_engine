@@ -1556,7 +1556,7 @@ int main()
             lostScene.render();
             points.render("GOLD", SCREEN_WIDTH * 0.66, SCREEN_HEIGHT * 0.715, 3, glm::vec3(1.0, 0.75, 0.0));
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.63, SCREEN_HEIGHT * 0.57, 3, glm::vec3(1.0, 0.75, 0.0));
-            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 1.0f, 1.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
             {
                 restartFlag = true;
@@ -1570,7 +1570,7 @@ int main()
             winScene.render();
             points.render("GOLD", SCREEN_WIDTH * 0.66, SCREEN_HEIGHT * 0.715, 3, glm::vec3(1.0, 0.75, 0.0));
             points.render(std::to_string(Points::getInstance()->getScore()), SCREEN_WIDTH * 0.63, SCREEN_HEIGHT * 0.57, 3, glm::vec3(1.0, 0.75, 0.0));
-            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 0.0f, 0.0f));
+            points.render("Press V / ., to continue...", 0, SCREEN_HEIGHT * 0.08, 1, glm::vec3(1.0f, 1.0f, 1.0f));
             if (keyboardInput->isKeyPressed(GLFW_KEY_V) || keyboardInput->isKeyPressed(GLFW_KEY_PERIOD))
             {
                 sceneManager.changeCurrentScene("mainMenu");
