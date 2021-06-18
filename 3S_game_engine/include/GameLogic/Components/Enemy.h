@@ -53,6 +53,7 @@ namespace GameLogic
 		float gravityAcceleration;
 		int islandID;
 		irrklang::ISoundEngine* enemyEngine = irrklang::createIrrKlangDevice();
+		std::string enemyType;
 		
 		EnemyState currentState;
 		
