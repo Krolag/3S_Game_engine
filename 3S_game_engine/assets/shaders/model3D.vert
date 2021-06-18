@@ -1,6 +1,6 @@
 #version 430 core
 const int MAX_JOINTS = 100;
-const int MAX_WEIGHTS = 4;
+const int MAX_BONE_INFLUENCE = 4;
 
 layout (location = 0) in vec3 inPos;
 layout (location = 1) in vec3 inNormal;
@@ -17,7 +17,7 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform vec4 plane;
-uniform mat4 jointTransforms[MAX_JOINTS];
+uniform mat4 jointTransforms[100];
 uniform bool noAnim;
 uniform mat4 lightSpaceMatrix;
 
@@ -39,23 +39,29 @@ void main()
 	else
 	{
 		vec4 totalLocalPosition = vec4(0.0f);
-		vec4 totalNormal = vec4(0.0f);
+		vec3 totalNormal = vec3(0.0f);
 
 		/* Calculate total position */
-		for (int i = 0; i < MAX_WEIGHTS; i++)
+		for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
 		{
-			vec4 localPosition = jointTransforms[inJointIndices[i]] * vec4(inPos, 1.0f);
-			totalLocalPosition += localPosition * inWeights[i];
+			mat4 jointTransformTMP = jointTransforms[inJointIndices[i]];
+			vec4 posePosition = jointTransformTMP * vec4(inPos, 1.0f);
+			totalLocalPosition += posePosition * inWeights[i];
 
-			vec4 worldNormal = jointTransforms[inJointIndices[i]] * vec4(inNormal, 1.0f);
-			totalNormal += worldNormal * inWeights[i];
+//			vec4 localPosition = jointTransforms[inJointIndices[i]] * vec4(inPos, 1.0f);
+//			totalLocalPosition += localPosition * inWeights[i];
+//
+//			vec4 worldNormal = jointTransforms[inJointIndices[i]] * vec4(inNormal, 1.0f);
+			totalNormal = mat3(jointTransforms[inJointIndices[i]]) * inNormal;
 		}
 
-		FragPos = vec3(model * totalLocalPosition);
-		Normal = mat3(transpose(inverse(model))) * totalNormal.xyz;
+		mat4 viewMovel = view * model;
+		gl_Position = projection * viewMovel * totalLocalPosition;
 		TexCoord = inTexCoords;
-		FragPosLightSpace = lightSpaceMatrix * model * totalLocalPosition;
+		FragPos = vec3(model * vec4(inPos, 1.0f));
+
+		Normal = mat3(transpose(inverse(model))) * totalNormal;
+		FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0f);
 		
-		gl_Position = projection * view * model * totalLocalPosition;
 	}
 }

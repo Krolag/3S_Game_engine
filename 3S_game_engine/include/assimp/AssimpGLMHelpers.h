@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ASSIMPGLMHELPERS_H
+#define ASSIMPGLMHELPERS_H
 
 #include<assimp/Quaternion.h>
 #include<assimp/vector3.h>
@@ -6,11 +7,8 @@
 #include<glm/glm.hpp>
 #include<glm/gtc/quaternion.hpp>
 
-
-class AssimpGLMHelpers
-{
+class AssimpGLMHelpers {
 public:
-
     static inline glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
     {
         glm::mat4 to;
@@ -32,3 +30,5 @@ public:
         return glm::quat(pOrientation.w, pOrientation.x, pOrientation.y, pOrientation.z);
     }
 };
+
+#endif // !ASSIMPGLMHELPERS_H

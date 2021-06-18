@@ -105,7 +105,6 @@
     <ClInclude Include="include\AnimationSystem\System\Animation.h" />
     <ClInclude Include="include\AnimationSystem\System\Animator.h" />
     <ClInclude Include="include\Monster\Monster.h" />
-    <ClInclude Include="include\AnimationSystem\System\BoneInfo.h" />
     <ClInclude Include="include\GameLogic\Components\Anima.h" />
     <ClInclude Include="include\Application\Scene.h" />
     <ClInclude Include="include\Boat\Boat.h" />

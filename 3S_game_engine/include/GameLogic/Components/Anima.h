@@ -3,32 +3,26 @@
 #define ANIMA_H
 
 #include "Component.h"
-#include "AnimationSystem/System/Animation.h"
 #include "AnimationSystem/System/Animator.h"
-#include "GameLogic/Proctor.h"
 #include "Loader/Model.h"
+#include "Shader/Shader.h"
 
 namespace GameLogic
 {
+	
+	
 	class Anima : public Component
 	{
 	public:
-		Animator animator;
-		std::vector<Animation> loadedAnimations;
+		Animator* currentAnimator;
+		Animator* idle;
 
-		/* Constructors */
-		Anima(ComponentType _type, Proctor* _proctor = NULL);
+		Animation playerOneIdle;
+		Shader* animationShader;
+
+		Anima(ComponentType _type, Proctor* _proctor, Loader::Model* _model, Shader* _shader);
 
 		void update();
-		void playAnimation(int _index);
-
-	protected:
-		int cIndex = -1;
-
-	private:
-		Loader::Model* model;
-		void getModelFromProctor();
-		void initializeAnimations();
 	};
 }
 

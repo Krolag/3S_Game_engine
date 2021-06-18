@@ -1,4 +1,3 @@
-#pragma once
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
 
@@ -7,26 +6,23 @@
 #include <vector>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
-#include "AnimationSystem/System/Animation.h"
+#include "Animation.h"
+#include "Bone.h"
 
-//namespace AnimationSystem
-//{
-	class Animator
-	{
-	public:
-		Animator(Animation* _animation = NULL);
+class Animator {
+private:
+    std::vector<glm::mat4> m_Transforms;
+    Animation* m_CurrentAnimation;
+    float m_CurrentTime;
+    float m_DeltaTime;
+public:
+    Animator() = default;
+    Animator(Animation* current);
+    void UpdateAnimation(float dt);
+    void PlayAnimation(Animation* pAnimation);
+    void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
+    std::vector<glm::mat4> GetPoseTransforms();
+};
 
-		void updateAnimation(float _dt);
-		void playAnimation(Animation* _pAnimation);
-		void calculateBoneTransform(const AssimpNodeData* _node, glm::mat4 _parentTransform);
-		std::vector<glm::mat4> getFinalBoneMatrices();
-
-	private:
-		std::vector<glm::mat4> finalBoneMatrices;
-		Animation* currentAnimation;
-		float currentTime;
-		float deltaTime;
-	};
-//}
 
 #endif // !ANIMATOR_H

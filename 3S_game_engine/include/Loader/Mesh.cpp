@@ -41,7 +41,7 @@ namespace Loader
 
 	Mesh::Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, aiColor4D _diffuse, aiColor4D _specular)
 		: vertices(_vertices), indices(_indices), diffuse(_diffuse), specular(_specular), noTex(true)
-	{ 
+	{
 		setup();
 	}
 
@@ -105,7 +105,7 @@ namespace Loader
 		glGenBuffers(1, &EBO);
 
 		glBindVertexArray(VAO);
-		
+
 		/* Load data */
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);

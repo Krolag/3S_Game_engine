@@ -324,11 +324,10 @@ int main()
     GameLogic::BoxCollider  boat_bc(GameLogic::C_COLLIDER, &boat_m, &boat, &collisionBoxShader, false);
     hierarchy.addObject(&boat);
     /* Player One */
-    Loader::Model           hero_00_m("./assets/models/players/blue1.fbx", "playerOne", true, false);
+    Loader::Model           hero_00_m("./assets/models/players/postacie.fbx", "playerOne", true, true);
     GameLogic::Proctor      hero_00("playerOne", glm::vec3(621.332f, 6.5f, 25.568f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f), glm::vec3(0.012f));
     GameLogic::MeshRenderer hero_00_mr(GameLogic::C_MESH, &hero_00, &hero_00_m, &model3D);
-    GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00);
-    hero_00_an.playAnimation(0);
+    //GameLogic::Anima        hero_00_an(GameLogic::C_ANIMA, &hero_00, &hero_00_m, &model3D);
     GameLogic::PlayerInput  hero_00_pi(GameLogic::C_MOVEMENT, &hero_00, true, &boat_b);
     for (int i = 0; i < 6; i++)
         hero_00_pi.controls[i] = &playerOneControls[i];

@@ -1,67 +1,61 @@
-#pragma once
 #ifndef BONE_H
 #define BONE_H
 
 #include <vector>
 #include <assimp/scene.h>
-#include <assimp/AssimpGLMHelpers.h>
 #include <list>
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
+#include "assimp/AssimpGLMHelpers.h"
 
-//namespace AnimationSystem
-//{
-	struct KeyPosition
-	{
-		glm::vec3 position;
-		float timeStamp;
-	};
+struct KeyPosition
+{
+    glm::vec3 position;
+    float timeStamp;
+};
 
-	struct KeyRotation
-	{
-		glm::quat rotation;
-		float timeStamp;
-	};
+struct KeyRotation
+{
+    glm::quat orientation;
+    float timeStamp;
+};
 
-	struct KeyScale
-	{
-		glm::vec3 scale;
-		float timeStamp;
-	};
+struct KeyScale
+{
+    glm::vec3 scale;
+    float timeStamp;
+};
 
-	class Bone
-	{
-	public:
-		Bone(const std::string& _name, int _ID, const aiNodeAnim* _channel);
 
-		void update(float _animationTime);
+class Bone {
+private:
+    std::vector<KeyPosition> m_Positions;
+    std::vector<KeyRotation> m_Rotations;
+    std::vector<KeyScale> m_Scales;
+    int m_NumPositions;
+    int m_NumRotations;
+    int m_NumScalings;
 
-		int getPositionIndex(float _animationTime);
-		int getRotationIndex(float _animationTime);
-		int getScaleIndex(float _animationTime);
+    glm::mat4 m_LocalTransform;
+    std::string m_Name;
+    int m_ID;
 
-		glm::mat4 getLocalTransform() { return localTransform; }
-		std::string getBoneName() const { return name; }
-		int getBoneID() { return ID; }
+    float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
+    glm::mat4 InterpolatePosition(float animationTime);
+    glm::mat4 InterpolateRotation(float animationTime);
+    glm::mat4 InterpolateScaling(float animationTime);
+public:
+    Bone(const std::string& name, int ID, const aiNodeAnim* channel);
+    void Update(float animationTime);
+    int GetPositionIndex(float animationTime);
+    int GetRotationIndex(float animationTime);
+    int GetScaleIndex(float animationTime);
 
-	private:
-		std::vector<KeyPosition> positions;
-		std::vector<KeyRotation> rotations;
-		std::vector<KeyScale> scales;
-		int numPositions;
-		int numRotations;
-		int numScales;
+    glm::mat4 GetLocalTransform() { return m_LocalTransform; }
+    std::string GetBoneName() const { return m_Name; }
+    int GetBoneID() const { return m_ID; }
+};
 
-		std::string name;
-		int ID;
-		glm::mat4 localTransform;
-
-		float getScaleFactor(float _lastTimeStamp, float _nextTimeStamp, float _animationTime);
-		glm::mat4 interpolatePosition(float _animationTime);
-		glm::mat4 interpolateRotation(float _animationTime);
-		glm::mat4 interpolateScale(float _animationTime);
-	};
-//}
 
 #endif // !BONE_H

@@ -6,8 +6,8 @@ namespace Loader
 		: position(_position), rotation(_rotation), scale(_scale), path(_path), noTex(_noTex), name(_name)
 	{
 		loadModel(path);
-	}	
-	
+	}
+
 	Model::Model(std::string _path, std::string _name, bool _noTex, bool _noAnim, glm::vec3 _position, glm::quat _rotation, glm::vec3 _scale)
 		: position(_position), rotation(_rotation), scale(_scale), path(_path), noTex(_noTex), noAnim(_noAnim), name(_name)
 	{
@@ -69,7 +69,7 @@ namespace Loader
 		const aiScene* scene;
 		if (!noAnim)
 			scene = importer.ReadFile(
-				_path, 
+				_path,
 				aiProcess_JoinIdenticalVertices |
 				aiProcess_SortByPType |
 				aiProcess_Triangulate |

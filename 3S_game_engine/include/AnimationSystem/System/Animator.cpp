@@ -1,70 +1,59 @@
 #include "Animator.h"
 
-//namespace AnimationSystem
-//{
-	Animator::Animator(Animation* _animation)
-	{
-		finalBoneMatrices.reserve(100);
+Animator::Animator(Animation* current)
+{
+    m_CurrentAnimation = current;
+    m_CurrentTime = 0.0;
+    m_Transforms.reserve(100);
+    for (int i = 0; i < 100; i++)
+        m_Transforms.push_back(glm::mat4(1.0f));
+}
 
-		for (int i = 0; i < 100; i++)
-		{
-			finalBoneMatrices.push_back(glm::mat4(1.0f));
-		}
-		this->currentTime = 0.0f;
+void Animator::UpdateAnimation(float dt)
+{
+    m_DeltaTime = dt;
+    if (m_CurrentAnimation)
+    {
+        m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
+        m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
+        CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
+    }
+}
 
-		if (_animation != NULL)
-		{
-			this->currentAnimation = _animation;
-		}
-	}
+void Animator::PlayAnimation(Animation* pAnimation)
+{
+    m_CurrentAnimation = pAnimation;
+    m_CurrentTime = 0.0f;
+}
 
-	void Animator::updateAnimation(float _dt)
-	{
-		this->deltaTime = _dt;
+void Animator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
+{
+    std::string nodeName = node->name;
+    glm::mat4 nodeTransform = node->transformation;
 
-		if (this->currentAnimation)
-		{
-			currentTime += currentAnimation->getTicksPerSecond() * _dt;
-			currentTime = fmod(currentTime, currentAnimation->getDuration());
-			calculateBoneTransform(&currentAnimation->getRootNode(), glm::mat4(1.0f));
-		}
-	}
+    Bone* Bone = m_CurrentAnimation->FindBone(nodeName);
 
-	void Animator::playAnimation(Animation* _pAnimation)
-	{
-		currentAnimation = _pAnimation;
-		currentTime = 0.0f;
-	}
+    if (Bone)
+    {
+        Bone->Update(m_CurrentTime);
+        nodeTransform = Bone->GetLocalTransform();
+    }
 
-	void Animator::calculateBoneTransform(const AssimpNodeData* _node, glm::mat4 _parentTransform)
-	{
-		std::string nodeName = _node->name;
-		glm::mat4 nodeTransform = _node->transformation;
+    glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-		Bone* bone = currentAnimation->findBone(nodeName);
+    auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+    if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+    {
+        int index = boneInfoMap[nodeName].id;
+        glm::mat4 offset = boneInfoMap[nodeName].offset;
+        m_Transforms[index] = globalTransformation * offset;
+    }
 
-		if (bone)
-		{
-			bone->update(currentTime);
-			nodeTransform = bone->getLocalTransform();
-		}
+    for (int i = 0; i < node->childrenCount; i++)
+        CalculateBoneTransform(&node->children[i], globalTransformation);
+}
 
-		glm::mat4 globalTransform = _parentTransform * nodeTransform;
-
-		auto boneInfoMap = currentAnimation->getBoneIDMap();
-		if (boneInfoMap.find(nodeName) != boneInfoMap.end())
-		{
-			int index = boneInfoMap[nodeName].id;
-			glm::mat4 offset = boneInfoMap[nodeName].offset;
-			finalBoneMatrices[index] = globalTransform * offset;
-		}
-
-		for (int i = 0; i < _node->childrenCount; i++)
-			calculateBoneTransform(&_node->children[i], globalTransform);
-	}
-
-	std::vector<glm::mat4> Animator::getFinalBoneMatrices()
-	{
-		return finalBoneMatrices;
-	}
-//}
+std::vector<glm::mat4> Animator::GetPoseTransforms()
+{
+    return m_Transforms;
+}

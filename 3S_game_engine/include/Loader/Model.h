@@ -15,7 +15,7 @@
 #include <Shader/Shader.h>
 #include "Loader/Mesh.h"
 #include "Material/Material.h"
-#include "AnimationSystem/System/BoneInfo.h"
+#include "AnimationSystem/System/Animdata.h"
 #include <vector>
 #include <map>
 

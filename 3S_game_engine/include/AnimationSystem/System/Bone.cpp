@@ -1,156 +1,131 @@
 #include "Bone.h"
 
-//namespace AnimationSystem
-//{
-	/* Reads keyframes from aiNodeAnim */
-	Bone::Bone(const std::string& _name, int _ID, const aiNodeAnim* _channel)
-		:
-		name(_name),
-		ID(_ID),
-		localTransform(1.0f)
-	{
-		/* Load positions */
-		numPositions = _channel->mNumPositionKeys;
-		for (int positionIndex = 0; positionIndex < numPositions; ++positionIndex)
-		{
-			aiVector3D aiPosition = _channel->mPositionKeys[positionIndex].mValue;
-			float timeStamp = _channel->mPositionKeys[positionIndex].mTime;
-			KeyPosition data;
-			data.position = AssimpGLMHelpers::GetGLMVec(aiPosition);
-			data.timeStamp = timeStamp;
-			positions.push_back(data);
-		}
+Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel) :
+    m_Name(name),
+    m_ID(ID),
+    m_LocalTransform(1.0f) {
+    m_NumPositions = channel->mNumPositionKeys;
 
-		/* Load rotations */
-		numRotations = _channel->mNumRotationKeys;
-		for (int rotationIndex = 0; rotationIndex < numRotations; ++rotationIndex)
-		{
-			aiQuaternion aiRotation = _channel->mRotationKeys[rotationIndex].mValue;
-			float timeStamp = _channel->mRotationKeys[rotationIndex].mTime;
-			KeyRotation data;
-			data.rotation = AssimpGLMHelpers::GetGLMQuat(aiRotation);
-			data.timeStamp = timeStamp;
-			rotations.push_back(data);
-		}
+    for (int positionIndex = 0; positionIndex < m_NumPositions; ++positionIndex) {
+        aiVector3D aiPosition = channel->mPositionKeys[positionIndex].mValue;
+        float timeStamp = channel->mPositionKeys[positionIndex].mTime;
+        KeyPosition data;
+        data.position = AssimpGLMHelpers::GetGLMVec(aiPosition);
+        data.timeStamp = timeStamp;
+        m_Positions.push_back(data);
+    }
 
-		/* Load scales */
-		numScales = _channel->mNumScalingKeys;
-		for (int scaleIndex = 0; scaleIndex < numScales; ++scaleIndex)
-		{
-			aiVector3D aiScale = _channel->mScalingKeys[scaleIndex].mValue;
-			float timeStamp = _channel->mScalingKeys[scaleIndex].mTime;
-			KeyScale data;
-			data.scale = AssimpGLMHelpers::GetGLMVec(aiScale);
-			data.timeStamp = timeStamp;
-			scales.push_back(data);
-		}
-	}
+    m_NumRotations = channel->mNumRotationKeys;
+    for (int rotationIndex = 0; rotationIndex < m_NumRotations; ++rotationIndex) {
+        aiQuaternion aiOrientation = channel->mRotationKeys[rotationIndex].mValue;
+        float timeStamp = channel->mRotationKeys[rotationIndex].mTime;
+        KeyRotation data;
+        data.orientation = AssimpGLMHelpers::GetGLMQuat(aiOrientation);
+        data.timeStamp = timeStamp;
+        m_Rotations.push_back(data);
+    }
 
-	/* Interpolates bones/weights positions, rotations & scales keys based on the current time of the animation
-		and prepeares the local transformation matrix by comining all keys transformations
-	*/
-	void Bone::update(float _animationTime)
-	{
-		glm::mat4 position = interpolatePosition(_animationTime);
-		glm::mat4 rotation = interpolateRotation(_animationTime);
-		glm::mat4 scale = interpolateScale(_animationTime);
-		this->localTransform = position * rotation * scale;
-	}
+    m_NumScalings = channel->mNumScalingKeys;
+    for (int keyIndex = 0; keyIndex < m_NumScalings; ++keyIndex) {
+        aiVector3D scale = channel->mScalingKeys[keyIndex].mValue;
+        float timeStamp = channel->mScalingKeys[keyIndex].mTime;
+        KeyScale data;
+        data.scale = AssimpGLMHelpers::GetGLMVec(scale);
+        data.timeStamp = timeStamp;
+        m_Scales.push_back(data);
+    }
+}
 
-	/* Gets the current index on KeyPositions to interpolate to based on the current animation time */
-	int Bone::getPositionIndex(float _animationTime)
-	{
-		for (int index = 0; index < numPositions - 1; ++index)
-		{
-			if (_animationTime < positions[index + 1].timeStamp)
-				return index;
-		}
+void Bone::Update(float animationTime)
+{
+    glm::mat4 translation = InterpolatePosition(animationTime);
+    glm::mat4 rotation = InterpolateRotation(animationTime);
+    glm::mat4 scale = InterpolateScaling(animationTime);
+    m_LocalTransform = translation * rotation * scale;
+}
 
-		assert(0);
-	}
+int Bone::GetPositionIndex(float animationTime)
+{
+    for (int index = 0; index < m_NumPositions - 1; ++index)
+    {
+        if (animationTime < m_Positions[index + 1].timeStamp)
+            return index;
+    }
+    assert(0);
+}
 
-	/* Gets the current index on KeyRotations to interpolate to based on the current animation time */
-	int Bone::getRotationIndex(float _animationTime)
-	{
-		for (int index = 0; index < numRotations - 1; ++index)
-		{
-			if (_animationTime < rotations[index + 1].timeStamp)
-				return index;
-		}
+int Bone::GetRotationIndex(float animationTime)
+{
+    for (int index = 0; index < m_NumRotations - 1; ++index)
+    {
+        if (animationTime < m_Rotations[index + 1].timeStamp)
+            return index;
+    }
+    assert(0);
+}
 
-		assert(0);
-	}
+int Bone::GetScaleIndex(float animationTime)
+{
+    for (int index = 0; index < m_NumScalings - 1; ++index)
+    {
+        if (animationTime < m_Scales[index + 1].timeStamp)
+            return index;
+    }
+    assert(0);
+}
 
-	/* Gets the current index on KeyScale to interpolate to based on the current animation time */
-	int Bone::getScaleIndex(float _animationTime)
-	{
-		for (int index = 0; index < numScales - 1; ++index)
-		{
-			if (_animationTime < scales[index + 1].timeStamp)
-				return index;
-		}
-		assert(0);
-	}
+float Bone::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
+{
+    float scaleFactor = 0.0f;
+    float midWayLength = animationTime - lastTimeStamp;
+    float framesDiff = nextTimeStamp - lastTimeStamp;
+    scaleFactor = midWayLength / framesDiff;
+    return scaleFactor;
+}
 
-	/* Gets normalized value for Lerp & Slerp */
-	float Bone::getScaleFactor(float _lastTimeStamp, float _nextTimeStamp, float _animationTime)
-	{
-		float scaleFactor = 0.0f;
-		float midWayLength = _animationTime - _lastTimeStamp;
-		float framesDiff = _nextTimeStamp - _lastTimeStamp;
-		scaleFactor = midWayLength / framesDiff;
-		return scaleFactor;
-	}
+glm::mat4 Bone::InterpolatePosition(float animationTime)
+{
+    if (1 == m_NumPositions)
+        return glm::translate(glm::mat4(1.0f), m_Positions[0].position);
 
-	/* Figures out which position keys to interpolate bone/weight and performs the interpolation
-	*  and returns the translation matrix
-	*/
-	glm::mat4 Bone::interpolatePosition(float _animationTime)
-	{
-		if (1 == numPositions)
-			return glm::translate(glm::mat4(1.0f), positions[0].position);
+    int p0Index = GetPositionIndex(animationTime);
+    int p1Index = p0Index + 1;
+    float scaleFactor = GetScaleFactor(m_Positions[p0Index].timeStamp,
+        m_Positions[p1Index].timeStamp, animationTime);
+    glm::vec3 finalPosition = glm::mix(m_Positions[p0Index].position, m_Positions[p1Index].position
+        , scaleFactor);
+    return glm::translate(glm::mat4(1.0f), finalPosition);
+}
 
-		int pZeroIndex = getPositionIndex(_animationTime);
-		int pOneIndex = pZeroIndex + 1;
-		float scaleFactor = getScaleFactor(positions[pZeroIndex].timeStamp, positions[pOneIndex].timeStamp, _animationTime);
-		glm::vec3 finalPosition = glm::mix(positions[pZeroIndex].position, positions[pOneIndex].position, scaleFactor);
+glm::mat4 Bone::InterpolateRotation(float animationTime)
+{
+    if (1 == m_NumRotations)
+    {
+        auto rotation = glm::normalize(m_Rotations[0].orientation);
+        return glm::toMat4(rotation);
+    }
 
-		return glm::translate(glm::mat4(1.0f), finalPosition);
-	}
+    int p0Index = GetRotationIndex(animationTime);
+    int p1Index = p0Index + 1;
+    float scaleFactor = GetScaleFactor(m_Rotations[p0Index].timeStamp,
+        m_Rotations[p1Index].timeStamp, animationTime);
+    glm::quat finalRotation = glm::slerp(m_Rotations[p0Index].orientation, m_Rotations[p1Index].orientation
+        , scaleFactor);
+    finalRotation = glm::normalize(finalRotation);
+    return glm::toMat4(finalRotation);
 
-	/* Figures out which rotations keys to interpolate bone/weight and performs the interpolation
-	*  and rotation matrix
-	*/
-	glm::mat4 Bone::interpolateRotation(float _animationTime)
-	{
-		if (1 == numRotations)
-		{
-			auto rotation = glm::normalize(rotations[0].rotation);
-			return glm::toMat4(rotation);
-		}
+}
 
-		int rZeroIndex = getRotationIndex(_animationTime);
-		int rOneIndex = rZeroIndex + 1;
-		float scaleFactor = getScaleFactor(rotations[rZeroIndex].timeStamp, rotations[rOneIndex].timeStamp, _animationTime);
-		glm::quat finalRotation = glm::slerp(rotations[rZeroIndex].rotation, rotations[rOneIndex].rotation, scaleFactor);
-		finalRotation = glm::normalize(finalRotation);
+glm::mat4 Bone::InterpolateScaling(float animationTime)
+{
+    if (1 == m_NumScalings)
+        return glm::scale(glm::mat4(1.0f), m_Scales[0].scale);
 
-		return glm::toMat4(finalRotation);
-	}
-
-	/* Figures out which scale keys to interpolate bone/weight and performs the interpolation
-	*  and return the scale matrix
-	*/
-	glm::mat4 Bone::interpolateScale(float _animationTime)
-	{
-		if (1 == numScales)
-			return glm::scale(glm::mat4(1.0f), scales[0].scale);
-
-		int sZeroIndex = getScaleIndex(_animationTime);
-		int sOneIndex = sZeroIndex + 1;
-		float scaleFactor = getScaleFactor(scales[sZeroIndex].timeStamp, scales[sOneIndex].timeStamp, _animationTime);
-		glm::vec3 finalScale = glm::mix(scales[sZeroIndex].scale, scales[sOneIndex].scale, scaleFactor);
-
-		return glm::scale(glm::mat4(1.0f), finalScale);
-	}
-//}
+    int p0Index = GetScaleIndex(animationTime);
+    int p1Index = p0Index + 1;
+    float scaleFactor = GetScaleFactor(m_Scales[p0Index].timeStamp,
+        m_Scales[p1Index].timeStamp, animationTime);
+    glm::vec3 finalScale = glm::mix(m_Scales[p0Index].scale, m_Scales[p1Index].scale
+        , scaleFactor);
+    return glm::scale(glm::mat4(1.0f), finalScale);
+}
