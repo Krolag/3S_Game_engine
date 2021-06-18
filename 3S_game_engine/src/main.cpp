@@ -411,9 +411,9 @@ int main()
                importer.importedProctors.at(i).get()
                ));
        }
-   	// Enemy
-   	if(tmpCompoBooleanValues[5])
-   	{
+   		// Enemy
+   		if(tmpCompoBooleanValues[5])
+   		{
            importer.enemies.push_back(std::make_shared<GameLogic::Enemy>(
                importer.importedProctors.at(i).get(),
                &hero_00,
@@ -421,10 +421,14 @@ int main()
                importer.enemiesIslands[enemiesIterator++],
                importer.prepareModelName(importer.importedProctors.at(i).get()->name)
            ));
-   	}
+   		}
        hierarchy.addObject(importer.importedProctors.at(i).get());
    }
-  
+
+    //for (GameLogic::Proctor* proctor : hierarchy.getProctors())
+    //{
+	   // 
+    //}
 ///* Clear vector which is now unused */
    importer.enemiesIslands.clear();
 	
