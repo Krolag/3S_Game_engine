@@ -317,7 +317,7 @@ int main()
     /* Load models for not-serializable proctors */
     /* Boat */
     Loader::Model           boat_m("./assets/models/boat/bbot.fbx", "boat", true, true);
-    GameLogic::Proctor      boat("boat", glm::vec3(778.0f, 2.2f, -166.5f), glm::quat(1.0f, 0.0f, 2.47f, 0.0f), glm::vec3(0.09f));
+    GameLogic::Proctor      boat("boat", glm::vec3(709.0f, 2.2f, -164.5f), glm::quat(1.0f, 0.0f, 3.14f, 0.0f), glm::vec3(0.09f));
     GameLogic::MeshRenderer boat_mr(GameLogic::C_MESH, &boat, &boat_m, &model3D);
     GameLogic::Boat         boat_b(GameLogic::C_MOVEMENT, &boat);
     GameLogic::Interactable boat_inter(GameLogic::C_INTERACTABLE, &boat);
@@ -1647,7 +1647,7 @@ int main()
     }
 
 	/* Export scene to xml file */
-    //Loader::Exporter::exportScene(hierarchy.getProctors(), "./assets/scenes/exported_scene.xml");
+    Loader::Exporter::exportScene(hierarchy.getProctors(), "./assets/scenes/exported_scene.xml");
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
