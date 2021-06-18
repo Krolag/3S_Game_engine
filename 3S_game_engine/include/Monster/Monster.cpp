@@ -99,8 +99,7 @@ bool Monster::isDeepWater()
 {
 	float boat_x = boat->getPosition().x;
 	float boat_z = boat->getPosition().z;
-	if (boat_x < X_LEFT || boat_x > X_RIGHT || boat_z > Z_UP || boat_z < Z_DOWN) {
-		std::cout << "dzban";
+	if (boat_x < X_RIGHT || boat_x > X_LEFT || boat_z > Z_UP || boat_z < Z_DOWN) {
 		return true;
 	}
 	return false;

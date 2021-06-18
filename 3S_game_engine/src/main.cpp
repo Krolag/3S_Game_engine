@@ -364,7 +364,7 @@ int main()
     hero_01.setInitialTransform();
 
     /* Create importer with given *.xml file */
-    Loader::Importer importer("./assets/scenes/exported_scene.xml", &model3D, false, 10.0f);
+    Loader::Importer importer("./assets/scenes/scene.xml", &model3D, false, 10.0f);
 	
     /* Load models to hierarchy */
     int size = importer.importedProctors.size();
@@ -1475,7 +1475,7 @@ int main()
             hierarchy.renderWithShader(&model3D);
 
             /* Render water */
-            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1100));
+            model = glm::translate(model, glm::vec3(-1100, waterYpos, -1300));
             water.render(model, projection, view, reflectBufferTex.id, mainScene.deltaTime, glm::vec3(camera.Position.x + 1100, camera.Position.y, camera.Position.z + 1100));
 
             skybox.render();

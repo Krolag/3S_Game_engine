@@ -17,9 +17,9 @@ public:
 private:
 	WaterMesh* water;
 
-	const int X_LEFT=-1100;
-	const int Z_UP=1100;
-	const int X_RIGHT=1100;
+	const int X_LEFT=1100;
+	const int Z_UP=500;
+	const int X_RIGHT=-300;
 	const int Z_DOWN=-1100;
 
 	const int SAFE_DISTANCE = 200; // radius of safe zone around island
