@@ -41,6 +41,7 @@ namespace GameLogic
 
 		//colect chest TEST
 		float timepassed = 0;
+		float currentTime = 0.0f;
 		int buttonToPress;
 		bool isPlayerOneUsingChest = false;
 

@@ -143,14 +143,18 @@ namespace GameLogic
 				if ((keyboard->isKeyDown(GLFW_KEY_W) || 
 					keyboard->isKeyDown(GLFW_KEY_S) || 
 					keyboard->isKeyDown(GLFW_KEY_A) || 
-					keyboard->isKeyDown(GLFW_KEY_D)) && 
-					frameCounter % 10 == 0)
+					keyboard->isKeyDown(GLFW_KEY_D)))
 				{
 					/* Check if player clicked any button */
 					if (!isFirstClicked)
 						isFirstClicked = true;
 
-					playerSounds->play2D(footsteps.at(randomNumber));
+					currentTime += deltaTime;
+					if (currentTime > 0.4f)
+					{
+						currentTime = 0.0f;
+						playerSounds->play2D(footsteps.at(randomNumber));
+					}
 
 					//if (proctor->getComponentOfType(C_ANIMA) != NULL)
 					//	((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(-1);
@@ -261,13 +265,17 @@ namespace GameLogic
 				if ((keyboard->isKeyDown(GLFW_KEY_I) ||
 					keyboard->isKeyDown(GLFW_KEY_K) ||
 					keyboard->isKeyDown(GLFW_KEY_J) ||
-					keyboard->isKeyDown(GLFW_KEY_L))
-					&& frameCounter % 10 == 0)
+					keyboard->isKeyDown(GLFW_KEY_L)))
 				{
 					if (!isFirstClicked)
 						isFirstClicked = true;
 					
-					playerSounds->play2D(footsteps.at(randomNumber));
+					currentTime += deltaTime;
+					if (currentTime > 0.4f)
+					{
+						currentTime = 0.0f;
+						playerSounds->play2D(footsteps.at(randomNumber));
+					}
 
 					//((Anima*)proctor->getComponentOfType(C_ANIMA))->playAnimation(1);
 				}
