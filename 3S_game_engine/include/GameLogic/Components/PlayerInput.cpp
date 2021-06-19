@@ -84,7 +84,6 @@ namespace GameLogic
 		/* Check if nearest enemy is within attack radius */
 		if(distanceTo(nearestEnemy) < ATTACK_RADIUS || nearestEnemy != NULL)
 		{
-			std::cout << "enemy is within attack radius of " << proctor->name << ", distance = " << distanceTo(nearestEnemy) << "\n";
 			playerInAttackRadius = true;
 			///* Calculate direction to nearest enemy */
 			//glm::vec3 enemyPos = nearestEnemy->getPosition();

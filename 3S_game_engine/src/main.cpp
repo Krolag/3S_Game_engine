@@ -424,13 +424,9 @@ int main()
    		}
        hierarchy.addObject(importer.importedProctors.at(i).get());
    }
-
-    //for (GameLogic::Proctor* proctor : hierarchy.getProctors())
-    //{
-	   // 
-    //}
-///* Clear vector which is now unused */
-   importer.enemiesIslands.clear();
+	
+	/* Clear vector which is now unused */
+	importer.enemiesIslands.clear();
 	
     int cashSize = importer.cash.size();
 #pragma endregion
@@ -561,12 +557,12 @@ int main()
         ImGui::NewFrame();
 
         /* Enable/disable debug mode */
-        if (keyboardInput->isKeyPressed(GLFW_KEY_TAB))
+       /* if (keyboardInput->isKeyPressed(GLFW_KEY_TAB))
             isDebugModeOn = !isDebugModeOn;
         if (keyboardInput->isKeyPressed(GLFW_KEY_SPACE))
         {
             hierarchy.takeDamage();
-        }
+        }*/
 
         /* SCENE LOADER */
         if (sceneManager.cActiveScene["mainMenu"])
@@ -1595,70 +1591,70 @@ int main()
             monster.activate();
         }
 
-#pragma region Debug Mode
-        if (isDebugModeOn)
-        {
-            ImGui::Begin("Camera and dir light");
-            {
-                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-                float variables[4];
-                /* CAMERA */
-                ImGui::Text("---- CAMERA ----");
-                // Position
-                variables[0] = camera.Position.x; variables[1] = camera.Position.y; variables[2] = camera.Position.z;
-                ImGui::DragFloat3("campos", variables);
-                camera.Position.x = variables[0]; camera.Position.y = variables[1]; camera.Position.z = variables[2];
-                // Pitch
-                variables[0] = camera.Pitch;
-                ImGui::DragFloat("pitch", variables);
-                camera.Pitch = variables[0];
-                // Yaw
-                variables[0] = camera.Yaw;
-                ImGui::DragFloat("yaw", variables);
-                camera.Yaw = variables[0];
-                ImGui::DragFloat("active radius:", &camera.activeProctorsRadius);
-                ImGui::Text("---- LIGHT -----");
-                /* Dir light */
-                // Direction
-                variables[0] = dirLight.direction.x; variables[1] = dirLight.direction.y; variables[2] = dirLight.direction.z;
-                ImGui::DragFloat3("direction", variables);
-                dirLight.direction.x = variables[0]; dirLight.direction.y = variables[1]; dirLight.direction.z = variables[2];
-                // Ambient
-                variables[0] = dirLight.ambient.x; variables[1] = dirLight.ambient.y; variables[2] = dirLight.ambient.z; variables[3] = dirLight.ambient.w;
-                ImGui::DragFloat4("ambient", variables);
-                dirLight.ambient.x = variables[0]; dirLight.ambient.y = variables[1]; dirLight.ambient.z = variables[2]; dirLight.ambient.w = variables[3];
-                // Diffuse
-                variables[0] = dirLight.diffuse.x; variables[1] = dirLight.diffuse.y; variables[2] = dirLight.diffuse.z; variables[3] = dirLight.diffuse.w;
-                ImGui::DragFloat4("diffuse", variables);
-                dirLight.diffuse.x = variables[0]; dirLight.diffuse.y = variables[1]; dirLight.diffuse.z = variables[2]; dirLight.diffuse.w = variables[3];
-                // Specular
-                variables[0] = dirLight.specular.x; variables[1] = dirLight.specular.y; variables[2] = dirLight.specular.z; variables[3] = dirLight.specular.w;
-                ImGui::DragFloat4("specular", variables);
-                dirLight.specular.x = variables[0]; dirLight.specular.y = variables[1]; dirLight.specular.z = variables[2]; dirLight.specular.w = variables[3];
-                // Bounding region min
-                variables[0] = dirLight.br.min.x; variables[1] = dirLight.br.min.y; variables[2] = dirLight.br.min.z;
-                ImGui::DragFloat3("br.min", variables);
-                dirLight.br.min.x = variables[0]; dirLight.br.min.y = variables[1]; dirLight.br.min.z = variables[2];
-                // Bounding region max
-                variables[0] = dirLight.br.max.x; variables[1] = dirLight.br.max.y; variables[2] = dirLight.br.max.z;
-                ImGui::DragFloat3("br.max", variables);
-                dirLight.br.max.x = variables[0]; dirLight.br.max.y = variables[1]; dirLight.br.max.z = variables[2];
-                // Gamma correction
-                ImGui::SliderFloat("gamma", &gammaCorrection, 0.0f, 3.0f);
-            }
-            ImGui::End();
-
-            if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
-                sceneManager.changeCurrentScene("exitStory_00");
-            else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
-                sceneManager.changeCurrentScene("exitStory_01");
-
-            collisionBoxShader.use();
-            collisionBoxShader.setUniform("projection", projection);
-            collisionBoxShader.setUniform("view", view);
-            collisionBoxShader.setUniformBool("collision", true);
-        }
-#pragma endregion
+//#pragma region Debug Mode
+//        if (isDebugModeOn)
+//        {
+//            ImGui::Begin("Camera and dir light");
+//            {
+//                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+//                float variables[4];
+//                /* CAMERA */
+//                ImGui::Text("---- CAMERA ----");
+//                // Position
+//                variables[0] = camera.Position.x; variables[1] = camera.Position.y; variables[2] = camera.Position.z;
+//                ImGui::DragFloat3("campos", variables);
+//                camera.Position.x = variables[0]; camera.Position.y = variables[1]; camera.Position.z = variables[2];
+//                // Pitch
+//                variables[0] = camera.Pitch;
+//                ImGui::DragFloat("pitch", variables);
+//                camera.Pitch = variables[0];
+//                // Yaw
+//                variables[0] = camera.Yaw;
+//                ImGui::DragFloat("yaw", variables);
+//                camera.Yaw = variables[0];
+//                ImGui::DragFloat("active radius:", &camera.activeProctorsRadius);
+//                ImGui::Text("---- LIGHT -----");
+//                /* Dir light */
+//                // Direction
+//                variables[0] = dirLight.direction.x; variables[1] = dirLight.direction.y; variables[2] = dirLight.direction.z;
+//                ImGui::DragFloat3("direction", variables);
+//                dirLight.direction.x = variables[0]; dirLight.direction.y = variables[1]; dirLight.direction.z = variables[2];
+//                // Ambient
+//                variables[0] = dirLight.ambient.x; variables[1] = dirLight.ambient.y; variables[2] = dirLight.ambient.z; variables[3] = dirLight.ambient.w;
+//                ImGui::DragFloat4("ambient", variables);
+//                dirLight.ambient.x = variables[0]; dirLight.ambient.y = variables[1]; dirLight.ambient.z = variables[2]; dirLight.ambient.w = variables[3];
+//                // Diffuse
+//                variables[0] = dirLight.diffuse.x; variables[1] = dirLight.diffuse.y; variables[2] = dirLight.diffuse.z; variables[3] = dirLight.diffuse.w;
+//                ImGui::DragFloat4("diffuse", variables);
+//                dirLight.diffuse.x = variables[0]; dirLight.diffuse.y = variables[1]; dirLight.diffuse.z = variables[2]; dirLight.diffuse.w = variables[3];
+//                // Specular
+//                variables[0] = dirLight.specular.x; variables[1] = dirLight.specular.y; variables[2] = dirLight.specular.z; variables[3] = dirLight.specular.w;
+//                ImGui::DragFloat4("specular", variables);
+//                dirLight.specular.x = variables[0]; dirLight.specular.y = variables[1]; dirLight.specular.z = variables[2]; dirLight.specular.w = variables[3];
+//                // Bounding region min
+//                variables[0] = dirLight.br.min.x; variables[1] = dirLight.br.min.y; variables[2] = dirLight.br.min.z;
+//                ImGui::DragFloat3("br.min", variables);
+//                dirLight.br.min.x = variables[0]; dirLight.br.min.y = variables[1]; dirLight.br.min.z = variables[2];
+//                // Bounding region max
+//                variables[0] = dirLight.br.max.x; variables[1] = dirLight.br.max.y; variables[2] = dirLight.br.max.z;
+//                ImGui::DragFloat3("br.max", variables);
+//                dirLight.br.max.x = variables[0]; dirLight.br.max.y = variables[1]; dirLight.br.max.z = variables[2];
+//                // Gamma correction
+//                ImGui::SliderFloat("gamma", &gammaCorrection, 0.0f, 3.0f);
+//            }
+//            ImGui::End();
+//
+//            if (keyboardInput->isKeyPressed(GLFW_KEY_Q))
+//                sceneManager.changeCurrentScene("exitStory_00");
+//            else if (keyboardInput->isKeyPressed(GLFW_KEY_E))
+//                sceneManager.changeCurrentScene("exitStory_01");
+//
+//            collisionBoxShader.use();
+//            collisionBoxShader.setUniform("projection", projection);
+//            collisionBoxShader.setUniform("view", view);
+//            collisionBoxShader.setUniformBool("collision", true);
+//        }
+//#pragma endregion
 
         /* Update InputSystem */
         keyboardInput->update();
@@ -1759,27 +1755,27 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 void cameraSwitch(int minZoom,int maxZoom,float maxDistanceX, float maxDistanceY, InputSystem::MouseInput* mouseInput, InputSystem::KeyboardInput* keyboardInput, Application::Window* _scene, GameLogic::Proctor* player_1, GameLogic::Proctor* player_2,
     GameLogic::Boat * boat_b, GameLogic::Proctor* boat, GameLogic::PlayerInput* input_00, GameLogic::PlayerInput* input_01)
 {
-    if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
-        isDebugCameraOn = !isDebugCameraOn;
-    }
+    //if (keyboardInput->isKeyPressed(GLFW_KEY_P)) {
+    //    isDebugCameraOn = !isDebugCameraOn;
+    //}
 
-    if (isDebugCameraOn)
-    {
-        cameraKeyboardInput(_scene, keyboardInput);
-        mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
+    //if (isDebugCameraOn)
+    //{
+    //    cameraKeyboardInput(_scene, keyboardInput);
+    //    mouseOusideWindowsPos(GLFW_KEY_R, keyboardInput, mouseInput);
 
-        if (keyboardInput->isKeyDown(GLFW_KEY_RIGHT_CONTROL))
-        {
-            cameraMouseInput(_scene->window, mouseInput);
-            mouseInput->cursorDisable();
-        }
-        if (keyboardInput->isKeyReleased(GLFW_KEY_RIGHT_CONTROL))
-        {
-            firstMouse = true; // reset last saved mosue position
-            mouseInput->cursorEnable();
-        }
+    //    if (keyboardInput->isKeyDown(GLFW_KEY_RIGHT_CONTROL))
+    //    {
+    //        cameraMouseInput(_scene->window, mouseInput);
+    //        mouseInput->cursorDisable();
+    //    }
+    //    if (keyboardInput->isKeyReleased(GLFW_KEY_RIGHT_CONTROL))
+    //    {
+    //        firstMouse = true; // reset last saved mosue position
+    //        mouseInput->cursorEnable();
+    //    }
 
-    }
+    //}
     if (!isDebugCameraOn)
     {       
         float xDistance = player_1->getWorldPosition()[0] - player_2->getWorldPosition()[0];

@@ -17,11 +17,30 @@ namespace GameLogic
 	constexpr float GRAVITY_ACCELERATION_DEFAULT = 0.3f;
 	constexpr float WANDER_STAY_TIME = 4.0f;
 	constexpr float ATTACK_TIME = 1.0f;
-	const float boundaries[4][4] = {
+	const float boundaries[23][4] = {
+		{621.0f, 658.0f, -365.0f, -476.0f},
+		{662.0f, 695.0f, -447.0f, -515.0f},
+		{744.0f, 778.0f, -362.0f, -515.0f},
+		{782.0f, 815.0f, -442.0f, -477.0f},
+		{395.0f, 433.0f, -784.0f, -944.0f},
 		{720.0f, 799.0f, 39.0f, -79.0f},
 		{720.0f, 799.0f, 39.0f, -79.0f},
 		{720.0f, 799.0f, 39.0f, -79.0f},
-		{720.0f, 799.0f, 39.0f, -79.0f}
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{-117.0f, 39.0f, -458.0f, -522.0f},
+		{-78.0f, -1.0f, -377.0f, -453.0f},
+		{-68.0f, -2.0f, -258.0f, -350.0f},
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{1, 1, 1, 1},
+		{45.0f, 115.0f, -219.0f, -288.0f}
 	};
 
 	/* Constructors and destructors */
@@ -214,6 +233,7 @@ namespace GameLogic
 			proctor->setRotation(enemyStartRotation);
 
 			/* Check boundaries for island */
+			//if (enemyPosition.x < boundaries[islandID-1][0]) wanderDirection.x *= -1;
 			if (enemyPosition.x < boundaries[islandID][0]) wanderDirection.x *= -1;
 			if (enemyPosition.x > boundaries[islandID][1]) wanderDirection.x *= -1;
 			if (enemyPosition.z < boundaries[islandID][2]) wanderDirection.z *= -1;
