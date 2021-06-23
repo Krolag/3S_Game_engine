@@ -222,6 +222,19 @@ namespace GameLogic
 
 			/* Wander */
 			proctor->setPosition(enemyPosition);
+
+			if (cTimeInAir >= 0 && cTimeInAir < 0.2)
+			{
+				proctor->transform.position.y += 10.0f * proctor->getDeltaTime();
+			}
+			if (cTimeInAir >= 0.2 && cTimeInAir < 0.4)
+			{
+				proctor->transform.position.y -= 10.0f * proctor->getDeltaTime();
+			}
+			if (cTimeInAir >= 0.4)
+				cTimeInAir = 0;
+
+			cTimeInAir += proctor->getDeltaTime();
 			
 			/* Calc rotation to look at the chased player */
 			float dot = enemyNormalDown.x * wanderDirection.x + enemyNormalDown.z * wanderDirection.z;	// dot product between enemy starting rotation and wander direction
@@ -307,7 +320,19 @@ namespace GameLogic
 		
 		/* Chase player */
 		proctor->setPosition(enemyPosition -= glm::vec3(direction.x * currentVelocity * proctor->getParentHierarchy()->getDeltaTime(), currentGravity * proctor->getParentHierarchy()->getDeltaTime(), direction.z * currentVelocity * proctor->getParentHierarchy()->getDeltaTime()));
+		if (cTimeInAir >= 0 && cTimeInAir < 0.2)
+		{
+			proctor->transform.position.y += 10.0f * proctor->getDeltaTime();
+		}
+		if (cTimeInAir >= 0.2 && cTimeInAir < 0.4)
+		{
+			proctor->transform.position.y -= 10.0f * proctor->getDeltaTime();
+		}
+		if (cTimeInAir >= 0.4)
+			cTimeInAir = 0;
 
+		cTimeInAir += proctor->getDeltaTime();
+		
 		/* Calc rotation to look at the chased player */
 		float dot = enemyNormalDown.x * direction.x + enemyNormalDown.z * direction.z;	// dot product between enemy starting rotation and direction to player
 		float det = enemyNormalDown.x * direction.z - direction.x * enemyNormalDown.z;	// determinant
