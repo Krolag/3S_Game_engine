@@ -82,7 +82,8 @@ namespace GameLogic
 
 		Proctor* nearestEnemy = getNearestEnemy();
 		/* Check if nearest enemy is within attack radius */
-		if(distanceTo(nearestEnemy) < ATTACK_RADIUS || nearestEnemy != NULL)
+		std::cout << distanceTo(nearestEnemy)<<"\n";
+		if(distanceTo(nearestEnemy) < ATTACK_RADIUS && nearestEnemy != NULL)
 		{
 			playerInAttackRadius = true;
 			///* Calculate direction to nearest enemy */
@@ -104,6 +105,7 @@ namespace GameLogic
 			// TODO: @Anyone show possibility of attack for player and change boolean isPlayerAttacking
 			
 			/* If attacking then check for time on timer */
+			isPlayerAttacking = true;
 			if(isPlayerAttacking)
 			{
 				if (attackTimer > ATTACK_TIME)
@@ -203,6 +205,7 @@ namespace GameLogic
 		{
 			if(distanceTo(enemy) < minDistance)
 			{
+				minDistance = distanceTo(enemy);
 				nearestEnemy = enemy;
 			}
 		}

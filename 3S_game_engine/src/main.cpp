@@ -1371,6 +1371,9 @@ int main()
                 hero_01_pi.controls[4]->render();
                 instructions.render("USE", 1639, 77, 1.0, glm::vec3(1.0, 1.0, 1.0));
             }
+            if (hero_01_pi.playerInAttackRadius) {
+                hero_01_pi.controls[5]->render();
+            }
             if (hero_01_pi.isPlayerTwoInBoat)
             {
                 for (int i = 1; i < 6; i++)
