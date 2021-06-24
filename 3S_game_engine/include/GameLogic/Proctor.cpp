@@ -30,6 +30,8 @@ namespace GameLogic
 		transform.position = _position;
 		transform.rotation = _rotation;
 		transform.scale = _scale;
+
+		initialTransform = transform;
 	}
 
 	Proctor::~Proctor() { }
@@ -155,7 +157,6 @@ namespace GameLogic
 	void Proctor::setParent(Hierarchy* _hierarchy)
 	{
 		parentHierarchy = _hierarchy;
-		initialTransform = transform;
 	}
 
 	unsigned int Proctor::childCount()
@@ -210,7 +211,9 @@ namespace GameLogic
 	void Proctor::activate()
 	{
 		activeFlag = true;
-		transform = initialTransform;
+
+		if (name != "playerOne" || name != "playerTwo")
+			transform = initialTransform;
 	}
 
 	void Proctor::setInitialTransform()
