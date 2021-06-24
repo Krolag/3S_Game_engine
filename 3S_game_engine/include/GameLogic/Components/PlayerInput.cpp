@@ -105,11 +105,10 @@ namespace GameLogic
 			// TODO: @Anyone show possibility of attack for player and change boolean isPlayerAttacking
 			
 			/* If attacking then check for time on timer */
-			isPlayerAttacking = true;
 
 			if(isPlayerOne)
 			{
-				if(keyboard->isKeyDown(GLFW_KEY_B))
+				if(keyboard->isKeyPressed(GLFW_KEY_B))
 				{
 					isPlayerAttacking = true;
 					playerSounds->play2D(attack_D, false);
@@ -117,7 +116,7 @@ namespace GameLogic
 			}
 			else
 			{
-				if (keyboard->isKeyDown(GLFW_KEY_SLASH))
+				if (keyboard->isKeyPressed(GLFW_KEY_SLASH))
 				{
 					isPlayerAttacking = true;
 					playerSounds->play2D(attack_K, false);
